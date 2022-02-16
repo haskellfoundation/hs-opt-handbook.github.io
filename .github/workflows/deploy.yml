@@ -21,7 +21,7 @@ jobs:
         # This assumes your book is in the root of your repository.
         # Just add a `cd` here if you need to change to another directory.
         mdbook build
-        git worktree add gh-pages gh-pages
+        git worktree add gh-pages
         git config user.name "Deploy from CI"
         git config user.email ""
         cd gh-pages
@@ -31,4 +31,5 @@ jobs:
         mv ../book/* .
         git add .
         git commit -m "Deploy $GITHUB_SHA to gh-pages"
+        git push --set-upstream origin gh-pages
         git push --force
