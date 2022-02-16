@@ -1,0 +1,10 @@
+[book]
+authors = ["doyougnu"]
+language = "en"
+multilingual = false
+src = "src"
+title = "Haskell Optimization Handbook"
+git-repository-url = "https://github.com/input-output-hk/hs-opt-handbook.github.io.git"
+
+[output.html]
+mathjax-support = true
