@@ -24,7 +24,6 @@ jobs:
         git worktree add deploy
         git config user.name "Deploy from CI"
         git config user.email ""
-        git pull
         cd deploy
         # Delete the ref to avoid keeping history.
         git update-ref -d refs/heads/deploy
@@ -32,5 +31,5 @@ jobs:
         mv ../book/* .
         git add .
         git commit -m "Deploy $GITHUB_SHA to gh-pages"
-        git push --set-upstream origin deploy
+        git push --set-upstream --force origin deploy
         git push --force
