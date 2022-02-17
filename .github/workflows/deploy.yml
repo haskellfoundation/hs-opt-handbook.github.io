@@ -33,5 +33,6 @@ jobs:
         git add .
         git commit -m "Deploy $GITHUB_SHA to gh-pages"
         git status
+        git pull origin deploy
         git push --set-upstream origin deploy
         git push --force
