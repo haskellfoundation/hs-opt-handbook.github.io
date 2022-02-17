@@ -23,3 +23,6 @@ A fully complete section in Part 1 of HOH will:
       and their corresponding meaning.
 - [ ] If applicable, The section has a reference subsection for further reading and resources.
 - [ ] The book builds with the PR, i.e., CI does not fail on the PR.
+- [ ] The section is free of obvious grammatical and spelling errors.
+- [ ] The section conforms to the style guide.
+- [ ] The section has been read aloud (YES! Really do this!)
