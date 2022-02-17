@@ -24,6 +24,7 @@ jobs:
         git worktree add deploy
         git config user.name "Deploy from CI"
         git config user.email ""
+        git pull
         cd deploy
         # Delete the ref to avoid keeping history.
         git update-ref -d refs/heads/deploy
