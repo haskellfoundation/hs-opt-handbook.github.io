@@ -1,5 +1,9 @@
 name: Deploy
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
 
 jobs:
   deploy:
@@ -28,5 +32,6 @@ jobs:
         mv ../book/* .
         git add .
         git commit -m "Deploy $GITHUB_SHA to gh-pages"
+        git status
         git push --set-upstream origin deploy
         git push --force
