@@ -5,5 +5,6 @@ with pkgs;
 mkShell {
   buildInputs = [
     sphinx
+    pandoc
   ];
 }
