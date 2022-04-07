@@ -6,34 +6,19 @@ on:
   pull_request:
 
 jobs:
-  deploy:
+  tests:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v2.4.0
+    - uses: cachix/install-nix-action@v16
       with:
-        fetch-depth: 0
-    - name: Install mdbook
-      run: |
-        mkdir mdbook
-        curl -sSL https://github.com/rust-lang/mdBook/releases/download/v0.4.14/mdbook-v0.4.14-x86_64-unknown-linux-gnu.tar.gz | tar -xz --directory=./mdbook
-        echo `pwd`/mdbook >> $GITHUB_PATH
-    - name: Deploy GitHub Pages
-      run: |
-        # This assumes your book is in the root of your repository.
-        # Just add a `cd` here if you need to change to another directory.
-        mdbook build
-        git worktree add deploy
-        git config user.name "Deploy from CI"
-        git config user.email ""
-        cd deploy
-        # Delete the ref to avoid keeping history.
-        git update-ref -d refs/heads/deploy
-        rm -rf *
-        mv ../book/* .
-        git add .
-        git commit -m "Deploy $GITHUB_SHA to gh-pages"
-        git status
-        git config pull.ff only
-        git pull origin deploy
-        git push --set-upstream origin deploy
-        git push --force
+        nix_path: nixpkgs=channel:nixos-unstable
+    - uses: cachix/cachix-action@v10
+    #  with:
+    #    name: mycache
+    #    # If you chose signing key for write access
+    #    signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
+    #    # If you chose API tokens for write access OR if you have a private cache
+    #    authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+    - run: nix-build
+    - run: nix-shell --run "echo OK"
