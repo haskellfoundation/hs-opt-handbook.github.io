@@ -8,7 +8,13 @@ Welcome to Haskell Optimization Handbook's documentation!
 
 .. toctree::
    :maxdepth: 2
+   :glob:
    :caption: Contents:
+
+   src/chapter_1.rst
+
+   Contributing/*
+
 
 
 
