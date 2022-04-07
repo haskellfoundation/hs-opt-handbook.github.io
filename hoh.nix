@@ -1,4 +1,5 @@
-{stdenv, sphinx, pandoc , target ? "epub"
+{stdenv, sphinx, pandoc , target ? "html"
+, texlive
 }:
 stdenv.mkDerivation {
   pname   = "hoh";
@@ -7,7 +8,7 @@ stdenv.mkDerivation {
 
 
   buildInputs = [
-    sphinx pandoc
+    sphinx pandoc texlive.combined.scheme-full
   ];
 
 

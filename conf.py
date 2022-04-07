@@ -18,7 +18,7 @@
 # -- Project information -----------------------------------------------------
 
 project = 'Haskell Optimization Handbook'
-copyright = '2022, Jeffrey Young (doyugnu)'
+copyright = '2022, Jeffrey Young (doyougnu)'
 author = 'Jeffrey Young (doyugnu)'
 
 # The full version, including alpha/beta/rc tags
