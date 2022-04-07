@@ -1,10 +1,1 @@
-{ pkgs ? import <nixpkgs> {} }:
-
-with pkgs;
-
-mkShell {
-  buildInputs = [
-    sphinx
-    pandoc
-  ];
-}
+(import ./release.nix {}).hoh-shell
