@@ -7,15 +7,15 @@ Welcome to Haskell Optimization Handbook's documentation!
 =========================================================
 
 .. toctree::
-   :maxdepth: 2
+   :caption: Table of Contents
    :glob:
-   :caption: Contents:
+   :name: mastertoc
 
-   src/chapter_1.rst
+   src/Preface/*
+   src/Preliminaries/*
 
+   Part_1/*
    Contributing/*
-
-
 
 
 Indices and tables
@@ -24,3 +24,8 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+
+Work Left
+=========
+.. todolist::
