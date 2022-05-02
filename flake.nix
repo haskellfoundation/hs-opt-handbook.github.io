@@ -2,16 +2,41 @@
   description = "Haskell Optimization Handbook flake";
 
   inputs = {
-    nixpkgs.url     = "github:nixos/nixpkgs-21.11";
     flake-utils.url = "github:numtide/flake-utils";
-  };
+    flake-compat = {
+      url = "github:edolstra/flake-compat";
+      flake = false;
+    };};
 
-  outputs = { self, nixpkgs, flake-utils }:
+  outputs = { self, nixpkgs, flake-utils, flake-compat }:
     flake-utils.lib.eachDefaultSystem
       (system:
-        let pkgs = nixpkgs.legacyPackages.${system}; in
-        {
-          devShell = import ./shell.nix { inherit pkgs; };
+        let pkgs = nixpkgs.legacyPackages.${system};
+
+            buildHoh = { target ? "html"
+                       }:
+                         pkgs.stdenv.mkDerivation {
+                           pname   = "hoh";
+                           version = "0.0.1";
+                           src     = ./.;
+
+
+                           buildInputs = with pkgs; [
+                             sphinx pandoc texlive.combined.scheme-full
+                           ];
+
+                           buildPhase = ''
+                           make ${target}
+                           '';
+                         };
+        in
+        rec {
+
+          defaultPackage = packages.build;
+
+          packages = {
+            build = buildHoh { target = "html"; };
+          };
         }
       );
 }
