@@ -13,9 +13,8 @@ Welcome to Haskell Optimization Handbook's documentation!
 
    src/Preface/*
    src/Preliminaries/*
-
-   Part_1/*
-   Contributing/*
+   src/Part_1/*
+   src/Part_2/*
 
 
 Indices and tables
@@ -28,4 +27,5 @@ Indices and tables
 
 Work Left
 =========
-.. todolist::
+.. toctree::
+   src/todos
