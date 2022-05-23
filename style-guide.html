@@ -1,0 +1,165 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>HOH Style Guide &#8212; Haskell Optimization Handbook 0.0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="hoh-style-guide">
+<h1>HOH Style Guide<a class="headerlink" href="#hoh-style-guide" title="Permalink to this headline">¶</a></h1>
+<section id="prose">
+<h2>Prose<a class="headerlink" href="#prose" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Prefer title case for chapter/section headings, ex: <cite>Discovering a Memory
+Leak</cite> rather than <cite>Discovering a memory leak</cite>.</p></li>
+<li><p>Prefer italics over single quotes when calling out a term, ex: <cite>is a
+*pure function*</cite> rather than <cite>is a ‘pure function’</cite>.</p></li>
+<li><p>Hard wrap at 80 chars</p></li>
+<li><p>Prefer not mixing code and not-code in one word, ex: <code class="docutils literal notranslate"><span class="pre">Remember</span> <span class="pre">when</span> <span class="pre">we</span>
+<span class="pre">`import</span> <span class="pre">Data.Map.Lazy?`</span></code> rather than <code class="docutils literal notranslate"><span class="pre">Remember</span> <span class="pre">when</span> <span class="pre">we</span> <span class="pre">`import`d</span>
+<span class="pre">`Data.Map.Lazy?</span></code></p></li>
+</ul>
+</section>
+<section id="code">
+<h2>Code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p>Add the file name before markdown blocks to make it clear which file we’re
+talking about, when applicable.</p></li>
+<li><p>When making changes to code, make it clear which parts of the code changed and
+which stayed the same. Point this out explicitly in the text, for example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Our original function call was:
+  ``map (\y -&gt; let x = ...expensive... in y + x) xs``.
+Notice that we have a ``let-binding`` that will allocate a let *for each* element in ``xs``.
+We might considering floating out the let, yielding::
+  let x = ...expensive...
+    in map (\y -&gt; y + x) xs
+Now we see that we have only a _single_ let that is then reused *for each* element in ``xs``,
+because we have moved the let outside of the call to ``map``.
+</pre></div>
+</div>
+<p>In this example we specifically point out the object of our change; the <em>let
+expression</em>, the way we changed it; <em>floating it out of the lambda</em>, and the
+impact of the change; a <em>single reference</em> to a single let rather than a new
+let for each element.</p>
+</li>
+<li><p>Split up long lines as appropriate to keep them under 80 chars if possible
+Use <code class="docutils literal notranslate"><span class="pre">bash</span></code> syntax highlighting for command line output code blocks</p></li>
+</ul>
+</section>
+<section id="links">
+<h2>Links<a class="headerlink" href="#links" title="Permalink to this headline">¶</a></h2>
+<p>Once all the scripts are done:</p>
+<ul class="simple">
+<li><p>If a link shouldn’t be printed, mark it to be ignored.
+* This includes all “Chapter XX” intra-book links, which <em>should</em> be links for the HTML version</p></li>
+<li><p>Make intra-book links and stdlib API doc links relative so they work whether
+the book is read offline or online.</p></li>
+</ul>
+</section>
+<section id="reference">
+<h2>Reference<a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h2>
+<p>This guide copied and modified with respect from
+[rust-lang/book](<a class="reference external" href="https://github.com/rust-lang/book">https://github.com/rust-lang/book</a>). Thank you rust community!</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Haskell Optimization Handbook</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="src/Preface/preface.html">Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src/Preliminaries/book_for.html">Who is this book for</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src/Preliminaries/expectations.html">Expectations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src/Preliminaries/what_makes_fast_hs.html">What makes Haskell programs run fast?</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="src/todos.html">Todos</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Jeffrey Young (doyougnu).
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/style-guide.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
