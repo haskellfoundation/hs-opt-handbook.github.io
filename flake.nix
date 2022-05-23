@@ -29,12 +29,10 @@
 
 
                            buildInputs = with pkgs; [
-                             python310Packages.sphinx pandoc ourTexLive
+                             python3Packages.sphinx
+                             pandoc
+                             ourTexLive
                            ];
-
-                           shellHook = ''
-                             unset SOURCE_DATE_EPOCH
-                           '';
 
                            buildPhase = ''
                            make ${target}
@@ -47,6 +45,8 @@
 
           packages = {
             build = buildHoh { target = "html"; };
+            epub  = buildHoh { target = "epub"; };
+            pdf   = buildHoh { target = "pdf"; };
           };
         }
       );
