@@ -32,6 +32,11 @@ release = '0.0.1'
 # ones.
 extensions = [ 'sphinx.ext.mathjax'
              , 'sphinx.ext.todo'
+             , 'sphinx.ext.githubpages'  ## this bypasses jekyll in the CI, if
+                                         ## you remove it the output will not
+                                         ## contain any .css files from any
+                                         ## directory with a prefixes
+                                         ## underscore
              ]
 
 # flags
