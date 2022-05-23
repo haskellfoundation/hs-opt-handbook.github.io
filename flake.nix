@@ -12,6 +12,13 @@
     flake-utils.lib.eachDefaultSystem
       (system:
         let pkgs = nixpkgs.legacyPackages.${system};
+            ourTexLive = pkgs.texlive.combine {
+              inherit (pkgs.texlive)
+                scheme-medium collection-xetex fncychap titlesec tabulary varwidth
+                framed capt-of wrapfig needspace dejavu-otf helvetic upquote;
+            };
+
+            fonts = pkgs.makeFontsConf { fontDirectories = [ pkgs.dejavu_fonts ]; };
 
             buildHoh = { target ? "html"
                        }:
@@ -22,8 +29,12 @@
 
 
                            buildInputs = with pkgs; [
-                             sphinx pandoc texlive.combined.scheme-full
+                             python310Packages.sphinx pandoc ourTexLive
                            ];
+
+                           shellHook = ''
+                             unset SOURCE_DATE_EPOCH
+                           '';
 
                            buildPhase = ''
                            make ${target}
