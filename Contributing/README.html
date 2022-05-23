@@ -1,0 +1,186 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>How to Contribute &#8212; Haskell Optimization Handbook 0.0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="how-to-contribute">
+<span id="contributing-readme"></span><h1>How to Contribute<a class="headerlink" href="#how-to-contribute" title="Permalink to this headline">¶</a></h1>
+<section id="general-procedure-and-working-convention">
+<h2>General Procedure and Working Convention<a class="headerlink" href="#general-procedure-and-working-convention" title="Permalink to this headline">¶</a></h2>
+<section id="kinds-of-contributors">
+<h3>Kinds of Contributors<a class="headerlink" href="#kinds-of-contributors" title="Permalink to this headline">¶</a></h3>
+<p>There are 2 kinds of contributors to this project:</p>
+<blockquote>
+<div><p><strong>Content Contributors</strong>: Any person who opens a pull request on the book repo with the intent to contribute a section or chapter.</p>
+<dl class="simple">
+<dt><strong>Editorial Contributors</strong>: Any person who reviews, edits, and makes</dt><dd><p>suggestions to a content contributors’ pull request for accuracy of
+content, grammar, structure and communication quality.</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>We use github’s issue tracking and projects to manage the work flow. The process
+is this, for each part, section or subsection in the table of contents a
+corresponding github issue exists in the book repository. Each issue can then
+have one or more tags, where each tag tracks properties of the section; these
+are:</p>
+<blockquote>
+<div><p><strong>Phase n</strong>: The issue belongs to phase 0, 1, or 2.</p>
+<p><strong>Kind</strong>: one of Optimization, Measurement, Case Study, etc. These are
+roughly the parts of the book as listing in the table of contents.</p>
+<p><strong>Platform</strong>: a tag which states the target platform of the technique, for
+example: ghc-specific, linux, web-browser. This set is open ended and I’m
+open to any suggestions here, the tags are for project metrics, i.e., we had
+10 measurement sections and 15 optimization techniques. These metrics serve
+as bylines for advertising the book: “HOH now has ways to make your code
+faster!”</p>
+</div></blockquote>
+</section>
+<section id="project-coordination">
+<h3>Project Coordination<a class="headerlink" href="#project-coordination" title="Permalink to this headline">¶</a></h3>
+<p>We use the github project dashboard, just as many projects in open source do. In
+particular, the life cycle of a section (as represented by an issue) is in one
+of 5 states:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>To do</p></li>
+<li><p>In progress</p></li>
+<li><p>Needs Review</p></li>
+<li><p>Review in progress</p></li>
+<li><p>Reviewer approved</p></li>
+</ol>
+</div></blockquote>
+<p>Each state is represented by a column in the kanban project board as provided by
+github. When a new contributor wants to begin working on a section they’ll begin
+the pipeline, which is:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Find the appropriate issue and ask to be assigned to the issue.</p></li>
+<li><p>An Editorial Contributor assigns the issue to them and moves the issue in
+the project board to the <cite>In Progress</cite> column.</p></li>
+<li><p>Once the contributor finishes the first draft they open a PR on the book
+repo. This triggers a project hook in github to automatically move the
+issue from <cite>In progress</cite> to <cite>Needs</cite> review.</p></li>
+<li><p>Once the issue is in <cite>Needs Review</cite> any Editorial Contributor can review
+it. This editor <em>now owns</em> and <em>is expected</em> to shepherd the section. The
+editor reviews the PR with respect to the appropriate checklist: Part 1
+checklist for sections pertinent to Part 1 of the book, case study
+checklist for case studies etc. Then makes recommendations to the
+contributor in the PR as comments in github during a PR review. Requesting
+changes in github automatically moves the issue from <cite>Needs Review</cite> to
+<cite>Review in Progress</cite>.</p></li>
+<li><p>Once the contributor applies the comments they ping the editor that
+comments have been addressed and manually moves the ticket back to Needs
+Review.</p></li>
+<li><p>The editor, having received the ping, does a final review, either they
+suggest more changes moving the issue back to <cite>Review in Progress</cite> or they
+are satisfied and approve the PR. Approving the PR triggers a project hook
+to move the issue to <cite>Reviewer Approved</cite>. The PR is now mergable and the
+section is considered finished.</p></li>
+</ul>
+</div></blockquote>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Haskell Optimization Handbook</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../src/Preface/preface.html">Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../src/Preliminaries/book_for.html">Who is this book for</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../src/Preliminaries/expectations.html">Expectations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../src/Preliminaries/what_makes_fast_hs.html">What makes Haskell programs run fast?</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../src/todos.html">Todos</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Jeffrey Young (doyougnu).
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/Contributing/README.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
