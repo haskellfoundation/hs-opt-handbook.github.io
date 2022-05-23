@@ -18,6 +18,7 @@
                 framed capt-of wrapfig needspace dejavu-otf helvetic upquote;
             };
 
+            ## TODO use this
             fonts = pkgs.makeFontsConf { fontDirectories = [ pkgs.dejavu_fonts ]; };
 
             buildHoh = { target ? "html"
@@ -31,16 +32,19 @@
                            buildInputs = with pkgs; [
                              python3Packages.sphinx
                              pandoc
-                             ourTexLive
+                             ## until we have a reason for tex leave this commented out for CI
+                             # ourTexLive
                            ];
 
                            buildPhase = ''
                            make ${target}
+                           touch "_build/.nojekyll"
+                           touch "_build/html/.nojekyll"
                            '';
                          };
         in
-        rec {
 
+        rec {
           defaultPackage = packages.build;
 
           packages = {
