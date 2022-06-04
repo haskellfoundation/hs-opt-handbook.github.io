@@ -43,9 +43,10 @@ your work is more easily merged. If you:
 
 - Want to suggest a new section, please open an issue and we'll triage in the issue.
 - Want to be an editor, please read the `Editor Contribution guide
-  <../Contributing/Editing.rst>`_.
+  <https://github.com/input-output-hk/hs-opt-handbook.github.io/tree/main/Contributing>`_.
 - Want to be a writer. We split the writing by book topic, so:
-  - Write a Case Study; see the `Case Study Contribution Guide <../Contributing/CaseStudies.rst>`_.
+
+  - Write a Case Study; see the `Case Study Contribution Guide <../Contributing/CaseStudies>`_.
   - Write a profiling or debugging section; see the `Part 1 Contribution Guide <../Contributing/Part1.rst>`_.
   - Write an optimization section; see the `Part 2 Contribution Guide <../Contributing/Part2.rst>`_.
 
