@@ -33,25 +33,85 @@
             
   <section id="haskell-optimization-handbook">
 <h1>Haskell Optimization Handbook<a class="headerlink" href="#haskell-optimization-handbook" title="Permalink to this headline">¶</a></h1>
-<p>This repository contains the source of <a class="reference external" href="https://input-output-hk.github.io/hs-opt-handbook.github.io/">Haskell Optimization Handbook</a></p>
-<section id="introduction">
-<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
-<p>This is an example reStructuredText document that starts at the very top
-with a title and a sub-title. There is one primary header, Introduction.
-There is one example subheading below.
-The document is just plain text so it is easily readable even before
-being converted to HTML, man page, PDF or other formats.</p>
-<section id="subheading">
-<h3>Subheading<a class="headerlink" href="#subheading" title="Permalink to this headline">¶</a></h3>
-<p>The basic syntax is not that different from Markdown, but it also
-has many more powerful features that Markdown doesn’t have. We aren’t
-taking advantage of those yet though.</p>
-<ul class="simple">
-<li><p>Bullet points</p></li>
-<li><p>Are intuitive</p></li>
-<li><p>And simple too</p></li>
-</ul>
+<p>Welcome! This repository contains the source of <a class="reference external" href="https://input-output-hk.github.io/hs-opt-handbook.github.io/">Haskell Optimization Handbook</a></p>
+<section id="what-we-are-trying-to-fix">
+<h2>What we are trying to fix<a class="headerlink" href="#what-we-are-trying-to-fix" title="Permalink to this headline">¶</a></h2>
+<p>In not so many words:</p>
+<ol class="arabic">
+<li><p>Haskell is a great and fast language</p></li>
+<li><p>Understanding the performance of Haskell programs is hard, because:
+1. Not many developers have direct experience with lazy evaluation.
+2. Resources for understanding performance are distributed around the web in</p>
+<blockquote>
+<div><p>wikis, blog posts etc.</p>
+</div></blockquote>
+<ol class="arabic simple" start="3">
+<li><p>Performance optimization in Haskell requires a lot of up front knowledge,
+including profiling techniques, the memory model or understanding GHC’s
+intermediate representations</p></li>
+</ol>
+</li>
+</ol>
 </section>
+<section id="the-goal">
+<h2>The Goal<a class="headerlink" href="#the-goal" title="Permalink to this headline">¶</a></h2>
+<p>Our mission is to create a <em>single resource</em> that makes available information
+previously reserved for the highest level of arcane functional programming
+wizards. We envision a handbook that any Haskeller can turn to, to gain enough
+actionable knowledge to begin performance optimization on their programs; with
+topics ranging from profiling/debugging and choosing appropriate libraries to
+low level optimization techniques such as exploiting <code class="docutils literal notranslate"><span class="pre">Levity</span> <span class="pre">polymorphism</span></code> to
+control memory representation and layout.</p>
+</section>
+<section id="contributing">
+<h2>Contributing<a class="headerlink" href="#contributing" title="Permalink to this headline">¶</a></h2>
+<p>Yes! We need your help! There are many ways to contribute and each have their
+own <a class="reference external" href="../Contributing/">contributing guide</a>. Please make sure to read through
+the <a class="reference external" href="../Contributing/README.rst">Working Conventions</a> for the project so that
+your work is more easily merged. If you:</p>
+<ul class="simple">
+<li><p>Want to suggest a new section, please open an issue and we’ll triage in the issue.</p></li>
+<li><p>Want to be an editor, please read the <a class="reference external" href="../Contributing/Editing.rst">Editor Contribution guide</a>.</p></li>
+<li><p>Want to be a writer. We split the writing by book topic, so:
+- Write a Case Study; see the <a class="reference external" href="../Contributing/CaseStudies.rst">Case Study Contribution Guide</a>.
+- Write a profiling or debugging section; see the <a class="reference external" href="../Contributing/Part1.rst">Part 1 Contribution Guide</a>.
+- Write an optimization section; see the <a class="reference external" href="../Contributing/Part2.rst">Part 2 Contribution Guide</a>.</p></li>
+</ul>
+<section id="building">
+<h3>Building<a class="headerlink" href="#building" title="Permalink to this headline">¶</a></h3>
+</section>
+</section>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
+<p>The project is built with <code class="docutils literal notranslate"><span class="pre">sphinx</span></code> and written in <code class="docutils literal notranslate"><span class="pre">RestructuredText</span></code>. Make
+sure the following is installed and available on <code class="docutils literal notranslate"><span class="pre">$PATH</span></code>:
+- <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">3.9</span></code>
+- <code class="docutils literal notranslate"><span class="pre">sphinx</span> <span class="pre">4.5.0</span></code></p>
+<p>If you’re using <code class="docutils literal notranslate"><span class="pre">nix</span></code> or <code class="docutils literal notranslate"><span class="pre">NixOs</span></code> then you’ll find the appropriate <code class="docutils literal notranslate"><span class="pre">.nix</span></code>
+files in the root directory of the project.</p>
+</section>
+<section id="id2">
+<h2>Building<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>Non-nix, run:
+.. code:: shell</p>
+<blockquote>
+<div><p>make html</p>
+</div></blockquote>
+<p>With nix and flakes, run:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>nix develop -c make html</p>
+</div></blockquote>
+<p>With nix and no flakes, run:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>nix-shell –run ‘make html’</p>
+</div></blockquote>
+<p>To rebuild the book everytime any <code class="docutils literal notranslate"><span class="pre">*.rst*</span></code> file changes do:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>find . -name “<a href="#id3"><span class="problematic" id="id4">*</span></a>.rst” | entr -sc ‘&lt;your-build-command-here&gt;’</p>
+</div></blockquote>
 </section>
 </section>
 
