@@ -13,6 +13,7 @@ In not so many words:
 
 1. Haskell is a great and fast language
 2. Understanding the performance of Haskell programs is hard, because:
+
    1. Not many developers have direct experience with lazy evaluation.
    2. Resources for understanding performance are distributed around the web in
       wikis, blog posts etc.
