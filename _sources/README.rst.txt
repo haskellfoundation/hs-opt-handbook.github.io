@@ -101,3 +101,10 @@ To rebuild the book everytime any ``*.rst*`` file changes do:
 .. code-block:: bash
 
    find . -name "*.rst" | entr -sc '<your-build-command-here>'
+
+You can then check the output in ``_build/html`` or load directory into whatever
+browser you'd like:
+
+.. code-block:: bash
+
+   firefox _build/html/index.html

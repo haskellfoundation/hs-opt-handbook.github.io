@@ -113,6 +113,11 @@ files in the root directory of the project.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>find . -name <span class="s2">&quot;*.rst&quot;</span> <span class="p">|</span> entr -sc <span class="s1">&#39;&lt;your-build-command-here&gt;&#39;</span>
 </pre></div>
 </div>
+<p>You can then check the output in <code class="docutils literal notranslate"><span class="pre">_build/html</span></code> or load directory into whatever
+browser you’d like:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>firefox _build/html/index.html
+</pre></div>
+</div>
 </section>
 </section>
 </section>
