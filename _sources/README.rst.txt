@@ -56,11 +56,9 @@ proposal
 <https://github.com/doyougnu/tech-proposals/blob/hs-opt-handbook/proposals/2022-01-31-haskell-optimization-handbook.md>`_
 
 
-========
 Building
 ========
 
-------------
 Requirements
 ------------
 The project is built with ``sphinx`` and written in ``RestructuredText``. Make
