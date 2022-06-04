@@ -95,16 +95,14 @@ files in the root directory of the project.</p>
 </section>
 <section id="id2">
 <h2>Building<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
-<p>Non-nix, run:
-.. code:: shell</p>
-<blockquote>
-<div><p>make html</p>
-</div></blockquote>
-<p>With nix and flakes, run:
-.. code-block:: bash</p>
-<blockquote>
-<div><p>nix develop -c make html</p>
-</div></blockquote>
+<p>Non-nix, run:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>make html
+</pre></div>
+</div>
+<p>With nix and flakes, run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>nix develop -c make html
+</pre></div>
+</div>
 <p>With nix and no flakes, run:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>nix-shell --run <span class="s1">&#39;make html&#39;</span>
 </pre></div>

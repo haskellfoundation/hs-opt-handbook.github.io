@@ -68,11 +68,13 @@ files in the root directory of the project.
 Building
 --------
 Non-nix, run:
+
 .. code:: shell
 
    make html
 
 With nix and flakes, run:
+
 .. code-block:: bash
 
    nix develop -c make html
