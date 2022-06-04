@@ -6,7 +6,7 @@ Welcome! This repository contains the source of `Haskell Optimization Handbook
 <https://input-output-hk.github.io/hs-opt-handbook.github.io/>`_
 
 
-What we are trying to fix
+What is the Point?
 -------------------------
 
 In not so many words:
@@ -37,10 +37,10 @@ Contributing
 ------------
 
 Yes! We need your help! There are many ways to contribute and each have their
-own contributing guide. Please make sure to read through the `Working
-Conventions
+own contributing guide. Please start by reading through the `Working Conventions
 <https://github.com/input-output-hk/hs-opt-handbook.github.io/tree/main/Contributing>`_
-for the project so that your work is more easily merged. If you:
+to familiarize yourself with the project expectations and workflow. We make
+extensive use of checklists to track and manage state, so If you:
 
 - Want to suggest a new section, please open an issue and we'll triage in the issue.
 - Want to be an editor, please read the `Editor Contribution guide
@@ -50,6 +50,11 @@ for the project so that your work is more easily merged. If you:
   - Write a Case Study; see the `Case Study Contribution Guide <https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/Contributing/CaseStudies.rst>`_.
   - Write a profiling or debugging section; see the `Part 1 Contribution Guide <https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/Contributing/Part1.rst>`_.
   - Write an optimization section; see the `Part 2 Contribution Guide <https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/Contributing/Part2.rst>`_.
+
+Lastly, you might also benefit from reading the original `Haskell Foundation
+proposal
+<https://github.com/doyougnu/tech-proposals/blob/hs-opt-handbook/proposals/2022-01-31-haskell-optimization-handbook.md>`_
+
 
 Building
 ========
