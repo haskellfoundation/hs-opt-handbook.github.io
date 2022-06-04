@@ -69,17 +69,22 @@ Building
 --------
 Non-nix, run:
 .. code:: shell
+
    make html
-   ::
 
 With nix and flakes, run:
 .. code-block:: bash
+
    nix develop -c make html
 
 With nix and no flakes, run:
+
 .. code-block:: bash
+
    nix-shell --run 'make html'
 
 To rebuild the book everytime any ``*.rst*`` file changes do:
+
 .. code-block:: bash
+
    find . -name "*.rst" | entr -sc '<your-build-command-here>'

@@ -105,16 +105,14 @@ files in the root directory of the project.</p>
 <blockquote>
 <div><p>nix develop -c make html</p>
 </div></blockquote>
-<p>With nix and no flakes, run:
-.. code-block:: bash</p>
-<blockquote>
-<div><p>nix-shell –run ‘make html’</p>
-</div></blockquote>
-<p>To rebuild the book everytime any <code class="docutils literal notranslate"><span class="pre">*.rst*</span></code> file changes do:
-.. code-block:: bash</p>
-<blockquote>
-<div><p>find . -name “<a href="#id3"><span class="problematic" id="id4">*</span></a>.rst” | entr -sc ‘&lt;your-build-command-here&gt;’</p>
-</div></blockquote>
+<p>With nix and no flakes, run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>nix-shell --run <span class="s1">&#39;make html&#39;</span>
+</pre></div>
+</div>
+<p>To rebuild the book everytime any <code class="docutils literal notranslate"><span class="pre">*.rst*</span></code> file changes do:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>find . -name <span class="s2">&quot;*.rst&quot;</span> <span class="p">|</span> entr -sc <span class="s1">&#39;&lt;your-build-command-here&gt;&#39;</span>
+</pre></div>
+</div>
 </section>
 </section>
 
