@@ -7,6 +7,24 @@ Prose
 
 - Prefer title case for chapter/section headings, ex: `Discovering a Memory
   Leak` rather than `Discovering a memory leak`.
+- We use the `Python Style Guide
+  <https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html#sections>`_
+  for organizing section headers. That is::
+
+    # with overline, for parts
+
+    * with overline, for chapters
+
+    = for sections
+
+    - for subsections
+
+    ^ for subsubsections
+
+    " for paragraphs
+
+
+
 - Prefer italics over single quotes when calling out a term, ex: `is a
   *pure function*` rather than `is a ‘pure function’`.
 - Hard wrap at 80 chars

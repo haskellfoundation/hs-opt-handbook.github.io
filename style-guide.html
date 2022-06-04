@@ -35,9 +35,25 @@
 <h1>HOH Style Guide<a class="headerlink" href="#hoh-style-guide" title="Permalink to this headline">¶</a></h1>
 <section id="prose">
 <h2>Prose<a class="headerlink" href="#prose" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
+<ul>
 <li><p>Prefer title case for chapter/section headings, ex: <cite>Discovering a Memory
 Leak</cite> rather than <cite>Discovering a memory leak</cite>.</p></li>
+<li><p>We use the <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html#sections">Python Style Guide</a>
+for organizing section headers. That is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># with overline, for parts</span>
+
+<span class="o">*</span> <span class="k">with</span> <span class="n">overline</span><span class="p">,</span> <span class="k">for</span> <span class="n">chapters</span>
+
+<span class="o">=</span> <span class="k">for</span> <span class="n">sections</span>
+
+<span class="o">-</span> <span class="k">for</span> <span class="n">subsections</span>
+
+<span class="o">^</span> <span class="k">for</span> <span class="n">subsubsections</span>
+
+<span class="s2">&quot; for paragraphs</span>
+</pre></div>
+</div>
+</li>
 <li><p>Prefer italics over single quotes when calling out a term, ex: <cite>is a
 *pure function*</cite> rather than <cite>is a ‘pure function’</cite>.</p></li>
 <li><p>Hard wrap at 80 chars</p></li>

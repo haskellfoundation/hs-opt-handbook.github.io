@@ -40,6 +40,8 @@ Contributing
 Yes! We need your help! There are many ways to contribute and each have their
 own contributing guide. Please start by reading through the `Working Conventions
 <https://github.com/input-output-hk/hs-opt-handbook.github.io/tree/main/Contributing>`_
+and `Style Guide
+<https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/style-guide.rst>`_
 to familiarize yourself with the project expectations and workflow. We make
 extensive use of checklists to track and manage state, so If you:
 
@@ -48,9 +50,12 @@ extensive use of checklists to track and manage state, so If you:
   <https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/Contributing/Editing.rst>`_.
 - Want to be a writer. We split the writing by book topic, so:
 
-  - Write a Case Study; see the `Case Study Contribution Guide <https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/Contributing/CaseStudies.rst>`_.
-  - Write a profiling or debugging section; see the `Part 1 Contribution Guide <https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/Contributing/Part1.rst>`_.
-  - Write an optimization section; see the `Part 2 Contribution Guide <https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/Contributing/Part2.rst>`_.
+  - Write a Case Study; see the `Case Study Contribution Guide
+    <https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/Contributing/CaseStudies.rst>`_.
+  - Write a profiling or debugging section; see the `Part 1 Contribution Guide
+    <https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/Contributing/Part1.rst>`_.
+  - Write an optimization section; see the `Part 2 Contribution Guide
+    <https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/Contributing/Part2.rst>`_.
 
 Lastly, you might also benefit from reading the original `Haskell Foundation
 proposal
