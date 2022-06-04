@@ -2,8 +2,8 @@
 Haskell Optimization Handbook
 =============================
 
-This repository contains the source of ..
-_https://input-output-hk.github.io/hs-opt-handbook.github.io/: Haskell Optimization Handbook.
+This repository contains the source of `Haskell Optimization Handbook
+<https://input-output-hk.github.io/hs-opt-handbook.github.io/>`_
 
 Introduction
 ============
