@@ -7,7 +7,7 @@ Welcome! This repository contains the source of `Haskell Optimization Handbook
 
 
 What is the Point?
--------------------------
+==================
 
 In not so many words:
 
@@ -22,7 +22,7 @@ In not so many words:
       intermediate representations
 
 The Goal
------------
+========
 
 Our mission is to create a *single resource* that makes available information
 previously reserved for the highest level of arcane functional programming
@@ -34,7 +34,7 @@ control memory representation and layout.
 
 
 Contributing
-------------
+===========
 
 Yes! We need your help! There are many ways to contribute and each have their
 own contributing guide. Please start by reading through the `Working Conventions
