@@ -61,3 +61,8 @@ The Checklist
 
       Above we see the higher ordered function ``fmap``. It is a higher ordered
       function because it takes a function as input.
+
+- [ ] Sentences are *concise*. That is, there are not many words in each
+  sentence that *do no work*. See `here
+  <https://owl.purdue.edu/owl/general_writing/academic_writing/conciseness/eliminating_words.html>`_
+  for examples.
