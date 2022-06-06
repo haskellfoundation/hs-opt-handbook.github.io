@@ -26,11 +26,11 @@ The Checklist
   or `Part 2
   <https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/Contributing/Part2.rst>`
 
-- [ ] My comments and edit requests are actionable. Do not just say
+- [ ] My comments and edit requests are actionable. Do not just say::
 
         This was hard to understand
 
-      Be specific and say *why* it was hard to understand:
+      Be specific and say *why* it was hard to understand:::
 
         This was hard to understand because the terminology keeps changing. In
         paragraph 1 it was ``foo``, then it paragraph 4 it was ``bar`` and now
@@ -40,7 +40,7 @@ The Checklist
 - [ ] If an example is given. The example is introduced, *and* the point of the
   example is explicitly stated in the text. For example:
 
-      Do:
+  Do:
       .. code-block:: haskell
 
          fmap :: (a -> b) -> [a] -> [b]
@@ -52,7 +52,7 @@ The Checklist
       ``(a -> b)``. This means that in order to use ``fmap`` we must pass into
       it a function!
 
-      Don't:
+  Don't:
       .. code-block:: haskell
 
          fmap :: (a -> b) -> [a] -> [b]

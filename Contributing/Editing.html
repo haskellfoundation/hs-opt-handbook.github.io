@@ -51,44 +51,40 @@ draft and edit. Please keep this in mind when editing someone’s contribution.<
 &lt;https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/Contributing/Part1.rst&gt;</cite>
 or <cite>Part 2
 &lt;https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/Contributing/Part2.rst&gt;</cite></p></li>
-<li><p>[ ] My comments and edit requests are actionable. Do not just say</p>
-<blockquote>
-<div><blockquote>
-<div><p>This was hard to understand</p>
-</div></blockquote>
-<p>Be specific and say <em>why</em> it was hard to understand:</p>
-<blockquote>
-<div><p>This was hard to understand because the terminology keeps changing. In
-paragraph 1 it was <code class="docutils literal notranslate"><span class="pre">foo</span></code>, then it paragraph 4 it was <code class="docutils literal notranslate"><span class="pre">bar</span></code> and now
-you are using <code class="docutils literal notranslate"><span class="pre">baz</span></code> and each interchangeably! Please stick to one
-phrase and use it consistently throughout the piece.</p>
-</div></blockquote>
-</div></blockquote>
+<li><p>[ ] My comments and edit requests are actionable. Do not just say:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>  This was hard to understand
+
+Be specific and say *why* it was hard to understand:::
+
+  This was hard to understand because the terminology keeps changing. In
+  paragraph 1 it was ``foo``, then it paragraph 4 it was ``bar`` and now
+  you are using ``baz`` and each interchangeably! Please stick to one
+  phrase and use it consistently throughout the piece.
+</pre></div>
+</div>
 </li>
 <li><p>[ ] If an example is given. The example is introduced, <em>and</em> the point of the
 example is explicitly stated in the text. For example:</p>
-<blockquote>
-<div><p>Do:
-.. code-block:: haskell</p>
-<blockquote>
-<div><p>fmap :: (a -&gt; b) -&gt; [a] -&gt; [b]
-fmap f []     = []
-fmap f (x:xs) = f x : fmap f xs</p>
-</div></blockquote>
+<dl>
+<dt>Do:</dt><dd><div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">fmap</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="p">[</span><span class="n">a</span><span class="p">]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="p">[</span><span class="n">b</span><span class="p">]</span><span class="w"></span>
+<span class="nf">fmap</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="kt">[]</span><span class="w">     </span><span class="ow">=</span><span class="w"> </span><span class="kt">[]</span><span class="w"></span>
+<span class="nf">fmap</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="kt">:</span><span class="w"> </span><span class="n">fmap</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">xs</span><span class="w"></span>
+</pre></div>
+</div>
 <p>Above we see the higher ordered function <code class="docutils literal notranslate"><span class="pre">fmap</span></code>. It is a higher ordered
 function because the parameter <code class="docutils literal notranslate"><span class="pre">f</span></code> is a function as shown in f’s type:
 <code class="docutils literal notranslate"><span class="pre">(a</span> <span class="pre">-&gt;</span> <span class="pre">b)</span></code>. This means that in order to use <code class="docutils literal notranslate"><span class="pre">fmap</span></code> we must pass into
 it a function!</p>
-<p>Don’t:
-.. code-block:: haskell</p>
-<blockquote>
-<div><p>fmap :: (a -&gt; b) -&gt; [a] -&gt; [b]
-fmap f []     = []
-fmap f (x:xs) = f x : fmap f xs</p>
-</div></blockquote>
+</dd>
+<dt>Don’t:</dt><dd><div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">fmap</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="p">[</span><span class="n">a</span><span class="p">]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="p">[</span><span class="n">b</span><span class="p">]</span><span class="w"></span>
+<span class="nf">fmap</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="kt">[]</span><span class="w">     </span><span class="ow">=</span><span class="w"> </span><span class="kt">[]</span><span class="w"></span>
+<span class="nf">fmap</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="kt">:</span><span class="w"> </span><span class="n">fmap</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">xs</span><span class="w"></span>
+</pre></div>
+</div>
 <p>Above we see the higher ordered function <code class="docutils literal notranslate"><span class="pre">fmap</span></code>. It is a higher ordered
 function because it takes a function as input.</p>
-</div></blockquote>
+</dd>
+</dl>
 </li>
 </ul>
 </section>
