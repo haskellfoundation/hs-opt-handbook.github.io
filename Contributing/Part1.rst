@@ -7,7 +7,13 @@ Part 1
 
 Introduction
 ============
-This is a guide on how to contribute to chapters in Part 1 of the handbook. Please see  :ref:`contributing-readme`
+
+This is a guide on how to contribute to chapters in Part 1 of the handbook. We
+use checklists to check the quality of each section of the handbook. If this is
+news to you then please see `the README
+<https://github.com/input-output-hk/hs-opt-handbook.github.io/tree/main/Contributing>`_
+to get up to speed on the expected project workflow as a writer.
+
 
 The Checklist
 =============
