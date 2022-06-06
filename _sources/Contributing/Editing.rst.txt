@@ -30,7 +30,7 @@ The Checklist
 
         This was hard to understand
 
-      Be specific and say *why* it was hard to understand:::
+  Be specific and say *why* it was hard to understand:::
 
         This was hard to understand because the terminology keeps changing. In
         paragraph 1 it was ``foo``, then it paragraph 4 it was ``bar`` and now
