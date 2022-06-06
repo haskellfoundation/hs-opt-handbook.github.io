@@ -37,36 +37,59 @@
 <h2>As an Editor<a class="headerlink" href="#as-an-editor" title="Permalink to this headline">¶</a></h2>
 <section id="introduction">
 <h3>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h3>
-<p>This is a checklist for editors of (Optimizations) of the Handbook. Please make
-sure that your section does each of the following. If you’re an editor then
-please make sure that the section you are editing does each of the following in
-addition to the completing the <span class="xref std std-ref">editor checklist</span>.</p>
+<p>This is a checklist for editors of (Optimizations) of the Handbook. A word to
+editors. Writing is hard and it is easy to get frustrated. Good writing is even
+harder and requires a constant and consistent willpower to iterate, revise,
+draft and edit. Please keep this in mind when editing someone’s contribution.</p>
 </section>
 <section id="the-checklist">
 <h3>The Checklist<a class="headerlink" href="#the-checklist" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li><p>[ ] The section states what the optimization is.</p></li>
-<li><p>[ ] The section states how invasive the optimization is. That is, is it simply
-a flag change, does it require a source code change? If so, how much a new
-pragma? A new data structure?</p></li>
-<li><p>[ ] The section states why the optimization is an optimization. Provide a
-theoretical reason, such as: “With Unboxing, all code which handles this value
-performs one less pointer de-reference to the heap, thus yielding a speedup.”</p></li>
-<li><p>[ ] The section provides evidence that the optimization <em>is in fact</em> an
-optimization. This can be Core, STG, Cmm or Assembly dumps, or a benchmark.
-Please provide a link to the relevant section (e.g., The handbook section on
-Core for Core) of the handbook for whichever one is relevant.</p></li>
-<li><p>[ ] The section classifies the optimization based on one of the four horsemen
-of slow code as written in the introduction. For example, “Unboxing our data
-types eliminates a good deal of pointer chasing, the second horsemen of slow
-code”.</p></li>
-<li><p>[ ] If you read the first line of each paragraph, they are form a coherent story
-, and that story arrives at the point of the section, within reason.</p></li>
-<li><p>[ ] The section has a closing summary that repeats: What the optimization is,
-how invasive the optimization is, a recommendation on when to use the
-optimization, and any downsides of implementing the optimization.</p></li>
-<li><p>[ ] The section has a reference or further reading subsection</p></li>
-<li><p>[ ] The book builds with the PR (this should be CI)</p></li>
+<ul>
+<li><p>[ ] The issue I am editing has been moved to <code class="docutils literal notranslate"><span class="pre">Review</span> <span class="pre">in</span> <span class="pre">Progress</span></code> on the
+<a class="reference external" href="https://github.com/input-output-hk/hs-opt-handbook.github.io/projects/1">project dashboard</a></p></li>
+<li><p>[ ] The issue abides by the checklist for its section of the book. <cite>Part 1
+&lt;https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/Contributing/Part1.rst&gt;</cite>
+or <cite>Part 2
+&lt;https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/Contributing/Part2.rst&gt;</cite></p></li>
+<li><p>[ ] My comments and edit requests are actionable. Do not just say</p>
+<blockquote>
+<div><blockquote>
+<div><p>This was hard to understand</p>
+</div></blockquote>
+<p>Be specific and say <em>why</em> it was hard to understand:</p>
+<blockquote>
+<div><p>This was hard to understand because the terminology keeps changing. In
+paragraph 1 it was <code class="docutils literal notranslate"><span class="pre">foo</span></code>, then it paragraph 4 it was <code class="docutils literal notranslate"><span class="pre">bar</span></code> and now
+you are using <code class="docutils literal notranslate"><span class="pre">baz</span></code> and each interchangeably! Please stick to one
+phrase and use it consistently throughout the piece.</p>
+</div></blockquote>
+</div></blockquote>
+</li>
+<li><p>[ ] If an example is given. The example is introduced, <em>and</em> the point of the
+example is explicitly stated in the text. For example:</p>
+<blockquote>
+<div><p>Do:
+.. code-block:: haskell</p>
+<blockquote>
+<div><p>fmap :: (a -&gt; b) -&gt; [a] -&gt; [b]
+fmap f []     = []
+fmap f (x:xs) = f x : fmap f xs</p>
+</div></blockquote>
+<p>Above we see the higher ordered function <code class="docutils literal notranslate"><span class="pre">fmap</span></code>. It is a higher ordered
+function because the parameter <code class="docutils literal notranslate"><span class="pre">f</span></code> is a function as shown in f’s type:
+<code class="docutils literal notranslate"><span class="pre">(a</span> <span class="pre">-&gt;</span> <span class="pre">b)</span></code>. This means that in order to use <code class="docutils literal notranslate"><span class="pre">fmap</span></code> we must pass into
+it a function!</p>
+<p>Don’t:
+.. code-block:: haskell</p>
+<blockquote>
+<div><p>fmap :: (a -&gt; b) -&gt; [a] -&gt; [b]
+fmap f []     = []
+fmap f (x:xs) = f x : fmap f xs</p>
+</div></blockquote>
+<p>Above we see the higher ordered function <code class="docutils literal notranslate"><span class="pre">fmap</span></code>. It is a higher ordered
+function because it takes a function as input.</p>
+</div></blockquote>
+</li>
 </ul>
 </section>
 </section>

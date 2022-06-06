@@ -2,39 +2,62 @@
 How to Contribute
 =================
 
+
 As an Editor
 ------------
 
 Introduction
 ============
 
-This is a checklist for editors of (Optimizations) of the Handbook. Please make
-sure that your section does each of the following. If you're an editor then
-please make sure that the section you are editing does each of the following in
-addition to the completing the :ref:`editor checklist`.
+This is a checklist for editors of (Optimizations) of the Handbook. A word to
+editors. Writing is hard and it is easy to get frustrated. Good writing is even
+harder and requires a constant and consistent willpower to iterate, revise,
+draft and edit. Please keep this in mind when editing someone's contribution.
 
 The Checklist
 =============
 
-- [ ] The section states what the optimization is.
-- [ ] The section states how invasive the optimization is. That is, is it simply
-  a flag change, does it require a source code change? If so, how much a new
-  pragma? A new data structure?
-- [ ] The section states why the optimization is an optimization. Provide a
-  theoretical reason, such as: "With Unboxing, all code which handles this value
-  performs one less pointer de-reference to the heap, thus yielding a speedup."
-- [ ] The section provides evidence that the optimization *is in fact* an
-  optimization. This can be Core, STG, Cmm or Assembly dumps, or a benchmark.
-  Please provide a link to the relevant section (e.g., The handbook section on
-  Core for Core) of the handbook for whichever one is relevant.
-- [ ] The section classifies the optimization based on one of the four horsemen
-  of slow code as written in the introduction. For example, "Unboxing our data
-  types eliminates a good deal of pointer chasing, the second horsemen of slow
-  code".
-- [ ] If you read the first line of each paragraph, they are form a coherent story
-  , and that story arrives at the point of the section, within reason.
-- [ ] The section has a closing summary that repeats: What the optimization is,
-  how invasive the optimization is, a recommendation on when to use the
-  optimization, and any downsides of implementing the optimization.
-- [ ] The section has a reference or further reading subsection
-- [ ] The book builds with the PR (this should be CI)
+- [ ] The issue I am editing has been moved to ``Review in Progress`` on the
+  `project dashboard
+  <https://github.com/input-output-hk/hs-opt-handbook.github.io/projects/1>`_
+
+- [ ] The issue abides by the checklist for its section of the book. `Part 1
+  <https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/Contributing/Part1.rst>`
+  or `Part 2
+  <https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/Contributing/Part2.rst>`
+
+- [ ] My comments and edit requests are actionable. Do not just say
+
+        This was hard to understand
+
+      Be specific and say *why* it was hard to understand:
+
+        This was hard to understand because the terminology keeps changing. In
+        paragraph 1 it was ``foo``, then it paragraph 4 it was ``bar`` and now
+        you are using ``baz`` and each interchangeably! Please stick to one
+        phrase and use it consistently throughout the piece.
+
+- [ ] If an example is given. The example is introduced, *and* the point of the
+  example is explicitly stated in the text. For example:
+
+      Do:
+      .. code-block:: haskell
+
+         fmap :: (a -> b) -> [a] -> [b]
+         fmap f []     = []
+         fmap f (x:xs) = f x : fmap f xs
+
+      Above we see the higher ordered function ``fmap``. It is a higher ordered
+      function because the parameter ``f`` is a function as shown in f's type:
+      ``(a -> b)``. This means that in order to use ``fmap`` we must pass into
+      it a function!
+
+      Don't:
+      .. code-block:: haskell
+
+         fmap :: (a -> b) -> [a] -> [b]
+         fmap f []     = []
+         fmap f (x:xs) = f x : fmap f xs
+
+      Above we see the higher ordered function ``fmap``. It is a higher ordered
+      function because it takes a function as input.
