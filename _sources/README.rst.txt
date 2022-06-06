@@ -89,8 +89,8 @@ sure the following is installed and available on ``$PATH``:
 If you're using ``nix`` or ``NixOs`` then you'll find the appropriate ``.nix``
 files in the root directory of the project.
 
-Building
---------
+Invocations
+-----------
 Non-nix, run:
 
 .. code:: shell
