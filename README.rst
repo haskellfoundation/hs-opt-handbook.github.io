@@ -35,7 +35,7 @@ control memory representation and layout.
 
 
 Contributing
-===========
+============
 
 Yes! We need your help! There are many ways to contribute and each have their
 own contributing guide. Please start by reading through the `Working Conventions
@@ -61,12 +61,25 @@ Lastly, you might also benefit from reading the original `Haskell Foundation
 proposal
 <https://github.com/doyougnu/tech-proposals/blob/hs-opt-handbook/proposals/2022-01-31-haskell-optimization-handbook.md>`_
 
+What's in it for me?
+--------------------
+
+How did you learn Haskell? Did you pick it up from Learn You a Haskell or one of
+the many other text books? This is your chance to give back to others who are
+beginning their Haskell Journey and to make the Haskell community a little bit
+better. Even if you do think you are not confident in your Haskell skills just
+reading and marking sections of text that are confusing would be a big help!
+Haskell has a reputation for being beginner unfriendly, and for a long learning
+curve, but this does not have to be the case. As a community we can, and should,
+do better, and you can begin doing that right now with this project.
+
 
 Building
 ========
 
 Requirements
 ------------
+
 The project is built with ``sphinx`` and written in ``RestructuredText``. Make
 sure the following is installed and available on ``$PATH``:
 
@@ -76,8 +89,8 @@ sure the following is installed and available on ``$PATH``:
 If you're using ``nix`` or ``NixOs`` then you'll find the appropriate ``.nix``
 files in the root directory of the project.
 
-Building
---------
+Invocations
+-----------
 Non-nix, run:
 
 .. code:: shell
