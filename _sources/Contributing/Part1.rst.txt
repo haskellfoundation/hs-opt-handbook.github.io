@@ -7,7 +7,8 @@ Part 1
 
 Introduction
 ============
-This is a guide on how to contribute to chapters in Part 1 of the handbook. Please see  :ref:`contributing-readme`
+This is a guide on how to contribute to chapters in Part 1 of the handbook. Please see :doc:`README`
+
 
 The Checklist
 =============

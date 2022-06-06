@@ -7,8 +7,11 @@ Part 2
 
 Introduction
 ============
+
 This is a checklist for contributors of Part 2 (Optimizations) of the Handbook.
-Please make sure that your section does each of the following.
+Please make sure that your section does each of the following. If you're an
+editor then please make sure that the section you are editing does each of the
+following in addition to the completing the :ref:`editor checklist`.
 
 The Checklist
 =============
