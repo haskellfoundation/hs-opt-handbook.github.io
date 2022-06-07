@@ -32,6 +32,8 @@
                            buildInputs = with pkgs; [
                              python3Packages.sphinx
                              pandoc
+                             rst2html5
+                             rst2pdf
                              ## until we have a reason for tex leave this commented out for CI
                              # ourTexLive
                            ];
