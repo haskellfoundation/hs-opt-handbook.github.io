@@ -66,3 +66,12 @@ The Checklist
   sentence that *do no work*. See `here
   <https://owl.purdue.edu/owl/general_writing/academic_writing/conciseness/eliminating_words.html>`_
   for examples.
+
+- [ ] The section defines an internal reference target, for example:
+  .. code-block:: restructuredText
+
+      .. _sec-four-horsemen:
+
+      The Four Horsemen of Bad Haskell Performance
+      ============================================
+      ...
