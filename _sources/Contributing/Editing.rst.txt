@@ -68,10 +68,10 @@ The Checklist
   for examples.
 
 - [ ] The section defines an internal reference target, for example:
-  .. code-block:: restructuredText
+        .. code-block:: restructuredText
 
-      .. _sec-four-horsemen:
+        .. _sec-four-horsemen:
 
-      The Four Horsemen of Bad Haskell Performance
-      ============================================
-      ...
+           The Four Horsemen of Bad Haskell Performance
+                        ============================================
+        ...
