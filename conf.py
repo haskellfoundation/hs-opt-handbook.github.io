@@ -18,6 +18,7 @@
 # -- Project information -----------------------------------------------------
 
 project = 'Haskell Optimization Handbook'
+html_title = 'Haskell Optimization Handbook'
 copyright = '2022, Jeffrey Young (doyougnu)'
 author = 'Jeffrey Young (doyugnu)'
 
