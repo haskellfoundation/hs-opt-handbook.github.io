@@ -18,14 +18,35 @@ to get up to speed on the expected project workflow as a writer.
 The Checklist
 =============
 
-- [ ] provide the motivation for using the external tool
-- [ ] provide a phrase "use this tool when ..."
-- [ ] provide the expected output of the tool "With this tool you can retrieve this important information"
-- [ ] provide the platforms that support this tool, if a platform does not
-  please state either: 1) an alternate tool to retrieve the same information or 2) a statement that this tool is not supported on the platform
-- [ ] if you read the first line of each paragraph, they are form a coherent story
-  , and that story arrives at the point of the section, within reason.
-- [ ] The section has a closing summary that repeats: when to use the tool, what information can be retreived with the tool, which performance issues this tool helps with, and how to run/use the tool.
-- [ ] After the summary there is a summary of command line invocations and their corresponding meaning
-- [ ] The section has a reference subsection
-- [ ] The book builds with the PR (this should be CI)
+- ☐ Provide the motivation for using the external tool.
+
+- ☐ Have the phrase ``Use this tool when...``
+
+- ☐ Provide the expected output of the tool, i.e., have the phrase ``With this tool you can find/discover/retrieve <insert-desirable information here>...``
+
+- ☐ Provide a list of platforms that support the tool. If a platform does not support the tool, please state: 1. Provide an alternative to retrieve the same or similar information. 2. Be explicit and clear that the tool is not supported on the platform.
+
+- ☐ The first sentence of each paragraph forms a coherent story and that story arrives at the point of the section.
+
+- ☐ The section’s last paragraph is a summary that states:
+
+     1. The name of the tool.
+     2. What the tool measures.
+     3. In what situations should the tool be used.
+     4. What information is retrieved by using the tool.
+     5. How that information relates to possible performance issues.
+     6. Finally, examples of how to run the tool.
+
+- ☐ If applicable, After the summary, the section has listings of command line invocations and their corresponding meaning.
+
+- ☐ If applicable, The section has a reference subsection for further reading and resources.
+
+- ☐ The section defines an restructuredText internal reference target above its section header.
+
+- ☐ The book builds with the PR, i.e., CI does not fail on the PR.
+
+- ☐ The section is free of obvious grammatical and spelling errors.
+
+- ☐ The section conforms to the style guide.
+
+- ☐ The section has been read aloud (YES! Really do this!)
