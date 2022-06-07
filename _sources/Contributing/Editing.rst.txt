@@ -68,7 +68,7 @@ The Checklist
   for examples.
 
 - [ ] The section defines an internal reference target, for example:
-        .. code-block:: restructuredText
+        .. code-block:: rst
 
         .. _sec-four-horsemen:
 
