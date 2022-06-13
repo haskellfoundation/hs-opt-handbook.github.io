@@ -43,8 +43,37 @@
 <li><p>Then move to haskell in particular</p></li>
 </ul>
 </div>
-<p>This section answers the question <code class="docutils literal notranslate"><span class="pre">What</span> <span class="pre">makes</span> <span class="pre">Haskell</span> <span class="pre">programs</span> <span class="pre">fast?</span></code>. In
-general, the enemy of high performance is pointer chasing. However,</p>
+<p>There are four horsemen of the poorly performing Haskell code. In this section,
+we describe each of the four horsemen in isolation so that an interested reader
+may triage their own issues. A reader should come away from this section with an
+understanding of the central ways a Haskell program slows down.</p>
+<section id="horseman-1-inlining">
+<h2>Horseman 1: Inlining<a class="headerlink" href="#horseman-1-inlining" title="Permalink to this headline">¶</a></h2>
+<section id="what-is-inlining">
+<h3>What is Inlining<a class="headerlink" href="#what-is-inlining" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="why-do-we-want-inlining">
+<h3>Why do we want Inlining<a class="headerlink" href="#why-do-we-want-inlining" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="how-does-inlining-slow-down-runtime-performance">
+<h3>How does Inlining slow down runtime performance<a class="headerlink" href="#how-does-inlining-slow-down-runtime-performance" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="how-do-i-fix-performance-if-inlining-is-the-issue">
+<h3>How do I fix performance if Inlining is the issue<a class="headerlink" href="#how-do-i-fix-performance-if-inlining-is-the-issue" title="Permalink to this headline">¶</a></h3>
+</section>
+</section>
+<section id="horseman-2-abundant-polymorphism">
+<h2>Horseman 2: Abundant Polymorphism<a class="headerlink" href="#horseman-2-abundant-polymorphism" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="horseman-3-pointer-chasing">
+<h2>Horseman 3: Pointer Chasing<a class="headerlink" href="#horseman-3-pointer-chasing" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="horseman-4-poor-domain-modelling">
+<h2>Horseman 4: Poor Domain Modelling<a class="headerlink" href="#horseman-4-poor-domain-modelling" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+</section>
 </section>
 
 
@@ -69,7 +98,20 @@ general, the enemy of high performance is pointer chasing. However,</p>
 <li class="toctree-l1"><a class="reference internal" href="../Preface/preface.html">Preface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="book_for.html">Who is this book for</a></li>
 <li class="toctree-l1"><a class="reference internal" href="expectations.html">Expectations</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">The Four Horsemen of Bad Haskell Performance</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">The Four Horsemen of Bad Haskell Performance</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#horseman-1-inlining">Horseman 1: Inlining</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#what-is-inlining">What is Inlining</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#why-do-we-want-inlining">Why do we want Inlining</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#how-does-inlining-slow-down-runtime-performance">How does Inlining slow down runtime performance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#how-do-i-fix-performance-if-inlining-is-the-issue">How do I fix performance if Inlining is the issue</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#horseman-2-abundant-polymorphism">Horseman 2: Abundant Polymorphism</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#horseman-3-pointer-chasing">Horseman 3: Pointer Chasing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#horseman-4-poor-domain-modelling">Horseman 4: Poor Domain Modelling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../todos.html">Todos</a></li>

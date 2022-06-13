@@ -46,28 +46,28 @@ to get up to speed on the expected project workflow as a writer.</p>
 <section id="the-checklist">
 <h3>The Checklist<a class="headerlink" href="#the-checklist" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><p>[ ] The section states what the optimization is.</p></li>
-<li><p>[ ] The section states how invasive the optimization is. That is, is it simply
-a flag change, does it require a source code change? If so, how much a new
+<li><p>☐ The section states what the optimization is.</p></li>
+<li><p>☐ The section states how invasive the optimization is. That is, is it simply a
+flag change, does it require a source code change? If so, how much a new
 pragma? A new data structure?</p></li>
-<li><p>[ ] The section states why the optimization is an optimization. Provide a
+<li><p>☐ The section states why the optimization is an optimization. Provide a
 theoretical reason, such as: “With Unboxing, all code which handles this value
 performs one less pointer de-reference to the heap, thus yielding a speedup.”</p></li>
-<li><p>[ ] The section provides evidence that the optimization <em>is in fact</em> an
+<li><p>☐ The section provides evidence that the optimization <em>is in fact</em> an
 optimization. This can be Core, STG, Cmm or Assembly dumps, or a benchmark.
 Please provide a link to the relevant section (e.g., The handbook section on
 Core for Core) of the handbook for whichever one is relevant.</p></li>
-<li><p>[ ] The section classifies the optimization based on one of the four horsemen
-of slow code as written in the introduction. For example, “Unboxing our data
+<li><p>☐ The section classifies the optimization based on one of the four horsemen of
+slow code as written in the introduction. For example, “Unboxing our data
 types eliminates a good deal of pointer chasing, the second horsemen of slow
 code”.</p></li>
-<li><p>[ ] If you read the first line of each paragraph, they are form a coherent story
-, and that story arrives at the point of the section, within reason.</p></li>
-<li><p>[ ] The section has a closing summary that repeats: What the optimization is,
+<li><p>☐ If you read the first line of each paragraph, they are form a coherent
+story, and that story arrives at the point of the section, within reason.</p></li>
+<li><p>☐ The section has a closing summary that repeats: What the optimization is,
 how invasive the optimization is, a recommendation on when to use the
 optimization, and any downsides of implementing the optimization.</p></li>
-<li><p>[ ] The section has a reference or further reading subsection</p></li>
-<li><p>[ ] The book builds with the PR (this should be CI)</p></li>
+<li><p>☐ The section has a reference or further reading subsection</p></li>
+<li><p>☐ The book builds with the PR (this should be CI)</p></li>
 </ul>
 </section>
 </section>

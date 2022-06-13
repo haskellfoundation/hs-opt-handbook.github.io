@@ -8,5 +8,39 @@ The Four Horsemen of Bad Haskell Performance
    - Start with abstract and generalities of slow programs in general, e.g., link chasing
    - Then move to haskell in particular
 
-This section answers the question ``What makes Haskell programs fast?``. In
-general, the enemy of high performance is pointer chasing. However,
+There are four horsemen of the poorly performing Haskell code. In this section,
+we describe each of the four horsemen in isolation so that an interested reader
+may triage their own issues. A reader should come away from this section with an
+understanding of the central ways a Haskell program slows down.
+
+
+Horseman 1: Inlining
+--------------------
+
+What is Inlining
+^^^^^^^^^^^^^^^^
+
+Why do we want Inlining
+^^^^^^^^^^^^^^^^^^^^^^^
+
+How does Inlining slow down runtime performance
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+How do I fix performance if Inlining is the issue
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+Horseman 2: Abundant Polymorphism
+---------------------------------
+
+
+Horseman 3: Pointer Chasing
+---------------------------
+
+
+Horseman 4: Poor Domain Modelling
+----------------------------------
+
+
+References
+----------

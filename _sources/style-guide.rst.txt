@@ -3,7 +3,7 @@ HOH Style Guide
 ==================
 
 Prose
-==================
+=====
 
 - Prefer title case for chapter/section headings, ex: `Discovering a Memory
   Leak` rather than `Discovering a memory leak`.
@@ -33,7 +33,7 @@ Prose
   `Data.Map.Lazy?``
 
 Code
-==================
+====
 
 - Add the file name before markdown blocks to make it clear which file we're
   talking about, when applicable.
@@ -57,7 +57,7 @@ Code
   Use ``bash`` syntax highlighting for command line output code blocks
 
 Links
-==================
+=====
 
 Once all the scripts are done:
 
@@ -68,6 +68,6 @@ Once all the scripts are done:
 
 
 Reference
-==================
+=========
 This guide copied and modified with respect from
 [rust-lang/book](https://github.com/rust-lang/book). Thank you rust community!
