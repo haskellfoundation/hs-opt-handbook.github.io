@@ -3,17 +3,13 @@
 The Programs of Consistent Lethargy
 ============================================
 
-.. todo::
-   - High level easy to understand enumeration of enemies of speed.
-   - Start with abstract and generalities of slow programs in general, e.g., link chasing
-   - Then move to haskell in particular
-
 We'll begin by showing small bite sized programs that demonstrate a particular
 way Haskell programs slow down. We call these programs *canonical* programs
-because each program is a micro example of a kind of slow down without any extra
-context, such as business logic. A reader should come away from this section
-with an understanding of the central ways a Haskell program slows down.
+because each program is the smallest example of a kind of slow down. A reader
+should come away from this section with an understanding of the central ways a
+Haskell program slows down.
 
+.. _canonical-inclining:
 
 Inlining
 --------
@@ -21,15 +17,56 @@ Inlining
 What is Inlining
 ^^^^^^^^^^^^^^^^
 
+Inlining [#]_ is a simple optimization technique that almost all optimizing
+compilers perform. The essential idea is to substitute the call sites of a
+function ``f``, with the body of ``f``. For example:
+
+.. code-block:: haskell
+   :caption: Before inlining
+
+   > let f x = x * 3
+   --- somewhere else
+   > f (a + b) - c
+
+Here we define a function ``f``, and then have a single call site ``f (a + b)
+...``. Inlining ``f`` transforms the call site by replacing ``f (a + b)``
+with the body (or right hand side) of ``f``:
+
+.. code-block:: haskell
+   :caption: After inlining
+
+   > let f x = x * 3
+   -- somewhere else
+   > (a + b) * 3 - c
+
+Notice the call to ``f`` is removed and has been replaced with ``x * 3``, where
+:math:`x \mapsto (a + b)`.
+
+
 Why do we want Inlining
 ^^^^^^^^^^^^^^^^^^^^^^^
+
+Inlining has been called the "mother of all optimizations" because it has two
+primary benefits. First, it removes the overhead of a function call, which can
+be noticeable in a hot loop. Second, it is an *enabling optimization*; by
+substituting the body of a function at its call sites, more optimizations are
+possible on the inlined result rather than the non-inlined result, thus leading
+to faster code. This is one of the main reasons why performance engineering is
+more art than science; a simple change can have cascading and unforeseen effects
+in the end result.
 
 How does Inlining slow down runtime performance
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-How do I fix performance if Inlining is the issue
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Inlining itself does not slow down runtime performance, *lack of* inlining does,
+because it limits otherwise possible optimizations from taking place. However,
+that does not mean we should always ask GHC to inline or manually perform
+inlining, in contrast, sometimes we can realize performance benefits by
+restricting inlining. We'll return to the cost benefit analysis, and discuss the
+particulars of GHC's inliner, in the section dedicated to :ref:`Inlining`.
 
+
+.. _canonical-fusion:
 
 Lack of Fusion
 --------------
@@ -46,14 +83,17 @@ How does Fusion slow down runtime performance
 How do I fix performance if Fusion is the issue
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+.. _canonical-pointer-chasing:
 
 Excessive Pointer Chasing
 -------------------------
 
+.. _canonical-closure-alloc:
 
 Excessive Closure Allocation
 ----------------------------
 
+.. _canonical-domain-modeling:
 
 Poor Domain Modeling
 --------------------
@@ -61,3 +101,4 @@ Poor Domain Modeling
 
 References
 ----------
+.. [#] https://wiki.haskell.org/Inlining_and_Specialisation

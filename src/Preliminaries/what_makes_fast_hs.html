@@ -13,6 +13,7 @@
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="&lt;no title&gt;" href="../Part_1/heap_profiling_ext.html" />
@@ -35,36 +36,63 @@
             
   <section id="the-programs-of-consistent-lethargy">
 <span id="sec-lethargy"></span><h1>The Programs of Consistent Lethargy<a class="headerlink" href="#the-programs-of-consistent-lethargy" title="Permalink to this headline">¶</a></h1>
-<div class="admonition-todo admonition" id="id1">
-<p class="admonition-title">Todo</p>
-<ul class="simple">
-<li><p>High level easy to understand enumeration of enemies of speed.</p></li>
-<li><p>Start with abstract and generalities of slow programs in general, e.g., link chasing</p></li>
-<li><p>Then move to haskell in particular</p></li>
-</ul>
-</div>
 <p>We’ll begin by showing small bite sized programs that demonstrate a particular
 way Haskell programs slow down. We call these programs <em>canonical</em> programs
-because each program is a micro example of a kind of slow down without any extra
-context, such as business logic. A reader should come away from this section
-with an understanding of the central ways a Haskell program slows down.</p>
+because each program is the smallest example of a kind of slow down. A reader
+should come away from this section with an understanding of the central ways a
+Haskell program slows down.</p>
 <section id="inlining">
-<h2>Inlining<a class="headerlink" href="#inlining" title="Permalink to this headline">¶</a></h2>
+<span id="canonical-inclining"></span><h2>Inlining<a class="headerlink" href="#inlining" title="Permalink to this headline">¶</a></h2>
 <section id="what-is-inlining">
 <h3>What is Inlining<a class="headerlink" href="#what-is-inlining" title="Permalink to this headline">¶</a></h3>
+<p>Inlining <a class="footnote-reference brackets" href="#id2" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> is a simple optimization technique that almost all optimizing
+compilers perform. The essential idea is to substitute the call sites of a
+function <code class="docutils literal notranslate"><span class="pre">f</span></code>, with the body of <code class="docutils literal notranslate"><span class="pre">f</span></code>. For example:</p>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">Before inlining</span><a class="headerlink" href="#id3" title="Permalink to this code">¶</a></div>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">3</span><span class="w"></span>
+<span class="c1">--- somewhere else</span><span class="w"></span>
+<span class="o">&gt;</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">c</span><span class="w"></span>
+</pre></div>
+</div>
+</div>
+<p>Here we define a function <code class="docutils literal notranslate"><span class="pre">f</span></code>, and then have a single call site <code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">(a</span> <span class="pre">+</span> <span class="pre">b)</span>
+<span class="pre">...</span></code>. Inlining <code class="docutils literal notranslate"><span class="pre">f</span></code> transforms the call site by replacing <code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">(a</span> <span class="pre">+</span> <span class="pre">b)</span></code>
+with the body (or right hand side) of <code class="docutils literal notranslate"><span class="pre">f</span></code>:</p>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">After inlining</span><a class="headerlink" href="#id4" title="Permalink to this code">¶</a></div>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">3</span><span class="w"></span>
+<span class="c1">-- somewhere else</span><span class="w"></span>
+<span class="o">&gt;</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">c</span><span class="w"></span>
+</pre></div>
+</div>
+</div>
+<p>Notice the call to <code class="docutils literal notranslate"><span class="pre">f</span></code> is removed and has been replaced with <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">*</span> <span class="pre">3</span></code>, where
+<span class="math notranslate nohighlight">\(x \mapsto (a + b)\)</span>.</p>
 </section>
 <section id="why-do-we-want-inlining">
 <h3>Why do we want Inlining<a class="headerlink" href="#why-do-we-want-inlining" title="Permalink to this headline">¶</a></h3>
+<p>Inlining has been called the “mother of all optimizations” because it has two
+primary benefits. First, it removes the overhead of a function call, which can
+be noticeable in a hot loop. Second, it is an <em>enabling optimization</em>; by
+substituting the body of a function at its call sites, more optimizations are
+possible on the inlined result rather than the non-inlined result, thus leading
+to faster code. This is one of the main reasons why performance engineering is
+more art than science; a simple change can have cascading and unforeseen effects
+in the end result.</p>
 </section>
 <section id="how-does-inlining-slow-down-runtime-performance">
 <h3>How does Inlining slow down runtime performance<a class="headerlink" href="#how-does-inlining-slow-down-runtime-performance" title="Permalink to this headline">¶</a></h3>
-</section>
-<section id="how-do-i-fix-performance-if-inlining-is-the-issue">
-<h3>How do I fix performance if Inlining is the issue<a class="headerlink" href="#how-do-i-fix-performance-if-inlining-is-the-issue" title="Permalink to this headline">¶</a></h3>
+<p>Inlining itself does not slow down runtime performance, <em>lack of</em> inlining does,
+because it limits otherwise possible optimizations from taking place. However,
+that does not mean we should always ask GHC to inline or manually perform
+inlining, in contrast, sometimes we can realize performance benefits by
+restricting inlining. We’ll return to the cost benefit analysis, and discuss the
+particulars of GHC’s inliner, in the section dedicated to <span class="xref std std-ref">Inlining</span>.</p>
 </section>
 </section>
 <section id="lack-of-fusion">
-<h2>Lack of Fusion<a class="headerlink" href="#lack-of-fusion" title="Permalink to this headline">¶</a></h2>
+<span id="canonical-fusion"></span><h2>Lack of Fusion<a class="headerlink" href="#lack-of-fusion" title="Permalink to this headline">¶</a></h2>
 <section id="what-is-fusion">
 <h3>What is Fusion<a class="headerlink" href="#what-is-fusion" title="Permalink to this headline">¶</a></h3>
 </section>
@@ -79,16 +107,20 @@ with an understanding of the central ways a Haskell program slows down.</p>
 </section>
 </section>
 <section id="excessive-pointer-chasing">
-<h2>Excessive Pointer Chasing<a class="headerlink" href="#excessive-pointer-chasing" title="Permalink to this headline">¶</a></h2>
+<span id="canonical-pointer-chasing"></span><h2>Excessive Pointer Chasing<a class="headerlink" href="#excessive-pointer-chasing" title="Permalink to this headline">¶</a></h2>
 </section>
 <section id="excessive-closure-allocation">
-<h2>Excessive Closure Allocation<a class="headerlink" href="#excessive-closure-allocation" title="Permalink to this headline">¶</a></h2>
+<span id="canonical-closure-alloc"></span><h2>Excessive Closure Allocation<a class="headerlink" href="#excessive-closure-allocation" title="Permalink to this headline">¶</a></h2>
 </section>
 <section id="poor-domain-modeling">
-<h2>Poor Domain Modeling<a class="headerlink" href="#poor-domain-modeling" title="Permalink to this headline">¶</a></h2>
+<span id="canonical-domain-modeling"></span><h2>Poor Domain Modeling<a class="headerlink" href="#poor-domain-modeling" title="Permalink to this headline">¶</a></h2>
 </section>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<aside class="footnote brackets" id="id2" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://wiki.haskell.org/Inlining_and_Specialisation">https://wiki.haskell.org/Inlining_and_Specialisation</a></p>
+</aside>
 </section>
 </section>
 
@@ -119,7 +151,6 @@ with an understanding of the central ways a Haskell program slows down.</p>
 <li class="toctree-l3"><a class="reference internal" href="#what-is-inlining">What is Inlining</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#why-do-we-want-inlining">Why do we want Inlining</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#how-does-inlining-slow-down-runtime-performance">How does Inlining slow down runtime performance</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#how-do-i-fix-performance-if-inlining-is-the-issue">How do I fix performance if Inlining is the issue</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#lack-of-fusion">Lack of Fusion</a><ul>
