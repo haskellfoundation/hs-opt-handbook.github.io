@@ -115,6 +115,13 @@ To rebuild the book everytime any ``*.rst*`` file changes do:
 
    find . -name "*.rst" | entr -sc '<your-build-command-here>'
 
+or use ``sphinx-autobuild``:
+
+.. code-block:: bash
+
+   sphinx-autobuild . _build/html
+
+
 You can then check the output in ``_build/html`` or load directory into whatever
 browser you'd like:
 
