@@ -13,7 +13,7 @@ Welcome to Haskell Optimization Handbook
 
    src/Preface/*
    src/Preliminaries/*
-   src/Part_1/
+   src/Part_1/*
    src/Part_2/
 
 
