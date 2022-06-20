@@ -30,7 +30,7 @@
   <body>
     <div id="app">
     <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
-  <router-link to="../../index.html" class="home-link">
+  <router-link to="../../contents.html" class="home-link">
     
       <span class="site-name">Haskell Optimization Handbook</span>
     
@@ -41,14 +41,14 @@
 
   
     <div class="nav-item">
-      <a href="../../index.html#welcome-to-haskell-optimization-handbook-s-documentation"
+      <a href="../../contents.html#welcome-to-haskell-optimization-handbook"
          class="nav-link  router-link-active">
          Table of Contents
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../../index.html#work-left"
+      <a href="../../contents.html#work-left"
          class="nav-link ">
          work left
       </a>
@@ -71,14 +71,14 @@
 
   
     <div class="nav-item">
-      <a href="../../index.html#welcome-to-haskell-optimization-handbook-s-documentation"
+      <a href="../../contents.html#welcome-to-haskell-optimization-handbook"
          class="nav-link  router-link-active">
          Table of Contents
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../../index.html#work-left"
+      <a href="../../contents.html#work-left"
          class="nav-link ">
          work left
       </a>
@@ -103,7 +103,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../../index.html#welcome-to-haskell-optimization-handbook-s-documentation">Table of Contents</a></span>
+        <span class="caption-text"><a href="../../contents.html#welcome-to-haskell-optimization-handbook">Table of Contents</a></span>
       </p>
       <ul class="current">
         
@@ -144,7 +144,7 @@
                 
                   <li class="toctree-l2"><a href="#inlining" class="reference internal">Inlining</a></li>
                 
-                  <li class="toctree-l2"><a href="#lack-of-fusion" class="reference internal">Lack of Fusion</a></li>
+                  <li class="toctree-l2"><a href="#what-is-fusion" class="reference internal">What is Fusion</a></li>
                 
                   <li class="toctree-l2"><a href="#excessive-pointer-chasing" class="reference internal">Excessive Pointer Chasing</a></li>
                 
@@ -209,7 +209,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../../index.html#work-left">work left</a></span>
+        <span class="caption-text"><a href="../../contents.html#work-left">work left</a></span>
       </p>
       <ul class="">
         
@@ -232,7 +232,7 @@
           <div class="body-header" role="navigation" aria-label="navigation">
   
   <ul class="breadcrumbs">
-    <li><a href="../../index.html">Docs</a> &raquo;</li>
+    <li><a href="../../contents.html">Docs</a> &raquo;</li>
     
     <li>The Programs of Consistent Lethargy</li>
   </ul>
@@ -261,14 +261,14 @@ because each program is the smallest example of a kind of slow down. A reader
 should come away from this section with an understanding of the central ways a
 Haskell program slows down.</p>
 <section id="inlining">
-<span id="canonical-inclining"></span><h2>Inlining<a class="headerlink" href="#inlining" title="Permalink to this headline">¶</a></h2>
+<span id="canonical-inlining"></span><h2>Inlining<a class="headerlink" href="#inlining" title="Permalink to this headline">¶</a></h2>
 <section id="what-is-inlining">
 <h3>What is Inlining<a class="headerlink" href="#what-is-inlining" title="Permalink to this headline">¶</a></h3>
-<p>Inlining <a class="footnote-reference brackets" href="#id2" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> is a simple optimization technique that almost all optimizing
+<p>Inlining <a class="footnote-reference brackets" href="#id4" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> is a simple optimization technique that almost all optimizing
 compilers perform. The essential idea is to substitute the call sites of a
 function <code class="docutils literal notranslate"><span class="pre">f</span></code>, with the body of <code class="docutils literal notranslate"><span class="pre">f</span></code>. For example:</p>
-<div class="literal-block-wrapper docutils container" id="id3">
-<div class="code-block-caption"><span class="caption-text">Before inlining</span><a class="headerlink" href="#id3" title="Permalink to this code">¶</a></div>
+<div class="literal-block-wrapper docutils container" id="id7">
+<div class="code-block-caption"><span class="caption-text">Before inlining</span><a class="headerlink" href="#id7" title="Permalink to this code">¶</a></div>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">3</span><span class="w"></span>
 <span class="c1">--- somewhere else</span><span class="w"></span>
 <span class="o">&gt;</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">c</span><span class="w"></span>
@@ -278,8 +278,8 @@ function <code class="docutils literal notranslate"><span class="pre">f</span></
 <p>Here we define a function <code class="docutils literal notranslate"><span class="pre">f</span></code>, and then have a single call site <code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">(a</span> <span class="pre">+</span> <span class="pre">b)</span>
 <span class="pre">...</span></code>. Inlining <code class="docutils literal notranslate"><span class="pre">f</span></code> transforms the call site by replacing <code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">(a</span> <span class="pre">+</span> <span class="pre">b)</span></code>
 with the body (or right hand side) of <code class="docutils literal notranslate"><span class="pre">f</span></code>:</p>
-<div class="literal-block-wrapper docutils container" id="id4">
-<div class="code-block-caption"><span class="caption-text">After inlining</span><a class="headerlink" href="#id4" title="Permalink to this code">¶</a></div>
+<div class="literal-block-wrapper docutils container" id="id8">
+<div class="code-block-caption"><span class="caption-text">After inlining</span><a class="headerlink" href="#id8" title="Permalink to this code">¶</a></div>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">3</span><span class="w"></span>
 <span class="c1">-- somewhere else</span><span class="w"></span>
 <span class="o">&gt;</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">c</span><span class="w"></span>
@@ -310,11 +310,36 @@ restricting inlining. We’ll return to the cost benefit analysis, and discuss t
 particulars of GHC’s inliner, in the section dedicated to <span class="xref std std-ref">Inlining</span>.</p>
 </section>
 </section>
-<section id="lack-of-fusion">
-<span id="canonical-fusion"></span><h2>Lack of Fusion<a class="headerlink" href="#lack-of-fusion" title="Permalink to this headline">¶</a></h2>
 <section id="what-is-fusion">
-<h3>What is Fusion<a class="headerlink" href="#what-is-fusion" title="Permalink to this headline">¶</a></h3>
-</section>
+<span id="canonical-fusion"></span><h2>What is Fusion<a class="headerlink" href="#what-is-fusion" title="Permalink to this headline">¶</a></h2>
+<p>Fusion or Deforestation <a class="footnote-reference brackets" href="#id5" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> <a class="footnote-reference brackets" href="#id6" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a> (We take Andy Gill’s excellent examples from
+this paper for this section. Thank you Andy Gill for your labor!) is an
+optimization technique that eliminates intermediate and short lived data
+structures between function calls. It is a key optimization that makes Haskell
+fast because idiomatic Haskell style is often written in compositional style.
+For example:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">all</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">and</span><span class="w"> </span><span class="p">(</span><span class="n">map</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="n">xs</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p>In <code class="docutils literal notranslate"><span class="pre">all</span></code> we apply <code class="docutils literal notranslate"><span class="pre">p</span></code> to each element of <code class="docutils literal notranslate"><span class="pre">xs</span></code> in <code class="docutils literal notranslate"><span class="pre">map</span> <span class="pre">p</span> <span class="pre">xs</span></code> , this
+produces an intermediate list of Booleans. This list is then consumed by <code class="docutils literal notranslate"><span class="pre">and</span></code>
+to produce the final single <code class="docutils literal notranslate"><span class="pre">Bool</span></code> result. Unfortunately, the allocation and
+collection of the intermediate list is expensive; requiring each <code class="docutils literal notranslate"><span class="pre">Cons</span></code> cell
+to be allocated on the heap, filled with a thunk, reified to a value, consumed
+by <code class="docutils literal notranslate"><span class="pre">and</span></code> and then finally deallocated. This costs extra CPU cycles and places
+more pressure on the garbage collector.</p>
+<p>Fusion is an optimization technique that transforms functions such as <code class="docutils literal notranslate"><span class="pre">all</span></code>
+into versions that do not use intermediate lists:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">all&#39;</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="n">xs</span><span class="w"></span>
+<span class="w">  </span><span class="kr">where</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="kt">[]</span><span class="w">     </span><span class="ow">=</span><span class="w"> </span><span class="kt">True</span><span class="w"></span>
+<span class="w">        </span><span class="n">h</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="n">xs</span><span class="w"></span>
+</pre></div>
+</div>
+<p>In this version of <code class="docutils literal notranslate"><span class="pre">all</span></code> we <em>do not</em> allocate any intermediate list. Instead,
+we create each Boolean value and immediately pass that value to <code class="docutils literal notranslate"><span class="pre">&amp;&amp;</span></code> creating
+a chain of function calls (in fact, the exact chain of function calls that would
+occur using <code class="docutils literal notranslate"><span class="pre">and</span></code>!). We say that <code class="docutils literal notranslate"><span class="pre">and</span></code> and <code class="docutils literal notranslate"><span class="pre">map</span></code> have <em>fused</em>, because
+this version is successful in removing the intermediate List, .</p>
 <section id="why-do-we-want-fusion">
 <h3>Why do we want Fusion<a class="headerlink" href="#why-do-we-want-fusion" title="Permalink to this headline">¶</a></h3>
 </section>
@@ -336,9 +361,17 @@ particulars of GHC’s inliner, in the section dedicated to <span class="xref st
 </section>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
-<aside class="footnote brackets" id="id2" role="note">
+<aside class="footnote brackets" id="id4" role="note">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="https://wiki.haskell.org/Inlining_and_Specialisation">https://wiki.haskell.org/Inlining_and_Specialisation</a></p>
+</aside>
+<aside class="footnote brackets" id="id5" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://www.sciencedirect.com/science/article/pii/030439759090147A?via%3Dihub">https://www.sciencedirect.com/science/article/pii/030439759090147A?via%3Dihub</a></p>
+</aside>
+<aside class="footnote brackets" id="id6" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://www.microsoft.com/en-us/research/wp-content/uploads/2016/07/deforestation-short-cut.pdf">https://www.microsoft.com/en-us/research/wp-content/uploads/2016/07/deforestation-short-cut.pdf</a></p>
 </aside>
 </section>
 </section>
