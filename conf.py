@@ -43,6 +43,9 @@ extensions = [ 'sphinx.ext.mathjax'
 todo_include_todos = True
 todo_link_only     = True
 
+# The rst file that holds the ToC. This indirection allows for a nice splash page
+master_doc = "contents"
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
