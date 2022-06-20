@@ -68,8 +68,11 @@ particulars of GHC's inliner, in the section dedicated to :ref:`Inlining`.
 
 .. _canonical-fusion:
 
+Fusion
+------
+
 What is Fusion
---------------
+^^^^^^^^^^^^^^
 
 Fusion or Deforestation [#]_ [#]_ (We take Andy Gill's excellent examples from
 this paper for this section. Thank you Andy Gill for your labor!) is an

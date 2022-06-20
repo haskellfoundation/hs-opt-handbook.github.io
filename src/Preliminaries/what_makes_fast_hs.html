@@ -144,7 +144,7 @@
                 
                   <li class="toctree-l2"><a href="#inlining" class="reference internal">Inlining</a></li>
                 
-                  <li class="toctree-l2"><a href="#what-is-fusion" class="reference internal">What is Fusion</a></li>
+                  <li class="toctree-l2"><a href="#fusion" class="reference internal">Fusion</a></li>
                 
                   <li class="toctree-l2"><a href="#excessive-pointer-chasing" class="reference internal">Excessive Pointer Chasing</a></li>
                 
@@ -310,8 +310,10 @@ restricting inlining. We’ll return to the cost benefit analysis, and discuss t
 particulars of GHC’s inliner, in the section dedicated to <span class="xref std std-ref">Inlining</span>.</p>
 </section>
 </section>
+<section id="fusion">
+<span id="canonical-fusion"></span><h2>Fusion<a class="headerlink" href="#fusion" title="Permalink to this headline">¶</a></h2>
 <section id="what-is-fusion">
-<span id="canonical-fusion"></span><h2>What is Fusion<a class="headerlink" href="#what-is-fusion" title="Permalink to this headline">¶</a></h2>
+<h3>What is Fusion<a class="headerlink" href="#what-is-fusion" title="Permalink to this headline">¶</a></h3>
 <p>Fusion or Deforestation <a class="footnote-reference brackets" href="#id5" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> <a class="footnote-reference brackets" href="#id6" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a> (We take Andy Gill’s excellent examples from
 this paper for this section. Thank you Andy Gill for your labor!) is an
 optimization technique that eliminates intermediate and short lived data
@@ -340,6 +342,7 @@ we create each Boolean value and immediately pass that value to <code class="doc
 a chain of function calls (in fact, the exact chain of function calls that would
 occur using <code class="docutils literal notranslate"><span class="pre">and</span></code>!). We say that <code class="docutils literal notranslate"><span class="pre">and</span></code> and <code class="docutils literal notranslate"><span class="pre">map</span></code> have <em>fused</em>, because
 this version is successful in removing the intermediate List, .</p>
+</section>
 <section id="why-do-we-want-fusion">
 <h3>Why do we want Fusion<a class="headerlink" href="#why-do-we-want-fusion" title="Permalink to this headline">¶</a></h3>
 </section>
