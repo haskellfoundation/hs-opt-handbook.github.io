@@ -6,8 +6,10 @@ The Programs of Consistent Lethargy
 We'll begin by showing small bite sized programs that demonstrate a particular
 way Haskell programs slow down. We call these programs *canonical* programs
 because each program is the smallest example of a kind of slow down. A reader
-should come away from this section with an understanding of the central ways a
-Haskell program slows down.
+should come away from this section with an understanding of the ways a
+Haskell program slows down. For each slow down topic we provide a sister
+
+
 
 .. _canonical-inlining:
 
@@ -63,7 +65,8 @@ because it limits otherwise possible optimizations from taking place. However,
 that does not mean we should always ask GHC to inline or manually perform
 inlining, in contrast, sometimes we can realize performance benefits by
 restricting inlining. We'll return to the cost benefit analysis, and discuss the
-particulars of GHC's inliner, in the section dedicated to :ref:`Inlining`.
+particulars of GHC's inliner, in the chapter dedicated to :ref:`Inlining`.
+
 
 
 .. _canonical-fusion:
@@ -111,16 +114,46 @@ this version is successful in removing the intermediate List, .
 Why do we want Fusion
 ^^^^^^^^^^^^^^^^^^^^^^^
 
+As Andy Gill writes:
+
+   We want to eat our cake and have it too. That is, we would like to write
+   programs in the style of ``all`` but have the compiler automatically
+   transform this into the more efficient version ``all'``.
+
 How does Fusion slow down runtime performance
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-How do I fix performance if Fusion is the issue
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Similar to Inlining, fusion itself does not slow down performance, rather *lack
+of* fusion does, because if something can fuse but doesn't, then the program
+will perform unnecessary allocations just to yield the same result. The
+difficult parts of a fusion slow down is identifying fusion as the root cause of
+your slow down *and then* convincing GHC to fuse whichever code was being
+difficult. We'll show how to identify fusion as the culprit and convice GHC to
+fuse in the chapter dedicated :ref:`Fusion`.
+
+
+
 
 .. _canonical-pointer-chasing:
 
 Excessive Pointer Chasing
 -------------------------
+
+Excessive pointer chasing is the enemy of any high performance Haskell program,
+and presents itself in various forms; most of which Haskeller's are familiar
+with to some degree. These include memory leaks during folds (strict and lazy),
+for example:
+
+.. code-block:: haskell
+
+   mean :: [Double] -> Double
+   mean xs =
+
+
+
+
+using Boxed fields in data constructor definitions,
+
 
 .. _canonical-closure-alloc:
 

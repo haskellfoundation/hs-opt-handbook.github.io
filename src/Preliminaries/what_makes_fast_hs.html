@@ -258,8 +258,8 @@
 <p>We’ll begin by showing small bite sized programs that demonstrate a particular
 way Haskell programs slow down. We call these programs <em>canonical</em> programs
 because each program is the smallest example of a kind of slow down. A reader
-should come away from this section with an understanding of the central ways a
-Haskell program slows down.</p>
+should come away from this section with an understanding of the ways a
+Haskell program slows down. For each slow down topic we provide a sister</p>
 <section id="inlining">
 <span id="canonical-inlining"></span><h2>Inlining<a class="headerlink" href="#inlining" title="Permalink to this headline">¶</a></h2>
 <section id="what-is-inlining">
@@ -307,7 +307,7 @@ because it limits otherwise possible optimizations from taking place. However,
 that does not mean we should always ask GHC to inline or manually perform
 inlining, in contrast, sometimes we can realize performance benefits by
 restricting inlining. We’ll return to the cost benefit analysis, and discuss the
-particulars of GHC’s inliner, in the section dedicated to <span class="xref std std-ref">Inlining</span>.</p>
+particulars of GHC’s inliner, in the chapter dedicated to <span class="xref std std-ref">Inlining</span>.</p>
 </section>
 </section>
 <section id="fusion">
@@ -345,16 +345,35 @@ this version is successful in removing the intermediate List, .</p>
 </section>
 <section id="why-do-we-want-fusion">
 <h3>Why do we want Fusion<a class="headerlink" href="#why-do-we-want-fusion" title="Permalink to this headline">¶</a></h3>
+<p>As Andy Gill writes:</p>
+<blockquote>
+<div><p>We want to eat our cake and have it too. That is, we would like to write
+programs in the style of <code class="docutils literal notranslate"><span class="pre">all</span></code> but have the compiler automatically
+transform this into the more efficient version <code class="docutils literal notranslate"><span class="pre">all'</span></code>.</p>
+</div></blockquote>
 </section>
 <section id="how-does-fusion-slow-down-runtime-performance">
 <h3>How does Fusion slow down runtime performance<a class="headerlink" href="#how-does-fusion-slow-down-runtime-performance" title="Permalink to this headline">¶</a></h3>
-</section>
-<section id="how-do-i-fix-performance-if-fusion-is-the-issue">
-<h3>How do I fix performance if Fusion is the issue<a class="headerlink" href="#how-do-i-fix-performance-if-fusion-is-the-issue" title="Permalink to this headline">¶</a></h3>
+<p>Similar to Inlining, fusion itself does not slow down performance, rather <em>lack
+of</em> fusion does, because if something can fuse but doesn’t, then the program
+will perform unnecessary allocations just to yield the same result. The
+difficult parts of a fusion slow down is identifying fusion as the root cause of
+your slow down <em>and then</em> convincing GHC to fuse whichever code was being
+difficult. We’ll show how to identify fusion as the culprit and convice GHC to
+fuse in the chapter dedicated <span class="xref std std-ref">Fusion</span>.</p>
 </section>
 </section>
 <section id="excessive-pointer-chasing">
 <span id="canonical-pointer-chasing"></span><h2>Excessive Pointer Chasing<a class="headerlink" href="#excessive-pointer-chasing" title="Permalink to this headline">¶</a></h2>
+<p>Excessive pointer chasing is the enemy of any high performance Haskell program,
+and presents itself in various forms; most of which Haskeller’s are familiar
+with to some degree. These include memory leaks during folds (strict and lazy),
+for example:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">mean</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">[</span><span class="kt">Double</span><span class="p">]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Double</span><span class="w"></span>
+<span class="nf">mean</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="ow">=</span><span class="w"></span>
+</pre></div>
+</div>
+<p>using Boxed fields in data constructor definitions,</p>
 </section>
 <section id="excessive-closure-allocation">
 <span id="canonical-closure-alloc"></span><h2>Excessive Closure Allocation<a class="headerlink" href="#excessive-closure-allocation" title="Permalink to this headline">¶</a></h2>
