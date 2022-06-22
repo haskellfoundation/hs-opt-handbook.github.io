@@ -142,15 +142,50 @@ Excessive Pointer Chasing
 Excessive pointer chasing is the enemy of any high performance Haskell program,
 and presents itself in various forms; most of which Haskeller's are familiar
 with to some degree. These include memory leaks during folds (strict and lazy),
-for example:
+for example [#]_:
+
+.. code-block:: haskell
+   :caption: mean, calculated with a lazy left fold
+
+   mean :: [Double] -> Double
+   mean xs = s / fromIntegral ln
+     where (s, ln)        = foldl step (0,0) xs
+           step (s, ln) a = (s + a, ln + 1)
+
+
+.. code-block:: haskell
+   :caption: mean, calculated with a strict left fold
+
+   mean' :: [Double] -> Double
+   mean' xs = s / fromIntegral ln
+     where (s, ln)        = foldl' step (0,0) xs
+           step (s, ln) a = (s + a, ln + 1)
+
+``mean`` (`side note
+<https://github.com/hasura/graphql-engine/pull/2933#discussion_r328821960>`_
+never use ``foldl`` on a list) and ``mean'`` are versions of a common source of
+memory leaks; performing a fold that is *too lazy* over a data structure. Even
+``mean'``, which uses a strict left fold, leaks memory because ``foldl'`` is not
+strict enough. ``foldl'`` evaluates its accumulator to :term:`WHNF`, in this
+case that is a *lazy tuple* and so each call to ``step`` will only evaluate to
+the constructor of the tuple: ``(,)``, *and will not* evaluate ``s + a`` or
+``ln + 1``. These computations are stored as thunks on the heap, which will be
+pointed to by the ``(,)`` constructor, and thus we have to chase these pointers
+to do our computation.
+
+Another form of common excessive pointer chasing is using lazy fields in a data
+constructor that does not benefit from laziness and will be consumed anyway. For
+example, consider the data type version of ``mean``:
 
 .. code-block:: haskell
 
-   mean :: [Double] -> Double
-   mean xs =
+   data
 
 
 
+
+Another form of common excessive pointer chasing is using :term:`Boxed` fields
+in
 
 using Boxed fields in data constructor definitions,
 
@@ -171,3 +206,5 @@ References
 .. [#] https://wiki.haskell.org/Inlining_and_Specialisation
 .. [#] https://www.sciencedirect.com/science/article/pii/030439759090147A?via%3Dihub
 .. [#] https://www.microsoft.com/en-us/research/wp-content/uploads/2016/07/deforestation-short-cut.pdf
+.. [#] This code adapted from Johan Tibell slides on Haskell `optimization
+       <https://www.slideshare.net/tibbe/highperformance-haskell>`_.

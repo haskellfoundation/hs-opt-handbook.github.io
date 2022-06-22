@@ -14,18 +14,11 @@ Welcome to Haskell Optimization Handbook
    src/Preface/*
    src/Preliminaries/*
    src/Part_1/*
-   src/Part_2/
 
 
 Indices and tables
 ==================
 
 * :ref:`genindex`
-* :ref:`modindex`
 * :ref:`search`
-
-
-Work Left
-=========
-.. toctree::
-   src/todos
+* :ref:`glossary`

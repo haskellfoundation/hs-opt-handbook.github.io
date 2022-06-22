@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-      <title>How to Contribute</title>
+      <title>Glossary</title>
     
           <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
           <link rel="stylesheet" href="../_static/theme.css " type="text/css" />
@@ -74,7 +74,7 @@
         
           <li class="toctree-l1 ">
             
-              <a href="../src/Preface/preface.html" class="reference internal ">Preface</a>
+              <a href="Preface/preface.html" class="reference internal ">Preface</a>
             
 
             
@@ -83,7 +83,7 @@
         
           <li class="toctree-l1 ">
             
-              <a href="../src/Preliminaries/book_for.html" class="reference internal ">Who is this book for</a>
+              <a href="Preliminaries/book_for.html" class="reference internal ">Who is this book for</a>
             
 
             
@@ -92,7 +92,7 @@
         
           <li class="toctree-l1 ">
             
-              <a href="../src/Preliminaries/expectations.html" class="reference internal ">Expectations</a>
+              <a href="Preliminaries/expectations.html" class="reference internal ">Expectations</a>
             
 
             
@@ -101,7 +101,7 @@
         
           <li class="toctree-l1 ">
             
-              <a href="../src/Preliminaries/what_makes_fast_hs.html" class="reference internal ">The Programs of Consistent Lethargy</a>
+              <a href="Preliminaries/what_makes_fast_hs.html" class="reference internal ">The Programs of Consistent Lethargy</a>
             
 
             
@@ -110,7 +110,7 @@
         
           <li class="toctree-l1 ">
             
-              <a href="../src/Part_1/heap_profiling_ext.html" class="reference internal "><no title></a>
+              <a href="Part_1/heap_profiling_ext.html" class="reference internal "><no title></a>
             
 
             
@@ -119,7 +119,7 @@
         
           <li class="toctree-l1 ">
             
-              <a href="../src/Part_1/heap_profiling_ghc.html" class="reference internal "><no title></a>
+              <a href="Part_1/heap_profiling_ghc.html" class="reference internal "><no title></a>
             
 
             
@@ -128,7 +128,7 @@
         
           <li class="toctree-l1 ">
             
-              <a href="../src/Part_1/measurement_ext.html" class="reference internal "><no title></a>
+              <a href="Part_1/measurement_ext.html" class="reference internal "><no title></a>
             
 
             
@@ -137,7 +137,7 @@
         
           <li class="toctree-l1 ">
             
-              <a href="../src/Part_1/measurement_ghc.html" class="reference internal "><no title></a>
+              <a href="Part_1/measurement_ghc.html" class="reference internal "><no title></a>
             
 
             
@@ -146,7 +146,7 @@
         
           <li class="toctree-l1 ">
             
-              <a href="../src/Part_1/measurement_lib.html" class="reference internal "><no title></a>
+              <a href="Part_1/measurement_lib.html" class="reference internal "><no title></a>
             
 
             
@@ -165,7 +165,7 @@
   <ul class="breadcrumbs">
     <li><a href="../contents.html">Docs</a> &raquo;</li>
     
-    <li>How to Contribute</li>
+    <li>Glossary</li>
   </ul>
   
 
@@ -176,46 +176,23 @@
 <hr>
           <div class="content" role="main" v-pre>
             
-  <section id="how-to-contribute">
-<h1>How to Contribute<a class="headerlink" href="#how-to-contribute" title="Permalink to this headline">¶</a></h1>
-<section id="part-2">
-<h2>Part 2<a class="headerlink" href="#part-2" title="Permalink to this headline">¶</a></h2>
-<section id="introduction">
-<h3>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h3>
-<p>This is a checklist for contributors of Part 2 (Optimizations) of the Handbook.
-Please make sure that your for part 2 satisfies all items on the checklist. We
-use checklists to check the quality of each section of the handbook. If this is
-news to you then please see <a class="reference external" href="https://github.com/input-output-hk/hs-opt-handbook.github.io/tree/main/Contributing">the README</a>
-to get up to speed on the expected project workflow as a writer.</p>
-</section>
-<section id="the-checklist">
-<h3>The Checklist<a class="headerlink" href="#the-checklist" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li><p>☐ The section states what the optimization is.</p></li>
-<li><p>☐ The section states how invasive the optimization is. That is, is it simply a
-flag change, does it require a source code change? If so, how much a new
-pragma? A new data structure?</p></li>
-<li><p>☐ The section states why the optimization is an optimization. Provide a
-theoretical reason, such as: “With Unboxing, all code which handles this value
-performs one less pointer de-reference to the heap, thus yielding a speedup.”</p></li>
-<li><p>☐ The section provides evidence that the optimization <em>is in fact</em> an
-optimization. This can be Core, STG, Cmm or Assembly dumps, or a benchmark.
-Please provide a link to the relevant section (e.g., The handbook section on
-Core for Core) of the handbook for whichever one is relevant.</p></li>
-<li><p>☐ The section classifies the optimization based on one of the four horsemen of
-slow code as written in the introduction. For example, “Unboxing our data
-types eliminates a good deal of pointer chasing, the second horsemen of slow
-code”.</p></li>
-<li><p>☐ If you read the first line of each paragraph, they are form a coherent
-story, and that story arrives at the point of the section, within reason.</p></li>
-<li><p>☐ The section has a closing summary that repeats: What the optimization is,
-how invasive the optimization is, a recommendation on when to use the
-optimization, and any downsides of implementing the optimization.</p></li>
-<li><p>☐ The section has a reference or further reading subsection</p></li>
-<li><p>☐ The book builds with the PR (this should be CI)</p></li>
-</ul>
-</section>
-</section>
+  <section id="glossary">
+<span id="id1"></span><h1>Glossary<a class="headerlink" href="#glossary" title="Permalink to this headline">¶</a></h1>
+<dl class="simple glossary">
+<dt id="term-WHNF">WHNF<a class="headerlink" href="#term-WHNF" title="Permalink to this term">¶</a></dt><dd><p>An expression is in <em>weak head normal form</em> if it has been evaluated to
+its’ outermost data constructor or lambda abstraction (i.e., <em>the head</em>).
+See <a class="reference external" href="https://stackoverflow.com/questions/6872898/what-is-weak-head-normal-form/6889335#6889335">this</a>
+post, <a class="reference external" href="https://wiki.haskell.org/Weak_head_normal_form">the wiki</a> , and
+<a class="reference external" href="https://en.wikipedia.org/wiki/Lambda_calculus_definition#Weak_head_normal_form">wikipedia</a>
+for more.</p>
+</dd>
+<dt id="term-Boxed">Boxed<a class="headerlink" href="#term-Boxed" title="Permalink to this term">¶</a></dt><dd><p>Foo bar bax</p>
+</dd>
+<dt id="term-UnBoxed">UnBoxed<a class="headerlink" href="#term-UnBoxed" title="Permalink to this term">¶</a></dt><dd><p>Foo bar bax</p>
+</dd>
+<dt id="term-UnLifted">UnLifted<a class="headerlink" href="#term-UnLifted" title="Permalink to this term">¶</a></dt><dd><p>Foo bar bax</p>
+</dd>
+</dl>
 </section>
 
 
