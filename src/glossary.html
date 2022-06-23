@@ -14,6 +14,7 @@
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
       
       <!-- bundled in js (rollup iife) -->
@@ -186,11 +187,29 @@ post, <a class="reference external" href="https://wiki.haskell.org/Weak_head_nor
 <a class="reference external" href="https://en.wikipedia.org/wiki/Lambda_calculus_definition#Weak_head_normal_form">wikipedia</a>
 for more.</p>
 </dd>
-<dt id="term-Boxed">Boxed<a class="headerlink" href="#term-Boxed" title="Permalink to this term">¶</a></dt><dd><p>Foo bar bax</p>
+<dt id="term-Boxed-Value">Boxed Value<a class="headerlink" href="#term-Boxed-Value" title="Permalink to this term">¶</a></dt><dd><p>A Boxed value is a value that is represented by a pointer to the heap.</p>
 </dd>
-<dt id="term-UnBoxed">UnBoxed<a class="headerlink" href="#term-UnBoxed" title="Permalink to this term">¶</a></dt><dd><p>Foo bar bax</p>
+<dt id="term-Unboxed-Value">Unboxed Value<a class="headerlink" href="#term-Unboxed-Value" title="Permalink to this term">¶</a></dt><dd><p>An UnBoxed value is a value that is represented by the value itself.
+UnBoxed values therefore cannot be lazy, like boxed values.</p>
 </dd>
-<dt id="term-UnLifted">UnLifted<a class="headerlink" href="#term-UnLifted" title="Permalink to this term">¶</a></dt><dd><p>Foo bar bax</p>
+<dt id="term-Lifted-Type">Lifted Type<a class="headerlink" href="#term-Lifted-Type" title="Permalink to this term">¶</a></dt><dd><p>A Lifted type is a type that contains the value <span class="math notranslate nohighlight">\(\bot\)</span>;
+which represents non-terminating computation. For example, the <code class="docutils literal notranslate"><span class="pre">Bool</span></code>
+type is a set with three values: <code class="docutils literal notranslate"><span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">False</span></code>, and <span class="math notranslate nohighlight">\(\bot\)</span>.
+Therefore <code class="docutils literal notranslate"><span class="pre">Bool</span></code> is a Lifted type.</p>
+</dd>
+<dt id="term-Unlifted-Type">Unlifted Type<a class="headerlink" href="#term-Unlifted-Type" title="Permalink to this term">¶</a></dt><dd><p>An Unlifted type is a type where <span class="math notranslate nohighlight">\(\bot\)</span> <em>is not</em> an element of that type.</p>
+</dd>
+<dt id="term-Thunk">Thunk<a class="headerlink" href="#term-Thunk" title="Permalink to this term">¶</a></dt><dd><p>A thunk is a special kind of <a class="reference internal" href="#term-Closure"><span class="xref std std-term">Closure</span></a> that represents a suspended
+computation. Thunks reside on the heap and are the key feature that
+provides Haskell’s laziness. See <a class="reference external" href="https://www.microsoft.com/en-us/research/wp-content/uploads/1992/04/spineless-tagless-gmachine.pdf">The Spineless-Tagless G-Machine</a>
+Section 3.1.2 for more details.</p>
+</dd>
+<dt id="term-Closure">Closure<a class="headerlink" href="#term-Closure" title="Permalink to this term">¶</a></dt><dd><p>A closure is value that associates a function with an environment, where
+the environment maps every free variable in the function with a value or
+reference to which the free variable was bound when the closure was
+created. Closure’s are the canonical way to realize lexical scoping in
+languages with first-class functions, such a Haskell. See <a class="reference external" href="https://en.wikipedia.org/wiki/Closure_(computer_programming)">the wikipedia</a> entry for
+more.</p>
 </dd>
 </dl>
 </section>
