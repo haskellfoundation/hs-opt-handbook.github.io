@@ -1,7 +1,7 @@
 .. _sec-lethargy:
 
 The Programs of Consistent Lethargy
-============================================
+===================================
 
 We'll begin by showing small bite sized programs that demonstrate a particular
 way Haskell programs slow down. We call these programs *canonical* programs
@@ -112,7 +112,7 @@ occur using ``and``!). We say that ``and`` and ``map`` have *fused*, because
 this version is successful in removing the intermediate List, .
 
 Why do we want Fusion
-^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
 
 As Andy Gill writes:
 
@@ -121,7 +121,7 @@ As Andy Gill writes:
    transform this into the more efficient version ``all'``.
 
 How does Fusion slow down runtime performance
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Similar to Inlining, fusion itself does not slow down performance, rather *lack
 of* fusion does, because if something can fuse but doesn't, then the program
@@ -138,6 +138,9 @@ fuse in the chapter dedicated :ref:`Fusion`.
 
 Excessive Pointer Chasing
 -------------------------
+
+What is Excessive Pointer Chasing
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Excessive pointer chasing is the enemy of any high performance Haskell program,
 and presents itself in various forms; most of which Haskeller's are familiar
@@ -161,33 +164,64 @@ for example [#]_:
      where (s, ln)        = foldl' step (0,0) xs
            step (s, ln) a = (s + a, ln + 1)
 
-``mean`` (`side note
-<https://github.com/hasura/graphql-engine/pull/2933#discussion_r328821960>`_
-never use ``foldl`` on a list) and ``mean'`` are versions of a common source of
-memory leaks; performing a fold that is *too lazy* over a data structure. Even
-``mean'``, which uses a strict left fold, leaks memory because ``foldl'`` is not
-strict enough. ``foldl'`` evaluates its accumulator to :term:`WHNF`, in this
-case that is a *lazy tuple* and so each call to ``step`` will only evaluate to
-the constructor of the tuple: ``(,)``, *and will not* evaluate ``s + a`` or
-``ln + 1``. These computations are stored as thunks on the heap, which will be
-pointed to by the ``(,)`` constructor, and thus we have to chase these pointers
-to do our computation.
+.. note::
+   `Never
+   <https://github.com/hasura/graphql-engine/pull/2933#discussion_r328821960>`_
+   use ``foldl`` on a list.
+
+``mean`` and ``mean'`` are versions of a common source of memory leaks;
+performing a fold that is *too lazy* over a data structure. Even ``mean'``,
+which uses a strict left fold, leaks memory because ``foldl'`` is not strict
+enough. ``foldl'`` evaluates its accumulator to :term:`WHNF`, in this case that
+is a *lazy tuple* and so each call to ``step`` will only evaluate to the
+constructor of the tuple: ``(,)``, *and will not* evaluate ``s + a`` or ``ln +
+1``. These computations are stored as thunks on the heap, which will be pointed
+to by the ``(,)`` constructor, and thus we have to chase these pointers to do
+our computation.
 
 Another form of common excessive pointer chasing is using lazy fields in a data
 constructor that does not benefit from laziness and will be consumed anyway. For
-example, consider the data type version of ``mean``:
+example, consider the data type version of ``step``:
 
 .. code-block:: haskell
 
-   data
+   data Step = Step Double Double
+   ...
+
+   -- mean rewritten with Step instead of (,)
+   mean'' :: [Double] -> Double
+   mean'' xs = s / fromIntegral ln
+     where (Step s  ln)       = foldl' step (0,0) xs
+           step (Step s ln) a = Step (s + a) (ln + 1)
+
+Just as ``mean'`` was excessively lazy, so will ``mean''`` be, because each
+``Double`` in ``Step`` is lazy, and so both the ``(s + a)`` and ``(ln + 1)``
+computations will be thunks. But in the domain of our program---calculating the
+geometric average---we gain nothing from this laziness because our program
+doesn't need to defer a computation. Instead, we would be better off immediately
+consuming the intermediate ``Step`` values, and gaining performance by removing
+the superfluous indirection.
+
+
+A related form of common excessive pointer chasing is using :term:`Boxed` fields
+in data constructors when :term:`Unboxed` fields would do. Consider an example
+of a ``Counter`` data type that tracks some domain specific integer:
+
+.. code-block:: haskell
+
+   data Counter = Counter Int
+
+.. note::
+   Normally, when compiling with ``-O2`` GHC will recognize and optimize this definition.
+
+``Int`` is a :term:`Boxed` and :term:`Lifted` type in ``Counter``, this means
+that each ``Counter`` holds a pointer to an ``Int`` on the heap *not* a pointer
+to an ``Int`` directly. We can instruct GHC remove the heap indirection with the
+`unpack
+<https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/exts/pragmas.html?highlight=unpack#unpack-pragma>`_
 
 
 
-
-Another form of common excessive pointer chasing is using :term:`Boxed` fields
-in
-
-using Boxed fields in data constructor definitions,
 
 
 .. _canonical-closure-alloc:
