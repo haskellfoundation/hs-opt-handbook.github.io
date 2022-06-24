@@ -35,8 +35,7 @@ Glossary
    Thunk
       A thunk is a special kind of :term:`Closure` that represents a suspended
       computation. Thunks reside on the heap and are the key feature that
-      provides Haskell's laziness. See `The Spineless-Tagless G-Machine
-      <https://www.microsoft.com/en-us/research/wp-content/uploads/1992/04/spineless-tagless-gmachine.pdf>`_
+      provides Haskell's laziness. See :cite:t:`SpinelessTaglessGMachine`
       Section 3.1.2 for more details.
 
    Closure
