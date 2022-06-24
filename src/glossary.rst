@@ -16,20 +16,20 @@ Glossary
       <https://en.wikipedia.org/wiki/Lambda_calculus_definition#Weak_head_normal_form>`_
       for more.
 
-   Boxed Value
+   Boxed : Levity
       A Boxed value is a value that is represented by a pointer to the heap.
 
-   Unboxed Value
+   Unboxed : Levity
       An UnBoxed value is a value that is represented by the value itself.
       UnBoxed values therefore cannot be lazy, like boxed values.
 
-   Lifted Type
+   Lifted : Levity
       A Lifted type is a type that contains the value :math:`\bot`;
       which represents non-terminating computation. For example, the ``Bool``
       type is a set with three values: ``True``, ``False``, and :math:`\bot`.
       Therefore ``Bool`` is a Lifted type.
 
-   Unlifted Type
+   Unlifted : Levity
       An Unlifted type is a type where :math:`\bot` *is not* an element of that type.
 
    Thunk
