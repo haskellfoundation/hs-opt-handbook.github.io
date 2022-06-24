@@ -142,10 +142,21 @@ Excessive Pointer Chasing
 What is Excessive Pointer Chasing
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Excessive pointer chasing is the enemy of any high performance Haskell program,
-and presents itself in various forms; most of which Haskeller's are familiar
-with to some degree. These include memory leaks during folds (strict and lazy),
-for example [#]_:
+Excessive pointer chasing is a form of superfluous computation; our program is
+doing more work than it needs in order to compute the result. It occurs anytime
+our programs dereference a pointer to retrieve a value instead of just
+referencing the value itself, thereby creating an extra layer of unnecessary
+indirection. In Haskell programs this most often occurs when we write programs
+without thinking about their memory representation; and especially around
+laziness. As such, most of these instances are well known and have floated
+around the community for some time.
+
+
+How does excessive pointer chasing slow down runtime performance?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The classic example of excessive pointer chasing is memory leaks that result
+from folds that are overly lazy, for example [#]_:
 
 .. code-block:: haskell
    :caption: mean, calculated with a lazy left fold
@@ -219,15 +230,31 @@ that each ``Counter`` holds a pointer to an ``Int`` on the heap *not* a pointer
 to an ``Int`` directly. We can instruct GHC remove the heap indirection with the
 `unpack
 <https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/exts/pragmas.html?highlight=unpack#unpack-pragma>`_
+pragma and a bang pattern:
 
+.. code-block:: haskell
 
+   data Counter = Counter {-# UNPACK -#} !Int
 
-
+This pragma instructs GHC to store the contents of ``Int`` directly in the
+``Counter`` constructor, rather than storing a pointer to an ``Int`` on the heap
+in the constructor. We'll return to these fixes in the :ref:`Excessive Pointer
+Chasing` section.
 
 .. _canonical-closure-alloc:
 
 Excessive Closure Allocation
 ----------------------------
+
+What is Excessive Closure Allocation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+xcessive :term:`Closure` allocation is :cite:p:`GHCInliner` and :cite:t:`GHCInliner`
+
+
+
+How does Excessive Closure Allocation slow down runtime performance
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. _canonical-domain-modeling:
 
