@@ -37,6 +37,7 @@ extensions = [ 'sphinx.ext.mathjax'
                                          ## contain any .css files from any
                                          ## directory with a prefixes
                                          ## underscore
+             , 'sphinxcontrib.bibtex'
              ]
 
 # flags
@@ -67,3 +68,7 @@ html_theme      = "press"
 # so a file named "default.css" will overwrite the builtin "default.css".
 # html_static_path = ['_static']
 mathjax_path = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+
+# bibtex file
+bibtex_bibfiles = ['bib/book.bib']
+bibtex_default_style = 'unsrt'

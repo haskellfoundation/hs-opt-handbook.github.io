@@ -164,6 +164,8 @@
                            buildInputs = with pkgs; [
                              python3Packages.sphinx
                              python3Packages.sphinx-autobuild
+                             python3Packages.sphinxcontrib-bibtex
+                             python3Packages.sphinxcontrib-tikz
                              # sphinx-book-theme
                              sphinx-press-theme
                              pandoc
