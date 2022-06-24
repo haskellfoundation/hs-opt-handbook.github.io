@@ -153,7 +153,7 @@ around the community for some time.
 
 
 How does excessive pointer chasing slow down runtime performance?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The classic example of excessive pointer chasing is memory leaks that result
 from folds that are overly lazy, for example [#]_:
