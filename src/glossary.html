@@ -211,6 +211,14 @@ created. Closure’s are the canonical way to realize lexical scoping in
 languages with first-class functions, such a Haskell. See <a class="reference external" href="https://en.wikipedia.org/wiki/Closure_(computer_programming)">the wikipedia</a> entry for
 more.</p>
 </dd>
+<dt id="term-Let-Floating">Let Floating<a class="headerlink" href="#term-Let-Floating" title="Permalink to this term">¶</a></dt><dd><p>A group of optimizing transformation’s that move <code class="docutils literal notranslate"><span class="pre">let</span></code> bindings to
+reduce heap allocations. See <span id="id3">Partain <em>et al.</em> [<a class="reference internal" href="../contents.html#id4" title="WD Partain, A Santos, and Simon Peyton Jones. Let-floating: moving bindings to give faster programs. May 1996. ACM SIGPLAN International Conference on Functional Programming (ICFP'96). URL: https://www.microsoft.com/en-us/research/publication/let-floating-moving-bindings-to-give-faster-programs/.">3</a>]</span> and
+<span id="id4">Peyton Jones and Santos [<a class="reference internal" href="../contents.html#id5" title="Simon Peyton Jones and Andre Santos. A transformation-based optimiser for haskell. Science of Computer Programming, October 1997. URL: https://www.microsoft.com/en-us/research/publication/a-transformation-based-optimiser-for-haskell/.">1</a>]</span> Section 7 for more details.</p>
+</dd>
+<dt id="term-Full-Laziness-transformation">Full Laziness transformation<a class="headerlink" href="#term-Full-Laziness-transformation" title="Permalink to this term">¶</a></dt><dd><p>A form of <a class="reference internal" href="#term-Let-Floating"><span class="xref std std-term">Let Floating</span></a> which moves let bindings out of lambda
+abstractions to avoid unnecessary allocation and computation. See
+<span id="id5">Peyton Jones and Santos [<a class="reference internal" href="../contents.html#id5" title="Simon Peyton Jones and Andre Santos. A transformation-based optimiser for haskell. Science of Computer Programming, October 1997. URL: https://www.microsoft.com/en-us/research/publication/a-transformation-based-optimiser-for-haskell/.">1</a>]</span> Section 7.2.</p>
+</dd>
 </dl>
 </section>
 

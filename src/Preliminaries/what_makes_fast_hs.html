@@ -214,11 +214,11 @@ Haskell program slows down. For each slow down topic we provide a sister</p>
 <span id="canonical-inlining"></span><h2>Inlining<a class="headerlink" href="#inlining" title="Permalink to this headline">¶</a></h2>
 <section id="what-is-inlining">
 <h3>What is Inlining<a class="headerlink" href="#what-is-inlining" title="Permalink to this headline">¶</a></h3>
-<p>Inlining <a class="footnote-reference brackets" href="#id7" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> is a simple optimization technique that almost all optimizing
+<p>Inlining <a class="footnote-reference brackets" href="#id8" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> is a simple optimization technique that almost all optimizing
 compilers perform. The essential idea is to substitute the call sites of a
 function <code class="docutils literal notranslate"><span class="pre">f</span></code>, with the body of <code class="docutils literal notranslate"><span class="pre">f</span></code>. For example:</p>
-<div class="literal-block-wrapper docutils container" id="id11">
-<div class="code-block-caption"><span class="caption-text">Before inlining</span><a class="headerlink" href="#id11" title="Permalink to this code">¶</a></div>
+<div class="literal-block-wrapper docutils container" id="id14">
+<div class="code-block-caption"><span class="caption-text">Before inlining</span><a class="headerlink" href="#id14" title="Permalink to this code">¶</a></div>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">3</span><span class="w"></span>
 <span class="c1">--- somewhere else</span><span class="w"></span>
 <span class="o">&gt;</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">c</span><span class="w"></span>
@@ -228,8 +228,8 @@ function <code class="docutils literal notranslate"><span class="pre">f</span></
 <p>Here we define a function <code class="docutils literal notranslate"><span class="pre">f</span></code>, and then have a single call site <code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">(a</span> <span class="pre">+</span> <span class="pre">b)</span>
 <span class="pre">...</span></code>. Inlining <code class="docutils literal notranslate"><span class="pre">f</span></code> transforms the call site by replacing <code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">(a</span> <span class="pre">+</span> <span class="pre">b)</span></code>
 with the body (or right hand side) of <code class="docutils literal notranslate"><span class="pre">f</span></code>:</p>
-<div class="literal-block-wrapper docutils container" id="id12">
-<div class="code-block-caption"><span class="caption-text">After inlining</span><a class="headerlink" href="#id12" title="Permalink to this code">¶</a></div>
+<div class="literal-block-wrapper docutils container" id="id15">
+<div class="code-block-caption"><span class="caption-text">After inlining</span><a class="headerlink" href="#id15" title="Permalink to this code">¶</a></div>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">3</span><span class="w"></span>
 <span class="c1">-- somewhere else</span><span class="w"></span>
 <span class="o">&gt;</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">c</span><span class="w"></span>
@@ -264,7 +264,7 @@ particulars of GHC’s inliner, in the chapter dedicated to <span class="xref st
 <span id="canonical-fusion"></span><h2>Fusion<a class="headerlink" href="#fusion" title="Permalink to this headline">¶</a></h2>
 <section id="what-is-fusion">
 <h3>What is Fusion<a class="headerlink" href="#what-is-fusion" title="Permalink to this headline">¶</a></h3>
-<p>Fusion or Deforestation <a class="footnote-reference brackets" href="#id8" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> <a class="footnote-reference brackets" href="#id9" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a> (We take Andy Gill’s excellent examples from
+<p>Fusion or Deforestation <a class="footnote-reference brackets" href="#id9" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> <a class="footnote-reference brackets" href="#id10" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a> (We take Andy Gill’s excellent examples from
 this paper for this section. Thank you Andy Gill for your labor!) is an
 optimization technique that eliminates intermediate and short lived data
 structures between function calls. It is a key optimization that makes Haskell
@@ -329,9 +329,9 @@ around the community for some time.</p>
 <section id="how-does-excessive-pointer-chasing-slow-down-runtime-performance">
 <h3>How does excessive pointer chasing slow down runtime performance?<a class="headerlink" href="#how-does-excessive-pointer-chasing-slow-down-runtime-performance" title="Permalink to this headline">¶</a></h3>
 <p>The classic example of excessive pointer chasing is memory leaks that result
-from folds that are overly lazy, for example <a class="footnote-reference brackets" href="#id10" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>:</p>
-<div class="literal-block-wrapper docutils container" id="id13">
-<div class="code-block-caption"><span class="caption-text">mean, calculated with a lazy left fold</span><a class="headerlink" href="#id13" title="Permalink to this code">¶</a></div>
+from folds that are overly lazy, for example <a class="footnote-reference brackets" href="#id11" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>:</p>
+<div class="literal-block-wrapper docutils container" id="id16">
+<div class="code-block-caption"><span class="caption-text">mean, calculated with a lazy left fold</span><a class="headerlink" href="#id16" title="Permalink to this code">¶</a></div>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">mean</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">[</span><span class="kt">Double</span><span class="p">]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Double</span><span class="w"></span>
 <span class="nf">mean</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">fromIntegral</span><span class="w"> </span><span class="n">ln</span><span class="w"></span>
 <span class="w">  </span><span class="kr">where</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">ln</span><span class="p">)</span><span class="w">        </span><span class="ow">=</span><span class="w"> </span><span class="n">foldl</span><span class="w"> </span><span class="n">step</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">xs</span><span class="w"></span>
@@ -339,8 +339,8 @@ from folds that are overly lazy, for example <a class="footnote-reference bracke
 </pre></div>
 </div>
 </div>
-<div class="literal-block-wrapper docutils container" id="id14">
-<div class="code-block-caption"><span class="caption-text">mean, calculated with a strict left fold</span><a class="headerlink" href="#id14" title="Permalink to this code">¶</a></div>
+<div class="literal-block-wrapper docutils container" id="id17">
+<div class="code-block-caption"><span class="caption-text">mean, calculated with a strict left fold</span><a class="headerlink" href="#id17" title="Permalink to this code">¶</a></div>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">mean&#39;</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">[</span><span class="kt">Double</span><span class="p">]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Double</span><span class="w"></span>
 <span class="nf">mean&#39;</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">fromIntegral</span><span class="w"> </span><span class="n">ln</span><span class="w"></span>
 <span class="w">  </span><span class="kr">where</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">ln</span><span class="p">)</span><span class="w">        </span><span class="ow">=</span><span class="w"> </span><span class="n">foldl&#39;</span><span class="w"> </span><span class="n">step</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">xs</span><span class="w"></span>
@@ -410,10 +410,100 @@ Chasing</span> section.</p>
 <span id="canonical-closure-alloc"></span><h2>Excessive Closure Allocation<a class="headerlink" href="#excessive-closure-allocation" title="Permalink to this headline">¶</a></h2>
 <section id="what-is-excessive-closure-allocation">
 <h3>What is Excessive Closure Allocation<a class="headerlink" href="#what-is-excessive-closure-allocation" title="Permalink to this headline">¶</a></h3>
-<p>xcessive <a class="reference internal" href="../glossary.html#term-Closure"><span class="xref std std-term">Closure</span></a> allocation is <span id="id5">[<a class="reference internal" href="../../contents.html#id2" title="Simon Peyton Jones and Simon Marlow. Secrets of the glasgow haskell compiler inliner. J. Funct. Program., 12(5):393–434, jul 2002. URL: https://doi.org/10.1017/S0956796802004331, doi:10.1017/S0956796802004331.">1</a>]</span> and <span id="id6">Peyton Jones and Marlow [<a class="reference internal" href="../../contents.html#id2" title="Simon Peyton Jones and Simon Marlow. Secrets of the glasgow haskell compiler inliner. J. Funct. Program., 12(5):393–434, jul 2002. URL: https://doi.org/10.1017/S0956796802004331, doi:10.1017/S0956796802004331.">1</a>]</span></p>
+<p>Excessive closure allocation is another form of superfluous computation and
+superfluous memory allocation; it means that our program is doing more memory
+allocation and likely more computation then required to compute the result.
+Excessive closure allocation is subtle for two reasons: first, because GHC is
+typically very good at optimizing it away via <a class="reference internal" href="../glossary.html#term-Let-Floating"><span class="xref std std-term">Let Floating</span></a> most
+Haskeller’s never have to confront it (which is a good indication of GHC’s
+quality); second, in order to observe it, the programmer must track the memory
+allocation of their program across many functions or even modules, which is not
+a common experience when writing Haskell. For our purposes’, we’ll inspect
+examples that GHC should have no problem finding and optimizing. See
+<span class="xref std std-ref">Case_Study_SBV</span></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>TODO: not yet written, see <a class="reference external" href="https://github.com/input-output-hk/hs-opt-handbook.github.io/issues/18">#18</a></p>
+</div>
+<p>for an example of excessive memory allocation in a widely used library. While
+GHC is good at optimizing these cases, becoming familiar with these code
+transformations is beneficial; it trains you to start thinking in terms of
+memory allocation when reading or writing Haskell code, and teaches you to
+perform these optimizations manually when GHC fails to optimization.</p>
 </section>
 <section id="how-does-excessive-closure-allocation-slow-down-runtime-performance">
 <h3>How does Excessive Closure Allocation slow down runtime performance<a class="headerlink" href="#how-does-excessive-closure-allocation-slow-down-runtime-performance" title="Permalink to this headline">¶</a></h3>
+<p>Consider these simple examples <a class="footnote-reference brackets" href="#id12" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a> :</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"></span>
+<span class="kr">in</span><span class="w"> </span><span class="kr">case</span><span class="w"> </span><span class="n">tail</span><span class="w"> </span><span class="n">zs</span><span class="w"> </span><span class="kr">of</span><span class="w"></span>
+<span class="w">        </span><span class="kt">[]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">x</span><span class="w"></span>
+<span class="w">        </span><span class="kr">_</span><span class="w">  </span><span class="ow">-&gt;</span><span class="w"> </span><span class="mi">1</span><span class="w"></span>
+</pre></div>
+</div>
+<p>This is an example of <code class="docutils literal notranslate"><span class="pre">Let</span> <span class="pre">Floating</span> <span class="pre">inwards</span></code>. Notice that <code class="docutils literal notranslate"><span class="pre">x</span></code> is only used
+in <em>one branch</em> of the <code class="docutils literal notranslate"><span class="pre">case</span> <span class="pre">expression</span></code>, because the other branch does not
+require it GHC can <em>Float x inward</em> to the first branch:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">case</span><span class="w"> </span><span class="n">tail</span><span class="w"> </span><span class="n">zs</span><span class="w"> </span><span class="kr">of</span><span class="w"></span>
+<span class="w">     </span><span class="kt">[]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"></span>
+<span class="w">           </span><span class="kr">in</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">x</span><span class="w"></span>
+<span class="w">     </span><span class="kr">_</span><span class="w">  </span><span class="ow">-&gt;</span><span class="w"> </span><span class="mi">1</span><span class="w"></span>
+</pre></div>
+</div>
+<p>Now <code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">...</span></code> occurs <em>conditionally</em> depending on the result of <code class="docutils literal notranslate"><span class="pre">tail</span> <span class="pre">zs</span></code>,
+rather than everytime as we saw in the first previous example. Thus, the second
+form is semantically identical but more efficient because our program may avoid
+<code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">...</span></code> and thereby avoid an extra heap allocation.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Let Floating can change <a class="reference internal" href="../glossary.html#term-Thunk"><span class="xref std std-term">Thunk</span></a> sizes.</p>
+</div>
+<p>Consider this example from <span id="id7">Peyton Jones and Santos [<a class="reference internal" href="../../contents.html#id5" title="Simon Peyton Jones and Andre Santos. A transformation-based optimiser for haskell. Science of Computer Programming, October 1997. URL: https://www.microsoft.com/en-us/research/publication/a-transformation-based-optimiser-for-haskell/.">1</a>]</span>, Section 7.1:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">w</span><span class="w">     </span><span class="c1">-- v and w are free variables in x</span><span class="w"></span>
+<span class="w">    </span><span class="n">y</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="o">...</span><span class="n">x</span><span class="o">...</span><span class="n">x</span><span class="w">  </span><span class="c1">-- y mentions x</span><span class="w"></span>
+<span class="kr">in</span><span class="w"> </span><span class="kt">B</span><span class="w">              </span><span class="c1">-- B does not mention x</span><span class="w"></span>
+</pre></div>
+</div>
+<p>Floating <code class="docutils literal notranslate"><span class="pre">x</span></code> inward produces:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">let</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="c1">-- now v and w are free variables in y</span><span class="w"></span>
+<span class="w">        </span><span class="kr">in</span><span class="w"> </span><span class="o">...</span><span class="n">x</span><span class="o">...</span><span class="n">x</span><span class="w"></span>
+<span class="kr">in</span><span class="w"> </span><span class="kt">B</span><span class="w"></span>
+</pre></div>
+</div>
+<p>Now <code class="docutils literal notranslate"><span class="pre">v</span></code> and <code class="docutils literal notranslate"><span class="pre">w</span></code> are free variables in <code class="docutils literal notranslate"><span class="pre">y</span></code> but <code class="docutils literal notranslate"><span class="pre">x</span></code> is not. <code class="docutils literal notranslate"><span class="pre">x</span></code> is a
+bound variable in <code class="docutils literal notranslate"><span class="pre">y</span></code> (and will get inlined). So if <code class="docutils literal notranslate"><span class="pre">v</span></code> and <code class="docutils literal notranslate"><span class="pre">w</span></code> were
+originally free in <code class="docutils literal notranslate"><span class="pre">y</span></code> then the size of the thunk for <code class="docutils literal notranslate"><span class="pre">y</span></code> will be unchanged.
+However, if <code class="docutils literal notranslate"><span class="pre">v</span></code> and <code class="docutils literal notranslate"><span class="pre">w</span></code> are newly free in <code class="docutils literal notranslate"><span class="pre">y</span></code> then the size of the thunk
+will increase to reference the new free variables.</p>
+<p>Let bindings are also be floated outwards. There are several versions of outward
+let floating which perform small optimizations by moving <code class="docutils literal notranslate"><span class="pre">let</span></code> bindings around
+<code class="docutils literal notranslate"><span class="pre">case</span></code> expressions, for now we’ll focus on a very effective outward floating
+transformation called the <a class="reference internal" href="../glossary.html#term-Full-Laziness-transformation"><span class="xref std std-term">Full Laziness transformation</span></a>. The Full
+Laziness transformation floats bindings out of lambda abstractions, consider:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">f</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="nf">\</span><span class="n">xs</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kr">let</span><span class="w"></span>
+<span class="w">             </span><span class="n">g</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="nf">\</span><span class="n">y</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="n">xs</span><span class="w">  </span><span class="c1">-- calculate n</span><span class="w"></span>
+<span class="w">                       </span><span class="kr">in</span><span class="w"> </span><span class="o">...</span><span class="n">g</span><span class="o">...</span><span class="n">n</span><span class="w">        </span><span class="c1">-- use n, but not xs</span><span class="w"></span>
+<span class="w">           </span><span class="kr">in</span><span class="w"> </span><span class="o">...</span><span class="n">g</span><span class="o">...</span><span class="w"></span>
+</pre></div>
+</div>
+<p>So we have an outer function, <code class="docutils literal notranslate"><span class="pre">f</span></code>, that defines a tight inner loop <code class="docutils literal notranslate"><span class="pre">g</span></code>.
+Notice that <em>every</em> recursive call to <code class="docutils literal notranslate"><span class="pre">g</span></code> will allocate space for, and
+calclulate <code class="docutils literal notranslate"><span class="pre">length</span> <span class="pre">xs</span></code> because <code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">n</span> <span class="pre">=</span> <span class="pre">...</span></code> is inside the body of <code class="docutils literal notranslate"><span class="pre">g</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">n</span></code> is also used in <code class="docutils literal notranslate"><span class="pre">g</span></code>. But this is clearly wasteful, <code class="docutils literal notranslate"><span class="pre">xs</span></code> isn’t
+changing in the body of <code class="docutils literal notranslate"><span class="pre">g</span></code> and so we should only need to calculate <code class="docutils literal notranslate"><span class="pre">n</span></code>
+once. Fortunately, <code class="docutils literal notranslate"><span class="pre">g</span></code> never uses <code class="docutils literal notranslate"><span class="pre">xs</span></code> other than to calculate <code class="docutils literal notranslate"><span class="pre">n</span></code>, so
+<code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">n</span> <span class="pre">=</span> <span class="pre">...</span></code> can be floated out of <code class="docutils literal notranslate"><span class="pre">g</span></code>:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">f</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="nf">\</span><span class="n">xs</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="n">xs</span><span class="w">          </span><span class="c1">-- n only calculated once</span><span class="w"></span>
+<span class="w">           </span><span class="kr">in</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="nf">\</span><span class="n">y</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="o">...</span><span class="n">g</span><span class="o">...</span><span class="n">n</span><span class="w">  </span><span class="c1">-- use previously defined n</span><span class="w"></span>
+<span class="w">              </span><span class="kr">in</span><span class="w"> </span><span class="o">...</span><span class="n">g</span><span class="o">...</span><span class="w"></span>
+</pre></div>
+</div>
+<p>This version is the full laziness version because we have moved <code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">n</span> <span class="pre">=</span> <span class="pre">..</span></code>
+out of the lambda in the body of <code class="docutils literal notranslate"><span class="pre">g</span></code>. This version is much more efficient by
+utilizing laziness and avoiding repeated, wasteful computations of <code class="docutils literal notranslate"><span class="pre">n</span></code>. <code class="docutils literal notranslate"><span class="pre">n</span></code>
+will be a thunk for the first iteration of <code class="docutils literal notranslate"><span class="pre">g</span></code>, but for every other iteration
+of <code class="docutils literal notranslate"><span class="pre">g</span></code>, <code class="docutils literal notranslate"><span class="pre">n</span></code> will be evaluated to value thus saving time and space. We’ll see
+more cases of let floating and detecting excessive closure allocation in the
+<span class="xref std std-ref">Excessive Closure Allocation</span> section.</p>
 </section>
 </section>
 <section id="poor-domain-modeling">
@@ -421,21 +511,25 @@ Chasing</span> section.</p>
 </section>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
-<aside class="footnote brackets" id="id7" role="note">
+<aside class="footnote brackets" id="id8" role="note">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="https://wiki.haskell.org/Inlining_and_Specialisation">https://wiki.haskell.org/Inlining_and_Specialisation</a></p>
 </aside>
-<aside class="footnote brackets" id="id8" role="note">
+<aside class="footnote brackets" id="id9" role="note">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="https://www.sciencedirect.com/science/article/pii/030439759090147A?via%3Dihub">https://www.sciencedirect.com/science/article/pii/030439759090147A?via%3Dihub</a></p>
 </aside>
-<aside class="footnote brackets" id="id9" role="note">
+<aside class="footnote brackets" id="id10" role="note">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="https://www.microsoft.com/en-us/research/wp-content/uploads/2016/07/deforestation-short-cut.pdf">https://www.microsoft.com/en-us/research/wp-content/uploads/2016/07/deforestation-short-cut.pdf</a></p>
 </aside>
-<aside class="footnote brackets" id="id10" role="note">
+<aside class="footnote brackets" id="id11" role="note">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">4</a><span class="fn-bracket">]</span></span>
 <p>This code adapted from Johan Tibell slides on Haskell <a class="reference external" href="https://www.slideshare.net/tibbe/highperformance-haskell">optimization</a>.</p>
+</aside>
+<aside class="footnote brackets" id="id12" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">5</a><span class="fn-bracket">]</span></span>
+<p>This code adapted from <span id="id13">Peyton Jones and Santos [<a class="reference internal" href="../../contents.html#id5" title="Simon Peyton Jones and Andre Santos. A transformation-based optimiser for haskell. Science of Computer Programming, October 1997. URL: https://www.microsoft.com/en-us/research/publication/a-transformation-based-optimiser-for-haskell/.">1</a>]</span> Section 7.</p>
 </aside>
 </section>
 </section>
