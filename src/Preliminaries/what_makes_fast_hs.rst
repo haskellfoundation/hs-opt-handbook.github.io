@@ -132,8 +132,6 @@ difficult. We'll show how to identify fusion as the culprit and convice GHC to
 fuse in the chapter dedicated :ref:`Fusion`.
 
 
-
-
 .. _canonical-pointer-chasing:
 
 Excessive Pointer Chasing
@@ -249,12 +247,115 @@ Excessive Closure Allocation
 What is Excessive Closure Allocation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-xcessive :term:`Closure` allocation is :cite:p:`GHCInliner` and :cite:t:`GHCInliner`
+Excessive closure allocation is another form of superfluous computation and
+superfluous memory allocation; it means that our program is doing more memory
+allocation and likely more computation then required to compute the result.
+Excessive closure allocation is subtle for two reasons: first, because GHC is
+typically very good at optimizing it away via :term:`Let Floating` most
+Haskeller's never have to confront it (which is a good indication of GHC's
+quality); second, in order to observe it, the programmer must track the memory
+allocation of their program across many functions or even modules, which is not
+a common experience when writing Haskell. For our purposes', we'll inspect
+examples that GHC should have no problem finding and optimizing. See
+:ref:`Case_Study_SBV`
 
+.. note::
+   TODO: not yet written, see `#18 <https://github.com/input-output-hk/hs-opt-handbook.github.io/issues/18>`_
+
+for an example of excessive memory allocation in a widely used library. While
+GHC is good at optimizing these cases, becoming familiar with these code
+transformations is beneficial; it trains you to start thinking in terms of
+memory allocation when reading or writing Haskell code, and teaches you to
+perform these optimizations manually when GHC fails to optimization.
 
 
 How does Excessive Closure Allocation slow down runtime performance
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Consider these simple examples [#]_ :
+
+.. code-block:: haskell
+
+   let x = y + 1
+   in case tail zs of
+           [] -> x * x
+           _  -> 1
+
+This is an example of ``Let Floating inwards``. Notice that ``x`` is only used
+in *one branch* of the ``case expression``, because the other branch does not
+require it GHC can *Float x inward* to the first branch:
+
+.. code-block:: haskell
+
+   case tail zs of
+        [] -> let x = y + 1
+              in x * x
+        _  -> 1
+
+Now ``let x = ...`` occurs *conditionally* depending on the result of ``tail zs``,
+rather than everytime as we saw in the first previous example. Thus, the second
+form is semantically identical but more efficient because our program may avoid
+``let x = ...`` and thereby avoid an extra heap allocation.
+
+.. note::
+   Let Floating can change :term:`Thunk` sizes.
+
+Consider this example from :cite:t:`peytonjones1997a`, Section 7.1:
+
+.. code-block:: haskell
+
+   let x = v + w     -- v and w are free variables in x
+       y = ...x...x  -- y mentions x
+   in B              -- B does not mention x
+
+Floating ``x`` inward produces:
+
+.. code-block:: haskell
+
+   let y = let x = v + w -- now v and w are free variables in y
+           in ...x...x
+   in B
+
+Now ``v`` and ``w`` are free variables in ``y`` but ``x`` is not. ``x`` is a
+bound variable in ``y`` (and will get inlined). So if ``v`` and ``w`` were
+originally free in ``y`` then the size of the thunk for ``y`` will be unchanged.
+However, if ``v`` and ``w`` are newly free in ``y`` then the size of the thunk
+will increase to reference the new free variables.
+
+Let bindings are also be floated outwards. There are several versions of outward
+let floating which perform small optimizations by moving ``let`` bindings around
+``case`` expressions, for now we'll focus on a very effective outward floating
+transformation called the :term:`Full Laziness transformation`. The Full
+Laziness transformation floats bindings out of lambda abstractions, consider:
+
+.. code-block:: haskell
+
+   f = \xs -> let
+                g = \y -> let n = length xs  -- calculate n
+                          in ...g...n        -- use n, but not xs
+              in ...g...
+
+So we have an outer function, ``f``, that defines a tight inner loop ``g``.
+Notice that *every* recursive call to ``g`` will allocate space for, and
+calclulate ``length xs`` because ``let n = ...`` is inside the body of ``g``,
+and ``n`` is also used in ``g``. But this is clearly wasteful, ``xs`` isn't
+changing in the body of ``g`` and so we should only need to calculate ``n``
+once. Fortunately, ``g`` never uses ``xs`` other than to calculate ``n``, so
+``let n = ...`` can be floated out of ``g``:
+
+.. code-block:: haskell
+
+   f = \xs -> let n = length xs          -- n only calculated once
+              in let g = \y -> ...g...n  -- use previously defined n
+                 in ...g...
+
+This version is the full laziness version because we have moved ``let n = ..``
+out of the lambda in the body of ``g``. This version is much more efficient by
+utilizing laziness and avoiding repeated, wasteful computations of ``n``. ``n``
+will be a thunk for the first iteration of ``g``, but for every other iteration
+of ``g``, ``n`` will be evaluated to value thus saving time and space. We'll see
+more cases of let floating and detecting excessive closure allocation in the
+:ref:`Excessive Closure Allocation` section.
 
 .. _canonical-domain-modeling:
 
@@ -269,3 +370,4 @@ References
 .. [#] https://www.microsoft.com/en-us/research/wp-content/uploads/2016/07/deforestation-short-cut.pdf
 .. [#] This code adapted from Johan Tibell slides on Haskell `optimization
        <https://www.slideshare.net/tibbe/highperformance-haskell>`_.
+.. [#] This code adapted from :cite:t:`peytonjones1997a` Section 7.
