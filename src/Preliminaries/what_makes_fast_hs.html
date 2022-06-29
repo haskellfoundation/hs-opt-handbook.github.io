@@ -240,7 +240,7 @@ with the body (or right hand side) of <code class="docutils literal notranslate"
 <span class="math notranslate nohighlight">\(x \mapsto (a + b)\)</span>.</p>
 </section>
 <section id="why-do-we-want-inlining">
-<h3>Why do we want Inlining<a class="headerlink" href="#why-do-we-want-inlining" title="Permalink to this headline">¶</a></h3>
+<h3>Why do We Want Inlining<a class="headerlink" href="#why-do-we-want-inlining" title="Permalink to this headline">¶</a></h3>
 <p>Inlining has been called the “mother of all optimizations” because it has two
 primary benefits. First, it removes the overhead of a function call, which can
 be noticeable in a hot loop. Second, it is an <em>enabling optimization</em>; by
@@ -251,7 +251,7 @@ more art than science; a simple change can have cascading and unforeseen effects
 in the end result.</p>
 </section>
 <section id="how-does-inlining-slow-down-runtime-performance">
-<h3>How does Inlining slow down runtime performance<a class="headerlink" href="#how-does-inlining-slow-down-runtime-performance" title="Permalink to this headline">¶</a></h3>
+<h3>How does Inlining Slow Down Runtime Performance<a class="headerlink" href="#how-does-inlining-slow-down-runtime-performance" title="Permalink to this headline">¶</a></h3>
 <p>Inlining itself does not slow down runtime performance, <em>lack of</em> inlining does,
 because it limits otherwise possible optimizations from taking place. However,
 that does not mean we should always ask GHC to inline or manually perform
@@ -303,7 +303,7 @@ transform this into the more efficient version <code class="docutils literal not
 </div></blockquote>
 </section>
 <section id="how-does-fusion-slow-down-runtime-performance">
-<h3>How does Fusion slow down runtime performance<a class="headerlink" href="#how-does-fusion-slow-down-runtime-performance" title="Permalink to this headline">¶</a></h3>
+<h3>How does Fusion Slow Down Runtime Performance<a class="headerlink" href="#how-does-fusion-slow-down-runtime-performance" title="Permalink to this headline">¶</a></h3>
 <p>Similar to Inlining, fusion itself does not slow down performance, rather <em>lack
 of</em> fusion does, because if something can fuse but doesn’t, then the program
 will perform unnecessary allocations just to yield the same result. The
@@ -327,7 +327,7 @@ laziness. As such, most of these instances are well known and have floated
 around the community for some time.</p>
 </section>
 <section id="how-does-excessive-pointer-chasing-slow-down-runtime-performance">
-<h3>How does excessive pointer chasing slow down runtime performance?<a class="headerlink" href="#how-does-excessive-pointer-chasing-slow-down-runtime-performance" title="Permalink to this headline">¶</a></h3>
+<h3>How does Excessive Pointer Chasing Slow Down Runtime Performance?<a class="headerlink" href="#how-does-excessive-pointer-chasing-slow-down-runtime-performance" title="Permalink to this headline">¶</a></h3>
 <p>The classic example of excessive pointer chasing is memory leaks that result
 from folds that are overly lazy, for example <a class="footnote-reference brackets" href="#id11" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>:</p>
 <div class="literal-block-wrapper docutils container" id="id16">
@@ -432,7 +432,7 @@ memory allocation when reading or writing Haskell code, and teaches you to
 perform these optimizations manually when GHC fails to optimization.</p>
 </section>
 <section id="how-does-excessive-closure-allocation-slow-down-runtime-performance">
-<h3>How does Excessive Closure Allocation slow down runtime performance<a class="headerlink" href="#how-does-excessive-closure-allocation-slow-down-runtime-performance" title="Permalink to this headline">¶</a></h3>
+<h3>How does Excessive Closure Allocation Slow Down Runtime Performance<a class="headerlink" href="#how-does-excessive-closure-allocation-slow-down-runtime-performance" title="Permalink to this headline">¶</a></h3>
 <p>Consider these simple examples <a class="footnote-reference brackets" href="#id12" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a> :</p>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"></span>
 <span class="kr">in</span><span class="w"> </span><span class="kr">case</span><span class="w"> </span><span class="n">tail</span><span class="w"> </span><span class="n">zs</span><span class="w"> </span><span class="kr">of</span><span class="w"></span>
@@ -472,7 +472,7 @@ form is semantically identical but more efficient because our program may avoid
 <p>Now <code class="docutils literal notranslate"><span class="pre">v</span></code> and <code class="docutils literal notranslate"><span class="pre">w</span></code> are free variables in <code class="docutils literal notranslate"><span class="pre">y</span></code> but <code class="docutils literal notranslate"><span class="pre">x</span></code> is not. <code class="docutils literal notranslate"><span class="pre">x</span></code> is a
 bound variable in <code class="docutils literal notranslate"><span class="pre">y</span></code> (and will get inlined). So if <code class="docutils literal notranslate"><span class="pre">v</span></code> and <code class="docutils literal notranslate"><span class="pre">w</span></code> were
 originally free in <code class="docutils literal notranslate"><span class="pre">y</span></code> then the size of the thunk for <code class="docutils literal notranslate"><span class="pre">y</span></code> will be unchanged.
-However, if <code class="docutils literal notranslate"><span class="pre">v</span></code> and <code class="docutils literal notranslate"><span class="pre">w</span></code> are newly free in <code class="docutils literal notranslate"><span class="pre">y</span></code> then the size of the thunk
+However, if <code class="docutils literal notranslate"><span class="pre">v</span></code> and <code class="docutils literal notranslate"><span class="pre">w</span></code> are <em>newly</em> free in <code class="docutils literal notranslate"><span class="pre">y</span></code> then the size of the thunk
 will increase to reference the new free variables.</p>
 <p>Let bindings are also be floated outwards. There are several versions of outward
 let floating which perform small optimizations by moving <code class="docutils literal notranslate"><span class="pre">let</span></code> bindings around
@@ -508,6 +508,74 @@ more cases of let floating and detecting excessive closure allocation in the
 </section>
 <section id="poor-domain-modeling">
 <span id="canonical-domain-modeling"></span><h2>Poor Domain Modeling<a class="headerlink" href="#poor-domain-modeling" title="Permalink to this headline">¶</a></h2>
+<section id="what-is-poor-domain-modeling">
+<h3>What is Poor Domain Modeling<a class="headerlink" href="#what-is-poor-domain-modeling" title="Permalink to this headline">¶</a></h3>
+<p>Poor domain modeling is a catch all phrase for constructing a program that has a
+high impedance to the problem domain. The problem domain requires specific
+actions that abide by specific invariants, if those actions are hard to do, and
+those invariants hard to abide by, then you have a high impedance between the
+problem domain and the program working on the problem domain. Obviously this is
+problem specific and so we cannot provide a canonical example, instead we’ll
+provide a set of guidelines to describe when you know you have high impedance
+and how to fix it.</p>
+</section>
+<section id="how-do-i-know-if-i-have-poor-domain-modeling">
+<h3>How do I know if I have Poor Domain Modeling<a class="headerlink" href="#how-do-i-know-if-i-have-poor-domain-modeling" title="Permalink to this headline">¶</a></h3>
+<p>Unfortunately, this is more art than science. Classic indications are:</p>
+<ol class="arabic">
+<li><p>You’ve used a List and have called a function from <code class="docutils literal notranslate"><span class="pre">Data.List</span></code> that does
+any kind of out-of-order processing on elements of the list, or must traverse
+the entire list in order to produce a result:</p>
+<ol class="loweralpha simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">length</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">reverse</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">splitAt</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">takeWhile</span></code></p></li>
+</ol>
+<p>e. <code class="docutils literal notranslate"><span class="pre">dropWhile</span></code>
+g. <code class="docutils literal notranslate"><span class="pre">elem</span></code>
+h. <code class="docutils literal notranslate"><span class="pre">notElem</span></code>
+i. <code class="docutils literal notranslate"><span class="pre">find</span></code>
+j. <code class="docutils literal notranslate"><span class="pre">filter</span></code>
+k. any kind of indexing</p>
+<p>Recall that lists in Haskell are streams; not treating them as such creates
+impedance between the problem domain and your program in addition to
+degrading runtime performance (and easily creating a quadratic time program).
+However, small temporary lists holding single digits of elements are fine
+because they take less time to construct and traverse than a more complicated
+data structure.</p>
+</li>
+<li><p>My functions do not easily compose to have meaning in my problem domain.</p></li>
+<li><p>The invariants in my problem domain are difficult to express.</p>
+<p>This one usually manifests through the use of superfluous guards. So many
+functions take this form:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- | an example function on Foo, this function learns a lot about Foo</span><span class="w"></span>
+<span class="nf">myFunction</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Foo</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Bar</span><span class="w"></span>
+<span class="nf">myFunction</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">predicate0</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="o">...</span><span class="kr">do</span><span class="w"> </span><span class="n">something</span><span class="w"> </span><span class="o">...</span><span class="w"></span>
+<span class="w">               </span><span class="o">|</span><span class="w"> </span><span class="n">predicate1</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="o">...</span><span class="kr">do</span><span class="w"> </span><span class="n">another</span><span class="w"> </span><span class="n">thing</span><span class="o">...</span><span class="w"></span>
+<span class="w">               </span><span class="o">|</span><span class="w"> </span><span class="o">...</span><span class="w"></span>
+<span class="w">               </span><span class="o">|</span><span class="w"> </span><span class="n">predicateN</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="o">...</span><span class="kr">do</span><span class="w"> </span><span class="kt">N</span><span class="w"> </span><span class="n">thing</span><span class="o">...</span><span class="w"></span>
+</pre></div>
+</div>
+<p>This becomes problematic when it grows to be ubiquitous in the code base.
+When a lot of functions in the program use guards the program will suffer
+from redundant checks and poor branch prediction, for example:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- | anoter function on Foo, this function doesn&#39;t learn much about Foo</span><span class="w"></span>
+<span class="nf">myOtherFunction</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Foo</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Baz</span><span class="w"></span>
+<span class="nf">myOtherFunction</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">predicate1</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="o">...</span><span class="kr">do</span><span class="w"> </span><span class="n">some</span><span class="w"> </span><span class="n">another</span><span class="w"> </span><span class="n">thing</span><span class="o">...</span><span class="w"></span>
+<span class="w">                    </span><span class="o">|</span><span class="w"> </span><span class="n">otherwise</span><span class="w">      </span><span class="ow">=</span><span class="w"> </span><span class="o">...</span><span class="w"></span>
+
+<span class="nf">main</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">IO</span><span class="w"> </span><span class="nb">()</span><span class="w"></span>
+<span class="nf">main</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kr">do</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="ow">&lt;-</span><span class="w"> </span><span class="n">getFoo</span><span class="w">          </span><span class="c1">-- we get a Foo</span><span class="w"></span>
+<span class="w">          </span><span class="n">myFunction</span><span class="w"> </span><span class="n">foo</span><span class="w">         </span><span class="c1">-- we learn a lot about Foo</span><span class="w"></span>
+<span class="w">          </span><span class="n">myOtherFunction</span><span class="w"> </span><span class="n">foo</span><span class="w">    </span><span class="c1">-- nothing we&#39;ve learned is propagated forward</span><span class="w"></span>
+<span class="w">                                 </span><span class="c1">--  from myFunction to myOtherFunction, and so</span><span class="w"></span>
+<span class="w">                                 </span><span class="c1">--  we redundantly check predicate1 on foo</span><span class="w"></span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
 </section>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
