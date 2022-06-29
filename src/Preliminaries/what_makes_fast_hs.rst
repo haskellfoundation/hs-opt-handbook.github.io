@@ -45,7 +45,7 @@ Notice the call to ``f`` is removed and has been replaced with ``x * 3``, where
 :math:`x \mapsto (a + b)`.
 
 
-Why do we want Inlining
+Why do We Want Inlining
 ^^^^^^^^^^^^^^^^^^^^^^^
 
 Inlining has been called the "mother of all optimizations" because it has two
@@ -57,7 +57,7 @@ to faster code. This is one of the main reasons why performance engineering is
 more art than science; a simple change can have cascading and unforeseen effects
 in the end result.
 
-How does Inlining slow down runtime performance
+How does Inlining Slow Down Runtime Performance
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Inlining itself does not slow down runtime performance, *lack of* inlining does,
@@ -120,7 +120,7 @@ As Andy Gill writes:
    programs in the style of ``all`` but have the compiler automatically
    transform this into the more efficient version ``all'``.
 
-How does Fusion slow down runtime performance
+How does Fusion Slow Down Runtime Performance
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Similar to Inlining, fusion itself does not slow down performance, rather *lack
@@ -150,7 +150,7 @@ laziness. As such, most of these instances are well known and have floated
 around the community for some time.
 
 
-How does excessive pointer chasing slow down runtime performance?
+How does Excessive Pointer Chasing Slow Down Runtime Performance?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The classic example of excessive pointer chasing is memory leaks that result
@@ -269,7 +269,7 @@ memory allocation when reading or writing Haskell code, and teaches you to
 perform these optimizations manually when GHC fails to optimization.
 
 
-How does Excessive Closure Allocation slow down runtime performance
+How does Excessive Closure Allocation Slow Down Runtime Performance
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Consider these simple examples [#]_ :
@@ -319,7 +319,7 @@ Floating ``x`` inward produces:
 Now ``v`` and ``w`` are free variables in ``y`` but ``x`` is not. ``x`` is a
 bound variable in ``y`` (and will get inlined). So if ``v`` and ``w`` were
 originally free in ``y`` then the size of the thunk for ``y`` will be unchanged.
-However, if ``v`` and ``w`` are newly free in ``y`` then the size of the thunk
+However, if ``v`` and ``w`` are *newly* free in ``y`` then the size of the thunk
 will increase to reference the new free variables.
 
 Let bindings are also be floated outwards. There are several versions of outward
@@ -361,6 +361,81 @@ more cases of let floating and detecting excessive closure allocation in the
 
 Poor Domain Modeling
 --------------------
+
+What is Poor Domain Modeling
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Poor domain modeling is a catch all phrase for constructing a program that has a
+high impedance to the problem domain. The problem domain requires specific
+actions that abide by specific invariants, if those actions are hard to do, and
+those invariants hard to abide by, then you have a high impedance between the
+problem domain and the program working on the problem domain. Obviously this is
+problem specific and so we cannot provide a canonical example, instead we'll
+provide a set of guidelines to describe when you know you have high impedance
+and how to fix it.
+
+
+How do I know if I have Poor Domain Modeling
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Unfortunately, this is more art than science. Classic indications are:
+
+1. You've used a List and have called a function from ``Data.List`` that does
+   any kind of out-of-order processing on elements of the list, or must traverse
+   the entire list in order to produce a result:
+
+   a. ``length``
+   b. ``reverse``
+   c. ``splitAt``
+   d. ``takeWhile``
+   e. ``dropWhile``
+   g. ``elem``
+   h. ``notElem``
+   i. ``find``
+   j. ``filter``
+   k. any kind of indexing
+
+   Recall that lists in Haskell are streams; not treating them as such creates
+   impedance between the problem domain and your program in addition to
+   degrading runtime performance (and easily creating a quadratic time program).
+   However, small temporary lists holding single digits of elements are fine
+   because they take less time to construct and traverse than a more complicated
+   data structure.
+
+2. My functions do not easily compose to have meaning in my problem domain.
+
+3. The invariants in my problem domain are difficult to express.
+
+   This one usually manifests through the use of superfluous guards. So many
+   functions take this form:
+
+   .. code-block:: haskell
+
+      -- | an example function on Foo, this function learns a lot about Foo
+      myFunction :: Foo -> Bar
+      myFunction foo | predicate0 foo = ...do something ...
+                     | predicate1 foo = ...do another thing...
+                     | ...
+                     | predicateN foo = ...do N thing...
+
+   This becomes problematic when it grows to be ubiquitous in the code base.
+   When a lot of functions in the program use guards the program will suffer
+   from redundant checks and poor branch prediction, for example:
+
+   .. code-block:: haskell
+
+      -- | anoter function on Foo, this function doesn't learn much about Foo
+      myOtherFunction :: Foo -> Baz
+      myOtherFunction foo | predicate1 foo = ...do some another thing...
+                          | otherwise      = ...
+
+      main :: IO ()
+      main = do foo <- getFoo          -- we get a Foo
+                myFunction foo         -- we learn a lot about Foo
+                myOtherFunction foo    -- nothing we've learned is propagated forward
+                                       --  from myFunction to myOtherFunction, and so
+                                       --  we redundantly check predicate1 on foo
+
 
 
 References
