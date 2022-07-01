@@ -426,7 +426,38 @@ Consider the example of an abstract data type, such as a Set [#]_:
 
 .. code-block:: haskell
 
-   code block here
+   -- | We realize the ADT of a Set with an implementation that uses lists
+   -- We deliberately do not use any List functions to simplify the example
+   -- Invariant: elements are unique
+   newtype Set a = Set { unSet :: [a] }
+
+   -- Now some functions on Sets, notice how these functions use and are aware
+   -- of the implementation
+
+   -- | membership is aware of the implementation because it uses relies on
+   functions that operate on the implementation (the List)
+   member :: Eq a => a -> Set a -> Bool
+   member x set = go
+           -- member reasons about the implementation because
+           -- go uses knowledge of the list
+     where go [] = False
+           go (y:ys) | x == y    = True
+                     | otherwise = member x ys
+
+   -- | insert an element into the set. Notice that even insert knows
+   -- about the implementation because of the use of (:)
+   insert :: Eq a => a -> Set a -> Set a
+   insert x set | member x set = set
+                | otherwise    = Set . (x:) . unSet $ set
+
+   delete :: Eq a => a -> Set a -> Set a
+   delete x set = Set . go
+           -- delete reasons about the implementation because
+           -- go uses knowledge of the list
+     where go []     = set
+           go (y:ys) | y == x    = go ys
+                     | otherwise = y : go ys
+
 
 
 Problem Domain Invariants are Difficult to Express
