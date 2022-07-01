@@ -380,61 +380,87 @@ How do I know if I have Poor Domain Modeling
 
 Unfortunately, this is more art than science. Classic indications are:
 
-1. You've used a List and have called a function from ``Data.List`` that does
-   any kind of out-of-order processing on elements of the list, or must traverse
-   the entire list in order to produce a result:
 
-   a. ``length``
-   b. ``reverse``
-   c. ``splitAt``
-   d. ``takeWhile``
-   e. ``dropWhile``
-   g. ``elem``
-   h. ``notElem``
-   i. ``find``
-   j. ``filter``
-   k. any kind of indexing
+Overuse of Data.List
+""""""""""""""""""""
 
-   Recall that lists in Haskell are streams; not treating them as such creates
-   impedance between the problem domain and your program in addition to
-   degrading runtime performance (and easily creating a quadratic time program).
-   However, small temporary lists holding single digits of elements are fine
-   because they take less time to construct and traverse than a more complicated
-   data structure.
+You've used a List and have called a function from ``Data.List`` that does any
+kind of out-of-order processing on elements of the list, or must traverse the
+entire list in order to produce a result:
 
-2. My functions do not easily compose to have meaning in my problem domain.
+#. ``length``
+#. ``reverse``
+#. ``splitAt``
+#. ``takeWhile``
+#. ``dropWhile``
+#. ``elem``
+#. ``notElem``
+#. ``find``
+#. ``filter``
+#. any kind of indexing
 
-3. The invariants in my problem domain are difficult to express.
+Recall that lists in Haskell are streams; not treating them as such creates
+impedance between the problem domain and your program in addition to
+degrading runtime performance (and easily creating a quadratic time program).
+However, small temporary lists holding single digits of elements are fine
+because they take less time to construct and traverse than a more complicated
+data structure.
 
-   This one usually manifests through the use of superfluous guards. So many
-   functions take this form:
+Functions in your Program Domain do not Easily Compose to have Meaning in your Problem Domain
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-   .. code-block:: haskell
+Composition and composability is one of the most valuable properties code can
+have. It is key to modularity, key to reuse, is easier to test, is easier to
+understand and often produces more compact code. When the functions in your
+program domain do not easily compose you'll often find yourself constantly
+packing, unpacking, and repacking domain elements just to get anything done.
+You'll be forced to reach into the *implementation* of objects in your program
+domain in order to express meaning in your problem domain, rather than
+expressing that meaning through functions.
 
-      -- | an example function on Foo, this function learns a lot about Foo
-      myFunction :: Foo -> Bar
-      myFunction foo | predicate0 foo = ...do something ...
-                     | predicate1 foo = ...do another thing...
-                     | ...
-                     | predicateN foo = ...do N thing...
+When the program domain lacks composability functions will become overly large
+and overly concerned with implementation details; *that* is high impedence
+expressing itself in the program domain.
 
-   This becomes problematic when it grows to be ubiquitous in the code base.
-   When a lot of functions in the program use guards the program will suffer
-   from redundant checks and poor branch prediction, for example:
+Consider the example of an abstract data type, such as a Set [#]_:
 
-   .. code-block:: haskell
+.. code-block:: haskell
 
-      -- | anoter function on Foo, this function doesn't learn much about Foo
-      myOtherFunction :: Foo -> Baz
-      myOtherFunction foo | predicate1 foo = ...do some another thing...
-                          | otherwise      = ...
+   code block here
 
-      main :: IO ()
-      main = do foo <- getFoo          -- we get a Foo
-                myFunction foo         -- we learn a lot about Foo
-                myOtherFunction foo    -- nothing we've learned is propagated forward
-                                       --  from myFunction to myOtherFunction, and so
-                                       --  we redundantly check predicate1 on foo
+
+Problem Domain Invariants are Difficult to Express
+""""""""""""""""""""""""""""""""""""""""""""""""""
+
+This one usually manifests through the use of superfluous guards. So many
+functions take this form:
+
+.. code-block:: haskell
+
+   -- | an example function on Foo, this function learns a lot about Foo
+   myFunction :: Foo -> Bar
+   myFunction foo | predicate0 foo = ...do something ...
+                  | predicate1 foo = ...do another thing...
+                  | ...
+                  | predicateN foo = ...do N thing...
+
+This becomes problematic when it grows to be ubiquitous in the code base.
+When a lot of functions in the program use guards the program will suffer
+from redundant checks and poor branch prediction, for example:
+
+.. code-block:: haskell
+
+   -- | anoter function on Foo, this function doesn't learn much about Foo
+   myOtherFunction :: Foo -> Baz
+   myOtherFunction foo | predicate1 foo = ...do some another thing...
+                       | otherwise      = ...
+
+   main :: IO ()
+   main = do foo <- getFoo          -- we get a Foo
+             myFunction foo         -- we learn a lot about Foo
+             myOtherFunction foo    -- nothing we've learned is propagated forward
+                                    --  from myFunction to myOtherFunction, and so
+                                    --  we redundantly check predicate1 on foo
 
 
 
@@ -446,3 +472,5 @@ References
 .. [#] This code adapted from Johan Tibell slides on Haskell `optimization
        <https://www.slideshare.net/tibbe/highperformance-haskell>`_.
 .. [#] This code adapted from :cite:t:`peytonjones1997a` Section 7.
+.. [#] This code adapted from :cite:t:`dataAbstractionRevisited`. Highly
+       recommended Friday reading material!
