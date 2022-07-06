@@ -1,5 +1,0 @@
-Preface
-=======
-
-.. todo::
-   Preface here!
