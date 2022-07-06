@@ -214,7 +214,7 @@ Haskell program slows down. For each slow down topic we provide a sister</p>
 <span id="canonical-inlining"></span><h2>Inlining<a class="headerlink" href="#inlining" title="Permalink to this headline">¶</a></h2>
 <section id="what-is-inlining">
 <h3>What is Inlining<a class="headerlink" href="#what-is-inlining" title="Permalink to this headline">¶</a></h3>
-<p>Inlining <a class="footnote-reference brackets" href="#id9" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> is a simple optimization technique that almost all optimizing
+<p>Inlining <a class="footnote-reference brackets" href="#id11" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> is a simple optimization technique that almost all optimizing
 compilers perform. The essential idea is to substitute the call sites of a
 function <code class="docutils literal notranslate"><span class="pre">f</span></code>, with the body of <code class="docutils literal notranslate"><span class="pre">f</span></code>. For example:</p>
 <div class="literal-block-wrapper docutils container" id="id17">
@@ -264,7 +264,7 @@ particulars of GHC’s inliner, in the chapter dedicated to <span class="xref st
 <span id="canonical-fusion"></span><h2>Fusion<a class="headerlink" href="#fusion" title="Permalink to this headline">¶</a></h2>
 <section id="what-is-fusion">
 <h3>What is Fusion<a class="headerlink" href="#what-is-fusion" title="Permalink to this headline">¶</a></h3>
-<p>Fusion or Deforestation <a class="footnote-reference brackets" href="#id10" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> <a class="footnote-reference brackets" href="#id11" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a> (We take Andy Gill’s excellent examples from
+<p>Fusion or Deforestation <a class="footnote-reference brackets" href="#id12" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> <a class="footnote-reference brackets" href="#id13" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a> (We take Andy Gill’s excellent examples from
 this paper for this section. Thank you Andy Gill for your labor!) is an
 optimization technique that eliminates intermediate and short lived data
 structures between function calls. It is a key optimization that makes Haskell
@@ -329,7 +329,7 @@ around the community for some time.</p>
 <section id="how-does-excessive-pointer-chasing-slow-down-runtime-performance">
 <h3>How does Excessive Pointer Chasing Slow Down Runtime Performance?<a class="headerlink" href="#how-does-excessive-pointer-chasing-slow-down-runtime-performance" title="Permalink to this headline">¶</a></h3>
 <p>The classic example of excessive pointer chasing is memory leaks that result
-from folds that are overly lazy, for example <a class="footnote-reference brackets" href="#id12" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>:</p>
+from folds that are overly lazy, for example <a class="footnote-reference brackets" href="#id14" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>:</p>
 <div class="literal-block-wrapper docutils container" id="id19">
 <div class="code-block-caption"><span class="caption-text">mean, calculated with a lazy left fold</span><a class="headerlink" href="#id19" title="Permalink to this code">¶</a></div>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">mean</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">[</span><span class="kt">Double</span><span class="p">]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Double</span><span class="w"></span>
@@ -421,9 +421,9 @@ allocation of their program across many functions or even modules, which is not
 a common experience when writing Haskell. For our purposes’, we’ll inspect
 examples that GHC should have no problem finding and optimizing. See
 <span class="xref std std-ref">Case_Study_SBV</span></p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>TODO: not yet written, see <a class="reference external" href="https://github.com/input-output-hk/hs-opt-handbook.github.io/issues/18">#18</a></p>
+<div class="admonition-todo admonition" id="id6">
+<p class="admonition-title">Todo</p>
+<p>Not yet written, see <a class="reference external" href="https://github.com/input-output-hk/hs-opt-handbook.github.io/issues/18">#18</a></p>
 </div>
 <p>for an example of excessive memory allocation in a widely used library. While
 GHC is good at optimizing these cases, becoming familiar with these code
@@ -433,7 +433,7 @@ perform these optimizations manually when GHC fails to optimization.</p>
 </section>
 <section id="how-does-excessive-closure-allocation-slow-down-runtime-performance">
 <h3>How does Excessive Closure Allocation Slow Down Runtime Performance<a class="headerlink" href="#how-does-excessive-closure-allocation-slow-down-runtime-performance" title="Permalink to this headline">¶</a></h3>
-<p>Consider these simple examples <a class="footnote-reference brackets" href="#id13" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a> :</p>
+<p>Consider these simple examples <a class="footnote-reference brackets" href="#id15" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a> :</p>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"></span>
 <span class="kr">in</span><span class="w"> </span><span class="kr">case</span><span class="w"> </span><span class="n">tail</span><span class="w"> </span><span class="n">zs</span><span class="w"> </span><span class="kr">of</span><span class="w"></span>
 <span class="w">        </span><span class="kt">[]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">x</span><span class="w"></span>
@@ -457,7 +457,7 @@ form is semantically identical but more efficient because our program may avoid
 <p class="admonition-title">Note</p>
 <p>Let Floating can change <a class="reference internal" href="../glossary.html#term-Thunk"><span class="xref std std-term">Thunk</span></a> sizes.</p>
 </div>
-<p>Consider this example from <span id="id7">Peyton Jones and Santos [<a class="reference internal" href="../../contents.html#id5" title="Simon Peyton Jones and Andre Santos. A transformation-based optimiser for haskell. Science of Computer Programming, October 1997. URL: https://www.microsoft.com/en-us/research/publication/a-transformation-based-optimiser-for-haskell/.">1</a>]</span>, Section 7.1:</p>
+<p>Consider this example from <span id="id8">Peyton Jones and Santos [<a class="reference internal" href="../../contents.html#id5" title="Simon Peyton Jones and Andre Santos. A transformation-based optimiser for haskell. Science of Computer Programming, October 1997. URL: https://www.microsoft.com/en-us/research/publication/a-transformation-based-optimiser-for-haskell/.">1</a>]</span>, Section 7.1:</p>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">w</span><span class="w">     </span><span class="c1">-- v and w are free variables in x</span><span class="w"></span>
 <span class="w">    </span><span class="n">y</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="o">...</span><span class="n">x</span><span class="o">...</span><span class="n">x</span><span class="w">  </span><span class="c1">-- y mentions x</span><span class="w"></span>
 <span class="kr">in</span><span class="w"> </span><span class="kt">B</span><span class="w">              </span><span class="c1">-- B does not mention x</span><span class="w"></span>
@@ -511,13 +511,13 @@ more cases of let floating and detecting excessive closure allocation in the
 <section id="what-is-poor-domain-modeling">
 <h3>What is Poor Domain Modeling<a class="headerlink" href="#what-is-poor-domain-modeling" title="Permalink to this headline">¶</a></h3>
 <p>Poor domain modeling is a catch all phrase for constructing a program that has a
-high impedance to the problem domain. The problem domain requires specific
-actions that abide by specific invariants, if those actions are hard to do, and
-those invariants hard to abide by, then you have a high impedance between the
-problem domain and the program working on the problem domain. Obviously this is
-problem specific and so we cannot provide a canonical example, instead we’ll
-provide a set of guidelines to describe when you know you have high impedance
-and how to fix it.</p>
+high impedance to the problem domain. The problem domain dictates the
+computation that the program must do; it requires specific actions that abide by
+specific invariants, if those actions are hard to express, and those invariants
+hard to abide by, then you have a high impedance between the problem domain and
+the program domain. Obviously this is problem specific and we cannot provide a
+canonical example, instead we’ll provide a set of guidelines to describe when
+you know you have high impedance and how to fix it.</p>
 </section>
 <section id="how-do-i-know-if-i-have-poor-domain-modeling">
 <h3>How do I know if I have Poor Domain Modeling<a class="headerlink" href="#how-do-i-know-if-i-have-poor-domain-modeling" title="Permalink to this headline">¶</a></h3>
@@ -559,39 +559,9 @@ expressing that meaning through functions.</p>
 <p>When the program domain lacks composability functions will become overly large
 and overly concerned with implementation details; <em>that</em> is high impedence
 expressing itself in the program domain.</p>
-<p>Consider the example of an abstract data type, such as a Set <a class="footnote-reference brackets" href="#id15" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a>:</p>
-<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- | We realize the ADT of a Set with an implementation that uses lists</span><span class="w"></span>
-<span class="c1">-- We deliberately do not use any List functions to simplify the example</span><span class="w"></span>
-<span class="c1">-- Invariant: elements are unique</span><span class="w"></span>
-<span class="kr">newtype</span><span class="w"> </span><span class="kt">Set</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">Set</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">unSet</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">[</span><span class="n">a</span><span class="p">]</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-
-<span class="c1">-- Now some functions on Sets, notice how these functions use and are aware</span><span class="w"></span>
-<span class="c1">-- of the implementation</span><span class="w"></span>
-
-<span class="c1">-- | membership is aware of the implementation because it uses relies on</span><span class="w"></span>
-<span class="nf">functions</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="n">operate</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">implementation</span><span class="w"> </span><span class="p">(</span><span class="n">the</span><span class="w"> </span><span class="kt">List</span><span class="p">)</span><span class="w"></span>
-<span class="nf">member</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Eq</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="ow">=&gt;</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Set</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Bool</span><span class="w"></span>
-<span class="nf">member</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">set</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">go</span><span class="w"></span>
-<span class="w">        </span><span class="c1">-- member reasons about the implementation because</span><span class="w"></span>
-<span class="w">        </span><span class="c1">-- go uses knowledge of the list</span><span class="w"></span>
-<span class="w">  </span><span class="kr">where</span><span class="w"> </span><span class="n">go</span><span class="w"> </span><span class="kt">[]</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">False</span><span class="w"></span>
-<span class="w">        </span><span class="n">go</span><span class="w"> </span><span class="p">(</span><span class="n">y</span><span class="kt">:</span><span class="n">ys</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">y</span><span class="w">    </span><span class="ow">=</span><span class="w"> </span><span class="kt">True</span><span class="w"></span>
-<span class="w">                  </span><span class="o">|</span><span class="w"> </span><span class="n">otherwise</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">member</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">ys</span><span class="w"></span>
-
-<span class="c1">-- | insert an element into the set. Notice that even insert knows</span><span class="w"></span>
-<span class="c1">-- about the implementation because of the use of (:)</span><span class="w"></span>
-<span class="nf">insert</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Eq</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="ow">=&gt;</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Set</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Set</span><span class="w"> </span><span class="n">a</span><span class="w"></span>
-<span class="nf">insert</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">set</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">member</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">set</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">set</span><span class="w"></span>
-<span class="w">             </span><span class="o">|</span><span class="w"> </span><span class="n">otherwise</span><span class="w">    </span><span class="ow">=</span><span class="w"> </span><span class="kt">Set</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="p">)</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="n">unSet</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="n">set</span><span class="w"></span>
-
-<span class="nf">delete</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Eq</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="ow">=&gt;</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Set</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Set</span><span class="w"> </span><span class="n">a</span><span class="w"></span>
-<span class="nf">delete</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">set</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">Set</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="n">go</span><span class="w"></span>
-<span class="w">        </span><span class="c1">-- delete reasons about the implementation because</span><span class="w"></span>
-<span class="w">        </span><span class="c1">-- go uses knowledge of the list</span><span class="w"></span>
-<span class="w">  </span><span class="kr">where</span><span class="w"> </span><span class="n">go</span><span class="w"> </span><span class="kt">[]</span><span class="w">     </span><span class="ow">=</span><span class="w"> </span><span class="n">set</span><span class="w"></span>
-<span class="w">        </span><span class="n">go</span><span class="w"> </span><span class="p">(</span><span class="n">y</span><span class="kt">:</span><span class="n">ys</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">x</span><span class="w">    </span><span class="ow">=</span><span class="w"> </span><span class="n">go</span><span class="w"> </span><span class="n">ys</span><span class="w"></span>
-<span class="w">                  </span><span class="o">|</span><span class="w"> </span><span class="n">otherwise</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="kt">:</span><span class="w"> </span><span class="n">go</span><span class="w"> </span><span class="n">ys</span><span class="w"></span>
-</pre></div>
+<div class="admonition-todo admonition" id="id10">
+<p class="admonition-title">Todo</p>
+<p>Need example as case study see <a class="reference external" href="https://github.com/input-output-hk/hs-opt-handbook.github.io/issues/20">#20</a></p>
 </div>
 </section>
 <section id="problem-domain-invariants-are-difficult-to-express">
@@ -627,30 +597,25 @@ from redundant checks and poor branch prediction, for example:</p>
 </section>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
-<aside class="footnote brackets" id="id9" role="note">
+<aside class="footnote brackets" id="id11" role="note">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="https://wiki.haskell.org/Inlining_and_Specialisation">https://wiki.haskell.org/Inlining_and_Specialisation</a></p>
 </aside>
-<aside class="footnote brackets" id="id10" role="note">
+<aside class="footnote brackets" id="id12" role="note">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="https://www.sciencedirect.com/science/article/pii/030439759090147A?via%3Dihub">https://www.sciencedirect.com/science/article/pii/030439759090147A?via%3Dihub</a></p>
 </aside>
-<aside class="footnote brackets" id="id11" role="note">
+<aside class="footnote brackets" id="id13" role="note">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="https://www.microsoft.com/en-us/research/wp-content/uploads/2016/07/deforestation-short-cut.pdf">https://www.microsoft.com/en-us/research/wp-content/uploads/2016/07/deforestation-short-cut.pdf</a></p>
 </aside>
-<aside class="footnote brackets" id="id12" role="note">
+<aside class="footnote brackets" id="id14" role="note">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">4</a><span class="fn-bracket">]</span></span>
 <p>This code adapted from Johan Tibell slides on Haskell <a class="reference external" href="https://www.slideshare.net/tibbe/highperformance-haskell">optimization</a>.</p>
 </aside>
-<aside class="footnote brackets" id="id13" role="note">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">5</a><span class="fn-bracket">]</span></span>
-<p>This code adapted from <span id="id14">Peyton Jones and Santos [<a class="reference internal" href="../../contents.html#id5" title="Simon Peyton Jones and Andre Santos. A transformation-based optimiser for haskell. Science of Computer Programming, October 1997. URL: https://www.microsoft.com/en-us/research/publication/a-transformation-based-optimiser-for-haskell/.">1</a>]</span> Section 7.</p>
-</aside>
 <aside class="footnote brackets" id="id15" role="note">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id8">6</a><span class="fn-bracket">]</span></span>
-<p>This code adapted from <span id="id16">Cook [<a class="reference internal" href="../../contents.html#id7" title="William R. Cook. On understanding data abstraction, revisited. SIGPLAN Not., 44(10):557–572, oct 2009. URL: https://doi.org/10.1145/1639949.1640133, doi:10.1145/1639949.1640133.">2</a>]</span>. Highly
-recommended Friday reading material!</p>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id7">5</a><span class="fn-bracket">]</span></span>
+<p>This code adapted from <span id="id16">Peyton Jones and Santos [<a class="reference internal" href="../../contents.html#id5" title="Simon Peyton Jones and Andre Santos. A transformation-based optimiser for haskell. Science of Computer Programming, October 1997. URL: https://www.microsoft.com/en-us/research/publication/a-transformation-based-optimiser-for-haskell/.">1</a>]</span> Section 7.</p>
 </aside>
 </section>
 </section>
