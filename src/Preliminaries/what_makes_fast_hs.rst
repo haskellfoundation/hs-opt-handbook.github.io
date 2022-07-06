@@ -259,8 +259,8 @@ a common experience when writing Haskell. For our purposes', we'll inspect
 examples that GHC should have no problem finding and optimizing. See
 :ref:`Case_Study_SBV`
 
-.. note::
-   TODO: not yet written, see `#18 <https://github.com/input-output-hk/hs-opt-handbook.github.io/issues/18>`_
+.. todo::
+   Not yet written, see `#18 <https://github.com/input-output-hk/hs-opt-handbook.github.io/issues/18>`_
 
 for an example of excessive memory allocation in a widely used library. While
 GHC is good at optimizing these cases, becoming familiar with these code
@@ -366,13 +366,13 @@ What is Poor Domain Modeling
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Poor domain modeling is a catch all phrase for constructing a program that has a
-high impedance to the problem domain. The problem domain requires specific
-actions that abide by specific invariants, if those actions are hard to do, and
-those invariants hard to abide by, then you have a high impedance between the
-problem domain and the program working on the problem domain. Obviously this is
-problem specific and so we cannot provide a canonical example, instead we'll
-provide a set of guidelines to describe when you know you have high impedance
-and how to fix it.
+high impedance to the problem domain. The problem domain dictates the
+computation that the program must do; it requires specific actions that abide by
+specific invariants, if those actions are hard to express, and those invariants
+hard to abide by, then you have a high impedance between the problem domain and
+the program domain. Obviously this is problem specific and we cannot provide a
+canonical example, instead we'll provide a set of guidelines to describe when
+you know you have high impedance and how to fix it.
 
 
 How do I know if I have Poor Domain Modeling
@@ -422,42 +422,8 @@ When the program domain lacks composability functions will become overly large
 and overly concerned with implementation details; *that* is high impedence
 expressing itself in the program domain.
 
-Consider the example of an abstract data type, such as a Set [#]_:
-
-.. code-block:: haskell
-
-   -- | We realize the ADT of a Set with an implementation that uses lists
-   -- We deliberately do not use any List functions to simplify the example
-   -- Invariant: elements are unique
-   newtype Set a = Set { unSet :: [a] }
-
-   -- Now some functions on Sets, notice how these functions use and are aware
-   -- of the implementation
-
-   -- | membership is aware of the implementation because it uses relies on
-   functions that operate on the implementation (the List)
-   member :: Eq a => a -> Set a -> Bool
-   member x set = go
-           -- member reasons about the implementation because
-           -- go uses knowledge of the list
-     where go [] = False
-           go (y:ys) | x == y    = True
-                     | otherwise = member x ys
-
-   -- | insert an element into the set. Notice that even insert knows
-   -- about the implementation because of the use of (:)
-   insert :: Eq a => a -> Set a -> Set a
-   insert x set | member x set = set
-                | otherwise    = Set . (x:) . unSet $ set
-
-   delete :: Eq a => a -> Set a -> Set a
-   delete x set = Set . go
-           -- delete reasons about the implementation because
-           -- go uses knowledge of the list
-     where go []     = set
-           go (y:ys) | y == x    = go ys
-                     | otherwise = y : go ys
-
+.. todo::
+   Need example as case study see `#20 <https://github.com/input-output-hk/hs-opt-handbook.github.io/issues/20>`_
 
 
 Problem Domain Invariants are Difficult to Express
@@ -503,5 +469,3 @@ References
 .. [#] This code adapted from Johan Tibell slides on Haskell `optimization
        <https://www.slideshare.net/tibbe/highperformance-haskell>`_.
 .. [#] This code adapted from :cite:t:`peytonjones1997a` Section 7.
-.. [#] This code adapted from :cite:t:`dataAbstractionRevisited`. Highly
-       recommended Friday reading material!
