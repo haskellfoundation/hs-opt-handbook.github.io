@@ -14,6 +14,7 @@
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
       
       <!-- bundled in js (rollup iife) -->
@@ -91,7 +92,15 @@
             
               <ul>
                 
+                  <li class="toctree-l2"><a href="#purpose" class="reference internal">Purpose</a></li>
+                
                   <li class="toctree-l2"><a href="#notation" class="reference internal">Notation</a></li>
+                
+                  <li class="toctree-l2"><a href="#where-to-begin" class="reference internal">Where to Begin</a></li>
+                
+                  <li class="toctree-l2"><a href="#goals" class="reference internal">Goals</a></li>
+                
+                  <li class="toctree-l2"><a href="#non-goals" class="reference internal">Non-Goals</a></li>
                 
               </ul>
             
@@ -185,8 +194,77 @@
             
   <section id="how-to-use-this-book">
 <h1>How to Use This Book<a class="headerlink" href="#how-to-use-this-book" title="Permalink to this headline">¶</a></h1>
+<section id="purpose">
+<h2>Purpose<a class="headerlink" href="#purpose" title="Permalink to this headline">¶</a></h2>
+<p>This book is meant as a handbook for the intrepid Haskell developer. It attempts
+to make clear aspects of the GHC-based Haskell so that performance optimizations
+and recommendations are actionable, rather than mysterious invocations whispered
+around the internet.</p>
+</section>
 <section id="notation">
 <h2>Notation<a class="headerlink" href="#notation" title="Permalink to this headline">¶</a></h2>
+<p>Code examples are written in Haskell unless otherwise noted. Other notation
+follows standards in programming language theory and computer science academic
+discourse:</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(\perp\)</span> to mean the <em>bottom</em> value</p></li>
+<li><p><span class="math notranslate nohighlight">\(Foo[x \rightarrow e]\)</span> to mean the result of substituting <span class="math notranslate nohighlight">\(e\)</span> for
+<span class="math notranslate nohighlight">\(x\)</span> in <span class="math notranslate nohighlight">\(Foo\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathcal{O}(n\log{}n)\)</span> to mean the minimum bound time complexity of an algorithm is <span class="math notranslate nohighlight">\(n\log{}n\)</span></p></li>
+</ol>
+</section>
+<section id="where-to-begin">
+<h2>Where to Begin<a class="headerlink" href="#where-to-begin" title="Permalink to this headline">¶</a></h2>
+<p>The book is structured into discrete independent parts to better serve as a
+handbook. Thus, the book is not meant to be read in a linear order. Instead, one
+should pick and choose which chapter to read next based on their needs because
+<em>The book assumes you have a problem that needs solving</em>.</p>
+<p>There are two general sections. The first section, Part 1, aids the developer in
+identifying performance issues in their own code. As such, this section is
+primarily concerned with measurement, observation, repeatability and testing.
+Part 1 also includes methods of <em>direct observation</em> such as inspecting and
+understanding the <code class="docutils literal notranslate"><span class="pre">Core</span></code> and <code class="docutils literal notranslate"><span class="pre">Stg</span></code> languages.</p>
+<p>The second section, Part 2, aids the developer in optimizing their code. It is
+ordered from the easiest methods, such as choosing the right libraries; to the
+hardest methods, such as exploiting <code class="docutils literal notranslate"><span class="pre">backpack</span></code> for fine-grained
+<a class="reference internal" href="../glossary.html#term-Unboxed"><span class="xref std std-term">Unboxed</span></a> data types or exploiting <a class="reference internal" href="../glossary.html#term-Levity-Polymorphism"><span class="xref std std-term">Levity Polymorphism</span></a> to control the
+runtime representation of a data type.</p>
+</section>
+<section id="goals">
+<h2>Goals<a class="headerlink" href="#goals" title="Permalink to this headline">¶</a></h2>
+<p>HOH is:</p>
+<ol class="arabic simple">
+<li><p>A freely available online book</p></li>
+<li><p>Is actionable: A reader can read a section and apply a technique to make progress for their problem.</p></li>
+<li><p>Is relevant: Case studies are not manufactured examples, rather they originate from real world code.</p></li>
+<li><p>Is practical: Content that describes a performance technique describes how to
+implement it, when to use it, and its observable effect on a code base.
+Content that describes a method of analysis describes what the method is, how
+to use the method, what the perceived results of the method should be and
+relevant signals in the output of the method. For example, the GHC heap
+profiling section should describe what heap profiling is, how to do the heap
+profiling, what the output should look like, and most importantly a gallery
+of examples of poor performing heap profiles and an explanation of why they
+are poor performing.</p></li>
+<li><p>Community driven</p></li>
+<li><p>Maintained and updated over time, with supported versions of GHC beginning at 8.10.x (for DWARF symbols)</p></li>
+<li><p>Understandable for intermediate to expert Haskell developers.</p></li>
+</ol>
+</section>
+<section id="non-goals">
+<h2>Non-Goals<a class="headerlink" href="#non-goals" title="Permalink to this headline">¶</a></h2>
+<p>HOH will not have:</p>
+<ol class="arabic simple">
+<li><p>Content suitable for beginner functional programmers.</p></li>
+<li><p>Explanations of project setup, build tools, using or setting up a shell or
+deployment of any kind, instructions on installing any third party tools for
+a given platform.</p></li>
+<li><p>Descriptions, analyses and explanations of functional algorithms or data
+structures. Content will instead be “Try unordered-containers if you have
+foo, bar, baz”, rather than “This is what a bankers queue or HAMT is …”.</p></li>
+<li><p>A monad or monad transformer tutorial. This is assumed knowledge in the
+audience.</p></li>
+</ol>
 </section>
 </section>
 
