@@ -41,6 +41,14 @@ Glossary
       An Unlifted type is a type where :math:`\bot` *is not* an element of that type.
 
 
+   Levity Polymorphism
+
+      A kind of polymorphism that abstracts over calling conventions which
+      allows levity polymorphic functions to be abstracted over memory layout.
+      See :cite:t:`levityPolymorphism` for a more precise technical definition
+      and discussion.
+
+
    Thunk
 
       A thunk is a special kind of :term:`Closure` that represents a suspended
