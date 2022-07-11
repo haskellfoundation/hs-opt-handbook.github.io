@@ -80,3 +80,9 @@ Glossary
       A form of :term:`Let Floating` which moves let bindings out of lambda
       abstractions to avoid unnecessary allocation and computation. See
       :cite:t:`peytonjones1997a` Section 7.2.
+
+   DWARF : Format
+
+      DWARF symbols are a widely used and standardized data format used to
+      provide source level debugging. For more, see `the official webpage
+      <https://dwarfstd.org/>`_

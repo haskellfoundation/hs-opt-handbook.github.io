@@ -6,11 +6,38 @@ How to Use This Book
 Purpose
 -------
 
-This book is meant as a handbook for the intrepid Haskell developer. It attempts
-to make clear aspects of the GHC-based Haskell so that performance optimizations
-and recommendations are actionable, rather than mysterious invocations whispered
-around the internet.
+This book is written as a handbook for the intrepid Haskell developer. It
+attempts to make clear aspects of the GHC-based Haskell so that performance
+optimizations and recommendations are actionable, rather than mysterious
+invocations whispered around the internet.
 
+Intended Audience
+-----------------
+
+The Haskell Optimization Handbook is intended for developers using Haskell in
+their day to day life for money or pleasure. It assumes the audience is
+proficient with pure functional programming concepts, such as recursion, purity,
+higher-ordered functions functors, applicative functors, monads et cetera., and
+the basics of the Haskell ecosystem, such as using cabal or stack to compile and
+run a project.
+
+
+What will I need?
+-----------------
+
+You need only code you are interested in optimizing and the will to go down the
+optimization rabbit hole. If you have no code to optimize, then you may consider
+picking your favorite Haskell library and attempting to optimize that!
+
+
+The book assumes you are using ``GHC 8.10.x`` and a Linux distribution (kernel
+version ``5.8`` and higher). Should you be using an older compiler than some
+sections, such as :doc:`Using EventLog </src/Part_1/eventlog>`; which arrived
+in ``GHC 8.8`` may still be useful, while others such as :doc:`Using Cachegrind
+</src/Part_1/cachegrind>`; which relies on :term:`DWARF` symbols (added in ``GHC 8.10.x``)
+may not be applicable. Similarly, some chapters, such as :doc:`Using perf
+<src/Part_1/perf>` will only be applicable for Linux and Linux based operating
+systems.
 
 Notation
 --------
@@ -33,17 +60,19 @@ handbook. Thus, the book is not meant to be read in a linear order. Instead, one
 should pick and choose which chapter to read next based on their needs because
 *The book assumes you have a problem that needs solving*.
 
-There are two general sections. The first section, Part 1, aids the developer in
-identifying performance issues in their own code. As such, this section is
-primarily concerned with measurement, observation, repeatability and testing.
-Part 1 also includes methods of *direct observation* such as inspecting and
-understanding the ``Core`` and ``Stg`` languages.
+There are two general sections; both are ordered from the least time consuming
+to most time consuming topics. The first section, Part 1, aids the developer in
+identifying performance issues in their own code. Part 1 is primarily concerned
+with measurement, observation, repeatability and testing, but also includes
+methods of *direct observation* such as inspecting and understanding the
+``Core`` and ``Stg`` languages.
 
 The second section, Part 2, aids the developer in optimizing their code. It is
 ordered from the easiest methods, such as choosing the right libraries; to the
 hardest methods, such as exploiting ``backpack`` for fine-grained
-:term:`Unboxed` data types or exploiting :term:`Levity Polymorphism` to control the
-runtime representation of a data type.
+:term:`Unboxed` data types or exploiting :term:`Levity Polymorphism` to control
+the runtime representation of a data type.
+
 
 Goals
 -----
@@ -69,7 +98,7 @@ HOH is:
 Non-Goals
 ---------
 
-HOH will not have:
+HOH does not have:
 
 #. Content suitable for beginner functional programmers.
 #. Explanations of project setup, build tools, using or setting up a shell or
