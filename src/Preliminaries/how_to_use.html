@@ -94,6 +94,10 @@
                 
                   <li class="toctree-l2"><a href="#purpose" class="reference internal">Purpose</a></li>
                 
+                  <li class="toctree-l2"><a href="#intended-audience" class="reference internal">Intended Audience</a></li>
+                
+                  <li class="toctree-l2"><a href="#what-will-i-need" class="reference internal">What will I need?</a></li>
+                
                   <li class="toctree-l2"><a href="#notation" class="reference internal">Notation</a></li>
                 
                   <li class="toctree-l2"><a href="#where-to-begin" class="reference internal">Where to Begin</a></li>
@@ -110,6 +114,24 @@
           <li class="toctree-l1 ">
             
               <a href="what_makes_fast_hs.html" class="reference internal ">The Programs of Consistent Lethargy</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../Part_1/cachegrind.html" class="reference internal ">Using Cachegrind</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../Part_1/eventlog.html" class="reference internal ">Using Eventlog</a>
             
 
             
@@ -196,10 +218,31 @@
 <h1>How to Use This Book<a class="headerlink" href="#how-to-use-this-book" title="Permalink to this headline">¶</a></h1>
 <section id="purpose">
 <h2>Purpose<a class="headerlink" href="#purpose" title="Permalink to this headline">¶</a></h2>
-<p>This book is meant as a handbook for the intrepid Haskell developer. It attempts
-to make clear aspects of the GHC-based Haskell so that performance optimizations
-and recommendations are actionable, rather than mysterious invocations whispered
-around the internet.</p>
+<p>This book is written as a handbook for the intrepid Haskell developer. It
+attempts to make clear aspects of the GHC-based Haskell so that performance
+optimizations and recommendations are actionable, rather than mysterious
+invocations whispered around the internet.</p>
+</section>
+<section id="intended-audience">
+<h2>Intended Audience<a class="headerlink" href="#intended-audience" title="Permalink to this headline">¶</a></h2>
+<p>The Haskell Optimization Handbook is intended for developers using Haskell in
+their day to day life for money or pleasure. It assumes the audience is
+proficient with pure functional programming concepts, such as recursion, purity,
+higher-ordered functions functors, applicative functors, monads et cetera., and
+the basics of the Haskell ecosystem, such as using cabal or stack to compile and
+run a project.</p>
+</section>
+<section id="what-will-i-need">
+<h2>What will I need?<a class="headerlink" href="#what-will-i-need" title="Permalink to this headline">¶</a></h2>
+<p>You need only code you are interested in optimizing and the will to go down the
+optimization rabbit hole. If you have no code to optimize, then you may consider
+picking your favorite Haskell library and attempting to optimize that!</p>
+<p>The book assumes you are using <code class="docutils literal notranslate"><span class="pre">GHC</span> <span class="pre">8.10.x</span></code> and a Linux distribution (kernel
+version <code class="docutils literal notranslate"><span class="pre">5.8</span></code> and higher). Should you be using an older compiler than some
+sections, such as <a class="reference internal" href="../Part_1/eventlog.html"><span class="doc">Using EventLog</span></a>; which arrived
+in <code class="docutils literal notranslate"><span class="pre">GHC</span> <span class="pre">8.8</span></code> may still be useful, while others such as <a class="reference internal" href="../Part_1/cachegrind.html"><span class="doc">Using Cachegrind</span></a>; which relies on <a class="reference internal" href="../glossary.html#term-DWARF"><span class="xref std std-term">DWARF</span></a> symbols (added in <code class="docutils literal notranslate"><span class="pre">GHC</span> <span class="pre">8.10.x</span></code>)
+may not be applicable. Similarly, some chapters, such as <span class="xref std std-doc">Using perf</span> will only be applicable for Linux and Linux based operating
+systems.</p>
 </section>
 <section id="notation">
 <h2>Notation<a class="headerlink" href="#notation" title="Permalink to this headline">¶</a></h2>
@@ -219,16 +262,17 @@ discourse:</p>
 handbook. Thus, the book is not meant to be read in a linear order. Instead, one
 should pick and choose which chapter to read next based on their needs because
 <em>The book assumes you have a problem that needs solving</em>.</p>
-<p>There are two general sections. The first section, Part 1, aids the developer in
-identifying performance issues in their own code. As such, this section is
-primarily concerned with measurement, observation, repeatability and testing.
-Part 1 also includes methods of <em>direct observation</em> such as inspecting and
-understanding the <code class="docutils literal notranslate"><span class="pre">Core</span></code> and <code class="docutils literal notranslate"><span class="pre">Stg</span></code> languages.</p>
+<p>There are two general sections; both are ordered from the least time consuming
+to most time consuming topics. The first section, Part 1, aids the developer in
+identifying performance issues in their own code. Part 1 is primarily concerned
+with measurement, observation, repeatability and testing, but also includes
+methods of <em>direct observation</em> such as inspecting and understanding the
+<code class="docutils literal notranslate"><span class="pre">Core</span></code> and <code class="docutils literal notranslate"><span class="pre">Stg</span></code> languages.</p>
 <p>The second section, Part 2, aids the developer in optimizing their code. It is
 ordered from the easiest methods, such as choosing the right libraries; to the
 hardest methods, such as exploiting <code class="docutils literal notranslate"><span class="pre">backpack</span></code> for fine-grained
-<a class="reference internal" href="../glossary.html#term-Unboxed"><span class="xref std std-term">Unboxed</span></a> data types or exploiting <a class="reference internal" href="../glossary.html#term-Levity-Polymorphism"><span class="xref std std-term">Levity Polymorphism</span></a> to control the
-runtime representation of a data type.</p>
+<a class="reference internal" href="../glossary.html#term-Unboxed"><span class="xref std std-term">Unboxed</span></a> data types or exploiting <a class="reference internal" href="../glossary.html#term-Levity-Polymorphism"><span class="xref std std-term">Levity Polymorphism</span></a> to control
+the runtime representation of a data type.</p>
 </section>
 <section id="goals">
 <h2>Goals<a class="headerlink" href="#goals" title="Permalink to this headline">¶</a></h2>
@@ -253,7 +297,7 @@ are poor performing.</p></li>
 </section>
 <section id="non-goals">
 <h2>Non-Goals<a class="headerlink" href="#non-goals" title="Permalink to this headline">¶</a></h2>
-<p>HOH will not have:</p>
+<p>HOH does not have:</p>
 <ol class="arabic simple">
 <li><p>Content suitable for beginner functional programmers.</p></li>
 <li><p>Explanations of project setup, build tools, using or setting up a shell or
