@@ -53,10 +53,10 @@
 
 
                            propagatedBuildInputs = with pkgs; [
-                             python3Packages.sphinx
-                             python3Packages.sphinx-autobuild
-                             python3Packages.sphinxcontrib-bibtex
-                             python3Packages.sphinxcontrib-tikz
+                             python310Packages.sphinx
+                             python310Packages.sphinx-autobuild
+                             python310Packages.sphinxcontrib-bibtex
+                             python310Packages.sphinxcontrib-tikz
                              sphinx-press-theme
                              pandoc
                              rst2html5
