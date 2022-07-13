@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-      <title>The Programs of Consistent Lethargy</title>
+      <title>1.2. The Programs of Consistent Lethargy</title>
     
           <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
           <link rel="stylesheet" href="../../_static/theme.css " type="text/css" />
@@ -23,8 +23,8 @@
     
   <link rel="index" title="Index" href="../../genindex.html" />
   <link rel="search" title="Search" href="../../search.html" />
-  <link rel="next" title="Using Cachegrind" href="../Part_1/cachegrind.html" />
-  <link rel="prev" title="How to Use This Book" href="how_to_use.html" /> 
+  <link rel="next" title="2. Measurement, Profiling, and Observation" href="../Part_1/index.html" />
+  <link rel="prev" title="1.1. How to Use This Book" href="how_to_use.html" /> 
   </head>
 
   <body>
@@ -73,11 +73,11 @@
       <p class="caption">
         <span class="caption-text"><a href="../../contents.html#welcome-to-haskell-optimization-handbook">Table of Contents</a></span>
       </p>
-      <ul class="current">
+      <ul class="">
         
           <li class="toctree-l1 ">
             
-              <a href="book_for.html" class="reference internal ">Intended Audience</a>
+              <a href="index.html" class="reference internal ">Preliminaries</a>
             
 
             
@@ -86,95 +86,7 @@
         
           <li class="toctree-l1 ">
             
-              <a href="how_to_use.html" class="reference internal ">How to Use This Book</a>
-            
-
-            
-          </li>
-
-        
-          <li class="toctree-l1 current">
-            
-              <a href="#" class="reference internal current">The Programs of Consistent Lethargy</a>
-            
-
-            
-              <ul>
-                
-                  <li class="toctree-l2"><a href="#inlining" class="reference internal">Inlining</a></li>
-                
-                  <li class="toctree-l2"><a href="#fusion" class="reference internal">Fusion</a></li>
-                
-                  <li class="toctree-l2"><a href="#excessive-pointer-chasing" class="reference internal">Excessive Pointer Chasing</a></li>
-                
-                  <li class="toctree-l2"><a href="#excessive-closure-allocation" class="reference internal">Excessive Closure Allocation</a></li>
-                
-                  <li class="toctree-l2"><a href="#poor-domain-modeling" class="reference internal">Poor Domain Modeling</a></li>
-                
-                  <li class="toctree-l2"><a href="#references" class="reference internal">References</a></li>
-                
-              </ul>
-            
-          </li>
-
-        
-          <li class="toctree-l1 ">
-            
-              <a href="../Part_1/cachegrind.html" class="reference internal ">Using Cachegrind</a>
-            
-
-            
-          </li>
-
-        
-          <li class="toctree-l1 ">
-            
-              <a href="../Part_1/eventlog.html" class="reference internal ">Using Eventlog</a>
-            
-
-            
-          </li>
-
-        
-          <li class="toctree-l1 ">
-            
-              <a href="../Part_1/heap_profiling_ext.html" class="reference internal "><no title></a>
-            
-
-            
-          </li>
-
-        
-          <li class="toctree-l1 ">
-            
-              <a href="../Part_1/heap_profiling_ghc.html" class="reference internal "><no title></a>
-            
-
-            
-          </li>
-
-        
-          <li class="toctree-l1 ">
-            
-              <a href="../Part_1/measurement_ext.html" class="reference internal "><no title></a>
-            
-
-            
-          </li>
-
-        
-          <li class="toctree-l1 ">
-            
-              <a href="../Part_1/measurement_ghc.html" class="reference internal "><no title></a>
-            
-
-            
-          </li>
-
-        
-          <li class="toctree-l1 ">
-            
-              <a href="../Part_1/measurement_lib.html" class="reference internal "><no title></a>
+              <a href="../Part_1/index.html" class="reference internal ">Measurement, Profiling, and Observation</a>
             
 
             
@@ -193,18 +105,20 @@
   <ul class="breadcrumbs">
     <li><a href="../../contents.html">Docs</a> &raquo;</li>
     
-    <li>The Programs of Consistent Lethargy</li>
+      <li><a href="index.html"><span class="section-number">1. </span>Preliminaries</a> &raquo;</li>
+    
+    <li><span class="section-number">1.2. </span>The Programs of Consistent Lethargy</li>
   </ul>
   
 
   <ul class="page-nav">
   <li class="prev">
     <a href="how_to_use.html"
-       title="previous chapter">← How to Use This Book</a>
+       title="previous chapter">← <span class="section-number">1.1. </span>How to Use This Book</a>
   </li>
   <li class="next">
-    <a href="../Part_1/cachegrind.html"
-       title="next chapter">Using Cachegrind →</a>
+    <a href="../Part_1/index.html"
+       title="next chapter"><span class="section-number">2. </span>Measurement, Profiling, and Observation →</a>
   </li>
 </ul>
   
@@ -213,16 +127,16 @@
           <div class="content" role="main" v-pre>
             
   <section id="the-programs-of-consistent-lethargy">
-<span id="sec-lethargy"></span><h1>The Programs of Consistent Lethargy<a class="headerlink" href="#the-programs-of-consistent-lethargy" title="Permalink to this headline">¶</a></h1>
+<span id="sec-lethargy"></span><h1><span class="section-number">1.2. </span>The Programs of Consistent Lethargy<a class="headerlink" href="#the-programs-of-consistent-lethargy" title="Permalink to this headline">¶</a></h1>
 <p>We’ll begin by showing small bite sized programs that demonstrate a particular
 way Haskell programs slow down. We call these programs <em>canonical</em> programs
 because each program is the smallest example of a kind of slow down. A reader
 should come away from this section with an understanding of the ways a
 Haskell program slows down. For each slow down topic we provide a sister</p>
 <section id="inlining">
-<span id="canonical-inlining"></span><h2>Inlining<a class="headerlink" href="#inlining" title="Permalink to this headline">¶</a></h2>
+<span id="canonical-inlining"></span><h2><span class="section-number">1.2.1. </span>Inlining<a class="headerlink" href="#inlining" title="Permalink to this headline">¶</a></h2>
 <section id="what-is-inlining">
-<h3>What is Inlining<a class="headerlink" href="#what-is-inlining" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">1.2.1.1. </span>What is Inlining<a class="headerlink" href="#what-is-inlining" title="Permalink to this headline">¶</a></h3>
 <p>Inlining <a class="footnote-reference brackets" href="#id11" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> is a simple optimization technique that almost all optimizing
 compilers perform. The essential idea is to substitute the call sites of a
 function <code class="docutils literal notranslate"><span class="pre">f</span></code>, with the body of <code class="docutils literal notranslate"><span class="pre">f</span></code>. For example:</p>
@@ -249,7 +163,7 @@ with the body (or right hand side) of <code class="docutils literal notranslate"
 <span class="math notranslate nohighlight">\(x \mapsto (a + b)\)</span>.</p>
 </section>
 <section id="why-do-we-want-inlining">
-<h3>Why do We Want Inlining<a class="headerlink" href="#why-do-we-want-inlining" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">1.2.1.2. </span>Why do We Want Inlining<a class="headerlink" href="#why-do-we-want-inlining" title="Permalink to this headline">¶</a></h3>
 <p>Inlining has been called the “mother of all optimizations” because it has two
 primary benefits. First, it removes the overhead of a function call, which can
 be noticeable in a hot loop. Second, it is an <em>enabling optimization</em>; by
@@ -260,7 +174,7 @@ more art than science; a simple change can have cascading and unforeseen effects
 in the end result.</p>
 </section>
 <section id="how-does-inlining-slow-down-runtime-performance">
-<h3>How does Inlining Slow Down Runtime Performance<a class="headerlink" href="#how-does-inlining-slow-down-runtime-performance" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">1.2.1.3. </span>How does Inlining Slow Down Runtime Performance<a class="headerlink" href="#how-does-inlining-slow-down-runtime-performance" title="Permalink to this headline">¶</a></h3>
 <p>Inlining itself does not slow down runtime performance, <em>lack of</em> inlining does,
 because it limits otherwise possible optimizations from taking place. However,
 that does not mean we should always ask GHC to inline or manually perform
@@ -270,9 +184,9 @@ particulars of GHC’s inliner, in the chapter dedicated to <span class="xref st
 </section>
 </section>
 <section id="fusion">
-<span id="canonical-fusion"></span><h2>Fusion<a class="headerlink" href="#fusion" title="Permalink to this headline">¶</a></h2>
+<span id="canonical-fusion"></span><h2><span class="section-number">1.2.2. </span>Fusion<a class="headerlink" href="#fusion" title="Permalink to this headline">¶</a></h2>
 <section id="what-is-fusion">
-<h3>What is Fusion<a class="headerlink" href="#what-is-fusion" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">1.2.2.1. </span>What is Fusion<a class="headerlink" href="#what-is-fusion" title="Permalink to this headline">¶</a></h3>
 <p>Fusion or Deforestation <a class="footnote-reference brackets" href="#id12" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> <a class="footnote-reference brackets" href="#id13" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a> (We take Andy Gill’s excellent examples from
 this paper for this section. Thank you Andy Gill for your labor!) is an
 optimization technique that eliminates intermediate and short lived data
@@ -303,7 +217,7 @@ occur using <code class="docutils literal notranslate"><span class="pre">and</sp
 this version is successful in removing the intermediate List, .</p>
 </section>
 <section id="why-do-we-want-fusion">
-<h3>Why do we want Fusion<a class="headerlink" href="#why-do-we-want-fusion" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">1.2.2.2. </span>Why do we want Fusion<a class="headerlink" href="#why-do-we-want-fusion" title="Permalink to this headline">¶</a></h3>
 <p>As Andy Gill writes:</p>
 <blockquote>
 <div><p>We want to eat our cake and have it too. That is, we would like to write
@@ -312,7 +226,7 @@ transform this into the more efficient version <code class="docutils literal not
 </div></blockquote>
 </section>
 <section id="how-does-fusion-slow-down-runtime-performance">
-<h3>How does Fusion Slow Down Runtime Performance<a class="headerlink" href="#how-does-fusion-slow-down-runtime-performance" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">1.2.2.3. </span>How does Fusion Slow Down Runtime Performance<a class="headerlink" href="#how-does-fusion-slow-down-runtime-performance" title="Permalink to this headline">¶</a></h3>
 <p>Similar to Inlining, fusion itself does not slow down performance, rather <em>lack
 of</em> fusion does, because if something can fuse but doesn’t, then the program
 will perform unnecessary allocations just to yield the same result. The
@@ -323,9 +237,9 @@ fuse in the chapter dedicated <span class="xref std std-ref">Fusion</span>.</p>
 </section>
 </section>
 <section id="excessive-pointer-chasing">
-<span id="canonical-pointer-chasing"></span><h2>Excessive Pointer Chasing<a class="headerlink" href="#excessive-pointer-chasing" title="Permalink to this headline">¶</a></h2>
+<span id="canonical-pointer-chasing"></span><h2><span class="section-number">1.2.3. </span>Excessive Pointer Chasing<a class="headerlink" href="#excessive-pointer-chasing" title="Permalink to this headline">¶</a></h2>
 <section id="what-is-excessive-pointer-chasing">
-<h3>What is Excessive Pointer Chasing<a class="headerlink" href="#what-is-excessive-pointer-chasing" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">1.2.3.1. </span>What is Excessive Pointer Chasing<a class="headerlink" href="#what-is-excessive-pointer-chasing" title="Permalink to this headline">¶</a></h3>
 <p>Excessive pointer chasing is a form of superfluous computation; our program is
 doing more work than it needs in order to compute the result. It occurs anytime
 our programs dereference a pointer to retrieve a value instead of just
@@ -336,7 +250,7 @@ laziness. As such, most of these instances are well known and have floated
 around the community for some time.</p>
 </section>
 <section id="how-does-excessive-pointer-chasing-slow-down-runtime-performance">
-<h3>How does Excessive Pointer Chasing Slow Down Runtime Performance?<a class="headerlink" href="#how-does-excessive-pointer-chasing-slow-down-runtime-performance" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">1.2.3.2. </span>How does Excessive Pointer Chasing Slow Down Runtime Performance?<a class="headerlink" href="#how-does-excessive-pointer-chasing-slow-down-runtime-performance" title="Permalink to this headline">¶</a></h3>
 <p>The classic example of excessive pointer chasing is memory leaks that result
 from folds that are overly lazy, for example <a class="footnote-reference brackets" href="#id14" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>:</p>
 <div class="literal-block-wrapper docutils container" id="id19">
@@ -416,9 +330,9 @@ Chasing</span> section.</p>
 </section>
 </section>
 <section id="excessive-closure-allocation">
-<span id="canonical-closure-alloc"></span><h2>Excessive Closure Allocation<a class="headerlink" href="#excessive-closure-allocation" title="Permalink to this headline">¶</a></h2>
+<span id="canonical-closure-alloc"></span><h2><span class="section-number">1.2.4. </span>Excessive Closure Allocation<a class="headerlink" href="#excessive-closure-allocation" title="Permalink to this headline">¶</a></h2>
 <section id="what-is-excessive-closure-allocation">
-<h3>What is Excessive Closure Allocation<a class="headerlink" href="#what-is-excessive-closure-allocation" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">1.2.4.1. </span>What is Excessive Closure Allocation<a class="headerlink" href="#what-is-excessive-closure-allocation" title="Permalink to this headline">¶</a></h3>
 <p>Excessive closure allocation is another form of superfluous computation and
 superfluous memory allocation; it means that our program is doing more memory
 allocation and likely more computation then required to compute the result.
@@ -441,7 +355,7 @@ memory allocation when reading or writing Haskell code, and teaches you to
 perform these optimizations manually when GHC fails to optimization.</p>
 </section>
 <section id="how-does-excessive-closure-allocation-slow-down-runtime-performance">
-<h3>How does Excessive Closure Allocation Slow Down Runtime Performance<a class="headerlink" href="#how-does-excessive-closure-allocation-slow-down-runtime-performance" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">1.2.4.2. </span>How does Excessive Closure Allocation Slow Down Runtime Performance<a class="headerlink" href="#how-does-excessive-closure-allocation-slow-down-runtime-performance" title="Permalink to this headline">¶</a></h3>
 <p>Consider these simple examples <a class="footnote-reference brackets" href="#id15" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a> :</p>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"></span>
 <span class="kr">in</span><span class="w"> </span><span class="kr">case</span><span class="w"> </span><span class="n">tail</span><span class="w"> </span><span class="n">zs</span><span class="w"> </span><span class="kr">of</span><span class="w"></span>
@@ -516,9 +430,9 @@ more cases of let floating and detecting excessive closure allocation in the
 </section>
 </section>
 <section id="poor-domain-modeling">
-<span id="canonical-domain-modeling"></span><h2>Poor Domain Modeling<a class="headerlink" href="#poor-domain-modeling" title="Permalink to this headline">¶</a></h2>
+<span id="canonical-domain-modeling"></span><h2><span class="section-number">1.2.5. </span>Poor Domain Modeling<a class="headerlink" href="#poor-domain-modeling" title="Permalink to this headline">¶</a></h2>
 <section id="what-is-poor-domain-modeling">
-<h3>What is Poor Domain Modeling<a class="headerlink" href="#what-is-poor-domain-modeling" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">1.2.5.1. </span>What is Poor Domain Modeling<a class="headerlink" href="#what-is-poor-domain-modeling" title="Permalink to this headline">¶</a></h3>
 <p>Poor domain modeling is a catch all phrase for constructing a program that has a
 high impedance to the problem domain. The problem domain dictates the
 computation that the program must do; it requires specific actions that abide by
@@ -529,10 +443,10 @@ canonical example, instead we’ll provide a set of guidelines to describe when
 you know you have high impedance and how to fix it.</p>
 </section>
 <section id="how-do-i-know-if-i-have-poor-domain-modeling">
-<h3>How do I know if I have Poor Domain Modeling<a class="headerlink" href="#how-do-i-know-if-i-have-poor-domain-modeling" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">1.2.5.2. </span>How do I know if I have Poor Domain Modeling<a class="headerlink" href="#how-do-i-know-if-i-have-poor-domain-modeling" title="Permalink to this headline">¶</a></h3>
 <p>Unfortunately, this is more art than science. Classic indications are:</p>
 <section id="overuse-of-data-list">
-<h4>Overuse of Data.List<a class="headerlink" href="#overuse-of-data-list" title="Permalink to this headline">¶</a></h4>
+<h4><span class="section-number">1.2.5.2.1. </span>Overuse of Data.List<a class="headerlink" href="#overuse-of-data-list" title="Permalink to this headline">¶</a></h4>
 <p>You’ve used a List and have called a function from <code class="docutils literal notranslate"><span class="pre">Data.List</span></code> that does any
 kind of out-of-order processing on elements of the list, or must traverse the
 entire list in order to produce a result:</p>
@@ -556,7 +470,7 @@ because they take less time to construct and traverse than a more complicated
 data structure.</p>
 </section>
 <section id="functions-in-your-program-domain-do-not-easily-compose-to-have-meaning-in-your-problem-domain">
-<h4>Functions in your Program Domain do not Easily Compose to have Meaning in your Problem Domain<a class="headerlink" href="#functions-in-your-program-domain-do-not-easily-compose-to-have-meaning-in-your-problem-domain" title="Permalink to this headline">¶</a></h4>
+<h4><span class="section-number">1.2.5.2.2. </span>Functions in your Program Domain do not Easily Compose to have Meaning in your Problem Domain<a class="headerlink" href="#functions-in-your-program-domain-do-not-easily-compose-to-have-meaning-in-your-problem-domain" title="Permalink to this headline">¶</a></h4>
 <p>Composition and composability is one of the most valuable properties code can
 have. It is key to modularity, key to reuse, is easier to test, is easier to
 understand and often produces more compact code. When the functions in your
@@ -574,7 +488,7 @@ expressing itself in the program domain.</p>
 </div>
 </section>
 <section id="problem-domain-invariants-are-difficult-to-express">
-<h4>Problem Domain Invariants are Difficult to Express<a class="headerlink" href="#problem-domain-invariants-are-difficult-to-express" title="Permalink to this headline">¶</a></h4>
+<h4><span class="section-number">1.2.5.2.3. </span>Problem Domain Invariants are Difficult to Express<a class="headerlink" href="#problem-domain-invariants-are-difficult-to-express" title="Permalink to this headline">¶</a></h4>
 <p>This one usually manifests through the use of superfluous guards. So many
 functions take this form:</p>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- | an example function on Foo, this function learns a lot about Foo</span><span class="w"></span>
@@ -605,7 +519,7 @@ from redundant checks and poor branch prediction, for example:</p>
 </section>
 </section>
 <section id="references">
-<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">1.2.6. </span>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
 <aside class="footnote brackets" id="id11" role="note">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="https://wiki.haskell.org/Inlining_and_Specialisation">https://wiki.haskell.org/Inlining_and_Specialisation</a></p>
@@ -635,11 +549,11 @@ from redundant checks and poor branch prediction, for example:</p>
             <div class="inner"><ul class="page-nav">
   <li class="prev">
     <a href="how_to_use.html"
-       title="previous chapter">← How to Use This Book</a>
+       title="previous chapter">← <span class="section-number">1.1. </span>How to Use This Book</a>
   </li>
   <li class="next">
-    <a href="../Part_1/cachegrind.html"
-       title="next chapter">Using Cachegrind →</a>
+    <a href="../Part_1/index.html"
+       title="next chapter"><span class="section-number">2. </span>Measurement, Profiling, and Observation →</a>
   </li>
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2022, Jeffrey Young (doyougnu).

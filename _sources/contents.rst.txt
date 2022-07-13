@@ -7,13 +7,14 @@ Welcome to Haskell Optimization Handbook
 ==========================================
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 3
    :caption: Table of Contents
-   :glob:
    :name: mastertoc
+   :numbered:
+   :titlesonly:
 
-   src/Preliminaries/*
-   src/Part_1/*
+   src/Preliminaries/index
+   src/Part_1/index
 
 
 Indices and tables

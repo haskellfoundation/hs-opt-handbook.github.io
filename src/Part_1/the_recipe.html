@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+      <title>2.1. The Recipe</title>
+    
+          <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+          <link rel="stylesheet" href="../../_static/theme.css " type="text/css" />
+      
+      <!-- sphinx script_files -->
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+
+      
+      <!-- bundled in js (rollup iife) -->
+      <!-- <script src="../../_static/theme-vendors.js"></script> -->
+      <script src="../../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="next" title="2.2. Heap Profiling and Inspection : GHC Based Methods" href="Part11/index.html" />
+  <link rel="prev" title="2. Measurement, Profiling, and Observation" href="index.html" /> 
+  </head>
+
+  <body>
+    <div id="app">
+    <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../../contents.html" class="home-link">
+    
+      <span class="site-name">Haskell Optimization Handbook</span>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../contents.html#welcome-to-haskell-optimization-handbook">Table of Contents</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../Preliminaries/index.html" class="reference internal ">Preliminaries</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="index.html" class="reference internal ">Measurement, Profiling, and Observation</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../../contents.html">Docs</a> &raquo;</li>
+    
+      <li><a href="index.html"><span class="section-number">2. </span>Measurement, Profiling, and Observation</a> &raquo;</li>
+    
+    <li><span class="section-number">2.1. </span>The Recipe</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+  <li class="prev">
+    <a href="index.html"
+       title="previous chapter">← <span class="section-number">2. </span>Measurement, Profiling, and Observation</a>
+  </li>
+  <li class="next">
+    <a href="Part11/index.html"
+       title="next chapter"><span class="section-number">2.2. </span>Heap Profiling and Inspection : GHC Based Methods →</a>
+  </li>
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main" v-pre>
+            
+  <section id="the-recipe">
+<h1><span class="section-number">2.1. </span>The Recipe<a class="headerlink" href="#the-recipe" title="Permalink to this headline">¶</a></h1>
+<p>This chapter presents a recipe for debugging performance regressions in Haskell.
+This is a philosophical, not tool based chapter. Often times when we need to
+debug code it becomes too easy to trace execution or use a shotgun approach;
+where we apply a bunch of changes and retest to see if our stimulus presents a
+response. You should do your best to avoid these urges. Instead use a scientific
+approach and develop a hypothesis and conceptual model. Every bug or performance
+regression is a learning opportunity and should be considered as such. By
+treating regressions as learning opportunities you gain knowledge of your system
+and the systems it interacts with, i.e., you become a better software engineer.
+This chapter provides a sequence of questions and reminders to aid in a
+scientific approach to performance regression debugging. We hope it aids you
+well.</p>
+<section id="characterize-the-problem">
+<h2><span class="section-number">2.1.1. </span>0: Characterize the problem<a class="headerlink" href="#characterize-the-problem" title="Permalink to this headline">¶</a></h2>
+<p>The first step to solving any kind of problem is characterization. We want to
+gain knowledge about the <em>nature</em> of the problem at hand, and how that problem
+manifests in our system. You should ask yourself the following questions:</p>
+<ol class="arabic simple">
+<li><p>Have I observed this problem before? Is it a known failure mode? If so then
+why does it continue to happen?</p></li>
+<li><p>Is the problem deterministic? Or is it stochastic? If it is stochastic what
+is the rate at which we observe the problem phenomena?</p></li>
+<li><p>Is there anything <em>unique</em> about the environment the problem manifest in?
+Specifically:
+-. one
+-. two
+-. three</p></li>
+</ol>
+</section>
+<section id="define-a-hypothesis">
+<h2><span class="section-number">2.1.2. </span>1: Define a Hypothesis<a class="headerlink" href="#define-a-hypothesis" title="Permalink to this headline">¶</a></h2>
+<p>It is</p>
+</section>
+<section id="create-the-smallest-possible-test-of-the-hypothesis">
+<h2><span class="section-number">2.1.3. </span>2: Create the smallest possible test of the Hypothesis<a class="headerlink" href="#create-the-smallest-possible-test-of-the-hypothesis" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="predict-the-response">
+<h2><span class="section-number">2.1.4. </span>3: Predict the Response<a class="headerlink" href="#predict-the-response" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+  <li class="prev">
+    <a href="index.html"
+       title="previous chapter">← <span class="section-number">2. </span>Measurement, Profiling, and Observation</a>
+  </li>
+  <li class="next">
+    <a href="Part11/index.html"
+       title="next chapter"><span class="section-number">2.2. </span>Heap Profiling and Inspection : GHC Based Methods →</a>
+  </li>
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2022, Jeffrey Young (doyougnu).
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.5.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
+</div>
+            </div>
+          </div>
+      </page>
+    </div></div>
+    
+    
+  </body>
+</html>
