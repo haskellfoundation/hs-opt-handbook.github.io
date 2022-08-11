@@ -24,16 +24,9 @@
                 sha256 = "sha256-KITKqx3AHssR0VjU3W0xeeLdl81IUWx2nMJzYCcuYrM=";
               };
 
-              propagatedBuildInputs = with pkgs.python3Packages; [
-                sphinx
-              ];
-
+              propagatedBuildInputs = with pkgs.python3Packages; [sphinx];
               doCheck = false; # no tests
-
-              # pythonImportsCheck = [ "sphinx-theme-builder[cli]" ];
             };
-
-     #######################################################################
 
             ourTexLive = pkgs.texlive.combine {
               inherit (pkgs.texlive)
@@ -73,12 +66,13 @@
         in
 
         rec {
-          defaultPackage = packages.build;
-
           packages = {
-            build = buildHoh { target = "html"; };
-            epub  = buildHoh { target = "epub"; };
-            pdf   = buildHoh { target = "pdf"; };
+            default = import ./hoh.nix { inherit pkgs; inherit sphinx-press-theme; target = "html"; };
+            epub    = import ./hoh.nix { inherit pkgs; inherit sphinx-press-theme; target = "epub"; };
+            pdf     = import ./hoh.nix { inherit pkgs; inherit sphinx-press-theme; target = "pdf"; };
+          };
+          devShells = {
+            default = packages.default;
           };
         }
       );

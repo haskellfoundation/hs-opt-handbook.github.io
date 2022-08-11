@@ -103,6 +103,12 @@ With nix and flakes, run:
 
    nix develop -c make html
 
+With nix and flakes, and to autobuild run:
+
+.. code-block:: bash
+
+   nix develop -c sphinx-autobuild . _build/html
+
 With nix and no flakes, run:
 
 .. code-block:: bash
