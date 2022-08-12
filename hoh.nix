@@ -1,22 +1,27 @@
 { pkgs
 , target ? "html"
-, sphinx-press-theme
 }:
 
+let
+   pythonInputs = with pkgs.python310Packages; [
+     sphinx
+     sphinx-autobuild
+     sphinxcontrib-bibtex
+     sphinxcontrib-tikz
+     ## until we have a reason for tex leave this commented out for CI
+     # ourTexLive
+   ];
+   nonPythonInputs = with pkgs; [ sphinx-press-theme # this comes from the overlay
+                                  pandoc
+                                  rst2html5
+                                ];
+in
 pkgs.stdenv.mkDerivation {
    pname   = "hoh";
    version = "0.0.1";
    src     = ./.;
-
-   buildInputs = with pkgs; [
-     python3Packages.sphinx
-     python3Packages.sphinx-autobuild
-     sphinx-press-theme
-     pandoc
-     rst2html5
-     ## until we have a reason for tex leave this commented out for CI
-     # ourTexLive
-   ];
+   buildInputs = pythonInputs ++ nonPythonInputs;
+   # non python packages
 
    buildPhase = ''
    make ${target}
