@@ -198,6 +198,10 @@ files in the root directory of the project.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>nix develop -c make html
 </pre></div>
 </div>
+<p>With nix and flakes, and to autobuild run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>nix develop -c sphinx-autobuild . _build/html
+</pre></div>
+</div>
 <p>With nix and no flakes, run:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>nix-shell --run <span class="s1">&#39;make html&#39;</span>
 </pre></div>
