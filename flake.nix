@@ -40,32 +40,6 @@
             ## TODO use this
             fonts = pkgs.makeFontsConf { fontDirectories = [ pkgs.dejavu_fonts ]; };
 
-            buildHoh = { target ? "html"
-                       }:
-                         pkgs.stdenv.mkDerivation {
-                           pname   = "hoh";
-                           version = "0.0.1";
-                           src     = ./.;
-
-
-                           propagatedBuildInputs = with pkgs; [
-                             python310Packages.sphinx
-                             python310Packages.sphinx-autobuild
-                             python310Packages.sphinxcontrib-bibtex
-                             python310Packages.sphinxcontrib-tikz
-                             sphinx-press-theme
-                             pandoc
-                             rst2html5
-                             ## until we have a reason for tex leave this commented out for CI
-                             # ourTexLive
-                           ];
-
-                           buildPhase = ''
-                           make ${target}
-                           touch "_build/.nojekyll"
-                           touch "_build/html/.nojekyll"
-                           '';
-                         };
         in
 
         rec {
