@@ -7,4 +7,7 @@ Heap Profiling and Inspection : GHC Based Methods
    :caption: Part 1.1: Measurement, Profiling, and Observation
    :name: Part11
 
+   ghc_flags
    eventlog
+   ghc_debug
+   scopes
