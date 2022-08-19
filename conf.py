@@ -41,8 +41,8 @@ extensions = [ 'sphinx.ext.mathjax'
              ]
 
 # flags
-todo_include_todos = True
-todo_link_only     = True
+todo_include_todos = False
+todo_link_only     = False
 
 # The rst file that holds the ToC. This indirection allows for a nice splash page
 master_doc = "contents"

@@ -1,3 +1,4 @@
+:orphan:
 
 Welcome to Haskell Optimization Handbook
 ==========================================
