@@ -1,3 +1,5 @@
+:orphan:
+
 *****************************
 Haskell Optimization Handbook
 *****************************
