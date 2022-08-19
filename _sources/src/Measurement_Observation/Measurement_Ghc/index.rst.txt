@@ -4,7 +4,7 @@ CPU Cycle Measurement
 .. toctree::
    :maxdepth: 2
    :glob:
-   :name: CPU_GHC_
+   :name: CPU_GHC
 
    ghc_flags
    dtimings
