@@ -11,3 +11,4 @@ Measurement, Profiling, and Observation
    Measurement_Ghc/index
    Measurement_Libs/index
    Measurement_Third/index
+   Direct_Observation/index

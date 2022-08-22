@@ -9,7 +9,7 @@
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-#
+
 import os
 import sys
 sys.path.insert(0, os.path.abspath('.'))
@@ -23,7 +23,6 @@ author = 'Jeffrey Young (doyugnu)'
 
 # The full version, including alpha/beta/rc tags
 release = '0.0.1'
-
 
 # -- General configuration ---------------------------------------------------
 
@@ -60,7 +59,6 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', '.dir-locals.el', '.proj
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-#
 html_theme      = "press"
 
 # Add any paths that contain custom static files (such as style sheets) here,
