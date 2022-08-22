@@ -1,13 +1,12 @@
-CPU Cycle Measurement
----------------------
+CPU Measurement : Haskell Libraries
+-----------------------------------
 
 .. toctree::
    :maxdepth: 2
    :glob:
-   :name: CPU_ThirdParty
+   :name: CPU_Libs
 
-   linux_time
-   linux_perf
-   valgrind
-   dtrace
-   flamegraph
+   criterion
+   weigh
+   inspection-testing
+   nothunks

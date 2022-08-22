@@ -1,5 +1,5 @@
-CPU Cycle Measurement
----------------------
+CPU Measurement : GHC Based Methods
+-----------------------------------
 
 .. toctree::
    :maxdepth: 2
