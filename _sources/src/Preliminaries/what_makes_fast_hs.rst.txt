@@ -65,7 +65,8 @@ because it limits otherwise possible optimizations from taking place. However,
 that does not mean we should always ask GHC to inline or manually perform
 inlining, in contrast, sometimes we can realize performance benefits by
 restricting inlining. We'll return to the cost benefit analysis, and discuss the
-particulars of GHC's inliner, in the chapter dedicated to :ref:`Inlining`.
+particulars of GHC's inliner, in the chapter dedicated to :ref:`Inlining
+<Inlining Chapter>`.
 
 
 
@@ -129,7 +130,7 @@ will perform unnecessary allocations just to yield the same result. The
 difficult parts of a fusion slow down is identifying fusion as the root cause of
 your slow down *and then* convincing GHC to fuse whichever code was being
 difficult. We'll show how to identify fusion as the culprit and convice GHC to
-fuse in the chapter dedicated :ref:`Fusion`.
+fuse in the chapter dedicated :ref:`Fusion <Fusion Rules Chapter>`.
 
 
 .. _canonical-pointer-chasing:

@@ -1,4 +1,4 @@
-.. _How to use this book
+.. _How_to_use
 
 How to Use This Book
 ====================
@@ -32,12 +32,14 @@ picking your favorite Haskell library and attempting to optimize that!
 
 The book assumes you are using ``GHC 8.10.x`` and a Linux distribution (kernel
 version ``5.8`` and higher). Should you be using an older compiler than some
-sections, such as :doc:`Using EventLog </src/Part_1/eventlog>`; which arrived
-in ``GHC 8.8`` may still be useful, while others such as :doc:`Using Cachegrind
-</src/Part_1/cachegrind>`; which relies on :term:`DWARF` symbols (added in ``GHC 8.10.x``)
-may not be applicable. Similarly, some chapters, such as :doc:`Using perf
-<src/Part_1/perf>` will only be applicable for Linux and Linux based operating
-systems.
+sections, such as :doc:`Using EventLog
+</src/Measurement_Observation/Heap_Ghc/eventlog>`; which arrived in ``GHC 8.8``
+may still be useful, while others such as :doc:`Using Cachegrind
+</src/Measurement_Observation/Heap_Third/cachegrind>`; which relies on
+:term:`DWARF` symbols (added in ``GHC 8.10.x``) may not be applicable.
+Similarly, some chapters, such as :doc:`Using perf
+</src/Measurement_Observation/Measurement_Third/linux_perf>` will only be
+applicable for Linux and Linux based operating systems.
 
 Notation
 --------

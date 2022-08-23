@@ -11,3 +11,6 @@ Library Agnostic Changes
    fusion_and_rules
    appropriate_folds
    inlining
+   lazy_tuples
+   using_ghc_exts
+   loopification

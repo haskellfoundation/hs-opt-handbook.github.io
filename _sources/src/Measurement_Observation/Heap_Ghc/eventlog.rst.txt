@@ -1,4 +1,4 @@
-.. EventLog
+.. _EventLog Chapter:
 
 Eventlog
 ========

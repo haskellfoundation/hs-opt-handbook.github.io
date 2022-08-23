@@ -1,4 +1,4 @@
-.. Inlining
+.. _Inlining Chapter:
 
 Inlining Pragma and Friends
 ===========================
