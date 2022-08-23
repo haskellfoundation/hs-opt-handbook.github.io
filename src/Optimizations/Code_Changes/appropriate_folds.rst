@@ -1,4 +1,4 @@
-.. Folds
+.. _Folds Chapter:
 
 Appropriate Folding
 ===================
