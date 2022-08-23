@@ -1,4 +1,4 @@
-.. Fusion_Rules
+.. _Fusion Rules Chapter:
 
 Fusion and Rules
 ================
