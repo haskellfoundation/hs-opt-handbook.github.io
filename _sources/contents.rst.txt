@@ -15,6 +15,7 @@ Welcome to Haskell Optimization Handbook
 
    src/Preliminaries/index
    src/Measurement_Observation/index
+   src/Optimizations/index
 
 
 Indices and tables
