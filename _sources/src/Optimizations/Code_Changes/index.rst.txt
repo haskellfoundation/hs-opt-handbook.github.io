@@ -14,3 +14,11 @@ Library Agnostic Changes
    lazy_tuples
    using_ghc_exts
    loopification
+   worker_wrapper
+   nested_transformers
+   parse_dont_validate
+   unroll_stacks
+   oneshot
+   cps
+   data_structures
+   backpack
