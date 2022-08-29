@@ -140,34 +140,56 @@
 This is a philosophical, not tool based chapter. Often times when we need to
 debug code it becomes too easy to trace execution or use a shotgun approach;
 where we apply a bunch of changes and retest to see if our stimulus presents a
-response. You should do your best to avoid these urges. Instead use a scientific
-approach and develop a hypothesis and conceptual model. Every bug or performance
-regression is a learning opportunity and should be considered as such. By
-treating regressions as learning opportunities you gain knowledge of your system
-and the systems it interacts with, i.e., you become a better software engineer.
-This chapter provides a sequence of questions and reminders to aid in a
-scientific approach to performance regression debugging. We hope it aids you
-well.</p>
+response. You should do your best to avoid these urges. Instead, use a
+scientific approach and develop a hypothesis and conceptual model. Every bug or
+performance regression is a learning opportunity and should be considered as
+such. By treating regressions as learning opportunities you gain knowledge of
+your system and the systems it interacts with, i.e., you become a better
+software engineer. This chapter provides a sequence of questions and reminders
+to aid in a scientific approach to performance regression debugging. We hope it
+aids you well.</p>
 <section id="characterize-the-problem">
 <h2><span class="section-number">2.1.1. </span>0: Characterize the problem<a class="headerlink" href="#characterize-the-problem" title="Permalink to this headline">¶</a></h2>
 <p>The first step to solving any kind of problem is characterization. We want to
 gain knowledge about the <em>nature</em> of the problem at hand, and how that problem
 manifests in our system. You should ask yourself the following questions:</p>
 <ol class="arabic simple">
-<li><p>Have I observed this problem before? Is it a known failure mode? If so then
-why does it continue to happen?</p></li>
+<li><p>Have I observed this problem before? Is it a known failure mode? If so, then
+why does it continue to happen? What are the chain of events that have caused
+it to occur again?</p></li>
 <li><p>Is the problem deterministic? Or is it stochastic? If it is stochastic what
 is the rate at which we observe the problem phenomena?</p></li>
 <li><p>Is there anything <em>unique</em> about the environment the problem manifest in?
 Specifically:
--. one
--. two
--. three</p></li>
+-. Does it manifest only on unique hardware?
+-. Does it manifest at a particular time of day or only on one person’s machine?
+-. Does it manifest only when other processes are running?</p></li>
 </ol>
 </section>
 <section id="define-a-hypothesis">
 <h2><span class="section-number">2.1.2. </span>1: Define a Hypothesis<a class="headerlink" href="#define-a-hypothesis" title="Permalink to this headline">¶</a></h2>
-<p>It is</p>
+<section id="the-objects-of-the-hypothesis">
+<h3><span class="section-number">2.1.2.1. </span>The objects of the hypothesis<a class="headerlink" href="#the-objects-of-the-hypothesis" title="Permalink to this headline">¶</a></h3>
+<p>Think of characters in a story book. These are the objects of your hypothesis;
+any system that takes an action to produce a result that your code interacts
+with or causes, is a character. Each data structure your code directly or
+indirectly uses, is a character. Each function you have written is a character.
+And so on.</p>
+</section>
+<section id="defining-a-good-hypothesis">
+<h3><span class="section-number">2.1.2.2. </span>Defining a good hypothesis<a class="headerlink" href="#defining-a-good-hypothesis" title="Permalink to this headline">¶</a></h3>
+<p>Not all hypotheses are created equal. Good hypotheses have the following
+properties:</p>
+<ol class="arabic simple">
+<li><p>A good hypothesis yields information when confirmed <em>and</em> when invalidated. A
+bad hypothesis <em>keeps constant</em> the level of information you have about the
+phenomena. In other words, a bad hypothesis is one where you only gain
+information if the hypothesis is shown to true.</p></li>
+<li><p>Specificity: Good hypotheses are specific enough <em>to be</em> invalidated. Here
+are some examples:
+#.</p></li>
+</ol>
+</section>
 </section>
 <section id="create-the-smallest-possible-test-of-the-hypothesis">
 <h2><span class="section-number">2.1.3. </span>2: Create the smallest possible test of the Hypothesis<a class="headerlink" href="#create-the-smallest-possible-test-of-the-hypothesis" title="Permalink to this headline">¶</a></h2>
