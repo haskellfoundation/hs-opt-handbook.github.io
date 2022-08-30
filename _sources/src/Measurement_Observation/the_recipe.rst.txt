@@ -50,17 +50,22 @@ And so on.
 Defining a good hypothesis
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Not all hypotheses are created equal. Good hypotheses have the following
+Not all hypotheses are equal. Good hypotheses have the following
 properties:
 
-#. A good hypothesis yields information when confirmed *and* when invalidated. A
-   bad hypothesis *keeps constant* the level of information you have about the
-   phenomena. In other words, a bad hypothesis is one where you only gain
-   information if the hypothesis is shown to true.
+#. They make progress; a good hypothesis yields information when confirmed *and*
+   when invalidated. A bad hypothesis *keeps constant* the level of information
+   you have about the phenomena. In other words, a bad hypothesis is one where
+   you only gain information if the hypothesis is shown to true.
 
-#. Specificity: Good hypotheses are specific enough *to be* invalidated. Here
-   are some examples:
-   #.
+#. They have specificity and are actionable: Good hypotheses are specific enough
+   *to be* invalidated. For example, the hypothesis "30% of CPU cycles are spent in
+   ``Data.List.reverse`` on input ``Foo``" is actionable; we can directly measure
+   how many CPU cycles are spent on this particular function for a particular
+   input. But in addition to that, this hypothesis also adds information *even if*
+   it is shown to be wrong. It could be the case that only 5% of the CPU cycles are
+   spent on ``reverse`` and if so then we have still learned something.
+
 
 
 

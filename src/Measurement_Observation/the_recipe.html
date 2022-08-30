@@ -178,16 +178,20 @@ And so on.</p>
 </section>
 <section id="defining-a-good-hypothesis">
 <h3><span class="section-number">2.1.2.2. </span>Defining a good hypothesis<a class="headerlink" href="#defining-a-good-hypothesis" title="Permalink to this headline">¶</a></h3>
-<p>Not all hypotheses are created equal. Good hypotheses have the following
+<p>Not all hypotheses are equal. Good hypotheses have the following
 properties:</p>
 <ol class="arabic simple">
-<li><p>A good hypothesis yields information when confirmed <em>and</em> when invalidated. A
-bad hypothesis <em>keeps constant</em> the level of information you have about the
-phenomena. In other words, a bad hypothesis is one where you only gain
-information if the hypothesis is shown to true.</p></li>
-<li><p>Specificity: Good hypotheses are specific enough <em>to be</em> invalidated. Here
-are some examples:
-#.</p></li>
+<li><p>They make progress; a good hypothesis yields information when confirmed <em>and</em>
+when invalidated. A bad hypothesis <em>keeps constant</em> the level of information
+you have about the phenomena. In other words, a bad hypothesis is one where
+you only gain information if the hypothesis is shown to true.</p></li>
+<li><p>They have specificity and are actionable: Good hypotheses are specific enough
+<em>to be</em> invalidated. For example, the hypothesis “30% of CPU cycles are spent in
+<code class="docutils literal notranslate"><span class="pre">Data.List.reverse</span></code> on input <code class="docutils literal notranslate"><span class="pre">Foo</span></code>” is actionable; we can directly measure
+how many CPU cycles are spent on this particular function for a particular
+input. But in addition to that, this hypothesis also adds information <em>even if</em>
+it is shown to be wrong. It could be the case that only 5% of the CPU cycles are
+spent on <code class="docutils literal notranslate"><span class="pre">reverse</span></code> and if so then we have still learned something.</p></li>
 </ol>
 </section>
 </section>
