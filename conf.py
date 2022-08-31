@@ -12,13 +12,15 @@
 
 import os
 import sys
+import time
 sys.path.insert(0, os.path.abspath('.'))
 
 # -- Project information -----------------------------------------------------
 
 project = 'Haskell Optimization Handbook'
 html_title = 'Haskell Optimization Handbook'
-copyright = '2022, Jeffrey Young (doyougnu)'
+# FIXME: https://github.com/input-output-hk/hs-opt-handbook.github.io/issues/58
+copyright = u'2006-%s, Jeffrey Young (doyougnu)' % time.strftime('%Y')
 author = 'Jeffrey Young (doyugnu)'
 
 # The full version, including alpha/beta/rc tags

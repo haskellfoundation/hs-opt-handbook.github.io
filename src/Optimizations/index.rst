@@ -6,4 +6,5 @@ Optimizations
    :name: Optimizations
 
    GHC_tech/index
+   Code_Changes_Libraries/index
    Code_Changes/index
