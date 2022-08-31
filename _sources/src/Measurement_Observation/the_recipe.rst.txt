@@ -68,10 +68,6 @@ Define a hypothesis
 The objects of the hypothesis
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-gain knowledge about the *nature* of the problem at hand, and
-the *failure mode*, i.e., how that problem manifests in our system.
-
-
 Think of characters in a story book. These are the objects of your hypothesis;
 any system that takes an action to produce a result that your code interacts
 with or causes, is a character. Each data structure your code directly or
@@ -80,6 +76,11 @@ And so on.
 
 Defining a good hypothesis
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+..
+   gain knowledge about the *nature* of the problem at hand, and
+   the *failure mode*, i.e., how that problem manifests in our system.
+
 
 Not all hypotheses are equal. Good hypotheses have the following
 properties:
