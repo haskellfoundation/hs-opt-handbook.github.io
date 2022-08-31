@@ -136,7 +136,7 @@
           <div class="content" role="main" v-pre>
             
   <section id="how-to-use-this-book">
-<h1><span class="section-number">1.1. </span>How to Use This Book<a class="headerlink" href="#how-to-use-this-book" title="Permalink to this headline">¶</a></h1>
+<span id="how-to-use"></span><h1><span class="section-number">1.1. </span>How to Use This Book<a class="headerlink" href="#how-to-use-this-book" title="Permalink to this headline">¶</a></h1>
 <section id="purpose">
 <h2><span class="section-number">1.1.1. </span>Purpose<a class="headerlink" href="#purpose" title="Permalink to this headline">¶</a></h2>
 <p>This book is written as a handbook for the intrepid Haskell developer. It
@@ -178,8 +178,26 @@ discourse:</p>
 <li><p><span class="math notranslate nohighlight">\(\mathcal{O}(n\log{}n)\)</span> to mean the minimum bound time complexity of an algorithm is <span class="math notranslate nohighlight">\(n\log{}n\)</span></p></li>
 </ol>
 </section>
+<section id="vocabulary">
+<h2><span class="section-number">1.1.5. </span>Vocabulary<a class="headerlink" href="#vocabulary" title="Permalink to this headline">¶</a></h2>
+<p>Unless otherwise noted, we use the following vocabulary to describe various
+aspects of our optimization journey. Because these do not have a formal
+definition we present them here instead of in the <a class="reference internal" href="../glossary.html#glossary"><span class="std std-ref">Glossary</span></a>:</p>
+<ol class="arabic simple">
+<li><p><em>The system</em>: The system is the entire infrastructure and computational
+ediface your program operates in. This includes your operating system, your
+CPU, your memory controller, even the network and internet if your program
+does any http request.</p></li>
+<li><p><em>The program</em>: The program is the program we are trying to optimize.</p></li>
+<li><p><em>The problem</em>: The problem is the performance regression we are trying to
+characterize, understand, fix and prevent.</p></li>
+<li><p><em>The failure mode</em>: The failure mode is the sequence of interactions between
+sub-systems in your system that manifest the problem. Once you understand the
+failure mode you are close to a solution.</p></li>
+</ol>
+</section>
 <section id="where-to-begin">
-<h2><span class="section-number">1.1.5. </span>Where to Begin<a class="headerlink" href="#where-to-begin" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">1.1.6. </span>Where to Begin<a class="headerlink" href="#where-to-begin" title="Permalink to this headline">¶</a></h2>
 <p>The book is structured into discrete independent parts to better serve as a
 handbook. Thus, the book is not meant to be read in a linear order. Instead, one
 should pick and choose which chapter to read next based on their needs because
@@ -197,10 +215,10 @@ hardest methods, such as exploiting <code class="docutils literal notranslate"><
 the runtime representation of a data type.</p>
 </section>
 <section id="goals">
-<h2><span class="section-number">1.1.6. </span>Goals<a class="headerlink" href="#goals" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">1.1.7. </span>Goals<a class="headerlink" href="#goals" title="Permalink to this headline">¶</a></h2>
 <p>HOH is:</p>
 <ol class="arabic simple">
-<li><p>A freely available online book</p></li>
+<li><p>A freely available online book.</p></li>
 <li><p>Is actionable: A reader can read a section and apply a technique to make progress for their problem.</p></li>
 <li><p>Is relevant: Case studies are not manufactured examples, rather they originate from real world code.</p></li>
 <li><p>Is practical: Content that describes a performance technique describes how to
@@ -212,13 +230,13 @@ profiling section should describe what heap profiling is, how to do the heap
 profiling, what the output should look like, and most importantly a gallery
 of examples of poor performing heap profiles and an explanation of why they
 are poor performing.</p></li>
-<li><p>Community driven</p></li>
-<li><p>Maintained and updated over time, with supported versions of GHC beginning at 8.10.x (for DWARF symbols)</p></li>
+<li><p>Community driven.</p></li>
+<li><p>Maintained and updated over time, with supported versions of GHC beginning at 8.10.x (for DWARF symbols).</p></li>
 <li><p>Understandable for intermediate to expert Haskell developers.</p></li>
 </ol>
 </section>
 <section id="non-goals">
-<h2><span class="section-number">1.1.7. </span>Non-Goals<a class="headerlink" href="#non-goals" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">1.1.8. </span>Non-Goals<a class="headerlink" href="#non-goals" title="Permalink to this headline">¶</a></h2>
 <p>HOH does not have:</p>
 <ol class="arabic simple">
 <li><p>Content suitable for beginner functional programmers.</p></li>
@@ -247,7 +265,7 @@ audience.</p></li>
        title="next chapter"><span class="section-number">1.2. </span>The Programs of Consistent Lethargy →</a>
   </li>
 </ul><div class="footer" role="contentinfo">
-      &#169; Copyright 2022, Jeffrey Young (doyougnu).
+      &#169; Copyright 2006-2022, Jeffrey Young (doyougnu).
     <br>
     Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.5.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
 </div>

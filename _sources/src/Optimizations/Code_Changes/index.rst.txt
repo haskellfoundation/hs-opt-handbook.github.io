@@ -5,20 +5,22 @@ Library Agnostic Changes
    :maxdepth: 3
    :name: Manual_Code_Changes
 
-   unboxing
-   unpacking_product_types
+   data_structures
+   ordering_constructors
+   lazy_tuples
+   appropriate_folds
+   parse_dont_validate
+   using_ghc_exts
+   inlining
    specialization
    fusion_and_rules
-   appropriate_folds
-   inlining
-   lazy_tuples
-   using_ghc_exts
+   unboxing
+   unpacking_product_types
    loopification
    worker_wrapper
    nested_transformers
-   parse_dont_validate
    unroll_stacks
    oneshot
-   cps
-   data_structures
+   continuation_passing_style
+   levity_polymorphism
    backpack

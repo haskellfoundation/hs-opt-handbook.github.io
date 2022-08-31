@@ -7,20 +7,22 @@ This is a philosophical, not tool based chapter. Often times when we need to
 debug code it becomes too easy to trace execution or use a shotgun approach;
 where we apply a bunch of changes and retest to see if our stimulus presents a
 response. You should do your best to avoid these urges. Instead, use a
-scientific approach and develop a hypothesis and conceptual model. Every bug or
-performance regression is a learning opportunity and should be considered as
-such. By treating regressions as learning opportunities you gain knowledge of
-your system and the systems it interacts with, i.e., you become a better
-software engineer. This chapter provides a sequence of questions and reminders
-to aid in a scientific approach to performance regression debugging. We hope it
-aids you well.
+scientific approach and develop a hypothesis and conceptual model of the failure
+mode or bug. Every bug or performance regression is a learning opportunity and
+should be considered as such. By treating regressions as learning opportunities
+you gain knowledge of your system and the systems it interacts with, i.e., you
+become a better software engineer. This chapter provides a sequence of questions
+and reminders to help in a scientific approach to performance regression
+debugging. We hope it aids you well.
 
-0: Characterize the problem
----------------------------
+Characterize the problem
+------------------------
 
-The first step to solving any kind of problem is characterization. We want to
-gain knowledge about the *nature* of the problem at hand, and how that problem
-manifests in our system. You should ask yourself the following questions:
+The first step to solving any kind of problem is characterization. The goal of
+this step is to observe how the problem *presents* itself in the system. No
+phenomena exists without leaving a trail of evidence. Our purpose in this step
+is to find this trail and re-state the problem description *in terms* of the
+system. You should ask yourself the following questions:
 
 #. Have I observed this problem before? Is it a known failure mode? If so, then
    why does it continue to happen? What are the chain of events that have caused
@@ -35,11 +37,40 @@ manifests in our system. You should ask yourself the following questions:
    -. Does it manifest at a particular time of day or only on one person's machine?
    -. Does it manifest only when other processes are running?
 
-1: Define a Hypothesis
-----------------------
+#. Is the problem temporal? Has anything *recently* changed in the system or the
+   environment the system operates in that could induce the problem?
+
+With these questions in mind, the next step is to gather data [#]_ . You want to
+gather enough data to be able to precisely describe the problem at hand. "The
+system slows to a crawl" is not a good description of the failure mode because
+it is too vague. How does the system slow? At what point does it slow? On what
+input does it slow? Does this always happen or is it a random occurrence? "The
+system consumes 36Gb out of 32Gb of memory on input ``foo``, which forces the
+operating system to begin paging" is a good description of the failure mode. It
+is a precise description; we know that whatever the root cause is it affects the
+runtime memory cost of our program. Similarly, this description gives an
+estimate of the magnitude of the problem.
+
+This step is concluded when you have the following information:
+
+#. You can precisely describe the problem *in terms* of the sub-systems of your
+   program. These sub-systems could be your own components or they could be
+   sub-systems your program relies upon. For example, you should be able to
+   precisely describe the increase in CPU cycles, runtime memory cost, missed
+   branches, cache writes/reads misses, network requests, dropped packets etc.
+   the failure mode incurs compared to the baseline (i.e., compared to normal
+   operation).
+
+
+Define a hypothesis
+-------------------
 
 The objects of the hypothesis
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+gain knowledge about the *nature* of the problem at hand, and
+the *failure mode*, i.e., how that problem manifests in our system.
+
 
 Think of characters in a story book. These are the objects of your hypothesis;
 any system that takes an action to produce a result that your code interacts
@@ -67,12 +98,16 @@ properties:
    spent on ``reverse`` and if so then we have still learned something.
 
 
+Create the smallest possible test of the Hypothesis
+---------------------------------------------------
+Once you have
+
+Predict the Response
+--------------------
+
+Summary
+-------
 
 
-
-
-2: Create the smallest possible test of the Hypothesis
-------------------------------------------------------
-
-3: Predict the Response
------------------------
+.. [#] Be sure to have a reproducible testing environment setup before you begin
+       gathering data. :ref:`Repeatable Measurements`
