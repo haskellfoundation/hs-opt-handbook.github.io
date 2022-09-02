@@ -148,8 +148,29 @@ you gain knowledge of your system and the systems it interacts with, i.e., you
 become a better software engineer. This chapter provides a sequence of questions
 and reminders to help in a scientific approach to performance regression
 debugging. We hope it aids you well.</p>
+<section id="vocabulary">
+<h2><span class="section-number">2.1.1. </span>Vocabulary<a class="headerlink" href="#vocabulary" title="Permalink to this headline">¶</a></h2>
+<p>Unless otherwise noted, we use the following vocabulary to describe various
+aspects of our optimization journey. Because these do not have a formal
+definition we present them here instead of in the <a class="reference internal" href="../glossary.html#glossary"><span class="std std-ref">Glossary</span></a>:</p>
+<ol class="arabic simple">
+<li><p><em>The system</em>: The system is the local infrastructure and computational
+edifice your program operates in. This includes your operating system, your
+CPU, your memory controller.</p></li>
+<li><p><em>The program</em>: The program is the program we are trying to optimize that runs
+on the system.</p></li>
+<li><p><em>The problem</em>: The problem is an observable phenomena of the program. It is
+the performance regression we are trying to characterize, understand, fix and
+prevent.</p></li>
+<li><p><em>The failure mode</em>: The failure mode is the sequence of interactions between
+sub-systems or external systems and your system that manifest the problem.</p></li>
+<li><p><em>The baseline</em>: The baseline is the observable, measurable behavior of the
+program which constitutes <em>normal operation</em>. This is how you know you have a
+problem.</p></li>
+</ol>
+</section>
 <section id="characterize-the-problem">
-<h2><span class="section-number">2.1.1. </span>Characterize the problem<a class="headerlink" href="#characterize-the-problem" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">2.1.2. </span>Characterize the problem<a class="headerlink" href="#characterize-the-problem" title="Permalink to this headline">¶</a></h2>
 <p>The first step to solving any kind of problem is characterization. The goal of
 this step is to observe how the problem <em>presents</em> itself in the system. No
 phenomena exists without leaving a trail of evidence. Our purpose in this step
@@ -167,7 +188,8 @@ Specifically:
 -. Does it manifest at a particular time of day or only on one person’s machine?
 -. Does it manifest only when other processes are running?</p></li>
 <li><p>Is the problem temporal? Has anything <em>recently</em> changed in the system or the
-environment the system operates in that could induce the problem?</p></li>
+environment the system operates in that could induce the problem? Bring out
+the git logs and begin bisecting!</p></li>
 </ol>
 <p>With these questions in mind, the next step is to gather data <a class="footnote-reference brackets" href="#id2" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> . You want to
 gather enough data to be able to precisely describe the problem at hand. “The
@@ -190,19 +212,57 @@ the failure mode incurs compared to the baseline (i.e., compared to normal
 operation).</p></li>
 </ol>
 </section>
+<section id="create-the-smallest-reproducible-test-of-the-problem">
+<h2><span class="section-number">2.1.3. </span>Create the smallest reproducible test of the problem<a class="headerlink" href="#create-the-smallest-reproducible-test-of-the-problem" title="Permalink to this headline">¶</a></h2>
+<p>Once you have characterized the problem you should try to create an isolated,
+minimal test to reproduce the problem. Try to construct the test such that it
+interacts with as few sub-systems and external systems as possible to limit the
+scope of the investigation. At the end of the investigation, you can add this
+test to your testsuite to ensure the problem does not manifest again.</p>
+<p>Creating the a reproducible test is never the easy part, but it is not
+impossible. To construct the test case try the following steps:</p>
+<ol class="arabic simple">
+<li><p>Try to isolate the sub-systems and external systems that you suspect are
+likely to be in the failure mode.</p></li>
+<li><p>Each external system provides information or a service to your system. Try to
+reproduce these dependencies in a deterministic way and treat them as inputs
+to your test case.</p></li>
+<li><p>Try to isolate the code you believe to be in the failure mode. This should
+follow almost directly from characterizing the problem. Tools such as
+valgrind, which provide line by line information of source code, are helpful
+here.</p></li>
+<li><p>Remove all domain-specific information. Think of the possible failure mode
+from the perspective of the system. Do not think in terms of your business
+logic; using concepts such as <code class="docutils literal notranslate"><span class="pre">Customer</span></code>, <code class="docutils literal notranslate"><span class="pre">Bank</span> <span class="pre">Account</span></code>, or <code class="docutils literal notranslate"><span class="pre">Payment</span>
+<span class="pre">Information</span></code>. Instead, think in terms of the realization of these concepts
+in your system. <code class="docutils literal notranslate"><span class="pre">Customer</span></code> is a <code class="docutils literal notranslate"><span class="pre">String</span></code>, <code class="docutils literal notranslate"><span class="pre">Bank</span> <span class="pre">Account</span></code> is a
+<code class="docutils literal notranslate"><span class="pre">Integer</span></code>, <code class="docutils literal notranslate"><span class="pre">Payment</span> <span class="pre">information</span></code> is a <code class="docutils literal notranslate"><span class="pre">String</span></code>. Now re-describe the
+possible failure mode in terms of the implementation concept: “When I send
+sub-system <code class="docutils literal notranslate"><span class="pre">Foo</span></code> a <code class="docutils literal notranslate"><span class="pre">String</span></code> that contains the character <code class="docutils literal notranslate"><span class="pre">U+03BB</span></code> I
+observe the problem”.</p></li>
+<li><p>Test different code paths to zero in on the failure mode. Run tests to see if
+you can deterministically observe the problem. You should be able to state
+“When I input <code class="docutils literal notranslate"><span class="pre">Foo</span></code> with properties <code class="docutils literal notranslate"><span class="pre">Bar</span></code> I observe the problem”, and
+“When I input <code class="docutils literal notranslate"><span class="pre">Baz</span></code> with properties <code class="docutils literal notranslate"><span class="pre">Qux</span></code> I observe the baseline”. You
+know you have found the right code path when you can reproducibly force the
+problem to occur <em>and</em> to not occur.</p></li>
+</ol>
+</section>
 <section id="define-a-hypothesis">
-<h2><span class="section-number">2.1.2. </span>Define a hypothesis<a class="headerlink" href="#define-a-hypothesis" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">2.1.4. </span>Define a hypothesis<a class="headerlink" href="#define-a-hypothesis" title="Permalink to this headline">¶</a></h2>
 <section id="the-objects-of-the-hypothesis">
-<h3><span class="section-number">2.1.2.1. </span>The objects of the hypothesis<a class="headerlink" href="#the-objects-of-the-hypothesis" title="Permalink to this headline">¶</a></h3>
-<p>Think of characters in a story book. These are the objects of your hypothesis;
-any system that takes an action to produce a result that your code interacts
-with or causes, is a character. Each data structure your code directly or
-indirectly uses, is a character. Each function you have written is a character.
-And so on.</p>
+<h3><span class="section-number">2.1.4.1. </span>The objects of the hypothesis<a class="headerlink" href="#the-objects-of-the-hypothesis" title="Permalink to this headline">¶</a></h3>
+<p>Think of each sub-system, external system, and component of your system as
+characters in a story. Any system that takes an action to produce a result that
+your code interacts with or causes, is a character. Each data structure your
+code directly or indirectly uses, is a character. Each function you have written
+is a character; and so on. These are the objects of your hypothesis; they are
+what the hypothesis makes a statement about, and define the sequence of
+interactions that constitutes the failure mode.</p>
 </section>
 <section id="defining-a-good-hypothesis">
-<h3><span class="section-number">2.1.2.2. </span>Defining a good hypothesis<a class="headerlink" href="#defining-a-good-hypothesis" title="Permalink to this headline">¶</a></h3>
-<p>Not all hypotheses are equal. Good hypotheses have the following
+<h3><span class="section-number">2.1.4.2. </span>Defining a good hypothesis<a class="headerlink" href="#defining-a-good-hypothesis" title="Permalink to this headline">¶</a></h3>
+<p>Of course, not all hypotheses are equal. Good hypotheses have the following
 properties:</p>
 <ol class="arabic simple">
 <li><p>They make progress; a good hypothesis yields information when confirmed <em>and</em>
@@ -219,15 +279,12 @@ spent on <code class="docutils literal notranslate"><span class="pre">reverse</s
 </ol>
 </section>
 </section>
-<section id="create-the-smallest-possible-test-of-the-hypothesis">
-<h2><span class="section-number">2.1.3. </span>Create the smallest possible test of the Hypothesis<a class="headerlink" href="#create-the-smallest-possible-test-of-the-hypothesis" title="Permalink to this headline">¶</a></h2>
-<p>Once you have</p>
-</section>
 <section id="predict-the-response">
-<h2><span class="section-number">2.1.4. </span>Predict the Response<a class="headerlink" href="#predict-the-response" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">2.1.5. </span>Predict the Response<a class="headerlink" href="#predict-the-response" title="Permalink to this headline">¶</a></h2>
+<p>Once you have a hypothesis</p>
 </section>
 <section id="summary">
-<h2><span class="section-number">2.1.5. </span>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">2.1.6. </span>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
 <aside class="footnote brackets" id="id2" role="note">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
 <p>Be sure to have a reproducible testing environment setup before you begin
