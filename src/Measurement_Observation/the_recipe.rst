@@ -15,6 +15,32 @@ become a better software engineer. This chapter provides a sequence of questions
 and reminders to help in a scientific approach to performance regression
 debugging. We hope it aids you well.
 
+Vocabulary
+----------
+
+Unless otherwise noted, we use the following vocabulary to describe various
+aspects of our optimization journey. Because these do not have a formal
+definition we present them here instead of in the :ref:`glossary`:
+
+1. *The system*: The system is the local infrastructure and computational
+   edifice your program operates in. This includes your operating system, your
+   CPU, your memory controller.
+
+2. *The program*: The program is the program we are trying to optimize that runs
+   on the system.
+
+3. *The problem*: The problem is an observable phenomena of the program. It is
+   the performance regression we are trying to characterize, understand, fix and
+   prevent.
+
+4. *The failure mode*: The failure mode is the sequence of interactions between
+   sub-systems or external systems and your system that manifest the problem.
+
+5. *The baseline*: The baseline is the observable, measurable behavior of the
+   program which constitutes *normal operation*. This is how you know you have a
+   problem.
+
+
 Characterize the problem
 ------------------------
 
@@ -38,7 +64,8 @@ system. You should ask yourself the following questions:
    -. Does it manifest only when other processes are running?
 
 #. Is the problem temporal? Has anything *recently* changed in the system or the
-   environment the system operates in that could induce the problem?
+   environment the system operates in that could induce the problem? Bring out
+   the git logs and begin bisecting!
 
 With these questions in mind, the next step is to gather data [#]_ . You want to
 gather enough data to be able to precisely describe the problem at hand. "The
@@ -61,6 +88,47 @@ This step is concluded when you have the following information:
    the failure mode incurs compared to the baseline (i.e., compared to normal
    operation).
 
+Create the smallest reproducible test of the problem
+----------------------------------------------------
+
+Once you have characterized the problem you should try to create an isolated,
+minimal test to reproduce the problem. Try to construct the test such that it
+interacts with as few sub-systems and external systems as possible to limit the
+scope of the investigation. At the end of the investigation, you can add this
+test to your testsuite to ensure the problem does not manifest again.
+
+Creating the a reproducible test is never the easy part, but it is not
+impossible. To construct the test case try the following steps:
+
+#. Try to isolate the sub-systems and external systems that you suspect are
+   likely to be in the failure mode.
+
+#. Each external system provides information or a service to your system. Try to
+   reproduce these dependencies in a deterministic way and treat them as inputs
+   to your test case.
+
+#. Try to isolate the code you believe to be in the failure mode. This should
+   follow almost directly from characterizing the problem. Tools such as
+   valgrind, which provide line by line information of source code, are helpful
+   here.
+
+#. Remove all domain-specific information. Think of the possible failure mode
+   from the perspective of the system. Do not think in terms of your business
+   logic; using concepts such as ``Customer``, ``Bank Account``, or ``Payment
+   Information``. Instead, think in terms of the realization of these concepts
+   in your system. ``Customer`` is a ``String``, ``Bank Account`` is a
+   ``Integer``, ``Payment information`` is a ``String``. Now re-describe the
+   possible failure mode in terms of the implementation concept: "When I send
+   sub-system ``Foo`` a ``String`` that contains the character ``U+03BB`` I
+   observe the problem".
+
+#. Test different code paths to zero in on the failure mode. Run tests to see if
+   you can deterministically observe the problem. You should be able to state
+   "When I input ``Foo`` with properties ``Bar`` I observe the problem", and
+   "When I input ``Baz`` with properties ``Qux`` I observe the baseline". You
+   know you have found the right code path when you can reproducibly force the
+   problem to occur *and* to not occur.
+
 
 Define a hypothesis
 -------------------
@@ -68,21 +136,18 @@ Define a hypothesis
 The objects of the hypothesis
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Think of characters in a story book. These are the objects of your hypothesis;
-any system that takes an action to produce a result that your code interacts
-with or causes, is a character. Each data structure your code directly or
-indirectly uses, is a character. Each function you have written is a character.
-And so on.
+Think of each sub-system, external system, and component of your system as
+characters in a story. Any system that takes an action to produce a result that
+your code interacts with or causes, is a character. Each data structure your
+code directly or indirectly uses, is a character. Each function you have written
+is a character; and so on. These are the objects of your hypothesis; they are
+what the hypothesis makes a statement about, and define the sequence of
+interactions that constitutes the failure mode.
 
 Defining a good hypothesis
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-..
-   gain knowledge about the *nature* of the problem at hand, and
-   the *failure mode*, i.e., how that problem manifests in our system.
-
-
-Not all hypotheses are equal. Good hypotheses have the following
+Of course, not all hypotheses are equal. Good hypotheses have the following
 properties:
 
 #. They make progress; a good hypothesis yields information when confirmed *and*
@@ -99,12 +164,10 @@ properties:
    spent on ``reverse`` and if so then we have still learned something.
 
 
-Create the smallest possible test of the Hypothesis
----------------------------------------------------
-Once you have
-
 Predict the Response
 --------------------
+
+Once you have a hypothesis
 
 Summary
 -------

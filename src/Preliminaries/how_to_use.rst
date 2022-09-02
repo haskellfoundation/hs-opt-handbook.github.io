@@ -53,28 +53,6 @@ discourse:
    :math:`x` in :math:`Foo`.
 3. :math:`\mathcal{O}(n\log{}n)` to mean the minimum bound time complexity of an algorithm is :math:`n\log{}n`
 
-Vocabulary
-----------
-
-Unless otherwise noted, we use the following vocabulary to describe various
-aspects of our optimization journey. Because these do not have a formal
-definition we present them here instead of in the :ref:`glossary`:
-
-1. *The system*: The system is the entire infrastructure and computational
-   ediface your program operates in. This includes your operating system, your
-   CPU, your memory controller, even the network and internet if your program
-   does any http request.
-
-2. *The program*: The program is the program we are trying to optimize.
-
-3. *The problem*: The problem is the performance regression we are trying to
-   characterize, understand, fix and prevent.
-
-4. *The failure mode*: The failure mode is the sequence of interactions between
-   sub-systems in your system that manifest the problem. Once you understand the
-   failure mode you are close to a solution.
-
-
 Where to Begin
 --------------
 
