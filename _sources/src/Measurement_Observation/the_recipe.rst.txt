@@ -70,7 +70,6 @@ yourself the following questions:
 Precisely Restate the Problem
 """""""""""""""""""""""""""""
 
-
 With these questions in mind, the next step is to gather data [#]_ . You want to
 gather enough data to be able to precisely describe the problem in terms of
 metrics your system cares about. For example, in a high performance application
@@ -131,33 +130,36 @@ hypothetical failure modes.
 Create the smallest reproducible test of the problem
 ----------------------------------------------------
 
-Once you have characterized the problem you should try to create an isolated,
-minimal test to reproduce the problem. Try to construct the test such that it
-interacts with as few sub-systems and external systems as possible to limit the
-scope of the investigation. At the end of the investigation, you can add this
-test to your testsuite to ensure the problem does not manifest again.
+Once you have characterized the problem and have possible failure modes you
+should try to create an isolated, minimal test to reproduce the problem. Try to
+construct the test such that it interacts with as few sub-systems and external
+systems as possible to limit the scope of the investigation. At the end of the
+investigation, you can add this test to your testsuite to ensure the problem
+does not manifest again. If you have many possible failure modes, then try to
+have one test per failure mode.
 
 Creating a reproducible test is never the easy part, but it is not impossible.
 To construct the test case try the following steps:
 
 #. Try to isolate the sub-systems and external systems that you suspect are
-   likely to be in the failure mode.
+   likely to be in the failure mode or failure modes.
 
 #. Each external system provides information or a service to your system. Try to
    reproduce these dependencies in a deterministic way and treat them as inputs
    to your test case.
 
 #. Try to isolate the code you believe to be in the failure mode. This should
-   follow almost directly from characterizing the problem. Tools such as
-   valgrind, which provide line by line information of source code, are helpful
-   here.
+   follow almost directly from characterizing the problem and defining the
+   failure mode or modes. Tools such as valgrind, which provide line by line
+   information of source code, are helpful here if CPU cycle counts are a
+   meaningful metric for your system.
 
 #. Remove all domain-specific information. Think of the possible failure mode
    from the perspective of the system. Do not think in terms of your business
    logic; using concepts such as ``Customer``, ``Bank Account``, or ``Payment
    Information``. Instead, think in terms of the realization of these concepts
    in your system. ``Customer`` is a ``String``, ``Bank Account`` is a
-   ``Integer``, ``Payment information`` is a ``String``. Now re-describe the
+   ``Integer``, ``Payment information`` is a ``Text``. Now re-describe the
    possible failure mode in terms of the implementation concept: "When I send
    sub-system ``Foo`` a ``String`` that contains the character ``U+03BB`` I
    observe the problem".
