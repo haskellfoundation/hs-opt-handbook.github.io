@@ -169,7 +169,7 @@ problem.</p></li>
 </ol>
 </section>
 <section id="characterize-the-problem">
-<h2><span class="section-number">2.1.2. </span>Characterize the problem<a class="headerlink" href="#characterize-the-problem" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">2.1.2. </span>Characterize the Problem<a class="headerlink" href="#characterize-the-problem" title="Permalink to this headline">¶</a></h2>
 <p>The first step to solving any kind of problem is characterization. The goal of
 this step is to observe how the problem <em>presents</em> itself in the system in terms
 of the sub-systems the system uses. No phenomena exists without leaving a trail
@@ -193,7 +193,7 @@ the git logs and begin bisecting!</p></li>
 </ol>
 <section id="precisely-restate-the-problem">
 <h3><span class="section-number">2.1.2.1. </span>Precisely Restate the Problem<a class="headerlink" href="#precisely-restate-the-problem" title="Permalink to this headline">¶</a></h3>
-<p>With these questions in mind, the next step is to gather data <a class="footnote-reference brackets" href="#id2" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> . You want to
+<p>With these questions in mind, the next step is to gather data <a class="footnote-reference brackets" href="#id3" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> . You want to
 gather enough data to be able to precisely describe the problem in terms of
 metrics your system cares about. For example, in a high performance application
 our system likely cares about any decrease in instructions per cycle (IPC) of
@@ -248,11 +248,14 @@ mode through testing.</p>
 hypothetical failure modes.</p>
 </section>
 <section id="create-the-smallest-reproducible-test-of-the-problem">
-<h2><span class="section-number">2.1.4. </span>Create the smallest reproducible test of the problem<a class="headerlink" href="#create-the-smallest-reproducible-test-of-the-problem" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">2.1.4. </span>Create The Smallest Reproducible Test of the Problem<a class="headerlink" href="#create-the-smallest-reproducible-test-of-the-problem" title="Permalink to this headline">¶</a></h2>
 <p>Once you have characterized the problem and have possible failure modes you
-should try to create an isolated, minimal test to reproduce the problem. Try to
-construct the test such that it interacts with as few sub-systems and external
-systems as possible to limit the scope of the investigation. At the end of the
+should try to create an isolated, minimal test to reproduce the problem. The
+idea is to try to capture the problem so you can begin analyzing it. A test is a
+light switch; the idea outcome of this step is that you have a light switch
+where you can “turn on” and “turn off” the problem at will. Try to construct the
+test such that it interacts with as few sub-systems and external systems as
+possible to limit the scope of the investigation. At the end of the
 investigation, you can add this test to your testsuite to ensure the problem
 does not manifest again. If you have many possible failure modes, then try to
 have one test per failure mode.</p>
@@ -275,19 +278,19 @@ logic; using concepts such as <code class="docutils literal notranslate"><span c
 <span class="pre">Information</span></code>. Instead, think in terms of the realization of these concepts
 in your system. <code class="docutils literal notranslate"><span class="pre">Customer</span></code> is a <code class="docutils literal notranslate"><span class="pre">String</span></code>, <code class="docutils literal notranslate"><span class="pre">Bank</span> <span class="pre">Account</span></code> is a
 <code class="docutils literal notranslate"><span class="pre">Integer</span></code>, <code class="docutils literal notranslate"><span class="pre">Payment</span> <span class="pre">information</span></code> is a <code class="docutils literal notranslate"><span class="pre">Text</span></code>. Now re-describe the
-possible failure mode in terms of the implementation concept: “When I send
-sub-system <code class="docutils literal notranslate"><span class="pre">Foo</span></code> a <code class="docutils literal notranslate"><span class="pre">String</span></code> that contains the character <code class="docutils literal notranslate"><span class="pre">U+03BB</span></code> I
-observe the problem”.</p></li>
-<li><p>Test different code paths to zero in on the failure mode. Run tests to see if
-you can deterministically observe the problem. You should be able to state
-“When I input <code class="docutils literal notranslate"><span class="pre">Foo</span></code> with properties <code class="docutils literal notranslate"><span class="pre">Bar</span></code> I observe the problem”, and
-“When I input <code class="docutils literal notranslate"><span class="pre">Baz</span></code> with properties <code class="docutils literal notranslate"><span class="pre">Qux</span></code> I observe the baseline”. You
-know you have found the right code path when you can reproducibly force the
-problem to occur <em>and</em> to not occur.</p></li>
+failure mode in terms of the implementation: “When I send sub-system <code class="docutils literal notranslate"><span class="pre">Foo</span></code>
+a <code class="docutils literal notranslate"><span class="pre">String</span></code> that contains the character <code class="docutils literal notranslate"><span class="pre">U+03BB</span></code> I observe the problem”.</p></li>
+<li><p>Create slightly different tests to test different code paths on the failure
+mode. Run tests to see if you can deterministically observe the problem. You
+should be able to state “When I input <code class="docutils literal notranslate"><span class="pre">Foo</span></code> with properties <code class="docutils literal notranslate"><span class="pre">Bar</span></code> I
+observe the problem”, and “When I input <code class="docutils literal notranslate"><span class="pre">Baz</span></code> with properties <code class="docutils literal notranslate"><span class="pre">Qux</span></code> I
+observe the baseline”. You know you have found the right code path in the
+failure mode when you can reproducibly force the problem to occur <em>and</em> to
+not occur.</p></li>
 </ol>
 </section>
 <section id="define-a-hypothesis">
-<h2><span class="section-number">2.1.5. </span>Define a hypothesis<a class="headerlink" href="#define-a-hypothesis" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">2.1.5. </span>Define a Hypothesis<a class="headerlink" href="#define-a-hypothesis" title="Permalink to this headline">¶</a></h2>
 <p>Think of each sub-system, external system, and component of your system as
 characters in a story. Any system that takes an action to produce a result that
 your code interacts with or causes, is a character. Each data structure your
@@ -298,35 +301,65 @@ interactions that constitutes the failure mode.</p>
 <p>Of course, not all hypotheses are equal. Good hypotheses have the following
 properties:</p>
 <ol class="arabic simple">
-<li><p>They make progress; a good hypothesis yields information when confirmed <em>and</em>
-when invalidated. A bad hypothesis <em>keeps constant</em> the level of information
-you have about the phenomena. In other words, a bad hypothesis is one where
-you only gain information if the hypothesis is shown to true.</p></li>
-<li><p>They have specificity and are actionable: Good hypotheses are specific enough
-<em>to be</em> invalidated. For example, the hypothesis “30% of CPU cycles are spent in
-<code class="docutils literal notranslate"><span class="pre">Data.List.reverse</span></code> on input <code class="docutils literal notranslate"><span class="pre">Foo</span></code>” is actionable; we can directly measure
-how many CPU cycles are spent on this particular function for a particular
-input. But in addition to that, this hypothesis also adds information <em>even if</em>
-it is shown to be wrong. It could be the case that only 5% of the CPU cycles are
-spent on <code class="docutils literal notranslate"><span class="pre">reverse</span></code> and if so then we have still learned something.</p></li>
+<li><p>They make progress, i.e, they are <em>falsifiable</em>; a good hypothesis yields
+information when confirmed <em>and</em> when invalidated. A bad hypothesis <em>keeps
+constant</em> the level of information you have about the phenomena. In other
+words, a bad hypothesis is one where you only gain information if the
+hypothesis is validated, not when the hypothesis validated <em>or</em> invalidated.</p></li>
+<li><p>They are <em>specific and testable</em>: Good hypotheses are specific enough <em>to be</em>
+invalidated. For example, the hypothesis “The total runtime of the system is
+dominated by garbage collection induced by storing thunks in the cache” is
+testable; we can directly measure how much garbage collection the runtime
+system does and the kinds of objects it is storing (see <span class="xref std std-doc">GHC
+Flags&lt;/src/Measurement_Observation/Heap_Ghc/ghc_flags</span>). This hypothesis is
+also specific, from reading it we know which sub-systems to inspect: the
+garbage collector, the cache, and the heap. But in addition to that, this
+hypothesis also adds information <em>even if</em> it is shown to be wrong. It could
+be the case that the runtime <em>is not</em> dominated by garbage collection, or it
+could be the case that the cache <em>is not</em> storing thunks. Either way, by
+testing an invalidating the hypothesis we learn where runtime is spent, and
+what is stored in the cache.</p></li>
 </ol>
 </section>
 <section id="predict-the-response-and-test">
 <h2><span class="section-number">2.1.6. </span>Predict the Response and Test<a class="headerlink" href="#predict-the-response-and-test" title="Permalink to this headline">¶</a></h2>
-<p>Now that you have your hypothesis and a minimal test case you can begin testing.
-Each change made to your code should be in pursuit of validating or invalidating
-the hypothesis. Do you best to resist the urge to begin shotgun debuggging! ..
-[#].</p>
+<p>Now that you have a hypothesis, a hypothetical failure mode and a minimal test
+case you can begin testing. Each change made to your code should be in pursuit
+of validating or invalidating the hypothesis. Do your best to resist the urge to
+begin shotgun debugging! <a class="footnote-reference brackets" href="#id4" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> The work flow should be:</p>
+<ol class="arabic simple">
+<li><p>Review the hypothesis and predict the response. State “if the hypothesis is
+true, then <code class="docutils literal notranslate"><span class="pre">Foo</span></code> should happen, or I should observe <code class="docutils literal notranslate"><span class="pre">Bar</span></code>”.</p></li>
+<li><p>Review the test to make sure the test will test the hypothesis and the
+failure mode.</p></li>
+<li><p>Perform your changes in the system. These should be <em>minimal</em>, ideally only a
+single change!</p></li>
+<li><p>Observe the response and then try to make sense of the response in comparison
+to the hypothesis.</p></li>
+<li><p>Repeat! Iterate until you have focused down the failure mode and the
+hypothesis.</p></li>
+</ol>
+<p>Let’s consider the previous example again, our hypothesis was that
+<code class="docutils literal notranslate"><span class="pre">Data.List.reverse</span></code> was causing a six-fold increase in CPU cycles.</p>
+<p>This
+implies we have a way to measure the CPU load from just this function
+(<a class="reference internal" href="Heap_Third/cachegrind.html"><span class="doc">cachegrind</span></a> provides
+this kind of information), so we could define a series of related tests which
+alter the input magnitude and observe the change in CPU cycles required by
+<code class="docutils literal notranslate"><span class="pre">Data.List.reverse</span></code>. Our predicted response then, should be something like
+“for each input <code class="docutils literal notranslate"><span class="pre">n</span></code> we should observe CPU Cycles of <code class="docutils literal notranslate"><span class="pre">Data.List.reverse</span></code> to
+be a function of <code class="docutils literal notranslate"><span class="pre">n</span></code> multiplied by some constant”. This would work but it is
+also testing that the problem is sensitive to the input size. Another</p>
 </section>
 <section id="summary">
 <h2><span class="section-number">2.1.7. </span>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
-<aside class="footnote brackets" id="id2" role="note">
+<aside class="footnote brackets" id="id3" role="note">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
 <p>Be sure to have a reproducible testing environment setup before you begin
 gathering data. <a class="reference internal" href="../Preliminaries/repeatable_measurements.html#repeatable-measurements"><span class="std std-ref">Setting up a Reproducible Test Environment</span></a></p>
 </aside>
-<aside class="footnote brackets" id="id3" role="note">
-<span class="label"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></span>
+<aside class="footnote brackets" id="id4" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
 <p>Shotgun debugging is usually an indication that you have not properly
 characterized the problem. The need to shotgun debug comes from not
 having identified the failure mode of the problem yet. In essence, when
