@@ -40,7 +40,7 @@ definition we present them here instead of in the :ref:`glossary`:
    problem.
 
 
-Characterize the problem
+Characterize the Problem
 ------------------------
 
 The first step to solving any kind of problem is characterization. The goal of
@@ -127,13 +127,16 @@ mode through testing.
 This step is concluded when you have identified and written down one or more
 hypothetical failure modes.
 
-Create the smallest reproducible test of the problem
+Create The Smallest Reproducible Test of the Problem
 ----------------------------------------------------
 
 Once you have characterized the problem and have possible failure modes you
-should try to create an isolated, minimal test to reproduce the problem. Try to
-construct the test such that it interacts with as few sub-systems and external
-systems as possible to limit the scope of the investigation. At the end of the
+should try to create an isolated, minimal test to reproduce the problem. The
+idea is to try to capture the problem so you can begin analyzing it. A test is a
+light switch; the idea outcome of this step is that you have a light switch
+where you can "turn on" and "turn off" the problem at will. Try to construct the
+test such that it interacts with as few sub-systems and external systems as
+possible to limit the scope of the investigation. At the end of the
 investigation, you can add this test to your testsuite to ensure the problem
 does not manifest again. If you have many possible failure modes, then try to
 have one test per failure mode.
@@ -160,22 +163,22 @@ To construct the test case try the following steps:
    Information``. Instead, think in terms of the realization of these concepts
    in your system. ``Customer`` is a ``String``, ``Bank Account`` is a
    ``Integer``, ``Payment information`` is a ``Text``. Now re-describe the
-   possible failure mode in terms of the implementation concept: "When I send
-   sub-system ``Foo`` a ``String`` that contains the character ``U+03BB`` I
-   observe the problem".
+   failure mode in terms of the implementation: "When I send sub-system ``Foo``
+   a ``String`` that contains the character ``U+03BB`` I observe the problem".
 
-#. Test different code paths to zero in on the failure mode. Run tests to see if
-   you can deterministically observe the problem. You should be able to state
-   "When I input ``Foo`` with properties ``Bar`` I observe the problem", and
-   "When I input ``Baz`` with properties ``Qux`` I observe the baseline". You
-   know you have found the right code path when you can reproducibly force the
-   problem to occur *and* to not occur.
+#. Create slightly different tests to test different code paths on the failure
+   mode. Run tests to see if you can deterministically observe the problem. You
+   should be able to state "When I input ``Foo`` with properties ``Bar`` I
+   observe the problem", and "When I input ``Baz`` with properties ``Qux`` I
+   observe the baseline". You know you have found the right code path in the
+   failure mode when you can reproducibly force the problem to occur *and* to
+   not occur.
 
 
-Define a hypothesis
+Define a Hypothesis
 -------------------
 
-The objects of the hypothesis
+The Objects of the Hypothesis
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Think of each sub-system, external system, and component of your system as
@@ -186,33 +189,69 @@ written, is a character; and so on. These are the objects of your hypothesis;
 they are what the hypothesis makes a statement about, and define the sequence of
 interactions that constitutes the failure mode.
 
-Defining a good hypothesis
+Defining a Good Hypothesis
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Of course, not all hypotheses are equal. Good hypotheses have the following
 properties:
 
-#. They make progress; a good hypothesis yields information when confirmed *and*
-   when invalidated. A bad hypothesis *keeps constant* the level of information
-   you have about the phenomena. In other words, a bad hypothesis is one where
-   you only gain information if the hypothesis is shown to true.
+#. They make progress, i.e, they are *falsifiable*; a good hypothesis yields
+   information when confirmed *and* when invalidated. A bad hypothesis *keeps
+   constant* the level of information you have about the phenomena. In other
+   words, a bad hypothesis is one where you only gain information if the
+   hypothesis is validated, not when the hypothesis validated *or* invalidated.
 
-#. They have specificity and are actionable: Good hypotheses are specific enough
-   *to be* invalidated. For example, the hypothesis "30% of CPU cycles are spent in
-   ``Data.List.reverse`` on input ``Foo``" is actionable; we can directly measure
-   how many CPU cycles are spent on this particular function for a particular
-   input. But in addition to that, this hypothesis also adds information *even if*
-   it is shown to be wrong. It could be the case that only 5% of the CPU cycles are
-   spent on ``reverse`` and if so then we have still learned something.
-
+#. They are *specific and testable*: Good hypotheses are specific enough *to be*
+   invalidated. For example, the hypothesis "The total runtime of the system is
+   dominated by garbage collection induced by storing thunks in the cache" is
+   testable; we can directly measure how much garbage collection the runtime
+   system does and the kinds of objects it is storing (see :doc:`GHC
+   Flags</src/Measurement_Observation/Heap_Ghc/ghc_flags`). This hypothesis is
+   also specific, from reading it we know which sub-systems to inspect: the
+   garbage collector, the cache, and the heap. But in addition to that, this
+   hypothesis also adds information *even if* it is shown to be wrong. It could
+   be the case that the runtime *is not* dominated by garbage collection, or it
+   could be the case that the cache *is not* storing thunks. Either way, by
+   testing an invalidating the hypothesis we learn where runtime is spent, and
+   what is stored in the cache.
 
 Predict the Response and Test
 -----------------------------
 
-Now that you have your hypothesis and a minimal test case you can begin testing.
-Each change made to your code should be in pursuit of validating or invalidating
-the hypothesis. Do you best to resist the urge to begin shotgun debuggging! ..
-[#].
+Now that you have a hypothesis, a hypothetical failure mode and a minimal test
+case you can begin testing. Each change made to your code should be in pursuit
+of validating or invalidating the hypothesis. Do your best to resist the urge to
+begin shotgun debugging! [#]_ The work flow should be:
+
+1. Review the hypothesis and predict the response. State "if the hypothesis is
+   true, then ``Foo`` should happen, or I should observe ``Bar``".
+
+2. Review the test to make sure the test will test the hypothesis and the
+   failure mode.
+
+3. Perform your changes in the system. These should be *minimal*, ideally only a
+   single change!
+
+4. Observe the response and then try to make sense of the response in comparison
+   to the hypothesis.
+
+5. Repeat! Iterate until you have focused down the failure mode and the
+   hypothesis.
+
+Let's consider the previous example again, our hypothesis was that
+``Data.List.reverse`` was causing a six-fold increase in CPU cycles.
+
+
+This
+implies we have a way to measure the CPU load from just this function
+(:doc:`cachegrind </src/Measurement_Observation/Heap_Third/cachegrind>` provides
+this kind of information), so we could define a series of related tests which
+alter the input magnitude and observe the change in CPU cycles required by
+``Data.List.reverse``. Our predicted response then, should be something like
+"for each input ``n`` we should observe CPU Cycles of ``Data.List.reverse`` to
+be a function of ``n`` multiplied by some constant". This would work but it is
+also testing that the problem is sensitive to the input size. Another
+
 
 Summary
 -------
