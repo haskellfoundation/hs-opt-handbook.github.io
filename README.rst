@@ -52,10 +52,10 @@ extensive use of checklists to track and manage state, so If you:
 
   - Write a Case Study; see the `Case Study Contribution Guide
     <https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/Contributing/CaseStudies.rst>`_.
-  - Write a profiling or debugging section; see the `Part 1 Contribution Guide
-    <https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/Contributing/Part1.rst>`_.
-  - Write an optimization section; see the `Part 2 Contribution Guide
-    <https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/Contributing/Part2.rst>`_.
+  - Write a profiling or debugging section; see the `Part 1: Measurement and Observation Contribution Guide
+    <https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/Contributing/Measurement_Observation.rst>`_.
+  - Write an optimization section; see the `Part 2: Optimizations Contribution Guide
+    <https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/Contributing/Optimizations.rst>`_.
 
 Lastly, you might also benefit from reading the original `Haskell Foundation
 proposal
