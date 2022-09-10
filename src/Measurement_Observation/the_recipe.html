@@ -310,15 +310,13 @@ hypothesis is validated, not when the hypothesis validated <em>or</em> invalidat
 invalidated. For example, the hypothesis “The total runtime of the system is
 dominated by garbage collection induced by storing thunks in the cache” is
 testable; we can directly measure how much garbage collection the runtime
-system does and the kinds of objects it is storing (see <a class="reference internal" href="Heap_Ghc/ghc_flags.html"><span class="doc">GHC
-Flags</span></a>). This hypothesis is
-also specific; from reading it we know which sub-systems to inspect: the
-garbage collector, the cache, and the heap. But in addition to that, this
-hypothesis also adds information <em>even if</em> it is shown to be wrong. It could
-be the case that the runtime <em>is not</em> dominated by garbage collection, or it
-could be the case that the cache <em>is not</em> storing thunks. Either way, by
-testing an invalidating the hypothesis we learn where runtime is spent, and
-what is stored in the cache.</p></li>
+system does and the kinds of objects it is storing (see <a class="reference internal" href="Heap_Ghc/ghc_flags.html"><span class="doc">GHC Flags</span></a>). This hypothesis is also specific; from reading it
+we know which sub-systems to inspect: the garbage collector, the cache, and
+the heap. But in addition to that, this hypothesis also adds information
+<em>even if</em> it is shown to be wrong. It could be the case that the runtime <em>is
+not</em> dominated by garbage collection, or it could be the case that the cache
+<em>is not</em> storing thunks. Either way, by testing an invalidating the
+hypothesis we learn where runtime is spent, and what is stored in the cache.</p></li>
 </ol>
 </section>
 <section id="predict-the-response-and-test">
