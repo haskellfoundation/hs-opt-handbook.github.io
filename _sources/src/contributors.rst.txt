@@ -6,7 +6,8 @@ answer, some knowledge, curiosity or entertainment---from it, and please say so
 if you have!
 
 ..
-   Variables
+   Variables. Please add the contributor as a variable even if they will only be
+   represented once (they might do another contribution!).
 .. |doyougnu| replace:: Jeffrey young (@doyougnu)
 
 Writers:
