@@ -237,18 +237,19 @@ begin shotgun debugging! [#]_ The work flow should be:
 5. Repeat. Iterate until you have focused down the failure mode and the
    hypothesis.
 
-Let's consider the previous example again, our hypothesis was that
-``Data.List.reverse`` was causing a six-fold increase in CPU cycles.
+..
+   Let's consider the previous example again, our hypothesis was that that the
+   cache was accumulating thunks, and that these thunks were dominating runtime.
 
 
-This implies we have a way to measure the CPU load from just this function
-(:doc:`cachegrind </src/Measurement_Observation/Heap_Third/cachegrind>` provides
-this kind of information), so we could define a series of related tests which
-alter the input magnitude and observe the change in CPU cycles required by
-``Data.List.reverse``. Our predicted response then, should be something like
-"for each input ``n`` we should observe CPU Cycles of ``Data.List.reverse`` to
-be a function of ``n`` multiplied by some constant". This would work but it is
-also testing that the problem is sensitive to the input size. Another
+   This implies we have a way to measure the CPU load from just this function
+   (:doc:`cachegrind </src/Measurement_Observation/Heap_Third/cachegrind>` provides
+   this kind of information), so we could define a series of related tests which
+   alter the input magnitude and observe the change in CPU cycles required by
+   ``Data.List.reverse``. Our predicted response then, should be something like
+   "for each input ``n`` we should observe CPU Cycles of ``Data.List.reverse`` to
+   be a function of ``n`` multiplied by some constant". This would work but it is
+   also testing that the problem is sensitive to the input size. Another
 
 
 Summary

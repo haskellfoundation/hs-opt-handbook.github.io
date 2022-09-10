@@ -337,16 +337,6 @@ to the hypothesis.</p></li>
 <li><p>Repeat. Iterate until you have focused down the failure mode and the
 hypothesis.</p></li>
 </ol>
-<p>Let’s consider the previous example again, our hypothesis was that
-<code class="docutils literal notranslate"><span class="pre">Data.List.reverse</span></code> was causing a six-fold increase in CPU cycles.</p>
-<p>This implies we have a way to measure the CPU load from just this function
-(<a class="reference internal" href="Heap_Third/cachegrind.html"><span class="doc">cachegrind</span></a> provides
-this kind of information), so we could define a series of related tests which
-alter the input magnitude and observe the change in CPU cycles required by
-<code class="docutils literal notranslate"><span class="pre">Data.List.reverse</span></code>. Our predicted response then, should be something like
-“for each input <code class="docutils literal notranslate"><span class="pre">n</span></code> we should observe CPU Cycles of <code class="docutils literal notranslate"><span class="pre">Data.List.reverse</span></code> to
-be a function of <code class="docutils literal notranslate"><span class="pre">n</span></code> multiplied by some constant”. This would work but it is
-also testing that the problem is sensitive to the input size. Another</p>
 </section>
 <section id="summary">
 <h2><span class="section-number">2.1.7. </span>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
