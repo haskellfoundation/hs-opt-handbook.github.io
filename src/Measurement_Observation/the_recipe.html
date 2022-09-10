@@ -310,9 +310,9 @@ hypothesis is validated, not when the hypothesis validated <em>or</em> invalidat
 invalidated. For example, the hypothesis “The total runtime of the system is
 dominated by garbage collection induced by storing thunks in the cache” is
 testable; we can directly measure how much garbage collection the runtime
-system does and the kinds of objects it is storing (see <span class="xref std std-doc">GHC
-Flags&lt;/src/Measurement_Observation/Heap_Ghc/ghc_flags</span>). This hypothesis is
-also specific, from reading it we know which sub-systems to inspect: the
+system does and the kinds of objects it is storing (see <a class="reference internal" href="Heap_Ghc/ghc_flags.html"><span class="doc">GHC
+Flags</span></a>). This hypothesis is
+also specific; from reading it we know which sub-systems to inspect: the
 garbage collector, the cache, and the heap. But in addition to that, this
 hypothesis also adds information <em>even if</em> it is shown to be wrong. It could
 be the case that the runtime <em>is not</em> dominated by garbage collection, or it
@@ -333,16 +333,15 @@ true, then <code class="docutils literal notranslate"><span class="pre">Foo</spa
 <li><p>Review the test to make sure the test will test the hypothesis and the
 failure mode.</p></li>
 <li><p>Perform your changes in the system. These should be <em>minimal</em>, ideally only a
-single change!</p></li>
+single change.</p></li>
 <li><p>Observe the response and then try to make sense of the response in comparison
 to the hypothesis.</p></li>
-<li><p>Repeat! Iterate until you have focused down the failure mode and the
+<li><p>Repeat. Iterate until you have focused down the failure mode and the
 hypothesis.</p></li>
 </ol>
 <p>Let’s consider the previous example again, our hypothesis was that
 <code class="docutils literal notranslate"><span class="pre">Data.List.reverse</span></code> was causing a six-fold increase in CPU cycles.</p>
-<p>This
-implies we have a way to measure the CPU load from just this function
+<p>This implies we have a way to measure the CPU load from just this function
 (<a class="reference internal" href="Heap_Third/cachegrind.html"><span class="doc">cachegrind</span></a> provides
 this kind of information), so we could define a series of related tests which
 alter the input magnitude and observe the change in CPU cycles required by
