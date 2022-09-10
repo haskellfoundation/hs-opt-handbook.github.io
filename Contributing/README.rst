@@ -81,3 +81,5 @@ the pipeline, which is:
       are satisfied and approve the PR. Approving the PR triggers a project hook
       to move the issue to `Reviewer Approved`. The PR is now mergable and the
       section is considered finished.
+
+    - The editor then adds the contributor to the `Contributors <https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/src/contributors.rst>`_ file.
