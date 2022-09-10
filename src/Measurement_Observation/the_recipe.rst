@@ -205,15 +205,14 @@ properties:
    invalidated. For example, the hypothesis "The total runtime of the system is
    dominated by garbage collection induced by storing thunks in the cache" is
    testable; we can directly measure how much garbage collection the runtime
-   system does and the kinds of objects it is storing (see :doc:`GHC
-   Flags</src/Measurement_Observation/Heap_Ghc/ghc_flags`). This hypothesis is
-   also specific, from reading it we know which sub-systems to inspect: the
-   garbage collector, the cache, and the heap. But in addition to that, this
-   hypothesis also adds information *even if* it is shown to be wrong. It could
-   be the case that the runtime *is not* dominated by garbage collection, or it
-   could be the case that the cache *is not* storing thunks. Either way, by
-   testing an invalidating the hypothesis we learn where runtime is spent, and
-   what is stored in the cache.
+   system does and the kinds of objects it is storing (see :doc:`GHC Flags
+   <./Heap_Ghc/ghc_flags>`). This hypothesis is also specific; from reading it
+   we know which sub-systems to inspect: the garbage collector, the cache, and
+   the heap. But in addition to that, this hypothesis also adds information
+   *even if* it is shown to be wrong. It could be the case that the runtime *is
+   not* dominated by garbage collection, or it could be the case that the cache
+   *is not* storing thunks. Either way, by testing an invalidating the
+   hypothesis we learn where runtime is spent, and what is stored in the cache.
 
 Predict the Response and Test
 -----------------------------
@@ -230,20 +229,19 @@ begin shotgun debugging! [#]_ The work flow should be:
    failure mode.
 
 3. Perform your changes in the system. These should be *minimal*, ideally only a
-   single change!
+   single change.
 
 4. Observe the response and then try to make sense of the response in comparison
    to the hypothesis.
 
-5. Repeat! Iterate until you have focused down the failure mode and the
+5. Repeat. Iterate until you have focused down the failure mode and the
    hypothesis.
 
 Let's consider the previous example again, our hypothesis was that
 ``Data.List.reverse`` was causing a six-fold increase in CPU cycles.
 
 
-This
-implies we have a way to measure the CPU load from just this function
+This implies we have a way to measure the CPU load from just this function
 (:doc:`cachegrind </src/Measurement_Observation/Heap_Third/cachegrind>` provides
 this kind of information), so we could define a series of related tests which
 alter the input magnitude and observe the change in CPU cycles required by
