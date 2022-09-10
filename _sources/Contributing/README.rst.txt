@@ -82,4 +82,4 @@ the pipeline, which is:
       to move the issue to `Reviewer Approved`. The PR is now mergable and the
       section is considered finished.
 
-    - The editor then adds the contributor to the :doc:`src/contributors` file.
+    - The editor then adds the contributor to the `Contributors <https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/src/contributors.rst>` file.
