@@ -1,7 +1,7 @@
 :orphan:
 
-Welcome to Haskell Optimization Handbook
-========================================
+Haskell Optimization Handbook
+=============================
 
 This book assumes you are using ghc ``8.10.x`` or above and using the Linux
 operating system. If you are new please start with the :doc:`How to use this
