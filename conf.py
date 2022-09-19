@@ -20,7 +20,7 @@ sys.path.insert(0, os.path.abspath('.'))
 project = 'Haskell Optimization Handbook'
 html_title = 'Haskell Optimization Handbook'
 # FIXME: https://github.com/input-output-hk/hs-opt-handbook.github.io/issues/58
-copyright = u'2006-%s, Jeffrey Young (doyougnu)' % time.strftime('%Y')
+copyright = u'2022-%s, Jeffrey Young (doyougnu)' % time.strftime('%Y')
 author = 'Jeffrey Young (doyugnu)'
 
 # The full version, including alpha/beta/rc tags
