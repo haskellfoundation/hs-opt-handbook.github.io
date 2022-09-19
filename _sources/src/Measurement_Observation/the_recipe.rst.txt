@@ -2,6 +2,13 @@
 The Recipe
 ==========
 
+.. warning::
+
+   This chapter is still under heavy revision. Please feel free to still read
+   through it, just know that it needs more love and care, and I (Jeff) had to
+   walk away in order to continue to make progress on it at some later date.
+
+
 This chapter presents a recipe for debugging performance regressions in Haskell.
 Often times when we debug code it becomes too easy to trace execution or use a
 shotgun approach; we apply a bunch of best-guess changes and retest to see if
