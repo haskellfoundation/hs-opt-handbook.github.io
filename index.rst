@@ -11,5 +11,14 @@ alone, please take this handbook and good luck!
 
 Sincerely,
 
-The :doc:`Contributors </src/contributors>` of the
-Haskell Optimization Handbook.
+The :doc:`Contributors </src/contributors>` of the Haskell Optimization
+Handbook.
+
+Release History
+---------------
+
+* September, 2022
+
+  * Add Release History to splash page
+  * End of Phase 0 in project plan
+  * Begin process of moving book repository to Haskell Foundation
