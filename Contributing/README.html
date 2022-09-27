@@ -8,6 +8,7 @@
     
           <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
           <link rel="stylesheet" href="../_static/theme.css " type="text/css" />
+          <link rel="stylesheet" href="../_static/css/s4defs-roles.css" type="text/css" />
       
       <!-- sphinx script_files -->
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -175,25 +176,25 @@ the pipeline, which is:</p>
 <div><ul class="simple">
 <li><p>Find the appropriate issue and ask to be assigned to the issue.</p></li>
 <li><p>An Editorial Contributor assigns the issue to them and moves the issue in
-the project board to the <cite>In Progress</cite> column.</p></li>
+the project board to the <span class="incremental">In Progress</span> column.</p></li>
 <li><p>Once the contributor finishes the first draft they open a PR on the book
 repo. This triggers a project hook in github to automatically move the
-issue from <cite>In progress</cite> to <cite>Needs</cite> review.</p></li>
-<li><p>Once the issue is in <cite>Needs Review</cite> any Editorial Contributor can review
+issue from <span class="incremental">In progress</span> to <span class="incremental">Needs</span> review.</p></li>
+<li><p>Once the issue is in <span class="incremental">Needs Review</span> any Editorial Contributor can review
 it. This editor <em>now owns</em> and <em>is expected</em> to shepherd the section. The
 editor reviews the PR with respect to the appropriate checklist: Part 1
 checklist for sections pertinent to Part 1 of the book, case study
 checklist for case studies etc. Then makes recommendations to the
 contributor in the PR as comments in github during a PR review. Requesting
-changes in github automatically moves the issue from <cite>Needs Review</cite> to
-<cite>Review in Progress</cite>.</p></li>
+changes in github automatically moves the issue from <span class="incremental">Needs Review</span> to
+<span class="incremental">Review in Progress</span>.</p></li>
 <li><p>Once the contributor applies the comments they ping the editor that
 comments have been addressed and manually moves the ticket back to Needs
 Review.</p></li>
 <li><p>The editor, having received the ping, does a final review, either they
-suggest more changes moving the issue back to <cite>Review in Progress</cite> or they
+suggest more changes moving the issue back to <span class="incremental">Review in Progress</span> or they
 are satisfied and approve the PR. Approving the PR triggers a project hook
-to move the issue to <cite>Reviewer Approved</cite>. The PR is now mergable and the
+to move the issue to <span class="incremental">Reviewer Approved</span>. The PR is now mergable and the
 section is considered finished.</p></li>
 <li><p>The editor then adds the contributor to the <a class="reference external" href="https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/src/contributors.rst">Contributors</a> file.</p></li>
 </ul>
