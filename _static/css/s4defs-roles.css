@@ -1,0 +1,97 @@
+/* Colors: most of these are already defined in s5defs.txt and provided by Rst.
+   Any additional colors need to have css defined here _and_ must define a role
+   in custom.rst in the root dir
+*/
+
+.black {
+    color: black;
+}
+
+.gray {
+    color: gray;
+}
+
+.grey {
+    color: gray;
+}
+
+.lightgrey {
+    color: #BEBEBE;
+}
+
+.silver {
+    color: silver;
+}
+
+.white {
+    color: white;
+}
+
+.maroon {
+    color: maroon;
+}
+
+.red {
+    color: red;
+}
+
+.magenta {
+    color: magenta;
+}
+
+.fuchsia {
+    color: fuchsia;
+}
+
+.pink {
+    color: pink;
+}
+
+.orange {
+    color: orange;
+}
+
+.yellow {
+    color: yellow;
+}
+
+.lime {
+    color: lime;
+}
+
+.green {
+    color: green;
+}
+
+.olive {
+    color: olive;
+}
+
+.teal {
+    color: teal;
+}
+
+.cyan {
+    color: cyan;
+}
+
+.aqua {
+    color: aqua;
+}
+
+.blue {
+    color: blue;
+}
+
+.navy {
+    color: navy;
+}
+
+.purple {
+    color: purple;
+}
+
+/* more markup, see custom.rst for the roles */
+.strike {
+  text-decoration: line-through;
+}
