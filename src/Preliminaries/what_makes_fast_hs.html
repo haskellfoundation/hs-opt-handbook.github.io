@@ -494,6 +494,7 @@ expressing itself in the program domain.</p>
 <p>This one usually manifests through the use of superfluous guards. So many
 functions take this form:</p>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- | an example function on Foo, this function learns a lot about Foo</span><span class="w"></span>
+<span class="c1">-- by testing Foo against many predicates</span><span class="w"></span>
 <span class="nf">myFunction</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Foo</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Bar</span><span class="w"></span>
 <span class="nf">myFunction</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">predicate0</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="o">...</span><span class="kr">do</span><span class="w"> </span><span class="n">something</span><span class="w"> </span><span class="o">...</span><span class="w"></span>
 <span class="w">               </span><span class="o">|</span><span class="w"> </span><span class="n">predicate1</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="o">...</span><span class="kr">do</span><span class="w"> </span><span class="n">another</span><span class="w"> </span><span class="n">thing</span><span class="o">...</span><span class="w"></span>
@@ -504,7 +505,8 @@ functions take this form:</p>
 <p>This becomes problematic when it grows to be ubiquitous in the code base.
 When a lot of functions in the program use guards the program will suffer
 from redundant checks and poor branch prediction, for example:</p>
-<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- | anoter function on Foo, this function doesn&#39;t learn much about Foo</span><span class="w"></span>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- | another function on Foo, this function doesn&#39;t learn much about Foo</span><span class="w"></span>
+<span class="c1">-- because it only tests Foo against one predicate.</span><span class="w"></span>
 <span class="nf">myOtherFunction</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Foo</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Baz</span><span class="w"></span>
 <span class="nf">myOtherFunction</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">predicate1</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="o">...</span><span class="kr">do</span><span class="w"> </span><span class="n">some</span><span class="w"> </span><span class="n">another</span><span class="w"> </span><span class="n">thing</span><span class="o">...</span><span class="w"></span>
 <span class="w">                    </span><span class="o">|</span><span class="w"> </span><span class="n">otherwise</span><span class="w">      </span><span class="ow">=</span><span class="w"> </span><span class="o">...</span><span class="w"></span>
@@ -514,7 +516,7 @@ from redundant checks and poor branch prediction, for example:</p>
 <span class="w">          </span><span class="n">myFunction</span><span class="w"> </span><span class="n">foo</span><span class="w">         </span><span class="c1">-- we learn a lot about Foo</span><span class="w"></span>
 <span class="w">          </span><span class="n">myOtherFunction</span><span class="w"> </span><span class="n">foo</span><span class="w">    </span><span class="c1">-- nothing we&#39;ve learned is propagated forward</span><span class="w"></span>
 <span class="w">                                 </span><span class="c1">--  from myFunction to myOtherFunction, and so</span><span class="w"></span>
-<span class="w">                                 </span><span class="c1">--  we redundantly check predicate1 on foo</span><span class="w"></span>
+<span class="w">                                 </span><span class="c1">--  we redundantly check predicate1 on foo.</span><span class="w"></span>
 </pre></div>
 </div>
 </section>

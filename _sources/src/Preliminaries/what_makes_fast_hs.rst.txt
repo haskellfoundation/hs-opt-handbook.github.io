@@ -436,6 +436,7 @@ functions take this form:
 .. code-block:: haskell
 
    -- | an example function on Foo, this function learns a lot about Foo
+   -- by testing Foo against many predicates
    myFunction :: Foo -> Bar
    myFunction foo | predicate0 foo = ...do something ...
                   | predicate1 foo = ...do another thing...
@@ -448,7 +449,8 @@ from redundant checks and poor branch prediction, for example:
 
 .. code-block:: haskell
 
-   -- | anoter function on Foo, this function doesn't learn much about Foo
+   -- | another function on Foo, this function doesn't learn much about Foo
+   -- because it only tests Foo against one predicate.
    myOtherFunction :: Foo -> Baz
    myOtherFunction foo | predicate1 foo = ...do some another thing...
                        | otherwise      = ...
@@ -458,7 +460,7 @@ from redundant checks and poor branch prediction, for example:
              myFunction foo         -- we learn a lot about Foo
              myOtherFunction foo    -- nothing we've learned is propagated forward
                                     --  from myFunction to myOtherFunction, and so
-                                    --  we redundantly check predicate1 on foo
+                                    --  we redundantly check predicate1 on foo.
 
 
 
