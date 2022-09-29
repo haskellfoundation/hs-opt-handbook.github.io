@@ -15,16 +15,18 @@
 -- Tested with GHC 8.10.7
 -----------------------------------------------------------------------------
 
-
 module Main where
 
 import Gauge
 
+import System.Random
+import Control.DeepSeq
+
 -- | This function creates excessive closures. Once we move the infinite list
 -- [0..] behind the lambda the list /will be created anew/ for each call of the
 -- lambda.
-bad :: (Int -> a) -> (Int -> a)
-bad f = (\x -> (map f [0..] !!) x)
+bad :: (Int -> a) -> [Int] -> (Int -> a)
+bad f xs =
 
 -- | This function /does not/ create excessive closures. It returns a function
 -- that has allocated the infinite list '[0..]' only once, then when the
@@ -34,9 +36,10 @@ good f = (map f [0..] !!)
 
 
 main :: IO ()
-main = let b = bad (+42)
-           g = good (+42)
-       in defaultMain [ bgroup "Too Many Closures" [ bench "bad"  . whnf $ fmap b [1..100]
-                                                   , bench "good" . whnf $ fmap g [1..100]
-                                                   ]
+main = do
+  seed <- initStdGen
+  let test_values = take 5000 $ repeat 1
+  defaultMain [ bgroup "Too Many Closures" [ bench "bad"  $ whnf (fmap $ bad (+42)) test_values
+                                           , bench "good" $ whnf (fmap $ good (+42)) test_values
+                                           ]
                    ]
