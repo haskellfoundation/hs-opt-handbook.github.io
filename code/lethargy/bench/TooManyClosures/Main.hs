@@ -25,8 +25,8 @@ import Control.DeepSeq
 -- | This function creates excessive closures. Once we move the infinite list
 -- [0..] behind the lambda the list /will be created anew/ for each call of the
 -- lambda.
-bad :: (Int -> a) -> [Int] -> (Int -> a)
-bad f xs =
+-- bad :: (Int -> a) -> [Int] -> (Int -> a)
+-- bad f xs =
 
 -- | This function /does not/ create excessive closures. It returns a function
 -- that has allocated the infinite list '[0..]' only once, then when the
