@@ -139,7 +139,43 @@
             
   <section id="eventlog">
 <span id="eventlog-chapter"></span><h1><span class="section-number">2.2.2. </span>Eventlog<a class="headerlink" href="#eventlog" title="Permalink to this headline">¶</a></h1>
-<p><a class="reference external" href="https://github.com/input-output-hk/hs-opt-handbook.github.io/issues/23">TODO</a></p>
+<p><a class="reference external" href="https://downloads.haskell.org/ghc/latest/docs/users_guide/runtime_control.html#rts-eventlog">Eventlog</a>
+is a GHC runtime system feature that logs events at runtime of a compiled
+program. It is able to provide profiling information on the heap, the garbage
+collector, the scheduler, and arbitrary events that a user inserts into their
+own code. Eventlog is a versatile profiling tool, and should be one of the first
+tools in the profiling toolbox you reach for. Use eventlog when you are just
+beginning to diagnose the problem and are gathering data and want to inspect the
+heap, or, if you already suspect a sub-system, such as the garbage collector,
+and want to visualize its behavior. This chapter walks through using eventlog to
+inspect a small program that suffers from <a class="reference internal" href="../../Preliminaries/what_makes_fast_hs.html#excessive-closure-allocation"><span class="std std-ref">Excessive Closure Allocation</span></a>.
+By the end of the chapter you should understand:</p>
+<ol class="arabic simple">
+<li><p>What information can you retrieve by using eventlog</p></li>
+<li><p>How to build your program to use eventlog</p></li>
+<li><p>How to visualize eventlog information</p></li>
+<li><p>How to tune eventlog to inspect specific subsystems</p></li>
+<li><p>How to tune eventlog to inspect specific pieces of code</p></li>
+<li><p>When to use eventlog</p></li>
+</ol>
+<section id="what-information-do-i-receive-from-eventlog">
+<h2><span class="section-number">2.2.2.1. </span>What Information Do I Receive From Eventlog?<a class="headerlink" href="#what-information-do-i-receive-from-eventlog" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="building-with-eventlog-support">
+<h2><span class="section-number">2.2.2.2. </span>Building with EventLog support<a class="headerlink" href="#building-with-eventlog-support" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="visualizing-eventlog">
+<h2><span class="section-number">2.2.2.3. </span>Visualizing EventLog<a class="headerlink" href="#visualizing-eventlog" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="tuning-the-output">
+<h2><span class="section-number">2.2.2.4. </span>Tuning the Output<a class="headerlink" href="#tuning-the-output" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="summary">
+<h2><span class="section-number">2.2.2.5. </span>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="references">
+<h2><span class="section-number">2.2.2.6. </span>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+</section>
 </section>
 
 

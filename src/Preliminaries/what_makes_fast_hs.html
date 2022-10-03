@@ -335,8 +335,7 @@ pragma and a bang pattern:</p>
 </div>
 <p>This pragma instructs GHC to store the contents of <code class="docutils literal notranslate"><span class="pre">Int</span></code> directly in the
 <code class="docutils literal notranslate"><span class="pre">Counter</span></code> constructor, rather than storing a pointer to an <code class="docutils literal notranslate"><span class="pre">Int</span></code> on the heap
-in the constructor. We’ll return to these fixes in the <span class="xref std std-ref">Excessive Pointer
-Chasing</span> section.</p>
+in the constructor. We’ll return to these fixes in the <a class="reference internal" href="#excessive-pointer-chasing"><span class="std std-ref">Excessive Pointer Chasing</span></a> section.</p>
 </section>
 </section>
 <section id="excessive-closure-allocation">
@@ -432,7 +431,7 @@ utilizing laziness and avoiding repeated, wasteful computations of <code class="
 will be a thunk for the first iteration of <code class="docutils literal notranslate"><span class="pre">g</span></code>, but for every other iteration
 of <code class="docutils literal notranslate"><span class="pre">g</span></code>, <code class="docutils literal notranslate"><span class="pre">n</span></code> will be evaluated to value thus saving time and space. We’ll see
 more cases of let floating and detecting excessive closure allocation in the
-<span class="xref std std-ref">Excessive Closure Allocation</span> section.</p>
+<a class="reference internal" href="#excessive-closure-allocation"><span class="std std-ref">Excessive Closure Allocation</span></a> section.</p>
 </section>
 </section>
 <section id="poor-domain-modeling">
