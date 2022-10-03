@@ -15,6 +15,8 @@
 -- Tested with GHC 9.2.4
 -----------------------------------------------------------------------------
 
+-- Need to disable optimizations because GHC will recognize and perform
+-- let-floating for us!
 {-# OPTIONS_GHC -O0 -ddump-simpl -ddump-to-file -ddump-stg-final #-}
 
 module Main where
@@ -25,11 +27,14 @@ import Gauge
 -- ys = [1..10000]
 
 -- | This function excessively allocates closures every time 'f' is called. The
--- closure in question
+-- closure in question being the allocation of the 10k element list.
 bad :: [Int] -> Int
 bad xs = sum $ fmap f xs
   where f x = x + length [1..10000]
 
+-- | This function avoids the excessive closure allocation. We still will
+-- allocate thunks for every element of 'xs' but we only calculate 'length
+-- [1..10000]' once because we floated it out of 'f'.
 good :: [Int] -> Int
 good xs = sum $ fmap f xs
   where

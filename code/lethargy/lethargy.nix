@@ -6,7 +6,7 @@ stdenv.mkDerivation {
   src = ./.;
   isLibrary = false;
   isExecutable = true;
-  buildInputs = [ ghc haskell-language-server ];
+  buildInputs = [ ghc haskell-language-server cabal-install haskellPackages.eventlog2html ];
   executableHaskellDepends = with haskellPackages; [ base ];
   benchmarkHaskellDepends =  with haskellPackages;[ base containers deepseq gauge random ];
   mainProgram = "lethargy";

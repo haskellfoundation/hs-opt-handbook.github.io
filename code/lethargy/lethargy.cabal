@@ -73,7 +73,7 @@ benchmark pointerChasing
 benchmark tooManyClosures
   type            : exitcode-stdio-1.0
   default-language: Haskell2010
-  ghc-options     : -O2 -threaded
+  ghc-options     : -O2 -threaded -prof -eventlog -fprof-auto
   main-is         : Main.hs
   hs-source-dirs  : bench/TooManyClosures
   build-depends: base >= 4.15

@@ -3,7 +3,7 @@
 Haskell Optimization Handbook
 =============================
 
-This book assumes you are using ghc ``8.10.x`` or above and using the Linux
+This book assumes you are using ghc ``9.2.x`` or above and using the Linux
 operating system. If you are new please start with the :doc:`How to use this
 book </src/Preliminaries/how_to_use>` chapter. If you are returning then feel
 free to jump to the :ref:`mastertoc` and best wishes. It is dangerous to go
@@ -16,6 +16,9 @@ Handbook.
 
 Release History
 ---------------
+
+* October, 2022
+  * Add code snippets
 
 * September, 2022
 
