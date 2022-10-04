@@ -2,7 +2,7 @@ Heap Profiling and Inspection : GHC Based Methods
 -------------------------------------------------
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :glob:
    :name: Heap_GHC_methods
 

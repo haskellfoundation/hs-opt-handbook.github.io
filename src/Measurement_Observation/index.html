@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-      <title>2. Measurement, Profiling, and Observation</title>
+      <title>Measurement, Profiling, and Observation</title>
     
           <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
           <link rel="stylesheet" href="../../_static/theme.css " type="text/css" />
@@ -23,8 +23,8 @@
     
   <link rel="index" title="Index" href="../../genindex.html" />
   <link rel="search" title="Search" href="../../search.html" />
-  <link rel="next" title="2.1. The Recipe" href="the_recipe.html" />
-  <link rel="prev" title="1.3. Setting up a Reproducible Test Environment" href="../Preliminaries/repeatable_measurements.html" /> 
+  <link rel="next" title="The Recipe" href="the_recipe.html" />
+  <link rel="prev" title="Setting up a Reproducible Test Environment" href="../Preliminaries/repeatable_measurements.html" /> 
   </head>
 
   <body>
@@ -120,18 +120,18 @@
   <ul class="breadcrumbs">
     <li><a href="../../contents.html">Docs</a> &raquo;</li>
     
-    <li><span class="section-number">2. </span>Measurement, Profiling, and Observation</li>
+    <li>Measurement, Profiling, and Observation</li>
   </ul>
   
 
   <ul class="page-nav">
   <li class="prev">
     <a href="../Preliminaries/repeatable_measurements.html"
-       title="previous chapter">← <span class="section-number">1.3. </span>Setting up a Reproducible Test Environment</a>
+       title="previous chapter">← Setting up a Reproducible Test Environment</a>
   </li>
   <li class="next">
     <a href="the_recipe.html"
-       title="next chapter"><span class="section-number">2.1. </span>The Recipe →</a>
+       title="next chapter">The Recipe →</a>
   </li>
 </ul>
   
@@ -140,66 +140,69 @@
           <div class="content" role="main" v-pre>
             
   <section id="measurement-profiling-and-observation">
-<h1><span class="section-number">2. </span>Measurement, Profiling, and Observation<a class="headerlink" href="#measurement-profiling-and-observation" title="Permalink to this headline">¶</a></h1>
+<h1>Measurement, Profiling, and Observation<a class="headerlink" href="#measurement-profiling-and-observation" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound" id="heap-ghc">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="the_recipe.html">2.1. The Recipe</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="the_recipe.html#vocabulary">2.1.1. Vocabulary</a></li>
-<li class="toctree-l2"><a class="reference internal" href="the_recipe.html#characterize-the-problem">2.1.2. Characterize the Problem</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="the_recipe.html#precisely-restate-the-problem">2.1.2.1. Precisely Restate the Problem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="the_recipe.html">The Recipe</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="the_recipe.html#vocabulary">Vocabulary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="the_recipe.html#characterize-the-problem">Characterize the Problem</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="the_recipe.html#precisely-restate-the-problem">Precisely Restate the Problem</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="the_recipe.html#construct-a-hypothetical-failure-mode">2.1.3. Construct a Hypothetical Failure Mode</a></li>
-<li class="toctree-l2"><a class="reference internal" href="the_recipe.html#create-the-smallest-reproducible-test-of-the-problem">2.1.4. Create The Smallest Reproducible Test of the Problem</a></li>
-<li class="toctree-l2"><a class="reference internal" href="the_recipe.html#define-a-hypothesis">2.1.5. Define a Hypothesis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="the_recipe.html#predict-the-response-and-test">2.1.6. Predict the Response and Test</a></li>
-<li class="toctree-l2"><a class="reference internal" href="the_recipe.html#summary">2.1.7. Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="the_recipe.html#construct-a-hypothetical-failure-mode">Construct a Hypothetical Failure Mode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="the_recipe.html#create-the-smallest-reproducible-test-of-the-problem">Create The Smallest Reproducible Test of the Problem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="the_recipe.html#define-a-hypothesis">Define a Hypothesis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="the_recipe.html#predict-the-response-and-test">Predict the Response and Test</a></li>
+<li class="toctree-l2"><a class="reference internal" href="the_recipe.html#summary">Summary</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="Heap_Ghc/index.html">2.2. Heap Profiling and Inspection : GHC Based Methods</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Heap_Ghc/ghc_flags.html">2.2.1. <span class="lightgrey">GHC Flags</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Heap_Ghc/eventlog.html">2.2.2. Eventlog</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="Heap_Ghc/eventlog.html#what-information-do-i-receive-from-eventlog">2.2.2.1. What Information Do I Receive From Eventlog?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Heap_Ghc/eventlog.html#building-with-eventlog-support">2.2.2.2. Building with EventLog support</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Heap_Ghc/eventlog.html#visualizing-eventlog">2.2.2.3. Visualizing EventLog</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Heap_Ghc/eventlog.html#tuning-the-output">2.2.2.4. Tuning the Output</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Heap_Ghc/eventlog.html#summary">2.2.2.5. Summary</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Heap_Ghc/eventlog.html#references">2.2.2.6. References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Heap_Ghc/index.html">Heap Profiling and Inspection : GHC Based Methods</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Heap_Ghc/ghc_flags.html"><span class="lightgrey">GHC Flags</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heap_Ghc/eventlog.html">Eventlog</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Heap_Ghc/eventlog.html#requirements">Requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Heap_Ghc/eventlog.html#what-information-do-i-receive-from-eventlog">What Information Do I Receive From Eventlog?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Heap_Ghc/eventlog.html#when-should-i-use-eventlog">When should I use Eventlog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Heap_Ghc/eventlog.html#the-running-example">The Running Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Heap_Ghc/eventlog.html#building-with-eventlog-support">Building with EventLog support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Heap_Ghc/eventlog.html#visualizing-eventlog">Visualizing EventLog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Heap_Ghc/eventlog.html#tuning-the-output">Tuning the Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Heap_Ghc/eventlog.html#summary">Summary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Heap_Ghc/eventlog.html#references-and-further-reading">References and Further Reading</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="Heap_Ghc/ghc_debug.html">2.2.3. <span class="lightgrey">GHC Debug</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Heap_Ghc/scopes.html">2.2.4. <span class="lightgrey">ThreadScope</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heap_Ghc/ghc_debug.html"><span class="lightgrey">GHC Debug</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Heap_Ghc/scopes.html"><span class="lightgrey">ThreadScope</span></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="Heap_Third/index.html">2.3. Heap Profiling and Inspection : Third Party Methods</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Heap_Third/cachegrind.html">2.3.1. <span class="lightgrey">Using Cachegrind</span></a></li>
+<li class="toctree-l1"><a class="reference internal" href="Heap_Third/index.html">Heap Profiling and Inspection : Third Party Methods</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Heap_Third/cachegrind.html"><span class="lightgrey">Using Cachegrind</span></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="Measurement_Ghc/index.html">2.4. CPU Measurement : GHC Based Methods</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Measurement_Ghc/ghc_flags.html">2.4.1. <span class="lightgrey">GHC Flags</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Measurement_Ghc/dtimings.html">2.4.2. <span class="lightgrey">-ddump-timings</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Measurement_Ghc/ticky_ticky.html">2.4.3. <span class="lightgrey">TickyTicky</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Measurement_Ghc/reduced_stack.html">2.4.4. <span class="lightgrey">The Reduced Stack Method</span></a></li>
+<li class="toctree-l1"><a class="reference internal" href="Measurement_Ghc/index.html">CPU Measurement : GHC Based Methods</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Measurement_Ghc/ghc_flags.html"><span class="lightgrey">GHC Flags</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Measurement_Ghc/dtimings.html"><span class="lightgrey">-ddump-timings</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Measurement_Ghc/ticky_ticky.html"><span class="lightgrey">TickyTicky</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Measurement_Ghc/reduced_stack.html"><span class="lightgrey">The Reduced Stack Method</span></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="Measurement_Libs/index.html">2.5. CPU Measurement : Haskell Libraries</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Measurement_Libs/criterion.html">2.5.1. <span class="lightgrey">Criterion, Gauge, and Tasty-Bench</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Measurement_Libs/weigh.html">2.5.2. <span class="lightgrey">Weigh</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Measurement_Libs/inspection-testing.html">2.5.3. <span class="lightgrey">Inspection-Testing</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Measurement_Libs/nothunks.html">2.5.4. <span class="lightgrey">Nothunks</span></a></li>
+<li class="toctree-l1"><a class="reference internal" href="Measurement_Libs/index.html">CPU Measurement : Haskell Libraries</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Measurement_Libs/criterion.html"><span class="lightgrey">Criterion, Gauge, and Tasty-Bench</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Measurement_Libs/weigh.html"><span class="lightgrey">Weigh</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Measurement_Libs/inspection-testing.html"><span class="lightgrey">Inspection-Testing</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Measurement_Libs/nothunks.html"><span class="lightgrey">Nothunks</span></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="Measurement_Third/index.html">2.6. CPU Measurement : Third Party Methods</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Measurement_Third/linux_time.html">2.6.1. <span class="lightgrey">The time Utility</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Measurement_Third/linux_perf.html">2.6.2. <span class="lightgrey">The perf utility</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Measurement_Third/valgrind.html">2.6.3. <span class="lightgrey">Valgrind</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Measurement_Third/dtrace.html">2.6.4. <span class="lightgrey">Dtrace</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Measurement_Third/flamegraph.html">2.6.5. <span class="lightgrey">Flamegraphs</span></a></li>
+<li class="toctree-l1"><a class="reference internal" href="Measurement_Third/index.html">CPU Measurement : Third Party Methods</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Measurement_Third/linux_time.html"><span class="lightgrey">The time Utility</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Measurement_Third/linux_perf.html"><span class="lightgrey">The perf utility</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Measurement_Third/valgrind.html"><span class="lightgrey">Valgrind</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Measurement_Third/dtrace.html"><span class="lightgrey">Dtrace</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Measurement_Third/flamegraph.html"><span class="lightgrey">Flamegraphs</span></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="Direct_Observation/index.html">2.7. Direct Observation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Direct_Observation/core.html">2.7.1. <span class="lightgrey">Reading Core</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Direct_Observation/stg.html">2.7.2. <span class="lightgrey">Reading Stg</span></a></li>
+<li class="toctree-l1"><a class="reference internal" href="Direct_Observation/index.html">Direct Observation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Direct_Observation/core.html"><span class="lightgrey">Reading Core</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Direct_Observation/stg.html"><span class="lightgrey">Reading Stg</span></a></li>
 </ul>
 </li>
 </ul>
@@ -212,11 +215,11 @@
             <div class="inner"><ul class="page-nav">
   <li class="prev">
     <a href="../Preliminaries/repeatable_measurements.html"
-       title="previous chapter">← <span class="section-number">1.3. </span>Setting up a Reproducible Test Environment</a>
+       title="previous chapter">← Setting up a Reproducible Test Environment</a>
   </li>
   <li class="next">
     <a href="the_recipe.html"
-       title="next chapter"><span class="section-number">2.1. </span>The Recipe →</a>
+       title="next chapter">The Recipe →</a>
   </li>
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2022-2022, Jeffrey Young (doyougnu).
