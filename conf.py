@@ -33,6 +33,7 @@ release = '0.0.1'
 # ones.
 extensions = [ 'sphinx.ext.mathjax'
              , 'sphinx.ext.todo'
+             , 'sphinx.ext.extlinks'
              , 'sphinx.ext.autosectionlabel'
              , 'sphinx.ext.githubpages'  ## this bypasses jekyll in the CI, if
                                          ## you remove it the output will not
@@ -45,6 +46,8 @@ extensions = [ 'sphinx.ext.mathjax'
 # flags
 todo_include_todos = False
 todo_link_only     = False
+
+extlinks = {'userGuide': ('https://downloads.haskell.org/~ghc/9.2.4/docs/html/users_guide/%s', '')}
 
 # prolog for colored text
 rst_prolog = """
@@ -69,7 +72,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', '.dir-locals.el', '.proj
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 html_theme      = "press"
-html_static_path = ['_static']
+html_static_path = ['_static', 'code']
 html_css_files = [ 'css/s4defs-roles.css' ]
 
 # Add any paths that contain custom static files (such as style sheets) here,
