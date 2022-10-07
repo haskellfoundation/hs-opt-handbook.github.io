@@ -18,6 +18,7 @@ Release History
 ---------------
 
 * October, 2022
+
   * Add code snippets
 
 * September, 2022

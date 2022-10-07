@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-      <title>Library Agnostic Changes</title>
+      <title>3.3. Library Agnostic Changes</title>
     
           <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
           <link rel="stylesheet" href="../../../_static/theme.css " type="text/css" />
@@ -23,8 +23,8 @@
     
   <link rel="index" title="Index" href="../../../genindex.html" />
   <link rel="search" title="Search" href="../../../search.html" />
-  <link rel="next" title="Orderin Data Constructors" href="ordering_constructors.html" />
-  <link rel="prev" title="Lower Impedance with Better Data Structures" href="../Code_Changes_Libraries/data_structures.html" /> 
+  <link rel="next" title="3.3.1. Orderin Data Constructors" href="ordering_constructors.html" />
+  <link rel="prev" title="3.2.1. Lower Impedance with Better Data Structures" href="../Code_Changes_Libraries/data_structures.html" /> 
   </head>
 
   <body>
@@ -114,20 +114,20 @@
   <ul class="breadcrumbs">
     <li><a href="../../../contents.html">Docs</a> &raquo;</li>
     
-      <li><a href="../index.html">Optimizations</a> &raquo;</li>
+      <li><a href="../index.html"><span class="section-number">3. </span>Optimizations</a> &raquo;</li>
     
-    <li>Library Agnostic Changes</li>
+    <li><span class="section-number">3.3. </span>Library Agnostic Changes</li>
   </ul>
   
 
   <ul class="page-nav">
   <li class="prev">
     <a href="../Code_Changes_Libraries/data_structures.html"
-       title="previous chapter">← <span class="lightgrey">Lower Impedance with Better Data Structures</span></a>
+       title="previous chapter">← <span class="section-number">3.2.1. </span><span class="lightgrey">Lower Impedance with Better Data Structures</span></a>
   </li>
   <li class="next">
     <a href="ordering_constructors.html"
-       title="next chapter"><span class="lightgrey">Orderin Data Constructors</span> →</a>
+       title="next chapter"><span class="section-number">3.3.1. </span><span class="lightgrey">Orderin Data Constructors</span> →</a>
   </li>
 </ul>
   
@@ -136,27 +136,27 @@
           <div class="content" role="main" v-pre>
             
   <section id="library-agnostic-changes">
-<h1>Library Agnostic Changes<a class="headerlink" href="#library-agnostic-changes" title="Permalink to this headline">¶</a></h1>
+<h1><span class="section-number">3.3. </span>Library Agnostic Changes<a class="headerlink" href="#library-agnostic-changes" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound" id="manual-code-changes">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="ordering_constructors.html"><span class="lightgrey">Orderin Data Constructors</span></a></li>
-<li class="toctree-l1"><a class="reference internal" href="lazy_tuples.html"><span class="lightgrey">Wrangling Lazy Tuples</span></a></li>
-<li class="toctree-l1"><a class="reference internal" href="appropriate_folds.html"><span class="lightgrey">Appropriate Folding</span></a></li>
-<li class="toctree-l1"><a class="reference internal" href="parse_dont_validate.html"><span class="lightgrey">Avoid Runtime Checks with Parse Don’t Validate:</span></a></li>
-<li class="toctree-l1"><a class="reference internal" href="using_ghc_exts.html"><span class="lightgrey">Using GHC.Exts</span></a></li>
-<li class="toctree-l1"><a class="reference internal" href="inlining.html"><span class="lightgrey">Inlining Pragma and Friends</span></a></li>
-<li class="toctree-l1"><a class="reference internal" href="specialization.html"><span class="lightgrey">Specialization</span></a></li>
-<li class="toctree-l1"><a class="reference internal" href="fusion_and_rules.html"><span class="lightgrey">Fusion and Rules</span></a></li>
-<li class="toctree-l1"><a class="reference internal" href="unboxing.html"><span class="lightgrey">Unboxing</span></a></li>
-<li class="toctree-l1"><a class="reference internal" href="unpacking_product_types.html"><span class="lightgrey">Unpacked Product Types</span></a></li>
-<li class="toctree-l1"><a class="reference internal" href="loopification.html"><span class="lightgrey">Loopification</span></a></li>
-<li class="toctree-l1"><a class="reference internal" href="worker_wrapper.html"><span class="lightgrey">Manual Worker/Wrapper</span></a></li>
-<li class="toctree-l1"><a class="reference internal" href="nested_transformers.html"><span class="lightgrey">Avoiding Nested Monad Transformers</span></a></li>
-<li class="toctree-l1"><a class="reference internal" href="unroll_stacks.html"><span class="lightgrey">Unroll Monad Transformer Stacks</span></a></li>
-<li class="toctree-l1"><a class="reference internal" href="oneshot.html"><span class="lightgrey">The OneShot Monad Trick</span></a></li>
-<li class="toctree-l1"><a class="reference internal" href="continuation_passing_style.html"><span class="lightgrey">Continuation Passing Style</span></a></li>
-<li class="toctree-l1"><a class="reference internal" href="levity_polymorphism.html"><span class="lightgrey">Using Levity Polymorphism</span></a></li>
-<li class="toctree-l1"><a class="reference internal" href="backpack.html"><span class="lightgrey">Using Backpack to Unroll Data Structures</span></a></li>
+<li class="toctree-l1"><a class="reference internal" href="ordering_constructors.html">3.3.1. <span class="lightgrey">Orderin Data Constructors</span></a></li>
+<li class="toctree-l1"><a class="reference internal" href="lazy_tuples.html">3.3.2. <span class="lightgrey">Wrangling Lazy Tuples</span></a></li>
+<li class="toctree-l1"><a class="reference internal" href="appropriate_folds.html">3.3.3. <span class="lightgrey">Appropriate Folding</span></a></li>
+<li class="toctree-l1"><a class="reference internal" href="parse_dont_validate.html">3.3.4. <span class="lightgrey">Avoid Runtime Checks with Parse Don’t Validate:</span></a></li>
+<li class="toctree-l1"><a class="reference internal" href="using_ghc_exts.html">3.3.5. <span class="lightgrey">Using GHC.Exts</span></a></li>
+<li class="toctree-l1"><a class="reference internal" href="inlining.html">3.3.6. <span class="lightgrey">Inlining Pragma and Friends</span></a></li>
+<li class="toctree-l1"><a class="reference internal" href="specialization.html">3.3.7. <span class="lightgrey">Specialization</span></a></li>
+<li class="toctree-l1"><a class="reference internal" href="fusion_and_rules.html">3.3.8. <span class="lightgrey">Fusion and Rules</span></a></li>
+<li class="toctree-l1"><a class="reference internal" href="unboxing.html">3.3.9. <span class="lightgrey">Unboxing</span></a></li>
+<li class="toctree-l1"><a class="reference internal" href="unpacking_product_types.html">3.3.10. <span class="lightgrey">Unpacked Product Types</span></a></li>
+<li class="toctree-l1"><a class="reference internal" href="loopification.html">3.3.11. <span class="lightgrey">Loopification</span></a></li>
+<li class="toctree-l1"><a class="reference internal" href="worker_wrapper.html">3.3.12. <span class="lightgrey">Manual Worker/Wrapper</span></a></li>
+<li class="toctree-l1"><a class="reference internal" href="nested_transformers.html">3.3.13. <span class="lightgrey">Avoiding Nested Monad Transformers</span></a></li>
+<li class="toctree-l1"><a class="reference internal" href="unroll_stacks.html">3.3.14. <span class="lightgrey">Unroll Monad Transformer Stacks</span></a></li>
+<li class="toctree-l1"><a class="reference internal" href="oneshot.html">3.3.15. <span class="lightgrey">The OneShot Monad Trick</span></a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuation_passing_style.html">3.3.16. <span class="lightgrey">Continuation Passing Style</span></a></li>
+<li class="toctree-l1"><a class="reference internal" href="levity_polymorphism.html">3.3.17. <span class="lightgrey">Using Levity Polymorphism</span></a></li>
+<li class="toctree-l1"><a class="reference internal" href="backpack.html">3.3.18. <span class="lightgrey">Using Backpack to Unroll Data Structures</span></a></li>
 </ul>
 </div>
 </section>
@@ -167,11 +167,11 @@
             <div class="inner"><ul class="page-nav">
   <li class="prev">
     <a href="../Code_Changes_Libraries/data_structures.html"
-       title="previous chapter">← <span class="lightgrey">Lower Impedance with Better Data Structures</span></a>
+       title="previous chapter">← <span class="section-number">3.2.1. </span><span class="lightgrey">Lower Impedance with Better Data Structures</span></a>
   </li>
   <li class="next">
     <a href="ordering_constructors.html"
-       title="next chapter"><span class="lightgrey">Orderin Data Constructors</span> →</a>
+       title="next chapter"><span class="section-number">3.3.1. </span><span class="lightgrey">Orderin Data Constructors</span> →</a>
   </li>
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2022-2022, Jeffrey Young (doyougnu).

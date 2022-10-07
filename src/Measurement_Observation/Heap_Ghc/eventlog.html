@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-      <title>Eventlog</title>
+      <title>2.2.2. Eventlog</title>
     
           <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
           <link rel="stylesheet" href="../../../_static/theme.css " type="text/css" />
@@ -23,8 +23,8 @@
     
   <link rel="index" title="Index" href="../../../genindex.html" />
   <link rel="search" title="Search" href="../../../search.html" />
-  <link rel="next" title="GHC Debug" href="ghc_debug.html" />
-  <link rel="prev" title="GHC Flags" href="ghc_flags.html" /> 
+  <link rel="next" title="2.2.3. GHC Debug" href="ghc_debug.html" />
+  <link rel="prev" title="2.2.1. GHC Flags" href="ghc_flags.html" /> 
   </head>
 
   <body>
@@ -114,22 +114,22 @@
   <ul class="breadcrumbs">
     <li><a href="../../../contents.html">Docs</a> &raquo;</li>
     
-      <li><a href="../index.html">Measurement, Profiling, and Observation</a> &raquo;</li>
+      <li><a href="../index.html"><span class="section-number">2. </span>Measurement, Profiling, and Observation</a> &raquo;</li>
     
-      <li><a href="index.html">Heap Profiling and Inspection : GHC Based Methods</a> &raquo;</li>
+      <li><a href="index.html"><span class="section-number">2.2. </span>Heap Profiling and Inspection : GHC Based Methods</a> &raquo;</li>
     
-    <li>Eventlog</li>
+    <li><span class="section-number">2.2.2. </span>Eventlog</li>
   </ul>
   
 
   <ul class="page-nav">
   <li class="prev">
     <a href="ghc_flags.html"
-       title="previous chapter">← <span class="lightgrey">GHC Flags</span></a>
+       title="previous chapter">← <span class="section-number">2.2.1. </span><span class="lightgrey">GHC Flags</span></a>
   </li>
   <li class="next">
     <a href="ghc_debug.html"
-       title="next chapter"><span class="lightgrey">GHC Debug</span> →</a>
+       title="next chapter"><span class="section-number">2.2.3. </span><span class="lightgrey">GHC Debug</span> →</a>
   </li>
 </ul>
   
@@ -138,7 +138,7 @@
           <div class="content" role="main" v-pre>
             
   <span class="target" id="eventlog-chapter"></span><section id="eventlog">
-<h1>Eventlog<a class="headerlink" href="#eventlog" title="Permalink to this headline">¶</a></h1>
+<h1><span class="section-number">2.2.2. </span>Eventlog<a class="headerlink" href="#eventlog" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="https://downloads.haskell.org/ghc/latest/docs/users_guide/runtime_control.html#rts-eventlog">Eventlog</a>
 is a GHC runtime system feature that logs events at runtime of a compiled
 program. It is able to provide profiling information on the heap, the garbage
@@ -151,37 +151,46 @@ and want to visualize its behavior. This chapter walks through using eventlog to
 inspect a small program that suffers from <a class="reference internal" href="../../Preliminaries/what_makes_fast_hs.html#excessive-closure-allocation"><span class="std std-ref">Excessive Closure Allocation</span></a>.
 By the end of the chapter you should understand:</p>
 <ol class="arabic simple">
-<li><p>What information can you retrieve by using eventlog</p></li>
-<li><p>How to build your program to use eventlog</p></li>
-<li><p>How to visualize eventlog information</p></li>
-<li><p>How to tune eventlog to inspect specific subsystems</p></li>
-<li><p>How to tune eventlog to inspect specific pieces of code</p></li>
-<li><p>When to use eventlog</p></li>
+<li><p>What information can you retrieve by using eventlog.</p></li>
+<li><p>How to build your program to use eventlog.</p></li>
+<li><p>How to visualize eventlog information.</p></li>
+<li><p>How to tune eventlog to inspect specific subsystems.</p></li>
+<li><p>How to tune eventlog to inspect specific pieces of code.</p></li>
+<li><p>When to use eventlog.</p></li>
 </ol>
 <section id="requirements">
-<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">2.2.2.1. </span>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic simple">
 <li><p>The program must be recompiled with the <code class="docutils literal notranslate"><span class="pre">-eventlog</span></code> GHC flag</p></li>
-<li><p>A program to consume the <code class="docutils literal notranslate"><span class="pre">program.eventlog</span></code> file. We recommend
+<li><p>A program to consume the <code class="docutils literal notranslate"><span class="pre">&lt;program&gt;.eventlog</span></code> file. We recommend
 <a class="reference external" href="https://github.com/mpickering/eventlog2html">eventlog2html</a>; see also the relevant section in the <a class="reference external" href="https://downloads.haskell.org/~ghc/9.2.4/docs/html/users_guide/runtime_control.html#rts-eventlog">GHC User’s
-Guide</a></p></li>
+Guide</a>. You can also parse the
+<code class="docutils literal notranslate"><span class="pre">&lt;program&gt;.eventlog</span></code> file using the <a class="reference external" href="https://hackage.haskell.org/package/ghc-events">ghc-events</a> library.</p></li>
 </ol>
 </section>
 <section id="what-information-do-i-receive-from-eventlog">
-<h2>What Information Do I Receive From Eventlog?<a class="headerlink" href="#what-information-do-i-receive-from-eventlog" title="Permalink to this headline">¶</a></h2>
-<dl class="simple">
-<dt>Eventlog logs events as a function of time. For a full list of events see the</dt><dd><p><a class="reference external" href="https://downloads.haskell.org/ghc/latest/docs/users_guide/runtime_control.html#rts-eventlog">GHC User’s Guide</a>.
-In general, the most common use case is to track heap events and arbitrary
-user events to get a heap profile.</p>
-</dd>
-</dl>
+<h2><span class="section-number">2.2.2.2. </span>What Information Do I Receive From Eventlog?<a class="headerlink" href="#what-information-do-i-receive-from-eventlog" title="Permalink to this headline">¶</a></h2>
+<p>Eventlog logs events as a function of runtime. A full list of possible events is
+available in <a class="reference external" href="https://downloads.haskell.org/~ghc/9.2.4/docs/html/users_guide/runtime_control.html#rts-eventlog">GHC User’s Guide</a>.
+In general, the most common use case is to track heap events, however a user may
+define and track their own events using the base functions <a class="reference external" href="https://downloads.haskell.org/~ghc/9.2.4/docs/html/libraries/base-4.16.3.0/Debug-Trace.html#v:traceMarker">traceEvent</a>
+or <a class="reference external" href="https://downloads.haskell.org/~ghc/9.2.4/docs/html/libraries/base-4.16.3.0/Debug-Trace.html#v:traceMarker">traceMarker</a>
+.</p>
 </section>
 <section id="when-should-i-use-eventlog">
-<h2>When should I use Eventlog<a class="headerlink" href="#when-should-i-use-eventlog" title="Permalink to this headline">¶</a></h2>
-<p>Eventlog is most useful when you need to <a class="reference internal" href="../the_recipe.html#characterize-the-problem"><span class="std std-ref">Characterize the Problem</span></a>. With</p>
+<h2><span class="section-number">2.2.2.3. </span>When should I use Eventlog<a class="headerlink" href="#when-should-i-use-eventlog" title="Permalink to this headline">¶</a></h2>
+<p>Eventlog is most useful when you need to <a class="reference internal" href="../the_recipe.html#characterize-the-problem"><span class="std std-ref">Characterize the Problem</span></a> . It
+yields runtime information of the program specific to subsystems the program
+relies on. Thus, it allows you to drill down into the behavior of the garbage
+collector, the scheduler, the heap and so. For example, using the flag <code class="docutils literal notranslate"><span class="pre">+RTS</span>
+<span class="pre">-lg</span></code> you can collect the <code class="docutils literal notranslate"><span class="pre">CONC_MARK_BEGIN</span></code> and <code class="docutils literal notranslate"><span class="pre">CONC_MARK_END</span></code> events which
+log the beginning and end of the concurrent garbage collectors marking phase.
+Similarly, you can collect <code class="docutils literal notranslate"><span class="pre">MEM_RETURN</span></code> which provides information about the
+current allocation of megablocks, attempts to return them to the operating
+system, and heap fragmentation.</p>
 </section>
 <section id="the-running-example">
-<h2>The Running Example<a class="headerlink" href="#the-running-example" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">2.2.2.4. </span>The Running Example<a class="headerlink" href="#the-running-example" title="Permalink to this headline">¶</a></h2>
 <p>Our test program is an example of excessive closure allocation:</p>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Need to disable optimizations because GHC will recognize and perform</span><span class="w"></span>
 <span class="c1">-- let-floating for us!</span><span class="w"></span>
@@ -227,22 +236,38 @@ once.</p>
 <p>The full laziness optimization will produce <code class="docutils literal notranslate"><span class="pre">good</span></code> from <code class="docutils literal notranslate"><span class="pre">bad</span></code>.</p>
 </div>
 <p>GHC is good at spotting such code patterns so we’ve turned off optimizations
-with the <code class="docutils literal notranslate"><span class="pre">OPTIONS_GHC</span> <span class="pre">-O0</span></code> pragma.</p>
+with the <code class="docutils literal notranslate"><span class="pre">OPTIONS_GHC</span> <span class="pre">-O0</span></code> pragma. We use gauge (see <span class="xref std std-ref">Criterion, Gauge,
+and Tasty-Bench</span>) to measure the runtime of each function.</p>
 </section>
-<section id="building-with-eventlog-support">
-<h2>Building with EventLog support<a class="headerlink" href="#building-with-eventlog-support" title="Permalink to this headline">¶</a></h2>
+<section id="the-setup">
+<h2><span class="section-number">2.2.2.5. </span>The Setup<a class="headerlink" href="#the-setup" title="Permalink to this headline">¶</a></h2>
+<p>Using Eventlog requires two pieces of setup. First, you must build your programs
+with the <code class="docutils literal notranslate"><span class="pre">-eventlog</span> <span class="pre">-rtsopts</span> <span class="pre">-prof</span></code> GHC flags (or alternatively set
+<code class="docutils literal notranslate"><span class="pre">profiling:</span> <span class="pre">True</span></code> in <code class="docutils literal notranslate"><span class="pre">cabal.project</span></code> or enable <code class="docutils literal notranslate"><span class="pre">library-profiling</span></code> and
+<code class="docutils literal notranslate"><span class="pre">executable-profiling</span></code> in <code class="docutils literal notranslate"><span class="pre">stack.yaml</span></code>.). Second, you must pass the RTS flag
+<code class="docutils literal notranslate"><span class="pre">-l</span></code> to your program <em>and</em> additional RTS flags that describe which events to
+track. Here are some examples of RTS flag combinations:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;program&gt;</span> <span class="pre">+RST</span> <span class="pre">-hy</span> <span class="pre">-l-agu</span></code>: Do not track all possible events (<code class="docutils literal notranslate"><span class="pre">a</span></code>), but
+track all garbage collector events (<code class="docutils literal notranslate"><span class="pre">g</span></code>) and all user events (<code class="docutils literal notranslate"><span class="pre">u</span></code>). This
+will produce an eventlog for heap profiling by types used in the program
+(<code class="docutils literal notranslate"><span class="pre">-hy</span></code>).</p></li>
+</ol>
 </section>
 <section id="visualizing-eventlog">
-<h2>Visualizing EventLog<a class="headerlink" href="#visualizing-eventlog" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">2.2.2.6. </span>Visualizing EventLog<a class="headerlink" href="#visualizing-eventlog" title="Permalink to this headline">¶</a></h2>
 </section>
 <section id="tuning-the-output">
-<h2>Tuning the Output<a class="headerlink" href="#tuning-the-output" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">2.2.2.7. </span>Tuning the Output<a class="headerlink" href="#tuning-the-output" title="Permalink to this headline">¶</a></h2>
 </section>
 <section id="summary">
-<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">2.2.2.8. </span>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
 </section>
 <section id="references-and-further-reading">
-<h2>References and Further Reading<a class="headerlink" href="#references-and-further-reading" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">2.2.2.9. </span>References and Further Reading<a class="headerlink" href="#references-and-further-reading" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><p>The</p></li>
+</ol>
 </section>
 </section>
 
@@ -252,11 +277,11 @@ with the <code class="docutils literal notranslate"><span class="pre">OPTIONS_GH
             <div class="inner"><ul class="page-nav">
   <li class="prev">
     <a href="ghc_flags.html"
-       title="previous chapter">← <span class="lightgrey">GHC Flags</span></a>
+       title="previous chapter">← <span class="section-number">2.2.1. </span><span class="lightgrey">GHC Flags</span></a>
   </li>
   <li class="next">
     <a href="ghc_debug.html"
-       title="next chapter"><span class="lightgrey">GHC Debug</span> →</a>
+       title="next chapter"><span class="section-number">2.2.3. </span><span class="lightgrey">GHC Debug</span> →</a>
   </li>
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2022-2022, Jeffrey Young (doyougnu).
