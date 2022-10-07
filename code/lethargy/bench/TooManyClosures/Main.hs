@@ -46,7 +46,8 @@ good xs = sum $ fmap f xs
 main :: IO ()
 main = do
   let test_values = replicate 5000 1
-  defaultMain [ bgroup "Too Many Closures" [ bench "bad"  $ whnf bad test_values
-                                           , bench "good" $ whnf good test_values
-                                           ]
-                   ]
+  putStrLn . show $ bad test_values
+  -- defaultMain [ bgroup "Too Many Closures" [ bench "bad"  $ whnf bad test_values
+  --                                          , bench "good" $ whnf good test_values
+  --                                          ]
+  --                  ]

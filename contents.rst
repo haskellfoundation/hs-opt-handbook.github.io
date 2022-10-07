@@ -10,6 +10,7 @@ Haskell Optimization Handbook
    :maxdepth: 3
    :caption: Table of Contents
    :name: mastertoc
+   :numbered:
    :titlesonly:
 
    src/Preliminaries/index

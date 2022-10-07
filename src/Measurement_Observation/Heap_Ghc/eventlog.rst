@@ -21,36 +21,48 @@ and want to visualize its behavior. This chapter walks through using eventlog to
 inspect a small program that suffers from :ref:`Excessive Closure Allocation`.
 By the end of the chapter you should understand:
 
-#. What information can you retrieve by using eventlog
-#. How to build your program to use eventlog
-#. How to visualize eventlog information
-#. How to tune eventlog to inspect specific subsystems
-#. How to tune eventlog to inspect specific pieces of code
-#. When to use eventlog
+#. What information can you retrieve by using eventlog.
+#. How to build your program to use eventlog.
+#. How to visualize eventlog information.
+#. How to tune eventlog to inspect specific subsystems.
+#. How to tune eventlog to inspect specific pieces of code.
+#. When to use eventlog.
 
 Requirements
 ------------
 
 #. The program must be recompiled with the ``-eventlog`` GHC flag
-#. A program to consume the ``program.eventlog`` file. We recommend
+#. A program to consume the ``<program>.eventlog`` file. We recommend
    |eventlog2html|; see also the relevant section in the :userGuide:`GHC User's
-   Guide <runtime_control.html#rts-eventlog>`
+   Guide <runtime_control.html#rts-eventlog>`. You can also parse the
+   ``<program>.eventlog`` file using the `ghc-events
+   <https://hackage.haskell.org/package/ghc-events>`_ library.
 
 
 What Information Do I Receive From Eventlog?
 --------------------------------------------
 
-Eventlog logs events as a function of time. For a full list of events see the
-   `GHC User's Guide
-   <https://downloads.haskell.org/ghc/latest/docs/users_guide/runtime_control.html#rts-eventlog>`_.
-   In general, the most common use case is to track heap events and arbitrary
-   user events to get a heap profile.
+Eventlog logs events as a function of runtime. A full list of possible events is
+available in :userGuide:`GHC User's Guide <runtime_control.html#rts-eventlog>`.
+In general, the most common use case is to track heap events, however a user may
+define and track their own events using the base functions `traceEvent
+<https://downloads.haskell.org/~ghc/9.2.4/docs/html/libraries/base-4.16.3.0/Debug-Trace.html#v:traceMarker>`_
+or `traceMarker
+<https://downloads.haskell.org/~ghc/9.2.4/docs/html/libraries/base-4.16.3.0/Debug-Trace.html#v:traceMarker>`_
+.
 
 When should I use Eventlog
 --------------------------
 
-Eventlog is most useful when you need to :ref:`Characterize the Problem`. With
-
+Eventlog is most useful when you need to :ref:`Characterize the Problem` . It
+yields runtime information of the program specific to subsystems the program
+relies on. Thus, it allows you to drill down into the behavior of the garbage
+collector, the scheduler, the heap and so. For example, using the flag ``+RTS
+-lg`` you can collect the ``CONC_MARK_BEGIN`` and ``CONC_MARK_END`` events which
+log the beginning and end of the concurrent garbage collectors marking phase.
+Similarly, you can collect ``MEM_RETURN`` which provides information about the
+current allocation of megablocks, attempts to return them to the operating
+system, and heap fragmentation.
 
 
 The Running Example
@@ -103,11 +115,34 @@ once.
    The full laziness optimization will produce ``good`` from ``bad``.
 
 GHC is good at spotting such code patterns so we've turned off optimizations
-with the ``OPTIONS_GHC -O0`` pragma.
+with the ``OPTIONS_GHC -O0`` pragma. We use gauge (see :ref:`Criterion, Gauge,
+and Tasty-Bench`) to measure the runtime of each function.
 
 
-Building with EventLog support
-------------------------------
+The Setup
+---------
+
+Using Eventlog requires two pieces of setup. First, you must build your programs
+with the ``-eventlog -rtsopts -prof`` GHC flags (or alternatively set
+``profiling: True`` in ``cabal.project`` or enable ``library-profiling`` and
+``executable-profiling`` in ``stack.yaml``.). Second, you must pass the RTS flag
+``-l`` to your program *and* additional RTS flags that describe which events to
+track. Here are some examples of RTS flag combinations:
+
+#. ``<program> +RST -hy -l-agu``: Do not track all possible events (``a``), but
+   track all garbage collector events (``g``) and all user events (``u``). This
+   will produce an eventlog for heap profiling by types used in the program
+   (``-hy``).
+
+
+..
+   Code example doesn't work but will for -prof so move to GHC flags chapter.
+   Then we need to have a memory leak to show the heap with eventlog here
+
+..
+   heap
+   profiling :ref:`GHC Flags` you wish, for example ``-hy`` or ``-hT`` for type and
+   closure type, respectively.
 
 Visualizing EventLog
 --------------------
@@ -120,3 +155,4 @@ Summary
 
 References and Further Reading
 ------------------------------
+#. The
