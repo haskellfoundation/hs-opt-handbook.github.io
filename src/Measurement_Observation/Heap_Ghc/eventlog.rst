@@ -2,7 +2,7 @@
 
 ..
    Local Variables
-.. |eventlog2html| replace:: `eventlog2html <https://github.com/mpickering/eventlog2html>`__
+.. |eventlog2html| replace:: `eventlog2html <https://mpickering.github.io/eventlog2html/>`__
 
 
 Eventlog
@@ -44,8 +44,9 @@ What Information Do I Receive From Eventlog?
 
 Eventlog logs events as a function of runtime. A full list of possible events is
 available in :userGuide:`GHC User's Guide <runtime_control.html#rts-eventlog>`.
-In general, the most common use case is to track heap events, however a user may
-define and track their own events using the base functions `traceEvent
+In general, the most common use case is to track heap events; which will be the
+focus of this chapter. However, a user may define and track their own events
+using the base functions `traceEvent
 <https://downloads.haskell.org/~ghc/9.2.4/docs/html/libraries/base-4.16.3.0/Debug-Trace.html#v:traceMarker>`_
 or `traceMarker
 <https://downloads.haskell.org/~ghc/9.2.4/docs/html/libraries/base-4.16.3.0/Debug-Trace.html#v:traceMarker>`_
@@ -68,51 +69,62 @@ system, and heap fragmentation.
 The Running Example
 -------------------
 
-Our test program is an example of excessive closure allocation:
+Our test program is an example of excessive pointer chasing. The toy example
+should be familiar to most Haskeller's as a traditional example of a memory
+leak:
 
 .. code-block:: haskell
 
-    -- Need to disable optimizations because GHC will recognize and perform
-    -- let-floating for us!
-    {-# OPTIONS_GHC -O0 -ddump-simpl -ddump-to-file -ddump-stg-final #-}
+   {-# LANGUAGE BangPatterns #-}
+   -- Need to disable optimizations because GHC will recognize and perform
+   -- let-floating for us!
+   {-# OPTIONS_GHC -O0 -ddump-simpl -ddump-to-file -ddump-stg-final #-}
 
-    module Main where
+   module Main where
 
-    import Gauge
+   import Data.List              (foldl')
+   import System.Random          (mkStdGen)
+   import System.Random.Stateful (newIOGenM, uniformRM)
+   import Control.Concurrent     (threadDelay)
+   import Control.Monad          (replicateM)
 
-    -- | This function excessively allocates closures every time 'f' is called. The
-    -- closure in question being the allocation of the 10k element list.
-    bad :: [Int] -> Int
-    bad xs = sum $ fmap f xs
-      where f x = x + length [1..10000]
+   lazy_mean :: [Double] -> Double
+   lazy_mean xs = s / fromIntegral ln
+     where (s, ln)        = foldl step (0,0) xs
+           step (s, ln) a = (s + a, ln + 1)
 
-    -- | This function avoids the excessive closure allocation. We still will
-    -- allocate thunks for every element of 'xs' but we only calculate 'length
-    -- [1..10000]' once because we floated it out of 'f'.
-    good :: [Int] -> Int
-    good xs = sum $ fmap f xs
-      where
-        n = length [1..10000]
-        f x = x + n
+   stricter_mean :: [Double] -> Double
+   stricter_mean xs = s / fromIntegral ln
+     where (s, ln)        = foldl' step (0,0) xs
+           step (s, ln) a = (s + a, ln + 1)
 
-    -- | use Gauge to run the benchmarks
-    main :: IO ()
-    main = do
-      let test_values = replicate 5000 1
-      defaultMain [ bgroup "Too Many Closures" [ bench "bad"  $ whnf bad test_values
-                                               , bench "good" $ whnf good test_values
-                                               ]
-                  ]
+   strict_mean :: [Double] -> Double
+   strict_mean xs = s / fromIntegral ln
+     where (s, ln)        = foldl' step (0,0) xs
+           step (!s, !ln) a = (s + a, ln + 1)
 
-We define two functions ``good`` and ``bad``. ``bad`` has excessive closure
-allocation because ``length [1..10000]`` is nested inside of ``f``. Thus the
-list ``[1..10000]`` is repeatedly allocated, and ``length [1..10000]`` is
-repeatedly computed for each call to ``f``. ``good`` floats ``length
-[1..10000]`` out of ``f`` so the list and ``length`` application only occur
-once.
+   main :: IO ()
+   main = do
+     -- generate random test data
+     seed <- newIOGenM (mkStdGen 1729)
+     test_values <- replicateM 500000 $ uniformRM (0,500000) seed
+     -- sleep for a second
+     let wait = threadDelay 1000000
+     -- now run
+     print $! lazy_mean test_values
+     wait
+     print $! stricter_mean test_values
+     wait
+     print $! strict_mean test_values
 
-.. note::
-   The full laziness optimization will produce ``good`` from ``bad``.
+We define three functions, each of which calculate a geometric mean from a list
+of Doubles. ``lazy_mean`` uses a lazy left fold, ``stricter_mean`` uses a strict
+left fold but will still have a memory leak because ``foldl'`` evaluates the
+operator to :term:`WHNF`. The operator in each fold is ``step`` whose WHNF is a
+tuple constructor. Thus, even ``stricter_mean`` will leak memory because the
+elements of the tuple *are still* lazy. ``strict_mean`` fixes this by adding
+bang patterns *inside* the tuple, thereby forcing the elements to evaluate to
+WHNF; which is just a value for ``Double``.
 
 GHC is good at spotting such code patterns so we've turned off optimizations
 with the ``OPTIONS_GHC -O0`` pragma. We use gauge (see :ref:`Criterion, Gauge,
@@ -122,30 +134,89 @@ and Tasty-Bench`) to measure the runtime of each function.
 The Setup
 ---------
 
-Using Eventlog requires two pieces of setup. First, you must build your programs
-with the ``-eventlog -rtsopts -prof`` GHC flags (or alternatively set
+Using Eventlog requires three pieces of setup. First, you must build your
+programs with the ``-eventlog -rtsopts -prof`` GHC flags (or alternatively set
 ``profiling: True`` in ``cabal.project`` or enable ``library-profiling`` and
-``executable-profiling`` in ``stack.yaml``.). Second, you must pass the RTS flag
-``-l`` to your program *and* additional RTS flags that describe which events to
-track. Here are some examples of RTS flag combinations:
+``executable-profiling`` in ``stack.yaml``.). For example:
 
-#. ``<program> +RST -hy -l-agu``: Do not track all possible events (``a``), but
-   track all garbage collector events (``g``) and all user events (``u``). This
-   will produce an eventlog for heap profiling by types used in the program
-   (``-hy``).
+.. code-block::
 
+   benchmark pointerChasing
+     type            : exitcode-stdio-1.0
+     default-language: Haskell2010
+     ghc-options     : -fforce-recomp -threaded -rtsopts -prof -eventlog
+     build-depends: base >= 4.15
+                  , containers
+                  , deepseq
+                  , gauge
+                  , random
+     hs-source-dirs: bench/PointerChasing
+     main-is: Main.hs
 
-..
-   Code example doesn't work but will for -prof so move to GHC flags chapter.
-   Then we need to have a memory leak to show the heap with eventlog here
+Second, you must pass the RTS flag ``-l`` to your program *and* additional RTS
+flags that describe which events to track. Lastly, you must pass RTS flags to
+describe the kind of heap information to collect. Here are some examples of RTS
+flag combinations:
 
-..
-   heap
-   profiling :ref:`GHC Flags` you wish, for example ``-hy`` or ``-hT`` for type and
-   closure type, respectively.
+#. ``<program> +RTS -hy -l-agu -RTS``: Do not track all possible events
+   (``-a``), but track all garbage collector events (``g``), all user events
+   (``u``) and produce a heap profile by type (``-hy``).
 
-Visualizing EventLog
+#. ``<program> +RTS -hr -la -RTS``: Trace all possible events (``a``) and
+   produce a heap profile by retainer (``-hr``).
+
+#. ``<program> +RTS -hb -l-asu -RTS``: Do not track all possible events
+   (``-a``), but track all scheduler events (``s``), all user events (``u``) and
+   produce a heap profile by biography (``-hb``).
+
+Heap Profile by Type
 --------------------
+
+To view the heap profile we'll use |eventlog2html|. To begin we'll inspect the
+heap by type. Our initial goal is to determine if we have a memory leak and if
+so which type is leaking. Here is the cabal file entry and invocation:
+
+.. note::
+
+   For subsequent runs, we will elide the complete output
+
+.. code-block:: bash
+   :caption: Run the benchmark, generate an eventlog of only (-a) user (u) and
+             GC (g) events with a heap profile by type (-hy)
+
+   $ cabal bench pointerChasing --benchmark-options='+RTS -hy -l-agu -RTS'
+   Build profile: -w ghc-9.2.4 -O1
+   In order, the following will be built (use -v for more details):
+    - lethargy-0.1.0.0 (bench:pointerChasing) (first run)
+   Preprocessing benchmark 'pointerChasing' for lethargy-0.1.0.0..
+   Building benchmark 'pointerChasing' for lethargy-0.1.0.0..
+   [1 of 1] Compiling Main             ( bench/PointerChasing/Main.hs, /home/doyougnu/writing/iohk/hs-opt-handbook.github.io/code/lethargy/dist-newstyle/build/x86_64-linux/ghc-9.2.4/lethargy-0.1.0.0/b/pointerChasing/build/pointerChasing/pointerChasing-tmp/Main.o )
+   [1 of 1] Compiling Main             ( bench/PointerChasing/Main.hs, /home/doyougnu/writing/iohk/hs-opt-handbook.github.io/code/lethargy/dist-newstyle/build/x86_64-linux/ghc-9.2.4/lethargy-0.1.0.0/b/pointerChasing/build/pointerChasing/pointerChasing-tmp/Main.o )
+   Linking /home/doyougnu/writing/iohk/hs-opt-handbook.github.io/code/lethargy/dist-newstyle/build/x86_64-linux/ghc-9.2.4/lethargy-0.1.0.0/b/pointerChasing/build/pointerChasing/pointerChasing ...
+   Running 1 benchmarks...
+   Benchmark pointerChasing: RUNNING...
+   250137.43193906464
+   250137.43193906464
+   250137.43193906464
+   Benchmark pointerChasing: FINISH
+
+   $ eventlog2html pointerChasing.eventlog
+
+   $ firefox pointerChasing.eventlog.html
+
+which produces the heap profile:
+
+.. image:: /_images/Measurement_Observation/Heap_GHC/eventlog/pc_heap_type.svg
+
+This heap profile is a classic case of a memory leak because it is shaped like a
+triangle. It is triangular because ``lazy_mean`` builds up a lot of thunks;
+increasing allocations on the heap and producing the rising edge, the program
+reaches a point where the thunks must be evaluated; producing the top of the
+triangle, and then begins evaluating them thus decreasing the allocations on the
+heap and which yields the descending edge.
+
+The advantage of eventlog2html over :ref:`traditional tools <GHC Flags>` is its
+interactivity and detailed heap breakdown.
 
 Tuning the Output
 -----------------
