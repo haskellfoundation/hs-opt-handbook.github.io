@@ -15,16 +15,17 @@
 -- Tested with GHC 9.2.4
 -----------------------------------------------------------------------------
 
+{-# LANGUAGE BangPatterns #-}
 -- Need to disable optimizations because GHC will recognize and perform
 -- let-floating for us!
 {-# OPTIONS_GHC -O0 -ddump-simpl -ddump-to-file -ddump-stg-final #-}
 
 module Main where
 
-import Gauge
 import Data.List              (foldl')
 import System.Random          (mkStdGen)
 import System.Random.Stateful (newIOGenM, uniformRM)
+import Control.Concurrent     (threadDelay)
 import Control.Monad          (replicateM)
 
 -- ys :: [Int]
@@ -35,17 +36,26 @@ lazy_mean xs = s / fromIntegral ln
   where (s, ln)        = foldl step (0,0) xs
         step (s, ln) a = (s + a, ln + 1)
 
-better_mean :: [Double] -> Double
-better_mean xs = s / fromIntegral ln
+stricter_mean :: [Double] -> Double
+stricter_mean xs = s / fromIntegral ln
   where (s, ln)        = foldl' step (0,0) xs
         step (s, ln) a = (s + a, ln + 1)
 
+strict_mean :: [Double] -> Double
+strict_mean xs = s / fromIntegral ln
+  where (s, ln)        = foldl' step (0,0) xs
+        step (!s, !ln) a = (s + a, ln + 1)
 
 main :: IO ()
 main = do
+  -- generate random test data
   seed <- newIOGenM (mkStdGen 1729)
-  test_values <- replicateM 5000 $ uniformRM (0,5000) seed
-  defaultMain [ bgroup "PointerChasing" [ bench "lazy"   $ whnf lazy_mean   test_values
-                                        , bench "better" $ whnf better_mean test_values
-                                        ]
-                   ]
+  test_values <- replicateM 500000 $ uniformRM (0,500000) seed
+  -- sleep for a second
+  let wait = threadDelay 1000000
+  -- now run
+  print $! lazy_mean test_values
+  wait
+  print $! stricter_mean test_values
+  wait
+  print $! strict_mean test_values

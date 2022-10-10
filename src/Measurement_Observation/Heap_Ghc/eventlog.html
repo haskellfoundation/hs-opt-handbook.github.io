@@ -163,7 +163,7 @@ By the end of the chapter you should understand:</p>
 <ol class="arabic simple">
 <li><p>The program must be recompiled with the <code class="docutils literal notranslate"><span class="pre">-eventlog</span></code> GHC flag</p></li>
 <li><p>A program to consume the <code class="docutils literal notranslate"><span class="pre">&lt;program&gt;.eventlog</span></code> file. We recommend
-<a class="reference external" href="https://github.com/mpickering/eventlog2html">eventlog2html</a>; see also the relevant section in the <a class="reference external" href="https://downloads.haskell.org/~ghc/9.2.4/docs/html/users_guide/runtime_control.html#rts-eventlog">GHC User’s
+<a class="reference external" href="https://mpickering.github.io/eventlog2html/">eventlog2html</a>; see also the relevant section in the <a class="reference external" href="https://downloads.haskell.org/~ghc/9.2.4/docs/html/users_guide/runtime_control.html#rts-eventlog">GHC User’s
 Guide</a>. You can also parse the
 <code class="docutils literal notranslate"><span class="pre">&lt;program&gt;.eventlog</span></code> file using the <a class="reference external" href="https://hackage.haskell.org/package/ghc-events">ghc-events</a> library.</p></li>
 </ol>
@@ -172,8 +172,9 @@ Guide</a>. You can also parse the
 <h2><span class="section-number">2.2.2.2. </span>What Information Do I Receive From Eventlog?<a class="headerlink" href="#what-information-do-i-receive-from-eventlog" title="Permalink to this headline">¶</a></h2>
 <p>Eventlog logs events as a function of runtime. A full list of possible events is
 available in <a class="reference external" href="https://downloads.haskell.org/~ghc/9.2.4/docs/html/users_guide/runtime_control.html#rts-eventlog">GHC User’s Guide</a>.
-In general, the most common use case is to track heap events, however a user may
-define and track their own events using the base functions <a class="reference external" href="https://downloads.haskell.org/~ghc/9.2.4/docs/html/libraries/base-4.16.3.0/Debug-Trace.html#v:traceMarker">traceEvent</a>
+In general, the most common use case is to track heap events; which will be the
+focus of this chapter. However, a user may define and track their own events
+using the base functions <a class="reference external" href="https://downloads.haskell.org/~ghc/9.2.4/docs/html/libraries/base-4.16.3.0/Debug-Trace.html#v:traceMarker">traceEvent</a>
 or <a class="reference external" href="https://downloads.haskell.org/~ghc/9.2.4/docs/html/libraries/base-4.16.3.0/Debug-Trace.html#v:traceMarker">traceMarker</a>
 .</p>
 </section>
@@ -191,71 +192,141 @@ system, and heap fragmentation.</p>
 </section>
 <section id="the-running-example">
 <h2><span class="section-number">2.2.2.4. </span>The Running Example<a class="headerlink" href="#the-running-example" title="Permalink to this headline">¶</a></h2>
-<p>Our test program is an example of excessive closure allocation:</p>
-<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Need to disable optimizations because GHC will recognize and perform</span><span class="w"></span>
+<p>Our test program is an example of excessive pointer chasing. The toy example
+should be familiar to most Haskeller’s as a traditional example of a memory
+leak:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="cm">{-# LANGUAGE BangPatterns #-}</span><span class="w"></span>
+<span class="c1">-- Need to disable optimizations because GHC will recognize and perform</span><span class="w"></span>
 <span class="c1">-- let-floating for us!</span><span class="w"></span>
 <span class="cm">{-# OPTIONS_GHC -O0 -ddump-simpl -ddump-to-file -ddump-stg-final #-}</span><span class="w"></span>
 
 <span class="kr">module</span><span class="w"> </span><span class="nn">Main</span><span class="w"> </span><span class="kr">where</span><span class="w"></span>
 
-<span class="kr">import</span><span class="w"> </span><span class="nn">Gauge</span><span class="w"></span>
+<span class="kr">import</span><span class="w"> </span><span class="nn">Data.List</span><span class="w">              </span><span class="p">(</span><span class="nf">foldl&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="kr">import</span><span class="w"> </span><span class="nn">System.Random</span><span class="w">          </span><span class="p">(</span><span class="nf">mkStdGen</span><span class="p">)</span><span class="w"></span>
+<span class="kr">import</span><span class="w"> </span><span class="nn">System.Random.Stateful</span><span class="w"> </span><span class="p">(</span><span class="nf">newIOGenM</span><span class="p">,</span><span class="w"> </span><span class="nf">uniformRM</span><span class="p">)</span><span class="w"></span>
+<span class="kr">import</span><span class="w"> </span><span class="nn">Control.Concurrent</span><span class="w">     </span><span class="p">(</span><span class="nf">threadDelay</span><span class="p">)</span><span class="w"></span>
+<span class="kr">import</span><span class="w"> </span><span class="nn">Control.Monad</span><span class="w">          </span><span class="p">(</span><span class="nf">replicateM</span><span class="p">)</span><span class="w"></span>
 
-<span class="c1">-- | This function excessively allocates closures every time &#39;f&#39; is called. The</span><span class="w"></span>
-<span class="c1">-- closure in question being the allocation of the 10k element list.</span><span class="w"></span>
-<span class="nf">bad</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">[</span><span class="kt">Int</span><span class="p">]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
-<span class="nf">bad</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="n">fmap</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">xs</span><span class="w"></span>
-<span class="w">  </span><span class="kr">where</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="o">..</span><span class="mi">10000</span><span class="p">]</span><span class="w"></span>
+<span class="nf">lazy_mean</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">[</span><span class="kt">Double</span><span class="p">]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Double</span><span class="w"></span>
+<span class="nf">lazy_mean</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">fromIntegral</span><span class="w"> </span><span class="n">ln</span><span class="w"></span>
+<span class="w">  </span><span class="kr">where</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">ln</span><span class="p">)</span><span class="w">        </span><span class="ow">=</span><span class="w"> </span><span class="n">foldl</span><span class="w"> </span><span class="n">step</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">xs</span><span class="w"></span>
+<span class="w">        </span><span class="n">step</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">ln</span><span class="p">)</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">ln</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"></span>
 
-<span class="c1">-- | This function avoids the excessive closure allocation. We still will</span><span class="w"></span>
-<span class="c1">-- allocate thunks for every element of &#39;xs&#39; but we only calculate &#39;length</span><span class="w"></span>
-<span class="c1">-- [1..10000]&#39; once because we floated it out of &#39;f&#39;.</span><span class="w"></span>
-<span class="nf">good</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">[</span><span class="kt">Int</span><span class="p">]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
-<span class="nf">good</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="n">fmap</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">xs</span><span class="w"></span>
-<span class="w">  </span><span class="kr">where</span><span class="w"></span>
-<span class="w">    </span><span class="n">n</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="o">..</span><span class="mi">10000</span><span class="p">]</span><span class="w"></span>
-<span class="w">    </span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">n</span><span class="w"></span>
+<span class="nf">stricter_mean</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">[</span><span class="kt">Double</span><span class="p">]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Double</span><span class="w"></span>
+<span class="nf">stricter_mean</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">fromIntegral</span><span class="w"> </span><span class="n">ln</span><span class="w"></span>
+<span class="w">  </span><span class="kr">where</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">ln</span><span class="p">)</span><span class="w">        </span><span class="ow">=</span><span class="w"> </span><span class="n">foldl&#39;</span><span class="w"> </span><span class="n">step</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">xs</span><span class="w"></span>
+<span class="w">        </span><span class="n">step</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">ln</span><span class="p">)</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">ln</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"></span>
 
-<span class="c1">-- | use Gauge to run the benchmarks</span><span class="w"></span>
+<span class="nf">strict_mean</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">[</span><span class="kt">Double</span><span class="p">]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Double</span><span class="w"></span>
+<span class="nf">strict_mean</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">fromIntegral</span><span class="w"> </span><span class="n">ln</span><span class="w"></span>
+<span class="w">  </span><span class="kr">where</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">ln</span><span class="p">)</span><span class="w">        </span><span class="ow">=</span><span class="w"> </span><span class="n">foldl&#39;</span><span class="w"> </span><span class="n">step</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">xs</span><span class="w"></span>
+<span class="w">        </span><span class="n">step</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="o">!</span><span class="n">ln</span><span class="p">)</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">ln</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"></span>
+
 <span class="nf">main</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">IO</span><span class="w"> </span><span class="nb">()</span><span class="w"></span>
 <span class="nf">main</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kr">do</span><span class="w"></span>
-<span class="w">  </span><span class="kr">let</span><span class="w"> </span><span class="n">test_values</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">replicate</span><span class="w"> </span><span class="mi">5000</span><span class="w"> </span><span class="mi">1</span><span class="w"></span>
-<span class="w">  </span><span class="n">defaultMain</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="n">bgroup</span><span class="w"> </span><span class="s">&quot;Too Many Closures&quot;</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="n">bench</span><span class="w"> </span><span class="s">&quot;bad&quot;</span><span class="w">  </span><span class="o">$</span><span class="w"> </span><span class="n">whnf</span><span class="w"> </span><span class="n">bad</span><span class="w"> </span><span class="n">test_values</span><span class="w"></span>
-<span class="w">                                           </span><span class="p">,</span><span class="w"> </span><span class="n">bench</span><span class="w"> </span><span class="s">&quot;good&quot;</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="n">whnf</span><span class="w"> </span><span class="n">good</span><span class="w"> </span><span class="n">test_values</span><span class="w"></span>
-<span class="w">                                           </span><span class="p">]</span><span class="w"></span>
-<span class="w">              </span><span class="p">]</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- generate random test data</span><span class="w"></span>
+<span class="w">  </span><span class="n">seed</span><span class="w"> </span><span class="ow">&lt;-</span><span class="w"> </span><span class="n">newIOGenM</span><span class="w"> </span><span class="p">(</span><span class="n">mkStdGen</span><span class="w"> </span><span class="mi">1729</span><span class="p">)</span><span class="w"></span>
+<span class="w">  </span><span class="n">test_values</span><span class="w"> </span><span class="ow">&lt;-</span><span class="w"> </span><span class="n">replicateM</span><span class="w"> </span><span class="mi">500000</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="n">uniformRM</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">500000</span><span class="p">)</span><span class="w"> </span><span class="n">seed</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- sleep for a second</span><span class="w"></span>
+<span class="w">  </span><span class="kr">let</span><span class="w"> </span><span class="n">wait</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">threadDelay</span><span class="w"> </span><span class="mi">1000000</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- now run</span><span class="w"></span>
+<span class="w">  </span><span class="n">print</span><span class="w"> </span><span class="o">$!</span><span class="w"> </span><span class="n">lazy_mean</span><span class="w"> </span><span class="n">test_values</span><span class="w"></span>
+<span class="w">  </span><span class="n">wait</span><span class="w"></span>
+<span class="w">  </span><span class="n">print</span><span class="w"> </span><span class="o">$!</span><span class="w"> </span><span class="n">stricter_mean</span><span class="w"> </span><span class="n">test_values</span><span class="w"></span>
+<span class="w">  </span><span class="n">wait</span><span class="w"></span>
+<span class="w">  </span><span class="n">print</span><span class="w"> </span><span class="o">$!</span><span class="w"> </span><span class="n">strict_mean</span><span class="w"> </span><span class="n">test_values</span><span class="w"></span>
 </pre></div>
 </div>
-<p>We define two functions <code class="docutils literal notranslate"><span class="pre">good</span></code> and <code class="docutils literal notranslate"><span class="pre">bad</span></code>. <code class="docutils literal notranslate"><span class="pre">bad</span></code> has excessive closure
-allocation because <code class="docutils literal notranslate"><span class="pre">length</span> <span class="pre">[1..10000]</span></code> is nested inside of <code class="docutils literal notranslate"><span class="pre">f</span></code>. Thus the
-list <code class="docutils literal notranslate"><span class="pre">[1..10000]</span></code> is repeatedly allocated, and <code class="docutils literal notranslate"><span class="pre">length</span> <span class="pre">[1..10000]</span></code> is
-repeatedly computed for each call to <code class="docutils literal notranslate"><span class="pre">f</span></code>. <code class="docutils literal notranslate"><span class="pre">good</span></code> floats <code class="docutils literal notranslate"><span class="pre">length</span>
-<span class="pre">[1..10000]</span></code> out of <code class="docutils literal notranslate"><span class="pre">f</span></code> so the list and <code class="docutils literal notranslate"><span class="pre">length</span></code> application only occur
-once.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The full laziness optimization will produce <code class="docutils literal notranslate"><span class="pre">good</span></code> from <code class="docutils literal notranslate"><span class="pre">bad</span></code>.</p>
-</div>
+<p>We define three functions, each of which calculate a geometric mean from a list
+of Doubles. <code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code> uses a lazy left fold, <code class="docutils literal notranslate"><span class="pre">stricter_mean</span></code> uses a strict
+left fold but will still have a memory leak because <code class="docutils literal notranslate"><span class="pre">foldl'</span></code> evaluates the
+operator to <a class="reference internal" href="../../glossary.html#term-WHNF"><span class="xref std std-term">WHNF</span></a>. The operator in each fold is <code class="docutils literal notranslate"><span class="pre">step</span></code> whose WHNF is a
+tuple constructor. Thus, even <code class="docutils literal notranslate"><span class="pre">stricter_mean</span></code> will leak memory because the
+elements of the tuple <em>are still</em> lazy. <code class="docutils literal notranslate"><span class="pre">strict_mean</span></code> fixes this by adding
+bang patterns <em>inside</em> the tuple, thereby forcing the elements to evaluate to
+WHNF; which is just a value for <code class="docutils literal notranslate"><span class="pre">Double</span></code>.</p>
 <p>GHC is good at spotting such code patterns so we’ve turned off optimizations
 with the <code class="docutils literal notranslate"><span class="pre">OPTIONS_GHC</span> <span class="pre">-O0</span></code> pragma. We use gauge (see <span class="xref std std-ref">Criterion, Gauge,
 and Tasty-Bench</span>) to measure the runtime of each function.</p>
 </section>
 <section id="the-setup">
 <h2><span class="section-number">2.2.2.5. </span>The Setup<a class="headerlink" href="#the-setup" title="Permalink to this headline">¶</a></h2>
-<p>Using Eventlog requires two pieces of setup. First, you must build your programs
-with the <code class="docutils literal notranslate"><span class="pre">-eventlog</span> <span class="pre">-rtsopts</span> <span class="pre">-prof</span></code> GHC flags (or alternatively set
+<p>Using Eventlog requires three pieces of setup. First, you must build your
+programs with the <code class="docutils literal notranslate"><span class="pre">-eventlog</span> <span class="pre">-rtsopts</span> <span class="pre">-prof</span></code> GHC flags (or alternatively set
 <code class="docutils literal notranslate"><span class="pre">profiling:</span> <span class="pre">True</span></code> in <code class="docutils literal notranslate"><span class="pre">cabal.project</span></code> or enable <code class="docutils literal notranslate"><span class="pre">library-profiling</span></code> and
-<code class="docutils literal notranslate"><span class="pre">executable-profiling</span></code> in <code class="docutils literal notranslate"><span class="pre">stack.yaml</span></code>.). Second, you must pass the RTS flag
-<code class="docutils literal notranslate"><span class="pre">-l</span></code> to your program <em>and</em> additional RTS flags that describe which events to
-track. Here are some examples of RTS flag combinations:</p>
+<code class="docutils literal notranslate"><span class="pre">executable-profiling</span></code> in <code class="docutils literal notranslate"><span class="pre">stack.yaml</span></code>.). For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">benchmark</span> <span class="n">pointerChasing</span>
+  <span class="nb">type</span>            <span class="p">:</span> <span class="n">exitcode</span><span class="o">-</span><span class="n">stdio</span><span class="o">-</span><span class="mf">1.0</span>
+  <span class="n">default</span><span class="o">-</span><span class="n">language</span><span class="p">:</span> <span class="n">Haskell2010</span>
+  <span class="n">ghc</span><span class="o">-</span><span class="n">options</span>     <span class="p">:</span> <span class="o">-</span><span class="n">fforce</span><span class="o">-</span><span class="n">recomp</span> <span class="o">-</span><span class="n">threaded</span> <span class="o">-</span><span class="n">rtsopts</span> <span class="o">-</span><span class="n">prof</span> <span class="o">-</span><span class="n">eventlog</span>
+  <span class="n">build</span><span class="o">-</span><span class="n">depends</span><span class="p">:</span> <span class="n">base</span> <span class="o">&gt;=</span> <span class="mf">4.15</span>
+               <span class="p">,</span> <span class="n">containers</span>
+               <span class="p">,</span> <span class="n">deepseq</span>
+               <span class="p">,</span> <span class="n">gauge</span>
+               <span class="p">,</span> <span class="n">random</span>
+  <span class="n">hs</span><span class="o">-</span><span class="n">source</span><span class="o">-</span><span class="n">dirs</span><span class="p">:</span> <span class="n">bench</span><span class="o">/</span><span class="n">PointerChasing</span>
+  <span class="n">main</span><span class="o">-</span><span class="ow">is</span><span class="p">:</span> <span class="n">Main</span><span class="o">.</span><span class="n">hs</span>
+</pre></div>
+</div>
+<p>Second, you must pass the RTS flag <code class="docutils literal notranslate"><span class="pre">-l</span></code> to your program <em>and</em> additional RTS
+flags that describe which events to track. Lastly, you must pass RTS flags to
+describe the kind of heap information to collect. Here are some examples of RTS
+flag combinations:</p>
 <ol class="arabic simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">&lt;program&gt;</span> <span class="pre">+RST</span> <span class="pre">-hy</span> <span class="pre">-l-agu</span></code>: Do not track all possible events (<code class="docutils literal notranslate"><span class="pre">a</span></code>), but
-track all garbage collector events (<code class="docutils literal notranslate"><span class="pre">g</span></code>) and all user events (<code class="docutils literal notranslate"><span class="pre">u</span></code>). This
-will produce an eventlog for heap profiling by types used in the program
-(<code class="docutils literal notranslate"><span class="pre">-hy</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;program&gt;</span> <span class="pre">+RTS</span> <span class="pre">-hy</span> <span class="pre">-l-agu</span> <span class="pre">-RTS</span></code>: Do not track all possible events
+(<code class="docutils literal notranslate"><span class="pre">-a</span></code>), but track all garbage collector events (<code class="docutils literal notranslate"><span class="pre">g</span></code>), all user events
+(<code class="docutils literal notranslate"><span class="pre">u</span></code>) and produce a heap profile by type (<code class="docutils literal notranslate"><span class="pre">-hy</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;program&gt;</span> <span class="pre">+RTS</span> <span class="pre">-hr</span> <span class="pre">-la</span> <span class="pre">-RTS</span></code>: Trace all possible events (<code class="docutils literal notranslate"><span class="pre">a</span></code>) and
+produce a heap profile by retainer (<code class="docutils literal notranslate"><span class="pre">-hr</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;program&gt;</span> <span class="pre">+RTS</span> <span class="pre">-hb</span> <span class="pre">-l-asu</span> <span class="pre">-RTS</span></code>: Do not track all possible events
+(<code class="docutils literal notranslate"><span class="pre">-a</span></code>), but track all scheduler events (<code class="docutils literal notranslate"><span class="pre">s</span></code>), all user events (<code class="docutils literal notranslate"><span class="pre">u</span></code>) and
+produce a heap profile by biography (<code class="docutils literal notranslate"><span class="pre">-hb</span></code>).</p></li>
 </ol>
 </section>
-<section id="visualizing-eventlog">
-<h2><span class="section-number">2.2.2.6. </span>Visualizing EventLog<a class="headerlink" href="#visualizing-eventlog" title="Permalink to this headline">¶</a></h2>
+<section id="heap-profile-by-type">
+<h2><span class="section-number">2.2.2.6. </span>Heap Profile by Type<a class="headerlink" href="#heap-profile-by-type" title="Permalink to this headline">¶</a></h2>
+<p>To view the heap profile we’ll use <a class="reference external" href="https://mpickering.github.io/eventlog2html/">eventlog2html</a>. To begin we’ll inspect the
+heap by type. Our initial goal is to determine if we have a memory leak and if
+so which type is leaking. Here is the cabal file entry and invocation:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For subsequent runs, we will elide the complete output</p>
+</div>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">Run the benchmark, generate an eventlog of only (-a) user (u) and
+GC (g) events with a heap profile by type (-hy)</span><a class="headerlink" href="#id2" title="Permalink to this code">¶</a></div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ cabal bench pointerChasing --benchmark-options<span class="o">=</span><span class="s1">&#39;+RTS -hy -l-agu -RTS&#39;</span>
+Build profile: -w ghc-9.2.4 -O1
+In order, the following will be built <span class="o">(</span>use -v <span class="k">for</span> more details<span class="o">)</span>:
+ - lethargy-0.1.0.0 <span class="o">(</span>bench:pointerChasing<span class="o">)</span> <span class="o">(</span>first run<span class="o">)</span>
+Preprocessing benchmark <span class="s1">&#39;pointerChasing&#39;</span> <span class="k">for</span> lethargy-0.1.0.0..
+Building benchmark <span class="s1">&#39;pointerChasing&#39;</span> <span class="k">for</span> lethargy-0.1.0.0..
+<span class="o">[</span><span class="m">1</span> of <span class="m">1</span><span class="o">]</span> Compiling Main             <span class="o">(</span> bench/PointerChasing/Main.hs, /home/doyougnu/writing/iohk/hs-opt-handbook.github.io/code/lethargy/dist-newstyle/build/x86_64-linux/ghc-9.2.4/lethargy-0.1.0.0/b/pointerChasing/build/pointerChasing/pointerChasing-tmp/Main.o <span class="o">)</span>
+<span class="o">[</span><span class="m">1</span> of <span class="m">1</span><span class="o">]</span> Compiling Main             <span class="o">(</span> bench/PointerChasing/Main.hs, /home/doyougnu/writing/iohk/hs-opt-handbook.github.io/code/lethargy/dist-newstyle/build/x86_64-linux/ghc-9.2.4/lethargy-0.1.0.0/b/pointerChasing/build/pointerChasing/pointerChasing-tmp/Main.o <span class="o">)</span>
+Linking /home/doyougnu/writing/iohk/hs-opt-handbook.github.io/code/lethargy/dist-newstyle/build/x86_64-linux/ghc-9.2.4/lethargy-0.1.0.0/b/pointerChasing/build/pointerChasing/pointerChasing ...
+Running <span class="m">1</span> benchmarks...
+Benchmark pointerChasing: RUNNING...
+<span class="m">250137</span>.43193906464
+<span class="m">250137</span>.43193906464
+<span class="m">250137</span>.43193906464
+Benchmark pointerChasing: FINISH
+
+$ eventlog2html pointerChasing.eventlog
+
+$ firefox pointerChasing.eventlog.html
+</pre></div>
+</div>
+</div>
+<p>which produces the heap profile:</p>
+<img alt="../../../_images/pc_heap_type.svg" src="../../../_images/pc_heap_type.svg" /><p>This heap profile is a classic case of a memory leak because it is shaped like a
+triangle. It is triangular because <code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code> builds up a lot of thunks;
+increasing allocations on the heap and producing the rising edge, the program
+reaches a point where the thunks must be evaluated; producing the top of the
+triangle, and then begins evaluating them thus decreasing the allocations on the
+heap and which yields the descending edge.</p>
+<p>The advantage of eventlog2html over <a class="reference internal" href="../../Optimizations/GHC_tech/index.html#ghc-flags"><span class="std std-ref">traditional tools</span></a> is its
+interactivity and detailed heap breakdown.</p>
 </section>
 <section id="tuning-the-output">
 <h2><span class="section-number">2.2.2.7. </span>Tuning the Output<a class="headerlink" href="#tuning-the-output" title="Permalink to this headline">¶</a></h2>

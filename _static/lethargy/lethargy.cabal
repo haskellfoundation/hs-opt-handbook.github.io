@@ -62,7 +62,7 @@ benchmark badDomain
 benchmark pointerChasing
   type            : exitcode-stdio-1.0
   default-language: Haskell2010
-  ghc-options     : -O2 -fforce-recomp -threaded -rtsopts -prof -eventlog -ticky -fprof-auto
+  ghc-options     : -fforce-recomp -threaded -rtsopts -prof -eventlog
   build-depends: base >= 4.15
                , containers
                , deepseq
