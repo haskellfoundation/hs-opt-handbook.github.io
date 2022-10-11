@@ -349,20 +349,22 @@ linechart for our toy program is:</p>
 <p>The linecharts are noisy, fortunately we can filter to see exactly what type of
 data on the heap is increasing over time, in this case I’ve filtered for <code class="docutils literal notranslate"><span class="pre">Double</span></code>:</p>
 <a class="reference internal image-reference" href="../../../_images/pc_heap_linechart_double_type.png"><img alt="../../../_images/pc_heap_linechart_double_type.png" src="../../../_images/pc_heap_linechart_double_type.png" style="width: 964.8000000000001px; height: 773.6px;" /></a>
-<p>and here is the same plot only filtered for <code class="docutils literal notranslate"><span class="pre">[]</span></code>:</p>
+<p>Notice the triangular shape that smooths out. Here is the same plot only
+filtered for <code class="docutils literal notranslate"><span class="pre">[]</span></code>:</p>
 <a class="reference internal image-reference" href="../../../_images/pc_heap_linechart_list_type.png"><img alt="../../../_images/pc_heap_linechart_list_type.png" src="../../../_images/pc_heap_linechart_list_type.png" style="width: 961.6px; height: 777.6px;" /></a>
-<p>Recall that these linecharts are <em>normalized</em> so we are not getting a raw
-portion of allocations on the heap, rather the chart displays what <em>portion</em> of
-the heap is composed of each type. This makes it easy to see that we actually
-have two memory leaks: one for <code class="docutils literal notranslate"><span class="pre">Double</span></code> and one for <code class="docutils literal notranslate"><span class="pre">[]</span></code>. Both types show a
-triangular profile shape. The triangle shape is a classic indication of a memory
-leak. It occurs because <code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code> builds up a lot of thunks; increasing
-allocations on the heap and producing the rising edge, the program reaches a
-point where the thunks must be evaluated; producing the top of the triangle, and
-then begins evaluating them thus decreasing the allocations on the heap and
-which yields the descending edge. We could have observed this pattern in the
-other plots, but the normalized linechart directly shows it. Use the linechart
-when you want to view the composition of the heap by element over time.</p>
+<p>Again, notice the roughly triangular shape. Recall that these linecharts are
+<em>normalized</em> so we are not getting a raw portion of allocations on the heap,
+rather the chart displays what <em>portion</em> of the heap is composed of each type.
+This makes it easy to see that we actually have two memory leaks: one for
+<code class="docutils literal notranslate"><span class="pre">Double</span></code> and one for <code class="docutils literal notranslate"><span class="pre">[]</span></code>. Both types show a triangular profile shape. The
+triangle shape is a classic indication of a memory leak. It occurs because
+<code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code> builds up a lot of thunks; increasing allocations on the heap and
+producing the rising edge, the program reaches a point where the thunks must be
+evaluated; producing the top of the triangle, and then begins evaluating them
+thus decreasing the allocations on the heap and which yields the descending
+edge. We could have observed this pattern in the other plots, but the normalized
+linechart directly shows it. Use the linechart when you want to view the
+composition of the heap by element over time.</p>
 <p>The heap plot shows the total heap size and the block and live bytes size over
 time.</p>
 </section>
