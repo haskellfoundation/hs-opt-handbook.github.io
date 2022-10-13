@@ -18,7 +18,7 @@ tools in the profiling toolbox you reach for. Use eventlog when you are just
 beginning to diagnose the problem and are gathering data and want to inspect the
 heap, or, if you already suspect a sub-system, such as the garbage collector,
 and want to visualize its behavior. This chapter walks through using eventlog to
-inspect a small program that suffers from :ref:`Excessive Closure Allocation`.
+inspect a small program that suffers from :ref:`Excessive Pointer Chasing`.
 By the end of the chapter you should understand:
 
 #. What information can you retrieve by using eventlog.
@@ -311,16 +311,12 @@ example, such a marker would allow us to say "Ah! Phase foo does excessive
 allocation due to leaking ``Double``". This is the purpose of ``traceMarker``
 and ``traceMarkerIO`` in ``Debug.Trace`` in the base library. Both functions
 allow us to emit a custom marker to the eventlog which will then be rendered by
-eventlog2html. We'll use ``traceMarker`` since we are emitting markers from pure
-code, for monadic code use ``traceMarkerIO`` or ``liftIO traceMarkerIO``. Here
-is the marker verison of the toy program:
+eventlog2html. We'll demonstrate both ``traceMarker`` in our functions and
+``traceMarkerIO`` in the main function. Furthermore, we'll add some more
+``wait`` statements to avoid a collisions between markers and the y-axis. Here
+is the marker version of the toy program:
 
 .. code-block:: haskell
-
-   {-# LANGUAGE BangPatterns #-}
-   -- Need to disable optimizations because GHC will recognize and perform
-   -- let-floating for us!
-   {-# OPTIONS_GHC -O0 -ddump-simpl -ddump-to-file -ddump-stg-final #-}
 
    module Main where
 
@@ -329,38 +325,127 @@ is the marker verison of the toy program:
    import System.Random.Stateful (newIOGenM, uniformRM)
    import Control.Concurrent     (threadDelay)
    import Control.Monad          (replicateM)
+   import Control.DeepSeq        (force)
 
-   import Debug.Trace            (traceMarker)               -- <-- new
+   import Debug.Trace            (traceMarker, traceMarkerIO)
 
    lazy_mean :: [Double] -> Double
-   lazy_mean xs = traceMarker "Begin lazy_mean: " $ s / fromIntegral ln
+   lazy_mean xs = traceMarker "Begin: lazy_mean" $ s / fromIntegral ln
      where (s, ln)        = foldl step (0,0) xs
            step (s, ln) a = (s + a, ln + 1)
 
    stricter_mean :: [Double] -> Double
-   stricter_mean xs = traceMarker "Begin stricter_mean: " $ s / fromIntegral ln
+   stricter_mean xs = traceMarker "Begin: stricter_mean" $ s / fromIntegral ln
      where (s, ln)        = foldl' step (0,0) xs
            step (s, ln) a = (s + a, ln + 1)
 
    strict_mean :: [Double] -> Double
-   strict_mean xs = traceMarker "Begin strict_mean: " $ s / fromIntegral ln
+   strict_mean xs = traceMarker "Begin: strict_mean" $ s / fromIntegral ln
      where (s, ln)        = foldl' step (0,0) xs
            step (!s, !ln) a = (s + a, ln + 1)
 
    main :: IO ()
    main = do
+     let wait = threadDelay 100000
+     -- create a delay at the beginning of the program, if we don't do this then
+     -- our marker will be merged with the y-axis of the heap profile
+     wait
+     traceMarkerIO "Bench Initialization"
      -- generate random test data
      seed <- newIOGenM (mkStdGen 1729)
      test_values <- replicateM 500000 $ uniformRM (0,500000) seed
-     -- sleep for a second
-     let wait = threadDelay 1000000
+     traceMarkerIO "End Bench Initialization"
+     wait
      -- now run
      print $! lazy_mean test_values
+     traceMarkerIO "End lazy_mean"
      wait
      print $! stricter_mean test_values
+     traceMarkerIO "End stricter_mean"
      wait
      print $! strict_mean test_values
+     traceMarkerIO "End strict_mean"
 
+We add markers in two areas: in the very beginning of each function and after
+each function call in main *including the benchmark setup*. Now let's view the
+heap profile:
+
+.. image:: /_images/Measurement_Observation/Heap_GHC/eventlog/pc_heap_marker_first.png
+   :scale: 80 %
+
+The gray lines that have been added to the profile are our markers. The
+``String`` input to ``traceMarker`` and ``traceMarkerIO`` is visible by hovering
+the mouse over the marker. I've manually added the labels to how the popups
+statically.
+
+We can make several important observations from this profile:
+
+First, we can observe the difference in runtime between these functions by
+comparing the horizontal space between the "Begin" and "End" markers. For
+example, notice how close the begin and end markers are for ``strict_mean``
+compared to ``lazy_mean``. From the x-axis we can see that ``strict_mean``
+finishes in about 0.1 seconds, while ``lazy_mean`` finishes in about 0.3
+seconds.
+
+Second, the ascending side of the first memory leak (the first triangle) comes,
+perhaps unsurprisingly, from the benchmark setup.
+
+Third, the peak of the first memory leak comes from the call to ``lazy_mean``.
+This makes sense since ``lazy_mean`` is the first function to request the values
+from ``test_values``. However, this also means we have a memory leak in the
+benchmark setup, because after the call ``lazy_mean`` *allocations decrease*. If
+we had all values from ``test_values`` fully evaluated and in memory when
+``lazy_mean`` was first called, then we would expect heap allocations *to
+increase* due to the leak in ``lazy_mean``. However, we observe the opposite,
+``lazy_mean`` reduces allocations until the heap levels out around 0.90 seconds
+and ~37M allocations right before ``lazy_mean`` ends. The point at which the
+allocations level out, is the point when ``lazy_mean`` finishes consuming thunks
+introduced by the benchmark setup and finally performs the arithmetic
+computation. Thus, we can conclude two things: First, a strict benchmark setup
+should allocate ~37M on the heap, because this is the amount of allocations
+after ``lazy_mean`` has consumed all the thunks; Second, the actual wall time
+for a strict ``lazy_mean`` *should* be around 0.1 seconds because this is the
+duration of time between the point at which ``lazy_mean`` has consumed all the
+thunks and when ``lazy_mean`` ends.
+
+Let's fix the benchmark setup memory leak by forcing strict IO with ``evaluate``
+and ``force`` from ``Control.Exception`` and ``Control.DeepSeq`` respectively. A
+simple one line change in ``main``:
+
+.. code-block:: haskell
+
+   main :: IO ()
+   main = do
+     let wait = threadDelay 100000
+     -- create a delay at the beginning of the program, if we don't do this then
+     -- our marker will be merged with the y-axis of the heap profile
+     wait
+     traceMarkerIO "Bench Initialization"
+     -- generate random test data
+     seed <- newIOGenM (mkStdGen 1729)
+     test_values <- fmap force (replicateM 500000 $ uniformRM (0,500000) seed)     -- <--- new
+                    >>= evaluate
+     traceMarkerIO "End Bench Initialization"
+     wait
+     -- now run
+     print $! lazy_mean test_values
+     traceMarkerIO "End lazy_mean"
+     wait
+     print $! stricter_mean test_values
+     traceMarkerIO "End stricter_mean"
+     wait
+     print $! strict_mean test_values
+     traceMarkerIO "End strict_mean"
+
+
+.. image:: /_images/Measurement_Observation/Heap_GHC/eventlog/pc_heap_marker_still_leaky.png
+   :scale: 80 %
+
+
+..
+  label the still leaky graph. point out the total allocatiosn have reduced but
+  we still ahve a leak then fix the memory leak with another evaluate
+  force. show the empty profile, and then increase the sampling rate
 
 ..
   Show the trace marker behavior with waits so we can see

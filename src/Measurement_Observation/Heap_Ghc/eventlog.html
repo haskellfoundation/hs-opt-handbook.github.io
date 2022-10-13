@@ -148,7 +148,7 @@ tools in the profiling toolbox you reach for. Use eventlog when you are just
 beginning to diagnose the problem and are gathering data and want to inspect the
 heap, or, if you already suspect a sub-system, such as the garbage collector,
 and want to visualize its behavior. This chapter walks through using eventlog to
-inspect a small program that suffers from <a class="reference internal" href="../../Preliminaries/what_makes_fast_hs.html#excessive-closure-allocation"><span class="std std-ref">Excessive Closure Allocation</span></a>.
+inspect a small program that suffers from <a class="reference internal" href="../../Preliminaries/what_makes_fast_hs.html#excessive-pointer-chasing"><span class="std std-ref">Excessive Pointer Chasing</span></a>.
 By the end of the chapter you should understand:</p>
 <ol class="arabic simple">
 <li><p>What information can you retrieve by using eventlog.</p></li>
@@ -394,54 +394,121 @@ example, such a marker would allow us to say “Ah! Phase foo does excessive
 allocation due to leaking <code class="docutils literal notranslate"><span class="pre">Double</span></code>”. This is the purpose of <code class="docutils literal notranslate"><span class="pre">traceMarker</span></code>
 and <code class="docutils literal notranslate"><span class="pre">traceMarkerIO</span></code> in <code class="docutils literal notranslate"><span class="pre">Debug.Trace</span></code> in the base library. Both functions
 allow us to emit a custom marker to the eventlog which will then be rendered by
-eventlog2html. We’ll use <code class="docutils literal notranslate"><span class="pre">traceMarker</span></code> since we are emitting markers from pure
-code, for monadic code use <code class="docutils literal notranslate"><span class="pre">traceMarkerIO</span></code> or <code class="docutils literal notranslate"><span class="pre">liftIO</span> <span class="pre">traceMarkerIO</span></code>. Here
-is the marker verison of the toy program:</p>
-<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="cm">{-# LANGUAGE BangPatterns #-}</span><span class="w"></span>
-<span class="c1">-- Need to disable optimizations because GHC will recognize and perform</span><span class="w"></span>
-<span class="c1">-- let-floating for us!</span><span class="w"></span>
-<span class="cm">{-# OPTIONS_GHC -O0 -ddump-simpl -ddump-to-file -ddump-stg-final #-}</span><span class="w"></span>
-
-<span class="kr">module</span><span class="w"> </span><span class="nn">Main</span><span class="w"> </span><span class="kr">where</span><span class="w"></span>
+eventlog2html. We’ll demonstrate both <code class="docutils literal notranslate"><span class="pre">traceMarker</span></code> in our functions and
+<code class="docutils literal notranslate"><span class="pre">traceMarkerIO</span></code> in the main function. Furthermore, we’ll add some more
+<code class="docutils literal notranslate"><span class="pre">wait</span></code> statements to avoid a collisions between markers and the y-axis. Here
+is the marker version of the toy program:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">module</span><span class="w"> </span><span class="nn">Main</span><span class="w"> </span><span class="kr">where</span><span class="w"></span>
 
 <span class="kr">import</span><span class="w"> </span><span class="nn">Data.List</span><span class="w">              </span><span class="p">(</span><span class="nf">foldl&#39;</span><span class="p">)</span><span class="w"></span>
 <span class="kr">import</span><span class="w"> </span><span class="nn">System.Random</span><span class="w">          </span><span class="p">(</span><span class="nf">mkStdGen</span><span class="p">)</span><span class="w"></span>
 <span class="kr">import</span><span class="w"> </span><span class="nn">System.Random.Stateful</span><span class="w"> </span><span class="p">(</span><span class="nf">newIOGenM</span><span class="p">,</span><span class="w"> </span><span class="nf">uniformRM</span><span class="p">)</span><span class="w"></span>
 <span class="kr">import</span><span class="w"> </span><span class="nn">Control.Concurrent</span><span class="w">     </span><span class="p">(</span><span class="nf">threadDelay</span><span class="p">)</span><span class="w"></span>
 <span class="kr">import</span><span class="w"> </span><span class="nn">Control.Monad</span><span class="w">          </span><span class="p">(</span><span class="nf">replicateM</span><span class="p">)</span><span class="w"></span>
+<span class="kr">import</span><span class="w"> </span><span class="nn">Control.DeepSeq</span><span class="w">        </span><span class="p">(</span><span class="nf">force</span><span class="p">)</span><span class="w"></span>
 
-<span class="kr">import</span><span class="w"> </span><span class="nn">Debug.Trace</span><span class="w">            </span><span class="p">(</span><span class="nf">traceMarker</span><span class="p">)</span><span class="w">               </span><span class="c1">-- &lt;-- new</span><span class="w"></span>
+<span class="kr">import</span><span class="w"> </span><span class="nn">Debug.Trace</span><span class="w">            </span><span class="p">(</span><span class="nf">traceMarker</span><span class="p">,</span><span class="w"> </span><span class="nf">traceMarkerIO</span><span class="p">)</span><span class="w"></span>
 
 <span class="nf">lazy_mean</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">[</span><span class="kt">Double</span><span class="p">]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Double</span><span class="w"></span>
-<span class="nf">lazy_mean</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">traceMarker</span><span class="w"> </span><span class="s">&quot;Begin lazy_mean: &quot;</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">fromIntegral</span><span class="w"> </span><span class="n">ln</span><span class="w"></span>
+<span class="nf">lazy_mean</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">traceMarker</span><span class="w"> </span><span class="s">&quot;Begin: lazy_mean&quot;</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">fromIntegral</span><span class="w"> </span><span class="n">ln</span><span class="w"></span>
 <span class="w">  </span><span class="kr">where</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">ln</span><span class="p">)</span><span class="w">        </span><span class="ow">=</span><span class="w"> </span><span class="n">foldl</span><span class="w"> </span><span class="n">step</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">xs</span><span class="w"></span>
 <span class="w">        </span><span class="n">step</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">ln</span><span class="p">)</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">ln</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"></span>
 
 <span class="nf">stricter_mean</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">[</span><span class="kt">Double</span><span class="p">]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Double</span><span class="w"></span>
-<span class="nf">stricter_mean</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">traceMarker</span><span class="w"> </span><span class="s">&quot;Begin stricter_mean: &quot;</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">fromIntegral</span><span class="w"> </span><span class="n">ln</span><span class="w"></span>
+<span class="nf">stricter_mean</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">traceMarker</span><span class="w"> </span><span class="s">&quot;Begin: stricter_mean&quot;</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">fromIntegral</span><span class="w"> </span><span class="n">ln</span><span class="w"></span>
 <span class="w">  </span><span class="kr">where</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">ln</span><span class="p">)</span><span class="w">        </span><span class="ow">=</span><span class="w"> </span><span class="n">foldl&#39;</span><span class="w"> </span><span class="n">step</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">xs</span><span class="w"></span>
 <span class="w">        </span><span class="n">step</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">ln</span><span class="p">)</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">ln</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"></span>
 
 <span class="nf">strict_mean</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">[</span><span class="kt">Double</span><span class="p">]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Double</span><span class="w"></span>
-<span class="nf">strict_mean</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">traceMarker</span><span class="w"> </span><span class="s">&quot;Begin strict_mean: &quot;</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">fromIntegral</span><span class="w"> </span><span class="n">ln</span><span class="w"></span>
+<span class="nf">strict_mean</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">traceMarker</span><span class="w"> </span><span class="s">&quot;Begin: strict_mean&quot;</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">fromIntegral</span><span class="w"> </span><span class="n">ln</span><span class="w"></span>
 <span class="w">  </span><span class="kr">where</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">ln</span><span class="p">)</span><span class="w">        </span><span class="ow">=</span><span class="w"> </span><span class="n">foldl&#39;</span><span class="w"> </span><span class="n">step</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">xs</span><span class="w"></span>
 <span class="w">        </span><span class="n">step</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="o">!</span><span class="n">ln</span><span class="p">)</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">ln</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"></span>
 
 <span class="nf">main</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">IO</span><span class="w"> </span><span class="nb">()</span><span class="w"></span>
 <span class="nf">main</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kr">do</span><span class="w"></span>
+<span class="w">  </span><span class="kr">let</span><span class="w"> </span><span class="n">wait</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">threadDelay</span><span class="w"> </span><span class="mi">100000</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- create a delay at the beginning of the program, if we don&#39;t do this then</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- our marker will be merged with the y-axis of the heap profile</span><span class="w"></span>
+<span class="w">  </span><span class="n">wait</span><span class="w"></span>
+<span class="w">  </span><span class="n">traceMarkerIO</span><span class="w"> </span><span class="s">&quot;Bench Initialization&quot;</span><span class="w"></span>
 <span class="w">  </span><span class="c1">-- generate random test data</span><span class="w"></span>
 <span class="w">  </span><span class="n">seed</span><span class="w"> </span><span class="ow">&lt;-</span><span class="w"> </span><span class="n">newIOGenM</span><span class="w"> </span><span class="p">(</span><span class="n">mkStdGen</span><span class="w"> </span><span class="mi">1729</span><span class="p">)</span><span class="w"></span>
 <span class="w">  </span><span class="n">test_values</span><span class="w"> </span><span class="ow">&lt;-</span><span class="w"> </span><span class="n">replicateM</span><span class="w"> </span><span class="mi">500000</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="n">uniformRM</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">500000</span><span class="p">)</span><span class="w"> </span><span class="n">seed</span><span class="w"></span>
-<span class="w">  </span><span class="c1">-- sleep for a second</span><span class="w"></span>
-<span class="w">  </span><span class="kr">let</span><span class="w"> </span><span class="n">wait</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">threadDelay</span><span class="w"> </span><span class="mi">1000000</span><span class="w"></span>
+<span class="w">  </span><span class="n">traceMarkerIO</span><span class="w"> </span><span class="s">&quot;End Bench Initialization&quot;</span><span class="w"></span>
+<span class="w">  </span><span class="n">wait</span><span class="w"></span>
 <span class="w">  </span><span class="c1">-- now run</span><span class="w"></span>
 <span class="w">  </span><span class="n">print</span><span class="w"> </span><span class="o">$!</span><span class="w"> </span><span class="n">lazy_mean</span><span class="w"> </span><span class="n">test_values</span><span class="w"></span>
+<span class="w">  </span><span class="n">traceMarkerIO</span><span class="w"> </span><span class="s">&quot;End lazy_mean&quot;</span><span class="w"></span>
 <span class="w">  </span><span class="n">wait</span><span class="w"></span>
 <span class="w">  </span><span class="n">print</span><span class="w"> </span><span class="o">$!</span><span class="w"> </span><span class="n">stricter_mean</span><span class="w"> </span><span class="n">test_values</span><span class="w"></span>
+<span class="w">  </span><span class="n">traceMarkerIO</span><span class="w"> </span><span class="s">&quot;End stricter_mean&quot;</span><span class="w"></span>
 <span class="w">  </span><span class="n">wait</span><span class="w"></span>
 <span class="w">  </span><span class="n">print</span><span class="w"> </span><span class="o">$!</span><span class="w"> </span><span class="n">strict_mean</span><span class="w"> </span><span class="n">test_values</span><span class="w"></span>
+<span class="w">  </span><span class="n">traceMarkerIO</span><span class="w"> </span><span class="s">&quot;End strict_mean&quot;</span><span class="w"></span>
 </pre></div>
 </div>
+<p>We add markers in two areas: in the very beginning of each function and after
+each function call in main <em>including the benchmark setup</em>. Now let’s view the
+heap profile:</p>
+<a class="reference internal image-reference" href="../../../_images/pc_heap_marker_first.png"><img alt="../../../_images/pc_heap_marker_first.png" src="../../../_images/pc_heap_marker_first.png" style="width: 960.8000000000001px; height: 774.4000000000001px;" /></a>
+<p>The gray lines that have been added to the profile are our markers. The
+<code class="docutils literal notranslate"><span class="pre">String</span></code> input to <code class="docutils literal notranslate"><span class="pre">traceMarker</span></code> and <code class="docutils literal notranslate"><span class="pre">traceMarkerIO</span></code> is visible by hovering
+the mouse over the marker. I’ve manually added the labels to how the popups
+statically.</p>
+<p>We can make several important observations from this profile:</p>
+<p>First, we can observe the difference in runtime between these functions by
+comparing the horizontal space between the “Begin” and “End” markers. For
+example, notice how close the begin and end markers are for <code class="docutils literal notranslate"><span class="pre">strict_mean</span></code>
+compared to <code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code>. From the x-axis we can see that <code class="docutils literal notranslate"><span class="pre">strict_mean</span></code>
+finishes in about 0.1 seconds, while <code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code> finishes in about 0.3
+seconds.</p>
+<p>Second, the ascending side of the first memory leak (the first triangle) comes,
+perhaps unsurprisingly, from the benchmark setup.</p>
+<p>Third, the peak of the first memory leak comes from the call to <code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code>.
+This makes sense since <code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code> is the first function to request the values
+from <code class="docutils literal notranslate"><span class="pre">test_values</span></code>. However, this also means we have a memory leak in the
+benchmark setup, because after the call <code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code> <em>allocations decrease</em>. If
+we had all values from <code class="docutils literal notranslate"><span class="pre">test_values</span></code> fully evaluated and in memory when
+<code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code> was first called, then we would expect heap allocations <em>to
+increase</em> due to the leak in <code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code>. However, we observe the opposite,
+<code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code> reduces allocations until the heap levels out around 0.90 seconds
+and ~37M allocations right before <code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code> ends. The point at which the
+allocations level out, is the point when <code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code> finishes consuming thunks
+introduced by the benchmark setup and finally performs the arithmetic
+computation. Thus, we can conclude two things: First, a strict benchmark setup
+should allocate ~37M on the heap, because this is the amount of allocations
+after <code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code> has consumed all the thunks; Second, the actual wall time
+for a strict <code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code> <em>should</em> be around 0.1 seconds because this is the
+duration of time between the point at which <code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code> has consumed all the
+thunks and when <code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code> ends.</p>
+<p>Let’s fix the benchmark setup memory leak by forcing strict IO with <code class="docutils literal notranslate"><span class="pre">evaluate</span></code>
+and <code class="docutils literal notranslate"><span class="pre">force</span></code> from <code class="docutils literal notranslate"><span class="pre">Control.Exception</span></code> and <code class="docutils literal notranslate"><span class="pre">Control.DeepSeq</span></code> respectively. A
+simple one line change in <code class="docutils literal notranslate"><span class="pre">main</span></code>:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">main</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">IO</span><span class="w"> </span><span class="nb">()</span><span class="w"></span>
+<span class="nf">main</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kr">do</span><span class="w"></span>
+<span class="w">  </span><span class="kr">let</span><span class="w"> </span><span class="n">wait</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">threadDelay</span><span class="w"> </span><span class="mi">100000</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- create a delay at the beginning of the program, if we don&#39;t do this then</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- our marker will be merged with the y-axis of the heap profile</span><span class="w"></span>
+<span class="w">  </span><span class="n">wait</span><span class="w"></span>
+<span class="w">  </span><span class="n">traceMarkerIO</span><span class="w"> </span><span class="s">&quot;Bench Initialization&quot;</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- generate random test data</span><span class="w"></span>
+<span class="w">  </span><span class="n">seed</span><span class="w"> </span><span class="ow">&lt;-</span><span class="w"> </span><span class="n">newIOGenM</span><span class="w"> </span><span class="p">(</span><span class="n">mkStdGen</span><span class="w"> </span><span class="mi">1729</span><span class="p">)</span><span class="w"></span>
+<span class="w">  </span><span class="n">test_values</span><span class="w"> </span><span class="ow">&lt;-</span><span class="w"> </span><span class="n">fmap</span><span class="w"> </span><span class="n">force</span><span class="w"> </span><span class="p">(</span><span class="n">replicateM</span><span class="w"> </span><span class="mi">500000</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="n">uniformRM</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">500000</span><span class="p">)</span><span class="w"> </span><span class="n">seed</span><span class="p">)</span><span class="w">     </span><span class="c1">-- &lt;--- new</span><span class="w"></span>
+<span class="w">                 </span><span class="o">&gt;&gt;=</span><span class="w"> </span><span class="n">evaluate</span><span class="w"></span>
+<span class="w">  </span><span class="n">traceMarkerIO</span><span class="w"> </span><span class="s">&quot;End Bench Initialization&quot;</span><span class="w"></span>
+<span class="w">  </span><span class="n">wait</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- now run</span><span class="w"></span>
+<span class="w">  </span><span class="n">print</span><span class="w"> </span><span class="o">$!</span><span class="w"> </span><span class="n">lazy_mean</span><span class="w"> </span><span class="n">test_values</span><span class="w"></span>
+<span class="w">  </span><span class="n">traceMarkerIO</span><span class="w"> </span><span class="s">&quot;End lazy_mean&quot;</span><span class="w"></span>
+<span class="w">  </span><span class="n">wait</span><span class="w"></span>
+<span class="w">  </span><span class="n">print</span><span class="w"> </span><span class="o">$!</span><span class="w"> </span><span class="n">stricter_mean</span><span class="w"> </span><span class="n">test_values</span><span class="w"></span>
+<span class="w">  </span><span class="n">traceMarkerIO</span><span class="w"> </span><span class="s">&quot;End stricter_mean&quot;</span><span class="w"></span>
+<span class="w">  </span><span class="n">wait</span><span class="w"></span>
+<span class="w">  </span><span class="n">print</span><span class="w"> </span><span class="o">$!</span><span class="w"> </span><span class="n">strict_mean</span><span class="w"> </span><span class="n">test_values</span><span class="w"></span>
+<span class="w">  </span><span class="n">traceMarkerIO</span><span class="w"> </span><span class="s">&quot;End strict_mean&quot;</span><span class="w"></span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../../../_images/pc_heap_marker_still_leaky.png"><img alt="../../../_images/pc_heap_marker_still_leaky.png" src="../../../_images/pc_heap_marker_still_leaky.png" style="width: 955.2px; height: 769.6px;" /></a>
 </section>
 <section id="tuning-the-output">
 <h2><span class="section-number">2.2.2.8. </span>Tuning the Output<a class="headerlink" href="#tuning-the-output" title="Permalink to this headline">¶</a></h2>
