@@ -18,7 +18,7 @@
 {-# LANGUAGE BangPatterns #-}
 -- Need to disable optimizations because GHC will recognize and perform
 -- let-floating for us!
-{-# OPTIONS_GHC -O2 -ddump-simpl -ddump-to-file -ddump-stg-final #-}
+{-# OPTIONS_GHC -O0 -ddump-simpl -ddump-to-file -ddump-stg-final #-}
 
 module Main where
 
@@ -27,6 +27,7 @@ import System.Random          (mkStdGen)
 import System.Random.Stateful (newIOGenM, uniformRM)
 import Control.Concurrent     (threadDelay)
 import Control.Monad          (replicateM)
+import Control.Exception      (evaluate)
 import Control.DeepSeq        (force)
 
 import Debug.Trace            (traceMarker, traceMarkerIO)
@@ -37,7 +38,7 @@ lazy_mean xs = traceMarker "Begin: lazy_mean" $ s / fromIntegral ln
         step (s, ln) a = (s + a, ln + 1)
 
 stricter_mean :: [Double] -> Double
-stricter_mean xs = traceMarker "Begin: stricter_mean" $ s / fromIntegral (traceMarker "Done: stricter_mean" ln)
+stricter_mean xs = traceMarker "Begin: stricter_mean" $ s / fromIntegral ln
   where (s, ln)        = foldl' step (0,0) xs
         step (s, ln) a = (s + a, ln + 1)
 
@@ -52,10 +53,14 @@ main = do
   -- create a delay at the beginning of the program, if we don't do this then
   -- our marker will be merged with the y-axis of the heap profile
   wait
-  -- generate random test data
   traceMarkerIO "Bench Initialization"
+  -- generate random test data
   seed <- newIOGenM (mkStdGen 1729)
-  test_values <- fmap force $ replicateM 500000 $ uniformRM (0,500000) seed
+  -- let genValue = fmap force uniformRM (0,500000) seed >>= evaluate           -- <--- new
+  -- test_values <- fmap force (replicateM 50000 genValue) >>= evaluate                        -- <--- new
+  -- let genValues = replicateM 500000 $ uniformRM (0,500000) seed          -- <--- new
+  test_values <- fmap force (replicateM 500000 $ uniformRM (0,500000) seed)
+                 >>= evaluate                        -- <--- new
   traceMarkerIO "End Bench Initialization"
   wait
   -- now run
