@@ -18,7 +18,7 @@
 {-# LANGUAGE BangPatterns #-}
 -- Need to disable optimizations because GHC will recognize and perform
 -- let-floating for us!
-{-# OPTIONS_GHC -O0 -ddump-simpl -ddump-to-file -ddump-stg-final #-}
+{-# OPTIONS_GHC -O2 -ddump-simpl -ddump-to-file -ddump-stg-final #-}
 
 module Main where
 
@@ -32,19 +32,19 @@ import Control.DeepSeq        (force)
 
 import Debug.Trace            (traceMarker, traceMarkerIO)
 
-lazy_mean :: [Double] -> Double
-lazy_mean xs = traceMarker "Begin: lazy_mean" $ s / fromIntegral ln
-  where (s, ln)        = foldl step (0,0) xs
-        step (s, ln) a = (s + a, ln + 1)
+-- lazy_mean :: [Double] -> Double
+-- lazy_mean xs = traceMarker "Begin: lazy_mean" $ s / fromIntegral ln
+--   where (s, ln)        = foldl step (0,0) xs
+--         step (s, ln) a = (s + a, ln + 1)
 
-stricter_mean :: [Double] -> Double
-stricter_mean xs = traceMarker "Begin: stricter_mean" $ s / fromIntegral ln
-  where (s, ln)        = foldl' step (0,0) xs
-        step (s, ln) a = (s + a, ln + 1)
+-- stricter_mean :: [Double] -> Double
+-- stricter_mean xs = traceMarker "Begin: stricter_mean" $ s / fromIntegral ln
+--   where (s, ln)        = foldl' step (0,0) xs
+--         step (s, ln) a = (s + a, ln + 1)
 
 strict_mean :: [Double] -> Double
 strict_mean xs = traceMarker "Begin: strict_mean" $ s / fromIntegral ln
-  where (s, ln)        = foldl' step (0,0) xs
+  where (!s, !ln)        = foldl' step (0,0) xs
         step (!s, !ln) a = (s + a, ln + 1)
 
 main :: IO ()
@@ -56,19 +56,19 @@ main = do
   traceMarkerIO "Bench Initialization"
   -- generate random test data
   seed <- newIOGenM (mkStdGen 1729)
-  -- let genValue = fmap force uniformRM (0,500000) seed >>= evaluate           -- <--- new
-  -- test_values <- fmap force (replicateM 50000 genValue) >>= evaluate                        -- <--- new
+  let genValue = fmap force uniformRM (0,500000) seed >>= evaluate           -- <--- new
+  test_values <- fmap force (replicateM 50000 genValue) >>= evaluate                        -- <--- new
   -- let genValues = replicateM 500000 $ uniformRM (0,500000) seed          -- <--- new
-  test_values <- fmap force (replicateM 500000 $ uniformRM (0,500000) seed)
-                 >>= evaluate                        -- <--- new
+  -- test_values <- fmap force (replicateM 500000 $ uniformRM (0,500000) seed)
+  --                >>= evaluate
   traceMarkerIO "End Bench Initialization"
-  wait
+  -- wait
   -- now run
-  print $! lazy_mean test_values
-  traceMarkerIO "End lazy_mean"
-  wait
-  print $! stricter_mean test_values
-  traceMarkerIO "End stricter_mean"
-  wait
+  -- print $! lazy_mean test_values
+  -- traceMarkerIO "End lazy_mean"
+  -- wait
+  -- print $! stricter_mean test_values
+  -- traceMarkerIO "End stricter_mean"
+  -- wait
   print $! strict_mean test_values
   traceMarkerIO "End strict_mean"

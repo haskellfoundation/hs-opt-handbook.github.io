@@ -441,11 +441,128 @@ simple one line change in ``main``:
 .. image:: /_images/Measurement_Observation/Heap_GHC/eventlog/pc_heap_marker_still_leaky.png
    :scale: 80 %
 
+Notice the y-axis has reduced, our maximum heap allocations have decreased to
+~51M, however we clearly still have a memory leak in the bench setup. The only
+remaining source of possible thunks in ``test_values`` is ``uniformRM``. So
+we'll remove any possible lazy IO from that call:
 
-..
-  label the still leaky graph. point out the total allocatiosn have reduced but
-  we still ahve a leak then fix the memory leak with another evaluate
-  force. show the empty profile, and then increase the sampling rate
+.. code-block:: haskell
+
+  main :: IO ()
+  main = do
+    let wait = threadDelay 100000
+    -- create a delay at the beginning of the program, if we don't do this then
+    -- our marker will be merged with the y-axis of the heap profile
+    wait
+    traceMarkerIO "Bench Initialization"
+    -- generate random test data
+    seed <- newIOGenM (mkStdGen 1729)
+    let genValue = fmap force uniformRM (0,500000) seed   >>= evaluate         -- <--- new
+    test_values <- fmap force (replicateM 50000 genValue) >>= evaluate         -- <--- new
+    traceMarkerIO "End Bench Initialization"
+    wait
+    -- now run
+    print $! lazy_mean test_values
+    traceMarkerIO "End lazy_mean"
+    wait
+    print $! stricter_mean test_values
+    traceMarkerIO "End stricter_mean"
+    wait
+    print $! strict_mean test_values
+    traceMarkerIO "End strict_mean"
+
+which produces an empty heap profile!:
+
+.. image:: /_images/Measurement_Observation/Heap_GHC/eventlog/pc_heap_marker_empty.png
+   :scale: 80 %
+
+Now that we've removed those thunks our heap profile sampling rate is to slow.
+Let's sample 100x more frequently by setting the ``-i`` RTS flag. The invocation
+now becomes:
+
+.. code-block:: bash
+
+    $ cabal bench pointerChasing --benchmark-options='+RTS -hy -l-agu -i0.001
+    -RTS'; eventlog2html pointerChasing.eventlog && firefox pointerChasing.eventlog.html
+
+and produces this heap profile:
+
+.. image:: /_images/Measurement_Observation/Heap_GHC/eventlog/pc_heap_marker_high_sample.png
+   :scale: 80 %
+
+There are several things to point out. The y-axis has reduced to ~7M maximum,
+and the x-axis has also reduced from 1.8 seconds to 0.9 seconds. We can clearly
+see the memory leaks from ``lazy`` and ``stricter`` now. In fact, ``lazy`` has a
+total of three memory leaks, and ``stricter`` has two. Because our program is
+relatively simple, there are not many sites where these leaks could originate.
+We'll focus on ``lazy_mean``, make it more strict, and add markers to the source
+of the remaining leaks. Here is ``lazy_mean`` reproduced to refresh your memory:
+
+.. code-block:: haskell
+
+   lazy_mean :: [Double] -> Double
+   lazy_mean xs = traceMarker "Begin: lazy_mean" $ s / fromIntegral ln
+     where (s, ln)        = foldl step (0,0) xs
+           step (s, ln) a = (s + a, ln + 1)
+
+Just as we observed three leaks, ``lazy_mean`` has three major elements: a fold,
+a division, and a coercion. The fold folds over ``xs`` using ``step``; we know
+that this should create two memory leaks: one because ``foldl`` is lazy and so
+we should be accumulating a thunk for each element of ``xs`` in the accumulator
+of ``foldl``; and another because the ``step`` function does not evaluate the
+values inside its input ``(,)``, thus accumulating thunks in the elements of the
+tuple. Fixing these leaks derives ``stricter_mean`` and ``strict_mean``
+respectively. The division computes the mean using ``(/)``, however we should
+not expect this functions to leak if the values passed to them are already
+evaluated since it should only be called at most once. Lastly, the coercian
+converts ``ln`` to a ``Double``, we should also not expect this to leak if
+``ln`` is fully evaluated. First, lets remove ``stricter_mean`` and
+``lazy_mean`` so that we can focus on memory leaks that are unknown. Here is the
+updated toy program:
+
+.. code-block:: haskell
+
+   {-# LANGUAGE BangPatterns #-}
+   -- Need to disable optimizations because GHC will recognize and perform
+   -- let-floating for us!
+   {-# OPTIONS_GHC -O0 -ddump-simpl -ddump-to-file -ddump-stg-final #-}
+
+   module Main where
+
+   import Data.List              (foldl')
+   import System.Random          (mkStdGen)
+   import System.Random.Stateful (newIOGenM, uniformRM)
+   import Control.Concurrent     (threadDelay)
+   import Control.Monad          (replicateM)
+   import Control.Exception      (evaluate)
+   import Control.DeepSeq        (force)
+
+   import Debug.Trace            (traceMarker, traceMarkerIO)
+
+   strict_mean :: [Double] -> Double
+   strict_mean xs = traceMarker "Begin: strict_mean" $ s / fromIntegral ln
+     where (s, ln)        = foldl' step (0,0) xs
+           step (!s, !ln) a = (s + a, ln + 1)
+
+   main :: IO ()
+   main = do
+     let wait = threadDelay 100000
+     -- create a delay at the beginning of the program, if we don't do this then
+     -- our marker will be merged with the y-axis of the heap profile
+     wait
+     traceMarkerIO "Bench Initialization"
+     -- generate random test data
+     seed <- newIOGenM (mkStdGen 1729)
+     let genValue = fmap force uniformRM (0,500000) seed >>= evaluate
+     test_values <- fmap force (replicateM 50000 genValue) >>= evaluate
+     traceMarkerIO "End Bench Initialization"
+     wait
+     -- now run
+     print $! strict_mean test_values
+     traceMarkerIO "End strict_mean"
+
+
+and heap profile:
 
 ..
   Show the trace marker behavior with waits so we can see
