@@ -495,81 +495,75 @@ and the x-axis has also reduced from 1.8 seconds to 0.9 seconds. We can clearly
 see the memory leaks from ``lazy`` and ``stricter`` now. In fact, ``lazy`` has a
 total of three memory leaks, and ``stricter`` has two. Because our program is
 relatively simple, there are not many sites where these leaks could originate.
-We'll focus on ``lazy_mean``, make it more strict, and add markers to the source
-of the remaining leaks. Here is ``lazy_mean`` reproduced to refresh your memory:
+We'll focus on ``stricter_mean``, and add markers to the source of the remaining
+leaks. Here is ``stricter_mean`` reproduced to refresh your memory:
 
 .. code-block:: haskell
 
-   lazy_mean :: [Double] -> Double
-   lazy_mean xs = traceMarker "Begin: lazy_mean" $ s / fromIntegral ln
-     where (s, ln)        = foldl step (0,0) xs
+   stricter_mean :: [Double] -> Double
+   stricter_mean xs = traceMarker "Begin: stricter_mean" $ s / fromIntegral ln
+     where (s, ln)        = foldl' step (0,0) xs
            step (s, ln) a = (s + a, ln + 1)
 
-Just as we observed three leaks, ``lazy_mean`` has three major elements: a fold,
-a division, and a coercion. The fold folds over ``xs`` using ``step``; we know
-that this should create two memory leaks: one because ``foldl`` is lazy and so
-we should be accumulating a thunk for each element of ``xs`` in the accumulator
-of ``foldl``; and another because the ``step`` function does not evaluate the
-values inside its input ``(,)``, thus accumulating thunks in the elements of the
-tuple. Fixing these leaks derives ``stricter_mean`` and ``strict_mean``
-respectively. The division computes the mean using ``(/)``, however we should
-not expect this functions to leak if the values passed to them are already
-evaluated since it should only be called at most once. Lastly, the coercian
-converts ``ln`` to a ``Double``, we should also not expect this to leak if
-``ln`` is fully evaluated. First, lets remove ``stricter_mean`` and
-``lazy_mean`` so that we can focus on memory leaks that are unknown. Here is the
-updated toy program:
+We observed two leaks. We know that the fold should produce one leak because
+``foldl'`` evaluates the accumulator to weak head normal form, and the ``step``
+function does not evaluate the values inside its input ``(,)``, thus
+accumulating thunks in the elements of the tuple. Let's add markers to verify
+this behavior:
 
 .. code-block:: haskell
 
-   {-# LANGUAGE BangPatterns #-}
-   -- Need to disable optimizations because GHC will recognize and perform
-   -- let-floating for us!
-   {-# OPTIONS_GHC -O0 -ddump-simpl -ddump-to-file -ddump-stg-final #-}
-
-   module Main where
-
-   import Data.List              (foldl')
-   import System.Random          (mkStdGen)
-   import System.Random.Stateful (newIOGenM, uniformRM)
-   import Control.Concurrent     (threadDelay)
-   import Control.Monad          (replicateM)
-   import Control.Exception      (evaluate)
-   import Control.DeepSeq        (force)
-
-   import Debug.Trace            (traceMarker, traceMarkerIO)
-
-   strict_mean :: [Double] -> Double
-   strict_mean xs = traceMarker "Begin: strict_mean" $ s / fromIntegral ln
+   stricter_mean :: [Double] -> Double
+   stricter_mean xs = (traceMarker "s" s) / fromIntegral (traceMarker "ln" ln)
      where (s, ln)        = foldl' step (0,0) xs
-           step (!s, !ln) a = (s + a, ln + 1)
-
-   main :: IO ()
-   main = do
-     let wait = threadDelay 100000
-     -- create a delay at the beginning of the program, if we don't do this then
-     -- our marker will be merged with the y-axis of the heap profile
-     wait
-     traceMarkerIO "Bench Initialization"
-     -- generate random test data
-     seed <- newIOGenM (mkStdGen 1729)
-     let genValue = fmap force uniformRM (0,500000) seed >>= evaluate
-     test_values <- fmap force (replicateM 50000 genValue) >>= evaluate
-     traceMarkerIO "End Bench Initialization"
-     wait
-     -- now run
-     print $! strict_mean test_values
-     traceMarkerIO "End strict_mean"
+           step (s, ln) a = (s + a, ln + 1)
 
 
 and heap profile:
 
+.. image:: /_images/Measurement_Observation/Heap_GHC/eventlog/pc_heap_marker_s_ln.png
+   :scale: 80 %
+
+Now we can see that the call to ``ln`` reduces a lot of the heap, i.e.,
+evaluates a lot of thunks. Let's make ``ln`` strict in ``step`` and observe the
+difference in the heap profile:
+
+.. code-block:: haskell
+
+   stricter_mean :: [Double] -> Double
+   stricter_mean xs = (traceMarker "s" s) / fromIntegral (traceMarker "ln" ln)
+     where (s, ln)        = foldl' step (0,0) xs
+           step (s, !ln) a = (s + a, ln + 1)
+
+and now we have:
+
+.. image:: /_images/Measurement_Observation/Heap_GHC/eventlog/pc_heap_marker_strict_ln.png
+   :scale: 80 %
+
+Notice the y-axis has further reduced. We still have a leak after ``s``, but
+this was expected. Let's make sure this is coming from ``s`` by making ``s``
+strict and generate the final profile:
+
+.. code-block:: haskell
+
+   stricter_mean :: [Double] -> Double
+   stricter_mean xs = (traceMarker "s" s) / fromIntegral (traceMarker "ln" ln)
+     where (s, ln)        = foldl' step (0,0) xs
+           step (!s, !ln) a = (s + a, ln + 1)
+
+which yields:
+
+.. image:: /_images/Measurement_Observation/Heap_GHC/eventlog/pc_heap_marker_strict_s_ln.png
+   :scale: 80 %
 ..
   Show the trace marker behavior with waits so we can see
   point out the strange memory leak in strict_mean
   then add markers to show that there is time between the end of strict_mean and
   when the values (s,ln) are requested, then add bangs and a marker to show that
   they unify. Perhaps show just a profile of -O2 to show the heap under normal conditions
+
+We could further investigate but our heap is now constant across
+``stricter_mean`` validating the lazy tuple hypothesis.
 
 
 

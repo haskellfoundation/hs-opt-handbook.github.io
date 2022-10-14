@@ -18,7 +18,7 @@
 {-# LANGUAGE BangPatterns #-}
 -- Need to disable optimizations because GHC will recognize and perform
 -- let-floating for us!
-{-# OPTIONS_GHC -O2 -ddump-simpl -ddump-to-file -ddump-stg-final #-}
+{-# OPTIONS_GHC -O0 -ddump-simpl -ddump-to-file -ddump-stg-final #-}
 
 module Main where
 
@@ -37,14 +37,14 @@ import Debug.Trace            (traceMarker, traceMarkerIO)
 --   where (s, ln)        = foldl step (0,0) xs
 --         step (s, ln) a = (s + a, ln + 1)
 
--- stricter_mean :: [Double] -> Double
--- stricter_mean xs = traceMarker "Begin: stricter_mean" $ s / fromIntegral ln
---   where (s, ln)        = foldl' step (0,0) xs
---         step (s, ln) a = (s + a, ln + 1)
+stricter_mean :: [Double] -> Double
+stricter_mean xs = (traceMarker "s" s) / fromIntegral (traceMarker "ln" ln)
+  where (s, ln)        = foldl' step (0,0) xs
+        step (!s, !ln) a = (s + a, ln + 1)
 
 strict_mean :: [Double] -> Double
 strict_mean xs = traceMarker "Begin: strict_mean" $ s / fromIntegral ln
-  where (!s, !ln)        = foldl' step (0,0) xs
+  where (s, ln)        = foldl' step (0,0) xs
         step (!s, !ln) a = (s + a, ln + 1)
 
 main :: IO ()
@@ -62,13 +62,14 @@ main = do
   -- test_values <- fmap force (replicateM 500000 $ uniformRM (0,500000) seed)
   --                >>= evaluate
   traceMarkerIO "End Bench Initialization"
-  -- wait
+  wait
   -- now run
   -- print $! lazy_mean test_values
   -- traceMarkerIO "End lazy_mean"
   -- wait
-  -- print $! stricter_mean test_values
-  -- traceMarkerIO "End stricter_mean"
-  -- wait
+  traceMarkerIO "Begin stricter_mean"
+  print $! stricter_mean test_values
+  traceMarkerIO "End stricter_mean"
+  wait
   print $! strict_mean test_values
   traceMarkerIO "End strict_mean"
