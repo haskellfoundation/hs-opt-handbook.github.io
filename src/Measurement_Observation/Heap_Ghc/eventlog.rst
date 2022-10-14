@@ -441,18 +441,129 @@ simple one line change in ``main``:
 .. image:: /_images/Measurement_Observation/Heap_GHC/eventlog/pc_heap_marker_still_leaky.png
    :scale: 80 %
 
+Notice the y-axis has reduced, our maximum heap allocations have decreased to
+~51M, however we clearly still have a memory leak in the bench setup. The only
+remaining source of possible thunks in ``test_values`` is ``uniformRM``. So
+we'll remove any possible lazy IO from that call:
 
-..
-  label the still leaky graph. point out the total allocatiosn have reduced but
-  we still ahve a leak then fix the memory leak with another evaluate
-  force. show the empty profile, and then increase the sampling rate
+.. code-block:: haskell
 
+  main :: IO ()
+  main = do
+    let wait = threadDelay 100000
+    -- create a delay at the beginning of the program, if we don't do this then
+    -- our marker will be merged with the y-axis of the heap profile
+    wait
+    traceMarkerIO "Bench Initialization"
+    -- generate random test data
+    seed <- newIOGenM (mkStdGen 1729)
+    let genValue = fmap force uniformRM (0,500000) seed   >>= evaluate         -- <--- new
+    test_values <- fmap force (replicateM 50000 genValue) >>= evaluate         -- <--- new
+    traceMarkerIO "End Bench Initialization"
+    wait
+    -- now run
+    print $! lazy_mean test_values
+    traceMarkerIO "End lazy_mean"
+    wait
+    print $! stricter_mean test_values
+    traceMarkerIO "End stricter_mean"
+    wait
+    print $! strict_mean test_values
+    traceMarkerIO "End strict_mean"
+
+which produces an empty heap profile!:
+
+.. image:: /_images/Measurement_Observation/Heap_GHC/eventlog/pc_heap_marker_empty.png
+   :scale: 80 %
+
+Now that we've removed those thunks our heap profile sampling rate is to slow.
+Let's sample 100x more frequently by setting the ``-i`` RTS flag. The invocation
+now becomes:
+
+.. code-block:: bash
+
+    $ cabal bench pointerChasing --benchmark-options='+RTS -hy -l-agu -i0.001
+    -RTS'; eventlog2html pointerChasing.eventlog && firefox pointerChasing.eventlog.html
+
+and produces this heap profile:
+
+.. image:: /_images/Measurement_Observation/Heap_GHC/eventlog/pc_heap_marker_high_sample.png
+   :scale: 80 %
+
+There are several things to point out. The y-axis has reduced to ~7M maximum,
+and the x-axis has also reduced from 1.8 seconds to 0.9 seconds. We can clearly
+see the memory leaks from ``lazy`` and ``stricter`` now. In fact, ``lazy`` has a
+total of three memory leaks, and ``stricter`` has two. Because our program is
+relatively simple, there are not many sites where these leaks could originate.
+We'll focus on ``stricter_mean``, and add markers to the source of the remaining
+leaks. Here is ``stricter_mean`` reproduced to refresh your memory:
+
+.. code-block:: haskell
+
+   stricter_mean :: [Double] -> Double
+   stricter_mean xs = traceMarker "Begin: stricter_mean" $ s / fromIntegral ln
+     where (s, ln)        = foldl' step (0,0) xs
+           step (s, ln) a = (s + a, ln + 1)
+
+We observed two leaks. We know that the fold should produce one leak because
+``foldl'`` evaluates the accumulator to weak head normal form, and the ``step``
+function does not evaluate the values inside its input ``(,)``, thus
+accumulating thunks in the elements of the tuple. Let's add markers to verify
+this behavior:
+
+.. code-block:: haskell
+
+   stricter_mean :: [Double] -> Double
+   stricter_mean xs = (traceMarker "s" s) / fromIntegral (traceMarker "ln" ln)
+     where (s, ln)        = foldl' step (0,0) xs
+           step (s, ln) a = (s + a, ln + 1)
+
+
+and heap profile:
+
+.. image:: /_images/Measurement_Observation/Heap_GHC/eventlog/pc_heap_marker_s_ln.png
+   :scale: 80 %
+
+Now we can see that the call to ``ln`` reduces a lot of the heap, i.e.,
+evaluates a lot of thunks. Let's make ``ln`` strict in ``step`` and observe the
+difference in the heap profile:
+
+.. code-block:: haskell
+
+   stricter_mean :: [Double] -> Double
+   stricter_mean xs = (traceMarker "s" s) / fromIntegral (traceMarker "ln" ln)
+     where (s, ln)        = foldl' step (0,0) xs
+           step (s, !ln) a = (s + a, ln + 1)
+
+and now we have:
+
+.. image:: /_images/Measurement_Observation/Heap_GHC/eventlog/pc_heap_marker_strict_ln.png
+   :scale: 80 %
+
+Notice the y-axis has further reduced. We still have a leak after ``s``, but
+this was expected. Let's make sure this is coming from ``s`` by making ``s``
+strict and generate the final profile:
+
+.. code-block:: haskell
+
+   stricter_mean :: [Double] -> Double
+   stricter_mean xs = (traceMarker "s" s) / fromIntegral (traceMarker "ln" ln)
+     where (s, ln)        = foldl' step (0,0) xs
+           step (!s, !ln) a = (s + a, ln + 1)
+
+which yields:
+
+.. image:: /_images/Measurement_Observation/Heap_GHC/eventlog/pc_heap_marker_strict_s_ln.png
+   :scale: 80 %
 ..
   Show the trace marker behavior with waits so we can see
   point out the strange memory leak in strict_mean
   then add markers to show that there is time between the end of strict_mean and
   when the values (s,ln) are requested, then add bangs and a marker to show that
   they unify. Perhaps show just a profile of -O2 to show the heap under normal conditions
+
+We could further investigate but our heap is now constant across
+``stricter_mean`` validating the lazy tuple hypothesis.
 
 
 
