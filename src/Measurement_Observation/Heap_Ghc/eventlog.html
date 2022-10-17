@@ -141,15 +141,15 @@
 <h1><span class="section-number">2.2.2. </span>Eventlog<a class="headerlink" href="#eventlog" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="https://downloads.haskell.org/ghc/latest/docs/users_guide/runtime_control.html#rts-eventlog">Eventlog</a>
 is a GHC runtime system feature that logs events at runtime of a compiled
-program. It is able to provide profiling information on the heap, the garbage
-collector, the scheduler, and arbitrary events that a user inserts into their
-own code. Eventlog is a versatile profiling tool, and should be one of the first
-tools in the profiling toolbox you reach for. Use eventlog when you are just
-beginning to diagnose the problem and are gathering data and want to inspect the
-heap, or, if you already suspect a sub-system, such as the garbage collector,
-and want to visualize its behavior. This chapter walks through using eventlog to
-inspect a small program that suffers from <a class="reference internal" href="../../Preliminaries/what_makes_fast_hs.html#excessive-pointer-chasing"><span class="std std-ref">Excessive Pointer Chasing</span></a>.
-By the end of the chapter you should understand:</p>
+program. It provides runtime information on the heap, the garbage collector, the
+scheduler, and arbitrary events that a user inserts into their own code.
+Eventlog is a versatile profiling tool, and should be one of the first tools in
+the profiling toolbox you reach for. Use eventlog when you are just beginning to
+diagnose the problem and are gathering data. Specifically when you want to
+inspect the heap or some other subsystem, such as the garbage collector. This
+chapter walks through using eventlog to inspect a small program that suffers
+from <a class="reference internal" href="../../Preliminaries/what_makes_fast_hs.html#excessive-pointer-chasing"><span class="std std-ref">Excessive Pointer Chasing</span></a>. By the end of the chapter you should
+understand:</p>
 <ol class="arabic simple">
 <li><p>What information can you retrieve by using eventlog.</p></li>
 <li><p>How to build your program to use eventlog.</p></li>
@@ -170,11 +170,10 @@ Guide</a>. You can also parse the
 </section>
 <section id="what-information-do-i-receive-from-eventlog">
 <h2><span class="section-number">2.2.2.2. </span>What Information Do I Receive From Eventlog?<a class="headerlink" href="#what-information-do-i-receive-from-eventlog" title="Permalink to this headline">¶</a></h2>
-<p>Eventlog logs events as a function of runtime. A full list of possible events is
-available in <a class="reference external" href="https://downloads.haskell.org/~ghc/9.2.4/docs/html/users_guide/runtime_control.html#rts-eventlog">GHC User’s Guide</a>.
-In general, the most common use case is to track heap events; which will be the
-focus of this chapter. However, a user may define and track their own events
-using the base functions <a class="reference external" href="https://downloads.haskell.org/~ghc/9.2.4/docs/html/libraries/base-4.16.3.0/Debug-Trace.html#v:traceMarker">traceEvent</a>
+<p>Eventlog logs events as a function of elapsed walltime. A full list of possible
+events is available in <a class="reference external" href="https://downloads.haskell.org/~ghc/9.2.4/docs/html/users_guide/runtime_control.html#rts-eventlog">GHC User’s Guide</a>. In general, the most common use case is to
+track heap events; which will be the focus of this chapter. However, a user may
+define and track their own events using the base functions <a class="reference external" href="https://downloads.haskell.org/~ghc/9.2.4/docs/html/libraries/base-4.16.3.0/Debug-Trace.html#v:traceMarker">traceEvent</a>
 or <a class="reference external" href="https://downloads.haskell.org/~ghc/9.2.4/docs/html/libraries/base-4.16.3.0/Debug-Trace.html#v:traceMarker">traceMarker</a>
 .</p>
 </section>
@@ -192,8 +191,8 @@ system, and heap fragmentation.</p>
 </section>
 <section id="the-running-example">
 <h2><span class="section-number">2.2.2.4. </span>The Running Example<a class="headerlink" href="#the-running-example" title="Permalink to this headline">¶</a></h2>
-<p>Our test program is an example of excessive pointer chasing. The toy example
-should be familiar to most Haskeller’s as a traditional example of a memory
+<p>Our toy program is an example of excessive pointer chasing. The toy example
+should be familiar to most Haskellers’ as a traditional example of a memory
 leak:</p>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="cm">{-# LANGUAGE BangPatterns #-}</span><span class="w"></span>
 <span class="c1">-- Need to disable optimizations because GHC will recognize and perform</span><span class="w"></span>
@@ -247,8 +246,7 @@ elements of the tuple <em>are still</em> lazy. <code class="docutils literal not
 bang patterns <em>inside</em> the tuple, thereby forcing the elements to evaluate to
 WHNF; which is just a value for <code class="docutils literal notranslate"><span class="pre">Double</span></code>.</p>
 <p>GHC is good at spotting such code patterns so we’ve turned off optimizations
-with the <code class="docutils literal notranslate"><span class="pre">OPTIONS_GHC</span> <span class="pre">-O0</span></code> pragma. We use gauge (see <span class="xref std std-ref">Criterion, Gauge,
-and Tasty-Bench</span>) to measure the runtime of each function.</p>
+with the <code class="docutils literal notranslate"><span class="pre">OPTIONS_GHC</span> <span class="pre">-O0</span></code> pragma.</p>
 </section>
 <section id="the-setup">
 <h2><span class="section-number">2.2.2.5. </span>The Setup<a class="headerlink" href="#the-setup" title="Permalink to this headline">¶</a></h2>
@@ -293,9 +291,6 @@ so which type is leaking. Here is the cabal file entry and invocation:</p>
 <p class="admonition-title">Note</p>
 <p>For subsequent runs, we will elide the complete output</p>
 </div>
-<div class="literal-block-wrapper docutils container" id="id2">
-<div class="code-block-caption"><span class="caption-text">Run the benchmark, generate an eventlog of only (-a) user (u) and
-GC (g) events with a heap profile by type (-hy)</span><a class="headerlink" href="#id2" title="Permalink to this code">¶</a></div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ cabal bench pointerChasing --benchmark-options<span class="o">=</span><span class="s1">&#39;+RTS -hy -l-agu -RTS&#39;</span>
 Build profile: -w ghc-9.2.4 -O1
 In order, the following will be built <span class="o">(</span>use -v <span class="k">for</span> more details<span class="o">)</span>:
@@ -317,14 +312,15 @@ $ eventlog2html pointerChasing.eventlog
 $ firefox pointerChasing.eventlog.html
 </pre></div>
 </div>
-</div>
-<p>which produces the heap profile:</p>
+<p>We ask cabal to run the benchmark, and generate an eventlog of only (-a)
+user (u) and GC (g) events with a heap profile by type (-hy); which yields the
+following heap profile:</p>
 <a class="reference internal image-reference" href="../../../_images/pc_heap_type.png"><img alt="../../../_images/pc_heap_type.png" src="../../../_images/pc_heap_type.png" style="width: 963.2px; height: 776.0px;" /></a>
 <p>The heap profile is similar to profiles generated by <a class="reference internal" href="../../Optimizations/GHC_tech/index.html#ghc-flags"><span class="std std-ref">traditional tools</span></a> with some notable exceptions. First, this is a more interactive
 plot; for example, you can hover your mouse over a section of the profile and a
-popup will describe the corresponding description from the legend or select an
-element on the legend to filter the plot to only that element. Second,
-eventlog2html produces more plots than just the Area chart; it also produces a
+popup will describe the corresponding description from the legend. You can also
+select an element on the legend to filter the plot to only that element. Second,
+eventlog2html produces more plots than just the Area chart. it also produces a
 normalized area chart, a <a class="reference external" href="https://en.wikipedia.org/wiki/Streamgraph">streamgraph</a>, a linechart, a heap breakdown by
 size of allocations (not count), and a detailed heap breakdown by every element
 in the legend.</p>
@@ -361,8 +357,8 @@ triangle shape is a classic indication of a memory leak. It occurs because
 <code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code> builds up a lot of thunks; increasing allocations on the heap and
 producing the rising edge, the program reaches a point where the thunks must be
 evaluated; producing the top of the triangle, and then begins evaluating them
-thus decreasing the allocations on the heap and which yields the descending
-edge. We could have observed this pattern in the other plots, but the normalized
+thus decreasing the allocations on the heap and yielding the descending edge. We
+could have observed this pattern in the other plots, but the normalized
 linechart directly shows it. Use the linechart when you want to view the
 composition of the heap by element over time.</p>
 <p>The heap plot shows the total heap size and the block and live bytes size over
@@ -377,7 +373,7 @@ program:</p>
 total allocations attributable to the element (in this case the type), and extra
 statistical information. You should use the detailed heap breakdown to inspect a
 particular element of the heap profile that you might already suspect and
-therefore can search. For our toy example the detailed view is not that useful
+therefore can search. For our toy example, the detailed view is not that useful
 because we can clearly see the culprits from the other views. However for a
 complicated heap profile with numerous kinds of heap objects, the detailed view
 provides an easy way to search and inspect a particular heap object which may be
@@ -462,25 +458,24 @@ example, notice how close the begin and end markers are for <code class="docutil
 compared to <code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code>. From the x-axis we can see that <code class="docutils literal notranslate"><span class="pre">strict_mean</span></code>
 finishes in about 0.1 seconds, while <code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code> finishes in about 0.3
 seconds.</p>
-<p>Second, the ascending side of the first memory leak (the first triangle) comes,
-perhaps unsurprisingly, from the benchmark setup.</p>
+<p>Second, the ascending side of the first memory leak (the first triangle) comes
+surprisingly from the benchmark setup.</p>
 <p>Third, the peak of the first memory leak comes from the call to <code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code>.
 This makes sense since <code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code> is the first function to request the values
-from <code class="docutils literal notranslate"><span class="pre">test_values</span></code>. However, this also means we have a memory leak in the
-benchmark setup, because after the call <code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code> <em>allocations decrease</em>. If
-we had all values from <code class="docutils literal notranslate"><span class="pre">test_values</span></code> fully evaluated and in memory when
-<code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code> was first called, then we would expect heap allocations <em>to
-increase</em> due to the leak in <code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code>. However, we observe the opposite,
-<code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code> reduces allocations until the heap levels out around 0.90 seconds
-and ~37M allocations right before <code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code> ends. The point at which the
-allocations level out, is the point when <code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code> finishes consuming thunks
-introduced by the benchmark setup and finally performs the arithmetic
-computation. Thus, we can conclude two things: First, a strict benchmark setup
-should allocate ~37M on the heap, because this is the amount of allocations
-after <code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code> has consumed all the thunks; Second, the actual wall time
-for a strict <code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code> <em>should</em> be around 0.1 seconds because this is the
-duration of time between the point at which <code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code> has consumed all the
-thunks and when <code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code> ends.</p>
+from <code class="docutils literal notranslate"><span class="pre">test_values</span></code>. However, this means we have a memory leak in the benchmark
+setup, because after the call <code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code> <em>allocations decrease</em>. If we had
+all values from <code class="docutils literal notranslate"><span class="pre">test_values</span></code> fully evaluated and in memory when <code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code>
+was first called, then we would expect heap allocations <em>to increase</em> due to the
+leak in <code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code>. However, we observe the opposite, <code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code> reduces
+allocations until the heap levels out around 0.90 seconds and ~37M allocations
+right before <code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code> ends. The point at which the allocations level out,
+is the point when <code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code> finishes consuming thunks introduced by the
+benchmark setup and finally performs the arithmetic computation. Thus, we can
+conclude two things: First, a strict benchmark setup should allocate ~37M on the
+heap, because this is the amount of allocations after <code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code> has consumed
+all the thunks; Second, the actual wall time for a strict <code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code> <em>should</em>
+be around 0.1 seconds because this is the duration of time between the point at
+which <code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code> has consumed all the thunks and when <code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code> ends.</p>
 <p>Let’s fix the benchmark setup memory leak by forcing strict IO with <code class="docutils literal notranslate"><span class="pre">evaluate</span></code>
 and <code class="docutils literal notranslate"><span class="pre">force</span></code> from <code class="docutils literal notranslate"><span class="pre">Control.Exception</span></code> and <code class="docutils literal notranslate"><span class="pre">Control.DeepSeq</span></code> respectively. A
 simple one line change in <code class="docutils literal notranslate"><span class="pre">main</span></code>:</p>
@@ -493,7 +488,7 @@ simple one line change in <code class="docutils literal notranslate"><span class
 <span class="w">  </span><span class="n">traceMarkerIO</span><span class="w"> </span><span class="s">&quot;Bench Initialization&quot;</span><span class="w"></span>
 <span class="w">  </span><span class="c1">-- generate random test data</span><span class="w"></span>
 <span class="w">  </span><span class="n">seed</span><span class="w"> </span><span class="ow">&lt;-</span><span class="w"> </span><span class="n">newIOGenM</span><span class="w"> </span><span class="p">(</span><span class="n">mkStdGen</span><span class="w"> </span><span class="mi">1729</span><span class="p">)</span><span class="w"></span>
-<span class="w">  </span><span class="n">test_values</span><span class="w"> </span><span class="ow">&lt;-</span><span class="w"> </span><span class="n">fmap</span><span class="w"> </span><span class="n">force</span><span class="w"> </span><span class="p">(</span><span class="n">replicateM</span><span class="w"> </span><span class="mi">500000</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="n">uniformRM</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">500000</span><span class="p">)</span><span class="w"> </span><span class="n">seed</span><span class="p">)</span><span class="w">     </span><span class="c1">-- &lt;--- new</span><span class="w"></span>
+<span class="w">  </span><span class="n">test_values</span><span class="w"> </span><span class="ow">&lt;-</span><span class="w"> </span><span class="n">fmap</span><span class="w"> </span><span class="n">force</span><span class="w"> </span><span class="p">(</span><span class="n">replicateM</span><span class="w"> </span><span class="mi">500000</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="n">uniformRM</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">500000</span><span class="p">)</span><span class="w"> </span><span class="n">seed</span><span class="p">)</span><span class="w"> </span><span class="c1">-- new</span><span class="w"></span>
 <span class="w">                 </span><span class="o">&gt;&gt;=</span><span class="w"> </span><span class="n">evaluate</span><span class="w"></span>
 <span class="w">  </span><span class="n">traceMarkerIO</span><span class="w"> </span><span class="s">&quot;End Bench Initialization&quot;</span><span class="w"></span>
 <span class="w">  </span><span class="n">wait</span><span class="w"></span>
@@ -522,8 +517,8 @@ we’ll remove any possible lazy IO from that call:</p>
 <span class="w">  </span><span class="n">traceMarkerIO</span><span class="w"> </span><span class="s">&quot;Bench Initialization&quot;</span><span class="w"></span>
 <span class="w">  </span><span class="c1">-- generate random test data</span><span class="w"></span>
 <span class="w">  </span><span class="n">seed</span><span class="w"> </span><span class="ow">&lt;-</span><span class="w"> </span><span class="n">newIOGenM</span><span class="w"> </span><span class="p">(</span><span class="n">mkStdGen</span><span class="w"> </span><span class="mi">1729</span><span class="p">)</span><span class="w"></span>
-<span class="w">  </span><span class="kr">let</span><span class="w"> </span><span class="n">genValue</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">fmap</span><span class="w"> </span><span class="n">force</span><span class="w"> </span><span class="n">uniformRM</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">500000</span><span class="p">)</span><span class="w"> </span><span class="n">seed</span><span class="w">   </span><span class="o">&gt;&gt;=</span><span class="w"> </span><span class="n">evaluate</span><span class="w">         </span><span class="c1">-- &lt;--- new</span><span class="w"></span>
-<span class="w">  </span><span class="n">test_values</span><span class="w"> </span><span class="ow">&lt;-</span><span class="w"> </span><span class="n">fmap</span><span class="w"> </span><span class="n">force</span><span class="w"> </span><span class="p">(</span><span class="n">replicateM</span><span class="w"> </span><span class="mi">50000</span><span class="w"> </span><span class="n">genValue</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;&gt;=</span><span class="w"> </span><span class="n">evaluate</span><span class="w">         </span><span class="c1">-- &lt;--- new</span><span class="w"></span>
+<span class="w">  </span><span class="kr">let</span><span class="w"> </span><span class="n">genValue</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">fmap</span><span class="w"> </span><span class="n">force</span><span class="w"> </span><span class="n">uniformRM</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">500000</span><span class="p">)</span><span class="w"> </span><span class="n">seed</span><span class="w">   </span><span class="o">&gt;&gt;=</span><span class="w"> </span><span class="n">evaluate</span><span class="w"> </span><span class="c1">-- new</span><span class="w"></span>
+<span class="w">  </span><span class="n">test_values</span><span class="w"> </span><span class="ow">&lt;-</span><span class="w"> </span><span class="n">fmap</span><span class="w"> </span><span class="n">force</span><span class="w"> </span><span class="p">(</span><span class="n">replicateM</span><span class="w"> </span><span class="mi">50000</span><span class="w"> </span><span class="n">genValue</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;&gt;=</span><span class="w"> </span><span class="n">evaluate</span><span class="w"> </span><span class="c1">-- new</span><span class="w"></span>
 <span class="w">  </span><span class="n">traceMarkerIO</span><span class="w"> </span><span class="s">&quot;End Bench Initialization&quot;</span><span class="w"></span>
 <span class="w">  </span><span class="n">wait</span><span class="w"></span>
 <span class="w">  </span><span class="c1">-- now run</span><span class="w"></span>
@@ -548,13 +543,14 @@ now becomes:</p>
 </div>
 <p>and produces this heap profile:</p>
 <a class="reference internal image-reference" href="../../../_images/pc_heap_marker_high_sample.png"><img alt="../../../_images/pc_heap_marker_high_sample.png" src="../../../_images/pc_heap_marker_high_sample.png" style="width: 958.4000000000001px; height: 782.4000000000001px;" /></a>
-<p>There are several things to point out. The y-axis has reduced to ~7M maximum,
-and the x-axis has also reduced from 1.8 seconds to 0.9 seconds. We can clearly
-see the memory leaks from <code class="docutils literal notranslate"><span class="pre">lazy</span></code> and <code class="docutils literal notranslate"><span class="pre">stricter</span></code> now. In fact, <code class="docutils literal notranslate"><span class="pre">lazy</span></code> has a
-total of three memory leaks, and <code class="docutils literal notranslate"><span class="pre">stricter</span></code> has two. Because our program is
-relatively simple, there are not many sites where these leaks could originate.
-We’ll focus on <code class="docutils literal notranslate"><span class="pre">stricter_mean</span></code>, and add markers to the source of the remaining
-leaks. Here is <code class="docutils literal notranslate"><span class="pre">stricter_mean</span></code> reproduced to refresh your memory:</p>
+<p>Much better! There are several things to point out. The y-axis has reduced to
+~7M maximum, and the x-axis has also reduced from 1.8 seconds to 0.9 seconds. We
+can clearly see the memory leaks from <code class="docutils literal notranslate"><span class="pre">lazy</span></code> and <code class="docutils literal notranslate"><span class="pre">stricter</span></code> now. In fact,
+<code class="docutils literal notranslate"><span class="pre">lazy</span></code> has a total of three memory leaks, and <code class="docutils literal notranslate"><span class="pre">stricter</span></code> has two. Because
+our program is relatively simple, there are not many sites where these leaks
+could originate. We’ll focus on <code class="docutils literal notranslate"><span class="pre">stricter_mean</span></code> and add markers to the source
+of the remaining leaks. We’ll also remove <code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code> but keep <code class="docutils literal notranslate"><span class="pre">strict_mean</span></code>
+for comparison . Here is <code class="docutils literal notranslate"><span class="pre">stricter_mean</span></code> reproduced to refresh your memory:</p>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">stricter_mean</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">[</span><span class="kt">Double</span><span class="p">]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Double</span><span class="w"></span>
 <span class="nf">stricter_mean</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">traceMarker</span><span class="w"> </span><span class="s">&quot;Begin: stricter_mean&quot;</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">fromIntegral</span><span class="w"> </span><span class="n">ln</span><span class="w"></span>
 <span class="w">  </span><span class="kr">where</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">ln</span><span class="p">)</span><span class="w">        </span><span class="ow">=</span><span class="w"> </span><span class="n">foldl&#39;</span><span class="w"> </span><span class="n">step</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">xs</span><span class="w"></span>
@@ -572,7 +568,7 @@ this behavior:</p>
 <span class="w">        </span><span class="n">step</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">ln</span><span class="p">)</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">ln</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"></span>
 </pre></div>
 </div>
-<p>and heap profile:</p>
+<p>which yields:</p>
 <a class="reference internal image-reference" href="../../../_images/pc_heap_marker_s_ln.png"><img alt="../../../_images/pc_heap_marker_s_ln.png" src="../../../_images/pc_heap_marker_s_ln.png" style="width: 958.4000000000001px; height: 790.4000000000001px;" /></a>
 <p>Now we can see that the call to <code class="docutils literal notranslate"><span class="pre">ln</span></code> reduces a lot of the heap, i.e.,
 evaluates a lot of thunks. Let’s make <code class="docutils literal notranslate"><span class="pre">ln</span></code> strict in <code class="docutils literal notranslate"><span class="pre">step</span></code> and observe the
@@ -599,14 +595,11 @@ strict and generate the final profile:</p>
 <p>We could further investigate but our heap is now constant across
 <code class="docutils literal notranslate"><span class="pre">stricter_mean</span></code> validating the lazy tuple hypothesis.</p>
 </section>
-<section id="tuning-the-output">
-<h2><span class="section-number">2.2.2.8. </span>Tuning the Output<a class="headerlink" href="#tuning-the-output" title="Permalink to this headline">¶</a></h2>
-</section>
 <section id="summary">
-<h2><span class="section-number">2.2.2.9. </span>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">2.2.2.8. </span>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
 </section>
 <section id="references-and-further-reading">
-<h2><span class="section-number">2.2.2.10. </span>References and Further Reading<a class="headerlink" href="#references-and-further-reading" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">2.2.2.9. </span>References and Further Reading<a class="headerlink" href="#references-and-further-reading" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic simple">
 <li><p>The</p></li>
 </ol>
