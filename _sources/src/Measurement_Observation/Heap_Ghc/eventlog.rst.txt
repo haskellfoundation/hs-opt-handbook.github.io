@@ -22,11 +22,11 @@ from :ref:`Excessive Pointer Chasing`. By the end of the chapter you should
 understand:
 
 #. What information can you retrieve by using eventlog.
+#. When to use eventlog.
 #. How to build your program to use eventlog.
 #. How to visualize eventlog information.
 #. How to tune eventlog to inspect specific subsystems.
 #. How to tune eventlog to inspect specific pieces of code.
-#. When to use eventlog.
 
 Requirements
 ------------
@@ -47,31 +47,28 @@ events is available in :userGuide:`GHC User's Guide
 <runtime_control.html#rts-eventlog>`. In general, the most common use case is to
 track heap events; which will be the focus of this chapter. However, a user may
 define and track their own events using the base functions `traceEvent
-<https://downloads.haskell.org/~ghc/9.2.4/docs/html/libraries/base-4.16.3.0/Debug-Trace.html#v:traceMarker>`_
-or `traceMarker
-<https://downloads.haskell.org/~ghc/9.2.4/docs/html/libraries/base-4.16.3.0/Debug-Trace.html#v:traceMarker>`_
-.
+<https://downloads.haskell.org/~ghc/9.2.4/docs/html/libraries/base-4.16.3.0/Debug-Trace.html#v:traceMarker>`_.
 
 When should I use Eventlog
 --------------------------
 
-Eventlog is most useful when you need to :ref:`Characterize the Problem` . It
-yields runtime information of the program specific to subsystems the program
-relies on. Thus, it allows you to drill down into the behavior of the garbage
-collector, the scheduler, the heap and so. For example, using the flag ``+RTS
--lg`` you can collect the ``CONC_MARK_BEGIN`` and ``CONC_MARK_END`` events which
-log the beginning and end of the concurrent garbage collectors marking phase.
-Similarly, you can collect ``MEM_RETURN`` which provides information about the
-current allocation of megablocks, attempts to return them to the operating
-system, and heap fragmentation.
+Eventlog is most useful when you need to :ref:`Characterize the Problem`. It
+yields runtime information on the specific subsystems the program relies on.
+Thus, it allows you to drill down into the behavior of the garbage collector,
+the scheduler, the heap and so. For example, using the flag ``+RTS -lg`` you can
+collect the ``CONC_MARK_BEGIN`` and ``CONC_MARK_END`` events which log the
+beginning and end of the concurrent garbage collectors marking phase. Similarly,
+you can collect ``MEM_RETURN`` which provides information about the current
+allocation of megablocks, attempts to return them to the operating system, and
+heap fragmentation.
 
 
 The Running Example
 -------------------
 
-Our toy program is an example of excessive pointer chasing. The toy example
-should be familiar to most Haskellers' as a traditional example of a memory
-leak:
+We'll use a toy program to demonstrate heap profiling with eventlog. Our toy
+program is an example of excessive pointer chasing and should be familiar to
+most Haskellers' as a traditional example of a memory leak:
 
 .. code-block:: haskell
 
@@ -119,12 +116,12 @@ leak:
 
 We define three functions, each of which calculate a geometric mean from a list
 of Doubles. ``lazy_mean`` uses a lazy left fold, ``stricter_mean`` uses a strict
-left fold but will still have a memory leak because ``foldl'`` evaluates the
-operator to :term:`WHNF`. The operator in each fold is ``step`` whose WHNF is a
-tuple constructor. Thus, even ``stricter_mean`` will leak memory because the
-elements of the tuple *are still* lazy. ``strict_mean`` fixes this by adding
-bang patterns *inside* the tuple, thereby forcing the elements to evaluate to
-WHNF; which is just a value for ``Double``.
+left fold but will still leak memory because ``foldl'`` evaluates the result of
+``step`` to :term:`WHNF`. ``step`` returns a tuple whose WHNF is a tuple
+constructor. Thus, ``stricter_mean`` will leak memory because the elements of
+the tuple *are still* lazy. ``strict_mean`` fixes this by adding bang patterns
+*inside* the tuple, thereby forcing the elements to evaluate to WHNF; which is
+just a value for ``Double``.
 
 GHC is good at spotting such code patterns so we've turned off optimizations
 with the ``OPTIONS_GHC -O0`` pragma.
@@ -158,14 +155,14 @@ flag combinations:
 
 #. ``<program> +RTS -hy -l-agu -RTS``: Do not track all possible events
    (``-a``), but track all garbage collector events (``g``), all user events
-   (``u``) and produce a heap profile by type (``-hy``).
+   (``u``), and produce a heap profile by type (``-hy``).
 
 #. ``<program> +RTS -hr -la -RTS``: Trace all possible events (``a``) and
    produce a heap profile by retainer (``-hr``).
 
 #. ``<program> +RTS -hb -l-asu -RTS``: Do not track all possible events
-   (``-a``), but track all scheduler events (``s``), all user events (``u``) and
-   produce a heap profile by biography (``-hb``).
+   (``-a``), but track all scheduler events (``s``), all user events (``u``),
+   and produce a heap profile by biography (``-hb``).
 
 Visualizing the Heap: Eventlog by Type
 --------------------------------------
@@ -553,17 +550,9 @@ which yields:
 
 .. image:: /_images/Measurement_Observation/Heap_GHC/eventlog/pc_heap_marker_strict_s_ln.png
    :scale: 80 %
-..
-  Show the trace marker behavior with waits so we can see
-  point out the strange memory leak in strict_mean
-  then add markers to show that there is time between the end of strict_mean and
-  when the values (s,ln) are requested, then add bangs and a marker to show that
-  they unify. Perhaps show just a profile of -O2 to show the heap under normal conditions
 
 We could further investigate but our heap is now constant across
 ``stricter_mean`` validating the lazy tuple hypothesis.
-
-
 
 ..
   Be sure to sidenote -fstrictness and demand analysis https://ghc.gitlab.haskell.org/ghc/doc/users_guide/using-optimisation.html#ghc-flag--fstrictness
@@ -571,6 +560,19 @@ We could further investigate but our heap is now constant across
 Summary
 -------
 
+In sum, we've demonstrated heap profiling using GHC's eventlog and
+|eventlog2html|. Eventlog records event specific data produced by GHC as a
+function of walltime. One can embed and emit custom events using the functions
+``traceEvent`` and ``traceEventIO``, and add runtime markers to the eventlog
+with ``traceMarker`` and ``traceMarkerIO`` in base. These functions and the
+better visualizations of |eventlog2html| make eventlog a powerful tool when
+investigating the runtime behavior of a program. In particular when finding,
+fixing, and debugging memory leaks or when correlating heap information to a
+particular function or phase of the program.
+
 References and Further Reading
 ------------------------------
-#. The
+
+#. The eventlog section in the :userGuide:`GHC User's
+   Guide <runtime_control.html#rts-eventlog>`.
+#. The eventlog2html `home page <https://mpickering.github.io/eventlog2html/>`_.

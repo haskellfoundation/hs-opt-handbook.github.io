@@ -152,11 +152,11 @@ from <a class="reference internal" href="../../Preliminaries/what_makes_fast_hs.
 understand:</p>
 <ol class="arabic simple">
 <li><p>What information can you retrieve by using eventlog.</p></li>
+<li><p>When to use eventlog.</p></li>
 <li><p>How to build your program to use eventlog.</p></li>
 <li><p>How to visualize eventlog information.</p></li>
 <li><p>How to tune eventlog to inspect specific subsystems.</p></li>
 <li><p>How to tune eventlog to inspect specific pieces of code.</p></li>
-<li><p>When to use eventlog.</p></li>
 </ol>
 <section id="requirements">
 <h2><span class="section-number">2.2.2.1. </span>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
@@ -173,27 +173,25 @@ Guide</a>. You can also parse the
 <p>Eventlog logs events as a function of elapsed walltime. A full list of possible
 events is available in <a class="reference external" href="https://downloads.haskell.org/~ghc/9.2.4/docs/html/users_guide/runtime_control.html#rts-eventlog">GHC User’s Guide</a>. In general, the most common use case is to
 track heap events; which will be the focus of this chapter. However, a user may
-define and track their own events using the base functions <a class="reference external" href="https://downloads.haskell.org/~ghc/9.2.4/docs/html/libraries/base-4.16.3.0/Debug-Trace.html#v:traceMarker">traceEvent</a>
-or <a class="reference external" href="https://downloads.haskell.org/~ghc/9.2.4/docs/html/libraries/base-4.16.3.0/Debug-Trace.html#v:traceMarker">traceMarker</a>
-.</p>
+define and track their own events using the base functions <a class="reference external" href="https://downloads.haskell.org/~ghc/9.2.4/docs/html/libraries/base-4.16.3.0/Debug-Trace.html#v:traceMarker">traceEvent</a>.</p>
 </section>
 <section id="when-should-i-use-eventlog">
 <h2><span class="section-number">2.2.2.3. </span>When should I use Eventlog<a class="headerlink" href="#when-should-i-use-eventlog" title="Permalink to this headline">¶</a></h2>
-<p>Eventlog is most useful when you need to <a class="reference internal" href="../the_recipe.html#characterize-the-problem"><span class="std std-ref">Characterize the Problem</span></a> . It
-yields runtime information of the program specific to subsystems the program
-relies on. Thus, it allows you to drill down into the behavior of the garbage
-collector, the scheduler, the heap and so. For example, using the flag <code class="docutils literal notranslate"><span class="pre">+RTS</span>
-<span class="pre">-lg</span></code> you can collect the <code class="docutils literal notranslate"><span class="pre">CONC_MARK_BEGIN</span></code> and <code class="docutils literal notranslate"><span class="pre">CONC_MARK_END</span></code> events which
-log the beginning and end of the concurrent garbage collectors marking phase.
-Similarly, you can collect <code class="docutils literal notranslate"><span class="pre">MEM_RETURN</span></code> which provides information about the
-current allocation of megablocks, attempts to return them to the operating
-system, and heap fragmentation.</p>
+<p>Eventlog is most useful when you need to <a class="reference internal" href="../the_recipe.html#characterize-the-problem"><span class="std std-ref">Characterize the Problem</span></a>. It
+yields runtime information on the specific subsystems the program relies on.
+Thus, it allows you to drill down into the behavior of the garbage collector,
+the scheduler, the heap and so. For example, using the flag <code class="docutils literal notranslate"><span class="pre">+RTS</span> <span class="pre">-lg</span></code> you can
+collect the <code class="docutils literal notranslate"><span class="pre">CONC_MARK_BEGIN</span></code> and <code class="docutils literal notranslate"><span class="pre">CONC_MARK_END</span></code> events which log the
+beginning and end of the concurrent garbage collectors marking phase. Similarly,
+you can collect <code class="docutils literal notranslate"><span class="pre">MEM_RETURN</span></code> which provides information about the current
+allocation of megablocks, attempts to return them to the operating system, and
+heap fragmentation.</p>
 </section>
 <section id="the-running-example">
 <h2><span class="section-number">2.2.2.4. </span>The Running Example<a class="headerlink" href="#the-running-example" title="Permalink to this headline">¶</a></h2>
-<p>Our toy program is an example of excessive pointer chasing. The toy example
-should be familiar to most Haskellers’ as a traditional example of a memory
-leak:</p>
+<p>We’ll use a toy program to demonstrate heap profiling with eventlog. Our toy
+program is an example of excessive pointer chasing and should be familiar to
+most Haskellers’ as a traditional example of a memory leak:</p>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="cm">{-# LANGUAGE BangPatterns #-}</span><span class="w"></span>
 <span class="c1">-- Need to disable optimizations because GHC will recognize and perform</span><span class="w"></span>
 <span class="c1">-- let-floating for us!</span><span class="w"></span>
@@ -239,12 +237,12 @@ leak:</p>
 </div>
 <p>We define three functions, each of which calculate a geometric mean from a list
 of Doubles. <code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code> uses a lazy left fold, <code class="docutils literal notranslate"><span class="pre">stricter_mean</span></code> uses a strict
-left fold but will still have a memory leak because <code class="docutils literal notranslate"><span class="pre">foldl'</span></code> evaluates the
-operator to <a class="reference internal" href="../../glossary.html#term-WHNF"><span class="xref std std-term">WHNF</span></a>. The operator in each fold is <code class="docutils literal notranslate"><span class="pre">step</span></code> whose WHNF is a
-tuple constructor. Thus, even <code class="docutils literal notranslate"><span class="pre">stricter_mean</span></code> will leak memory because the
-elements of the tuple <em>are still</em> lazy. <code class="docutils literal notranslate"><span class="pre">strict_mean</span></code> fixes this by adding
-bang patterns <em>inside</em> the tuple, thereby forcing the elements to evaluate to
-WHNF; which is just a value for <code class="docutils literal notranslate"><span class="pre">Double</span></code>.</p>
+left fold but will still leak memory because <code class="docutils literal notranslate"><span class="pre">foldl'</span></code> evaluates the result of
+<code class="docutils literal notranslate"><span class="pre">step</span></code> to <a class="reference internal" href="../../glossary.html#term-WHNF"><span class="xref std std-term">WHNF</span></a>. <code class="docutils literal notranslate"><span class="pre">step</span></code> returns a tuple whose WHNF is a tuple
+constructor. Thus, <code class="docutils literal notranslate"><span class="pre">stricter_mean</span></code> will leak memory because the elements of
+the tuple <em>are still</em> lazy. <code class="docutils literal notranslate"><span class="pre">strict_mean</span></code> fixes this by adding bang patterns
+<em>inside</em> the tuple, thereby forcing the elements to evaluate to WHNF; which is
+just a value for <code class="docutils literal notranslate"><span class="pre">Double</span></code>.</p>
 <p>GHC is good at spotting such code patterns so we’ve turned off optimizations
 with the <code class="docutils literal notranslate"><span class="pre">OPTIONS_GHC</span> <span class="pre">-O0</span></code> pragma.</p>
 </section>
@@ -274,12 +272,12 @@ flag combinations:</p>
 <ol class="arabic simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">&lt;program&gt;</span> <span class="pre">+RTS</span> <span class="pre">-hy</span> <span class="pre">-l-agu</span> <span class="pre">-RTS</span></code>: Do not track all possible events
 (<code class="docutils literal notranslate"><span class="pre">-a</span></code>), but track all garbage collector events (<code class="docutils literal notranslate"><span class="pre">g</span></code>), all user events
-(<code class="docutils literal notranslate"><span class="pre">u</span></code>) and produce a heap profile by type (<code class="docutils literal notranslate"><span class="pre">-hy</span></code>).</p></li>
+(<code class="docutils literal notranslate"><span class="pre">u</span></code>), and produce a heap profile by type (<code class="docutils literal notranslate"><span class="pre">-hy</span></code>).</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">&lt;program&gt;</span> <span class="pre">+RTS</span> <span class="pre">-hr</span> <span class="pre">-la</span> <span class="pre">-RTS</span></code>: Trace all possible events (<code class="docutils literal notranslate"><span class="pre">a</span></code>) and
 produce a heap profile by retainer (<code class="docutils literal notranslate"><span class="pre">-hr</span></code>).</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">&lt;program&gt;</span> <span class="pre">+RTS</span> <span class="pre">-hb</span> <span class="pre">-l-asu</span> <span class="pre">-RTS</span></code>: Do not track all possible events
-(<code class="docutils literal notranslate"><span class="pre">-a</span></code>), but track all scheduler events (<code class="docutils literal notranslate"><span class="pre">s</span></code>), all user events (<code class="docutils literal notranslate"><span class="pre">u</span></code>) and
-produce a heap profile by biography (<code class="docutils literal notranslate"><span class="pre">-hb</span></code>).</p></li>
+(<code class="docutils literal notranslate"><span class="pre">-a</span></code>), but track all scheduler events (<code class="docutils literal notranslate"><span class="pre">s</span></code>), all user events (<code class="docutils literal notranslate"><span class="pre">u</span></code>),
+and produce a heap profile by biography (<code class="docutils literal notranslate"><span class="pre">-hb</span></code>).</p></li>
 </ol>
 </section>
 <section id="visualizing-the-heap-eventlog-by-type">
@@ -597,11 +595,22 @@ strict and generate the final profile:</p>
 </section>
 <section id="summary">
 <h2><span class="section-number">2.2.2.8. </span>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>In sum, we’ve demonstrated heap profiling using GHC’s eventlog and
+<a class="reference external" href="https://mpickering.github.io/eventlog2html/">eventlog2html</a>. Eventlog records event specific data produced by GHC as a
+function of walltime. One can embed and emit custom events using the functions
+<code class="docutils literal notranslate"><span class="pre">traceEvent</span></code> and <code class="docutils literal notranslate"><span class="pre">traceEventIO</span></code>, and add runtime markers to the eventlog
+with <code class="docutils literal notranslate"><span class="pre">traceMarker</span></code> and <code class="docutils literal notranslate"><span class="pre">traceMarkerIO</span></code> in base. These functions and the
+better visualizations of <a class="reference external" href="https://mpickering.github.io/eventlog2html/">eventlog2html</a> make eventlog a powerful tool when
+investigating the runtime behavior of a program. In particular when finding,
+fixing, and debugging memory leaks or when correlating heap information to a
+particular function or phase of the program.</p>
 </section>
 <section id="references-and-further-reading">
 <h2><span class="section-number">2.2.2.9. </span>References and Further Reading<a class="headerlink" href="#references-and-further-reading" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic simple">
-<li><p>The</p></li>
+<li><p>The eventlog section in the <a class="reference external" href="https://downloads.haskell.org/~ghc/9.2.4/docs/html/users_guide/runtime_control.html#rts-eventlog">GHC User’s
+Guide</a>.</p></li>
+<li><p>The eventlog2html <a class="reference external" href="https://mpickering.github.io/eventlog2html/">home page</a>.</p></li>
 </ol>
 </section>
 </section>
