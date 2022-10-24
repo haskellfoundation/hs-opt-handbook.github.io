@@ -20,6 +20,7 @@ Release History
 * October, 2022
 
   * Add code snippets
+  * Add first draft of eventlog chapter
 
 * September, 2022
 
