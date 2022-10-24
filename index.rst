@@ -19,10 +19,11 @@ Release History
 
 * October, 2022
 
-  * Add code snippets
+  * Add first draft of eventlog chapter.
+  * Add code snippets.
 
 * September, 2022
 
-  * Add Release History to splash page
-  * End of Phase 0 in project plan
-  * Begin process of moving book repository to Haskell Foundation
+  * Add Release History to splash page.
+  * End of Phase 0 in project plan.
+  * Begin process of moving book repository to Haskell Foundation.
