@@ -548,8 +548,10 @@ strict and generate the final profile:
 
 which yields:
 
-.. image:: /_images/Measurement_Observation/Heap_GHC/eventlog/pc_heap_marker_strict_s_ln.png
-   :scale: 80 %
+.. raw:: html
+
+   <iframe src="../../../_static/pc_heap_marker_strict_s_ln.html" width="800"
+   height="1000"></frame>
 
 We could further investigate but our heap is now constant across
 ``stricter_mean`` validating the lazy tuple hypothesis.
