@@ -12,6 +12,7 @@ let
      # ourTexLive
    ];
    nonPythonInputs = with pkgs; [ sphinx-press-theme # this comes from the overlay
+                                  sphinx-copybutton  # this comes from the overlay
                                   pandoc
                                   rst2html5
                                 ];

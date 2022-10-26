@@ -22,13 +22,27 @@
             propagatedBuildInputs = [ prev.sphinx ];
           };
         };
+
+        copy-button = final: prev: {
+          sphinx-copybutton = prev.python310Packages.buildPythonPackage rec {
+            pname = "sphinx-copybutton";
+            version = "0.5.0";
+
+            src = prev.python3Packages.fetchPypi {
+              inherit pname;
+              inherit version;
+              sha256 = "sha256-oMBZ2q3QPCe6dQ2lNKkqY+ejanc23PaE8m7jRhmXh/Y=";
+            };
+            propagatedBuildInputs = [ prev.sphinx ];
+          };
+        };
+
     in
     flake-utils.lib.eachDefaultSystem
       (system:
-        let # pkgs = nixpkgs.legacyPackages.${system};
-            pkgs = import nixpkgs
+        let pkgs = import nixpkgs
               { inherit system;
-                overlays = [ press-theme-overlay ];
+                overlays = [ press-theme-overlay copy-button ];
               };
 
             ourTexLive = pkgs.texlive.combine {
