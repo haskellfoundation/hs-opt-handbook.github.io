@@ -1,20 +1,24 @@
 <!DOCTYPE html>
-<html >
+<html  lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
       <title>2.1. The Recipe</title>
     
           <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
           <link rel="stylesheet" href="../../_static/theme.css " type="text/css" />
+          <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
           <link rel="stylesheet" href="../../_static/css/s4defs-roles.css" type="text/css" />
       
       <!-- sphinx script_files -->
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
 
       
       <!-- bundled in js (rollup iife) -->
@@ -136,7 +140,7 @@
           <div class="content" role="main" v-pre>
             
   <section id="the-recipe">
-<h1><span class="section-number">2.1. </span>The Recipe<a class="headerlink" href="#the-recipe" title="Permalink to this headline">¶</a></h1>
+<h1><span class="section-number">2.1. </span>The Recipe<a class="headerlink" href="#the-recipe" title="Permalink to this heading">¶</a></h1>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>This chapter is still under heavy revision. Please feel free to still read
@@ -155,7 +159,7 @@ interacts with, and in turn become a better software engineer. This chapter
 provides a sequence of questions and reminders to help you take a scientific
 approach to performance regression debugging. We hope it aids you well.</p>
 <section id="vocabulary">
-<h2><span class="section-number">2.1.1. </span>Vocabulary<a class="headerlink" href="#vocabulary" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">2.1.1. </span>Vocabulary<a class="headerlink" href="#vocabulary" title="Permalink to this heading">¶</a></h2>
 <p>Unless otherwise noted, we use the following vocabulary to describe various
 aspects of our optimization journey. Because these do not have a formal
 definition we present them here instead of in the <a class="reference internal" href="../glossary.html#glossary"><span class="std std-ref">Glossary</span></a>:</p>
@@ -176,7 +180,7 @@ problem.</p></li>
 </ol>
 </section>
 <section id="characterize-the-problem">
-<h2><span class="section-number">2.1.2. </span>Characterize the Problem<a class="headerlink" href="#characterize-the-problem" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">2.1.2. </span>Characterize the Problem<a class="headerlink" href="#characterize-the-problem" title="Permalink to this heading">¶</a></h2>
 <p>The first step to solving any kind of problem is characterization. The goal of
 this step is to observe how the problem <em>presents</em> itself in the system in terms
 of the sub-systems the system uses. No phenomena exists without leaving a trail
@@ -199,7 +203,7 @@ environment the system operates in that could induce the problem? Bring out
 the git logs and begin bisecting!</p></li>
 </ol>
 <section id="precisely-restate-the-problem">
-<h3><span class="section-number">2.1.2.1. </span>Precisely Restate the Problem<a class="headerlink" href="#precisely-restate-the-problem" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">2.1.2.1. </span>Precisely Restate the Problem<a class="headerlink" href="#precisely-restate-the-problem" title="Permalink to this heading">¶</a></h3>
 <p>With these questions in mind, the next step is to gather data <a class="footnote-reference brackets" href="#id3" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> . You want to
 gather enough data to be able to precisely describe the problem in terms of
 metrics your system cares about. For example, in a high performance application
@@ -226,7 +230,7 @@ terms of metrics that are meaningful to your system.</p>
 </section>
 </section>
 <section id="construct-a-hypothetical-failure-mode">
-<h2><span class="section-number">2.1.3. </span>Construct a Hypothetical Failure Mode<a class="headerlink" href="#construct-a-hypothetical-failure-mode" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">2.1.3. </span>Construct a Hypothetical Failure Mode<a class="headerlink" href="#construct-a-hypothetical-failure-mode" title="Permalink to this heading">¶</a></h2>
 <p>The next step is to construct a hypothetical failure mode that could produce the
 observed problem. The failure mode should be a statement of sub-system
 interactions.  Imagine walking through the system with
@@ -255,7 +259,7 @@ mode through testing.</p>
 hypothetical failure modes.</p>
 </section>
 <section id="create-the-smallest-reproducible-test-of-the-problem">
-<h2><span class="section-number">2.1.4. </span>Create The Smallest Reproducible Test of the Problem<a class="headerlink" href="#create-the-smallest-reproducible-test-of-the-problem" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">2.1.4. </span>Create The Smallest Reproducible Test of the Problem<a class="headerlink" href="#create-the-smallest-reproducible-test-of-the-problem" title="Permalink to this heading">¶</a></h2>
 <p>Once you have characterized the problem and have possible failure modes you
 should try to create an isolated, minimal test to reproduce the problem. The
 idea is to try to capture the problem so you can begin analyzing it. A test is a
@@ -297,7 +301,7 @@ not occur.</p></li>
 </ol>
 </section>
 <section id="define-a-hypothesis">
-<h2><span class="section-number">2.1.5. </span>Define a Hypothesis<a class="headerlink" href="#define-a-hypothesis" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">2.1.5. </span>Define a Hypothesis<a class="headerlink" href="#define-a-hypothesis" title="Permalink to this heading">¶</a></h2>
 <p>Think of each sub-system, external system, and component of your system as
 characters in a story. Any system that takes an action to produce a result that
 your code interacts with or causes, is a character. Each data structure your
@@ -327,7 +331,7 @@ hypothesis we learn where runtime is spent, and what is stored in the cache.</p>
 </ol>
 </section>
 <section id="predict-the-response-and-test">
-<h2><span class="section-number">2.1.6. </span>Predict the Response and Test<a class="headerlink" href="#predict-the-response-and-test" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">2.1.6. </span>Predict the Response and Test<a class="headerlink" href="#predict-the-response-and-test" title="Permalink to this heading">¶</a></h2>
 <p>Now that you have a hypothesis, a hypothetical failure mode and a minimal test
 case you can begin testing. Each change made to your code should be in pursuit
 of validating or invalidating the hypothesis. Do your best to resist the urge to
@@ -346,7 +350,8 @@ hypothesis.</p></li>
 </ol>
 </section>
 <section id="summary">
-<h2><span class="section-number">2.1.7. </span>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">2.1.7. </span>Summary<a class="headerlink" href="#summary" title="Permalink to this heading">¶</a></h2>
+<aside class="footnote-list brackets">
 <aside class="footnote brackets" id="id3" role="note">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
 <p>Be sure to have a reproducible testing environment setup before you begin
@@ -364,6 +369,7 @@ you do not get a response, then you know that the sub-systems you’ve
 altered are not in the failure mode of the problem. This search for the
 failure mode is characterization of the problem and thus so is shotgun
 debugging.</p>
+</aside>
 </aside>
 </section>
 </section>
@@ -383,7 +389,7 @@ debugging.</p>
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2022-2022, Jeffrey Young (doyougnu).
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.5.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.1.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
 </div>
             </div>
           </div>
