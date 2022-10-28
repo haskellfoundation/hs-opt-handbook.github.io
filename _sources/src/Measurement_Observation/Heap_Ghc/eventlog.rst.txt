@@ -550,8 +550,7 @@ which yields:
 
 .. raw:: html
 
-   <iframe src="../../../_static/pc_heap_marker_strict_s_ln.html" width="800"
-   height="1000"></frame>
+   <iframe id="scaled-frame" src="../../../_static/pc_heap_marker_strict_s_ln.html"></frame>
 
 We could further investigate but our heap is now constant across
 ``stricter_mean`` validating the lazy tuple hypothesis.
