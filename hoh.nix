@@ -8,6 +8,8 @@ let
      sphinx-autobuild
      sphinxcontrib-bibtex
      sphinxcontrib-tikz
+     # marked as broken in nixpkgs unfortunately
+     # sphinx-book-theme
      ## until we have a reason for tex leave this commented out for CI
      # ourTexLive
    ];

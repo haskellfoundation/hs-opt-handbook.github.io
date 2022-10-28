@@ -74,6 +74,7 @@ exclude_patterns = [ '_build'
                    , 'glossary.rst'
                    , 'custom.rst'
                    , '.direnv'
+                   , 'code/lethargy/.direnv'
                    ]
 
 
@@ -82,8 +83,9 @@ exclude_patterns = [ '_build'
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 html_theme      = "press"
+html_theme_options = { "body_max_width": 1600 }
 html_static_path = ['_static', 'code']
-html_css_files = [ 'css/s4defs-roles.css' ]
+html_css_files = [ 'css/s4defs-roles.css', 'css/iframe.css' ]
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
