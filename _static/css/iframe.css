@@ -1,13 +1,13 @@
 #wrap {
-  width: 750px;
-  height: 1500px;
+  /* width: 750px; */
+  /* height: 750px; */
   padding: 0;
   overflow: hidden;
 }
 
 #scaled-frame {
   width: 1300px;
-  height: 1150px;
+  height: 1100px;
   border: 0px;
 }
 
