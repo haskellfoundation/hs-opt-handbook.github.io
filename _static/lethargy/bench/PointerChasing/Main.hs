@@ -37,39 +37,57 @@ import Debug.Trace            (traceMarker, traceMarkerIO)
 --   where (s, ln)        = foldl step (0,0) xs
 --         step (s, ln) a = (s + a, ln + 1)
 
+-- stricter_mean :: [Double] -> Double
+-- stricter_mean xs = (traceMarker "s" s) / fromIntegral (traceMarker "ln" ln)
+--   where (s, ln)        = foldl' step (0,0) xs
+--         step (!s, !ln) a = (s + a, ln + 1)
+
+-- strict_mean :: [Double] -> Double
+-- strict_mean xs = traceMarker "Begin: strict_mean" $ s / fromIntegral ln
+--   where (s, ln)        = foldl' step (0,0) xs
+--         step (!s, !ln) a = (s + a, ln + 1)
+
+lazy_mean :: [Double] -> Double
+lazy_mean xs = s / fromIntegral ln
+  where (s, ln)        = foldl step (0,0) xs
+        step (s, ln) a = (s + a, ln + 1)
+
 stricter_mean :: [Double] -> Double
-stricter_mean xs = (traceMarker "s" s) / fromIntegral (traceMarker "ln" ln)
+stricter_mean xs = s / fromIntegral ln
+  where (s, ln)        = foldl' step (0,0) xs
+        step (s, ln) a = (s + a, ln + 1)
+
+strict_mean :: [Double] -> Double
+strict_mean xs = s / fromIntegral ln
   where (s, ln)        = foldl' step (0,0) xs
         step (!s, !ln) a = (s + a, ln + 1)
 
-strict_mean :: [Double] -> Double
-strict_mean xs = traceMarker "Begin: strict_mean" $ s / fromIntegral ln
-  where (s, ln)        = foldl' step (0,0) xs
-        step (!s, !ln) a = (s + a, ln + 1)
+
 
 main :: IO ()
 main = do
   let wait = threadDelay 100000
   -- create a delay at the beginning of the program, if we don't do this then
   -- our marker will be merged with the y-axis of the heap profile
-  wait
-  traceMarkerIO "Bench Initialization"
+  -- wait
+  -- traceMarkerIO "Bench Initialization"
   -- generate random test data
   seed <- newIOGenM (mkStdGen 1729)
-  let genValue = fmap force uniformRM (0,500000) seed >>= evaluate           -- <--- new
-  test_values <- fmap force (replicateM 50000 genValue) >>= evaluate                        -- <--- new
+  test_values <- replicateM 500000 $ uniformRM (0,500000) seed
+  -- let genValue = fmap force uniformRM (0,500000) seed >>= evaluate           -- <--- new
+  -- test_values <- fmap force (replicateM 50000 genValue) >>= evaluate                        -- <--- new
   -- let genValues = replicateM 500000 $ uniformRM (0,500000) seed          -- <--- new
   -- test_values <- fmap force (replicateM 500000 $ uniformRM (0,500000) seed)
   --                >>= evaluate
-  traceMarkerIO "End Bench Initialization"
-  wait
-  -- now run
-  -- print $! lazy_mean test_values
-  -- traceMarkerIO "End lazy_mean"
+  -- traceMarkerIO "End Bench Initialization"
   -- wait
-  traceMarkerIO "Begin stricter_mean"
+  -- now run
+  print $! lazy_mean test_values
+  -- traceMarkerIO "End lazy_mean"
+  wait
+  -- traceMarkerIO "Begin stricter_mean"
   print $! stricter_mean test_values
-  traceMarkerIO "End stricter_mean"
+  -- traceMarkerIO "End stricter_mean"
   wait
   print $! strict_mean test_values
-  traceMarkerIO "End strict_mean"
+  -- traceMarkerIO "End strict_mean"
