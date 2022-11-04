@@ -1,18 +1,17 @@
 #wrap {
-  /* width: 750px; */
-  /* height: 750px; */
+  width: 750px;
+  height: 750px;
   padding: 0;
-  overflow: hidden;
 }
 
 #scaled-frame {
-  width: 1300px;
-  height: 1100px;
-  border: 0px;
+  width: 1700px;
+  height: 1450px;
+  display: block;
 }
 
 #scaled-frame {
-  zoom: 0.85;
+  zoom: 0.75;
   -moz-transform: scale(0.75);
   -moz-transform-origin: 0 0;
   -o-transform: scale(0.75);
@@ -23,6 +22,6 @@
 
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   #scaled-frame {
-    zoom: 1;
+    zoom: 0.75;
   }
 }

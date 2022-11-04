@@ -16,8 +16,8 @@ Sincerely,
 The :doc:`Contributors </src/contributors>` of the Haskell Optimization
 Handbook.
 
-Credit
-----------
+Sponsors
+--------
 
 While there are a number of community contributors to the book, the main author
 and project lead is Jeffrey M. Young, who was generously sponsored in this work
