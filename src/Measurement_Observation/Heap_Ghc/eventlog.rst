@@ -581,10 +581,16 @@ which yields:
      <iframe id="scaled-frame" src="../../../_static/eventlog/pc_heap_marker_strict_s_ln.html"></iframe>
 
 ``stricter_mean`` still doesn't run in constant heap as the heap decreases
-during and after calling it. The only ...
+during and after calling it, but it is difficult to see exactly what is
+decreasing. This situation is exactly why the detailed heap view is useful.
+Checking the detailed view of the latest profile shows ``Double`` and ``[]`` to
+be constant, but shows ``*`` decreasing. ``*`` is described in the GHC Users
+Guide; it is the symbol the profiler emits for closures that have an unknown or
+polymorphic type. But the toy program is monomorphic, so where is the
+polymorphism?
 
 .. note::
-   start here, describe what * is on the heap profile
+   start here, find the * in the user guide and link, show its fromIntegral
 
 
 We could further investigate but our heap is now constant across
