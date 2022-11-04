@@ -613,10 +613,16 @@ expected. Let’s make sure this is coming from <code class="docutils literal no
 </div>
 <p>which yields:</p>
 <iframe id="scaled-frame" src="../../../_static/eventlog/pc_heap_marker_strict_s_ln.html"></iframe><p><code class="docutils literal notranslate"><span class="pre">stricter_mean</span></code> still doesn’t run in constant heap as the heap decreases
-during and after calling it. The only …</p>
+during and after calling it, but it is difficult to see exactly what is
+decreasing. This situation is exactly why the detailed heap view is useful.
+Checking the detailed view of the latest profile shows <code class="docutils literal notranslate"><span class="pre">Double</span></code> and <code class="docutils literal notranslate"><span class="pre">[]</span></code> to
+be constant, but shows <code class="docutils literal notranslate"><span class="pre">*</span></code> decreasing. <code class="docutils literal notranslate"><span class="pre">*</span></code> is described in the GHC Users
+Guide; it is the symbol the profiler emits for closures that have an unknown or
+polymorphic type. But the toy program is monomorphic, so where is the
+polymorphism?</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>start here, describe what * is on the heap profile</p>
+<p>start here, find the * in the user guide and link, show its fromIntegral</p>
 </div>
 <p>We could further investigate but our heap is now constant across
 <code class="docutils literal notranslate"><span class="pre">stricter_mean</span></code> validating the lazy tuple hypothesis.</p>
