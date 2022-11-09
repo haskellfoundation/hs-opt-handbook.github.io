@@ -616,17 +616,44 @@ expected. Let’s make sure this is coming from <code class="docutils literal no
 during and after calling it, but it is difficult to see exactly what is
 decreasing. This situation is exactly why the detailed heap view is useful.
 Checking the detailed view of the latest profile shows <code class="docutils literal notranslate"><span class="pre">Double</span></code> and <code class="docutils literal notranslate"><span class="pre">[]</span></code> to
-be constant, but shows <code class="docutils literal notranslate"><span class="pre">*</span></code> decreasing. <code class="docutils literal notranslate"><span class="pre">*</span></code> is described in the GHC Users
-Guide; it is the symbol the profiler emits for closures that have an unknown or
-polymorphic type. But the toy program is monomorphic, so where is the
-polymorphism?</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>start here, find the * in the user guide and link, show its fromIntegral</p>
+be constant, but shows <code class="docutils literal notranslate"><span class="pre">*</span></code> decreasing. <code class="docutils literal notranslate"><span class="pre">*</span></code> is the symbol the heap profiler
+emits for closures that have an unknown type. But the toy program is completely
+monomorphic and has known types, so where do we have an unknown type? The only
+code in the toy program that doesn’t have a precise type is in the benchmark
+setup, and specifically this line:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="o">...</span><span class="w"></span>
+<span class="nf">seed</span><span class="w"> </span><span class="ow">&lt;-</span><span class="w"> </span><span class="n">newIOGenM</span><span class="w"> </span><span class="p">(</span><span class="n">mkStdGen</span><span class="w"> </span><span class="mi">1729</span><span class="p">)</span><span class="w"></span>
+<span class="o">...</span><span class="w"></span>
+</pre></div>
 </div>
+<p>where <code class="docutils literal notranslate"><span class="pre">newIOGenM</span></code> returns a polymorphic type that is implemented as an
+<code class="docutils literal notranslate"><span class="pre">IORef</span></code>, that is, a value the profiler doesn’t have access to! Thus, forcing
+this value should remove the memory leak. Our final <code class="docutils literal notranslate"><span class="pre">main</span></code> is:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">main</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">IO</span><span class="w"> </span><span class="nb">()</span><span class="w"></span>
+<span class="nf">main</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kr">do</span><span class="w"></span>
+<span class="w">  </span><span class="kr">let</span><span class="w"> </span><span class="n">wait</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">threadDelay</span><span class="w"> </span><span class="mi">100000</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- create a delay at the beginning of the program, if we don&#39;t do this then</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- our marker will be merged with the y-axis of the heap profile</span><span class="w"></span>
+<span class="w">  </span><span class="n">wait</span><span class="w"></span>
+<span class="w">  </span><span class="n">traceMarkerIO</span><span class="w"> </span><span class="s">&quot;Bench Initialization&quot;</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- generate random test data</span><span class="w"></span>
+<span class="w">  </span><span class="o">!</span><span class="n">seed</span><span class="w"> </span><span class="ow">&lt;-</span><span class="w"> </span><span class="n">newIOGenM</span><span class="w"> </span><span class="p">(</span><span class="n">mkStdGen</span><span class="w"> </span><span class="mi">1729</span><span class="p">)</span><span class="w">                               </span><span class="c1">-- new</span><span class="w"></span>
+<span class="w">  </span><span class="kr">let</span><span class="w"> </span><span class="n">genValue</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">fmap</span><span class="w"> </span><span class="n">force</span><span class="w"> </span><span class="n">uniformRM</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">500000</span><span class="p">)</span><span class="w"> </span><span class="n">seed</span><span class="w"> </span><span class="o">&gt;&gt;=</span><span class="w"> </span><span class="n">evaluate</span><span class="w"></span>
+<span class="w">  </span><span class="n">test_values</span><span class="w"> </span><span class="ow">&lt;-</span><span class="w"> </span><span class="n">replicateM</span><span class="w"> </span><span class="mi">50000</span><span class="w"> </span><span class="n">genValue</span><span class="w"> </span><span class="o">&gt;&gt;=</span><span class="w"> </span><span class="n">evaluate</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="n">force</span><span class="w"></span>
+<span class="w">  </span><span class="n">traceMarkerIO</span><span class="w"> </span><span class="s">&quot;End Bench Initialization&quot;</span><span class="w"></span>
+<span class="w">  </span><span class="n">wait</span><span class="w"></span>
+<span class="w">  </span><span class="n">traceMarkerIO</span><span class="w"> </span><span class="s">&quot;Begin stricter_mean&quot;</span><span class="w"></span>
+<span class="w">  </span><span class="n">print</span><span class="w"> </span><span class="o">$!</span><span class="w"> </span><span class="n">stricter_mean</span><span class="w"> </span><span class="n">test_values</span><span class="w"></span>
+<span class="w">  </span><span class="n">traceMarkerIO</span><span class="w"> </span><span class="s">&quot;End stricter_mean&quot;</span><span class="w"></span>
+<span class="w">  </span><span class="n">wait</span><span class="w"></span>
+<span class="w">  </span><span class="n">print</span><span class="w"> </span><span class="o">$!</span><span class="w"> </span><span class="n">strict_mean</span><span class="w"> </span><span class="n">test_values</span><span class="w"></span>
+<span class="w">  </span><span class="n">traceMarkerIO</span><span class="w"> </span><span class="s">&quot;End strict_mean&quot;</span><span class="w"></span>
+</pre></div>
+</div>
+<p>which produces the final heap profile:</p>
 <p>We could further investigate but our heap is now constant across
 <code class="docutils literal notranslate"><span class="pre">stricter_mean</span></code> validating the lazy tuple hypothesis.</p>
-</section>
+<iframe id="scaled-frame" src="../../../_static/eventlog/pc_heap_marker_final.html"></iframe></section>
 <section id="summary">
 <h2><span class="section-number">2.2.2.8. </span>Summary<a class="headerlink" href="#summary" title="Permalink to this heading">¶</a></h2>
 <p>In sum, we’ve demonstrated heap profiling using GHC’s eventlog and
