@@ -584,20 +584,54 @@ which yields:
 during and after calling it, but it is difficult to see exactly what is
 decreasing. This situation is exactly why the detailed heap view is useful.
 Checking the detailed view of the latest profile shows ``Double`` and ``[]`` to
-be constant, but shows ``*`` decreasing. ``*`` is described in the GHC Users
-Guide; it is the symbol the profiler emits for closures that have an unknown or
-polymorphic type. But the toy program is monomorphic, so where is the
-polymorphism?
+be constant, but shows ``*`` decreasing. ``*`` is the symbol the heap profiler
+emits for closures that have an unknown type. But the toy program is completely
+monomorphic and has known types, so where do we have an unknown type? The only
+code in the toy program that doesn't have a precise type is in the benchmark
+setup, and specifically this line:
 
-.. note::
-   start here, find the * in the user guide and link, show its fromIntegral
+.. code-block:: haskell
+
+   ...
+   seed <- newIOGenM (mkStdGen 1729)
+   ...
+
+where ``newIOGenM`` returns a polymorphic type that is implemented as an
+``IORef``, that is, a value the profiler doesn't have access to! Thus, forcing
+this value should remove the memory leak. Our final ``main`` is:
+
+.. code-block:: haskell
+
+   main :: IO ()
+   main = do
+     let wait = threadDelay 100000
+     -- create a delay at the beginning of the program, if we don't do this then
+     -- our marker will be merged with the y-axis of the heap profile
+     wait
+     traceMarkerIO "Bench Initialization"
+     -- generate random test data
+     !seed <- newIOGenM (mkStdGen 1729)                               -- new
+     let genValue = fmap force uniformRM (0,500000) seed >>= evaluate
+     test_values <- replicateM 50000 genValue >>= evaluate . force
+     traceMarkerIO "End Bench Initialization"
+     wait
+     traceMarkerIO "Begin stricter_mean"
+     print $! stricter_mean test_values
+     traceMarkerIO "End stricter_mean"
+     wait
+     print $! strict_mean test_values
+     traceMarkerIO "End strict_mean"
+
+which produces the final heap profile:
 
 
 We could further investigate but our heap is now constant across
 ``stricter_mean`` validating the lazy tuple hypothesis.
 
-..
-  Be sure to sidenote -fstrictness and demand analysis https://ghc.gitlab.haskell.org/ghc/doc/users_guide/using-optimisation.html#ghc-flag--fstrictness
+.. raw:: html
+
+     <iframe id="scaled-frame" src="../../../_static/eventlog/pc_heap_marker_final.html"></iframe>
+
 
 Summary
 -------
