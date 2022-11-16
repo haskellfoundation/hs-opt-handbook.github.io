@@ -123,7 +123,7 @@
     
       <li><a href="index.html"><span class="section-number">2.5. </span>CPU Measurement : Haskell Libraries</a> &raquo;</li>
     
-    <li><span class="section-number">2.5.2. </span><span class="lightgrey">Weigh</span></li>
+    <li><span class="section-number">2.5.2. </span><span class="incremental">Weigh</span></li>
   </ul>
   
 
@@ -143,8 +143,33 @@
           <div class="content" role="main" v-pre>
             
   <section id="weigh">
-<h1><span class="section-number">2.5.2. </span><span class="lightgrey">Weigh</span><a class="headerlink" href="#weigh" title="Permalink to this heading">¶</a></h1>
-<p><a class="reference external" href="https://github.com/input-output-hk/hs-opt-handbook.github.io/issues/36">TODO</a></p>
+<h1><span class="section-number">2.5.2. </span><span class="incremental">Weigh</span><a class="headerlink" href="#weigh" title="Permalink to this heading">¶</a></h1>
+<p><a class="reference external" href="https://hackage.haskell.org/package/weigh">Weigh</a> is a tiny Haskell package
+to measure allocations of data constructors and functions. It provides a similar
+interface to <span class="xref std std-ref">Criterion, Gauge, and Tasty-Bench</span> and is useful to confirm
+that a data structure or function has the memory performance you anticipate it
+to have at runtime.</p>
+<section id="requirements">
+<h2><span class="section-number">2.5.2.1. </span>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>The program must not be compiled with <code class="docutils literal notranslate"><span class="pre">-threaded</span></code>.</p></li>
+<li><p>The program must not be compiled with profiling enabled.</p></li>
+</ol>
+<p>Weigh works by tracking the allocation and garbage collection behavior of the
+runtime system, but it does so by taking snapshots before and after forcing
+whatever value you are passing to it. Thus, it will report incorrect
+measurements if another thread changes the heap unexpectedly. Similarly, it will
+report larger results if the values are artificially inflated for profiling.</p>
+</section>
+<section id="what-information-do-i-receive-from-weigh">
+<h2><span class="section-number">2.5.2.2. </span>What Information Do I Receive From Weigh?<a class="headerlink" href="#what-information-do-i-receive-from-weigh" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="when-should-i-use-weigh">
+<h2><span class="section-number">2.5.2.3. </span>When should I use Weigh<a class="headerlink" href="#when-should-i-use-weigh" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="the-running-example">
+<h2><span class="section-number">2.5.2.4. </span>The Running Example<a class="headerlink" href="#the-running-example" title="Permalink to this heading">¶</a></h2>
+</section>
 </section>
 
 
