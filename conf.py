@@ -47,6 +47,7 @@ extensions = [ 'sphinx.ext.mathjax'
 # flags
 todo_include_todos = False
 todo_link_only     = False
+autosectionlabel_prefix_document = True
 
 extlinks = {'userGuide': ('https://downloads.haskell.org/~ghc/9.2.4/docs/html/users_guide/%s', '')}
 

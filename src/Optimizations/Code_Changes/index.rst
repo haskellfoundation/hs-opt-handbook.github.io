@@ -5,7 +5,6 @@ Library Agnostic Changes
    :maxdepth: 3
    :name: Manual_Code_Changes
 
-   data_structures
    ordering_constructors
    lazy_tuples
    appropriate_folds
