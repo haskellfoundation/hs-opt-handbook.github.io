@@ -6,5 +6,6 @@ Direct Observation
    :glob:
    :name: Direction_Observation
 
+   size
    core
    stg
