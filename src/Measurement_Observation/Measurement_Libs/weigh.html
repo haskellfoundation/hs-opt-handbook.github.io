@@ -153,8 +153,9 @@ to have at runtime.</p>
 <h2><span class="section-number">2.5.2.1. </span>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading">¶</a></h2>
 <ol class="arabic simple">
 <li><p>The program must not be compiled with <code class="docutils literal notranslate"><span class="pre">-threaded</span></code>.</p></li>
-<li><p>The program must not be compiled with profiling enabled.</p></li>
 </ol>
+<p>2. The program must not be compiled with profiling enabled.
+3.</p>
 <p>Weigh works by tracking the allocation and garbage collection behavior of the
 runtime system, but it does so by taking snapshots before and after forcing
 whatever value you are passing to it. Thus, it will report incorrect
@@ -163,12 +164,22 @@ report larger results if the values are artificially inflated for profiling.</p>
 </section>
 <section id="what-information-do-i-receive-from-weigh">
 <h2><span class="section-number">2.5.2.2. </span>What Information Do I Receive From Weigh?<a class="headerlink" href="#what-information-do-i-receive-from-weigh" title="Permalink to this heading">¶</a></h2>
+<p>Weigh reports a table</p>
 </section>
 <section id="when-should-i-use-weigh">
 <h2><span class="section-number">2.5.2.3. </span>When should I use Weigh<a class="headerlink" href="#when-should-i-use-weigh" title="Permalink to this heading">¶</a></h2>
 </section>
-<section id="the-running-example">
-<h2><span class="section-number">2.5.2.4. </span>The Running Example<a class="headerlink" href="#the-running-example" title="Permalink to this heading">¶</a></h2>
+<section id="how-should-i-use-weigh">
+<h2><span class="section-number">2.5.2.4. </span>How should I use Weigh<a class="headerlink" href="#how-should-i-use-weigh" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="examples">
+<h2><span class="section-number">2.5.2.5. </span>Examples<a class="headerlink" href="#examples" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="summary">
+<h2><span class="section-number">2.5.2.6. </span>Summary<a class="headerlink" href="#summary" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="references-and-further-reading">
+<h2><span class="section-number">2.5.2.7. </span>References and Further Reading<a class="headerlink" href="#references-and-further-reading" title="Permalink to this heading">¶</a></h2>
 </section>
 </section>
 
