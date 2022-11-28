@@ -93,3 +93,4 @@ benchmark weigh
                , containers
                , deepseq
                , weigh
+               , random
