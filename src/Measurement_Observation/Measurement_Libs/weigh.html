@@ -153,9 +153,8 @@ to have at runtime.</p>
 <h2><span class="section-number">2.5.2.1. </span>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading">¶</a></h2>
 <ol class="arabic simple">
 <li><p>The program must not be compiled with <code class="docutils literal notranslate"><span class="pre">-threaded</span></code>.</p></li>
+<li><p>The program must not be compiled with profiling enabled.</p></li>
 </ol>
-<p>2. The program must not be compiled with profiling enabled.
-3.</p>
 <p>Weigh works by tracking the allocation and garbage collection behavior of the
 runtime system, but it does so by taking snapshots before and after forcing
 whatever value you are passing to it. Thus, it will report incorrect
@@ -164,13 +163,142 @@ report larger results if the values are artificially inflated for profiling.</p>
 </section>
 <section id="what-information-do-i-receive-from-weigh">
 <h2><span class="section-number">2.5.2.2. </span>What Information Do I Receive From Weigh?<a class="headerlink" href="#what-information-do-i-receive-from-weigh" title="Permalink to this heading">¶</a></h2>
-<p>Weigh reports a table</p>
+<p>Weigh reports a table similar to <code class="docutils literal notranslate"><span class="pre">criterion</span></code> or <code class="docutils literal notranslate"><span class="pre">gauge</span></code> except displays
+allocations in bytes and garbage collections. For example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Case       Allocated  GCs
+<span class="o">()</span>                 <span class="m">0</span>    <span class="m">0</span>
+<span class="m">1</span>                  <span class="m">0</span>    <span class="m">0</span>
+True               <span class="m">0</span>    <span class="m">0</span>
+<span class="o">[</span><span class="m">0</span>..3<span class="o">]</span>           <span class="m">192</span>    <span class="m">0</span>
+</pre></div>
+</div>
+<p>Notice that <code class="docutils literal notranslate"><span class="pre">()</span></code>, <code class="docutils literal notranslate"><span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">True</span></code> do not allocate any memory. This is because
+<code class="docutils literal notranslate"><span class="pre">weigh</span></code> measures <em>heap</em> allocations. Thus, anything that GHC concludes can be
+floated out of <code class="docutils literal notranslate"><span class="pre">main</span></code> and treated like a constant will return 0 allocations.
+The list allocates due to the use of List Ranges. Contrast that with a static
+literal version:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Base             Allocated  GCs
+<span class="o">()</span>                       <span class="m">0</span>    <span class="m">0</span>
+<span class="m">1</span>                        <span class="m">0</span>    <span class="m">0</span>
+True                     <span class="m">0</span>    <span class="m">0</span>
+<span class="o">[</span><span class="m">0</span>..3<span class="o">]</span>                 <span class="m">192</span>    <span class="m">0</span>
+<span class="o">[</span><span class="m">0</span>,1,2,3<span class="o">]</span>                <span class="m">0</span>    <span class="m">0</span>
+</pre></div>
+</div>
+<p>which does no allocation as expected.</p>
 </section>
 <section id="when-should-i-use-weigh">
 <h2><span class="section-number">2.5.2.3. </span>When should I use Weigh<a class="headerlink" href="#when-should-i-use-weigh" title="Permalink to this heading">¶</a></h2>
+<p>Weigh is useful in the following scenarios:</p>
+<ul class="simple">
+<li><p>Inspecting the memory footprint of a value, such as a data type. This could be
+useful to determine whether your data type will fit in a CPU cache line or not.</p></li>
+<li><p>Inspecting the memory footprint of a function. This information could
+inform the decision to manually apply certain GHC optimizations that might not
+be firing. Such as Lambda Lifting or the SAT transformation.</p></li>
+<li><p>Inspecting the memory footprint of a data structure under a certain load. This
+is useful information to tune the data structure specifically for that load.
+For example, one might make tradeoffs that create slower writes in exchange
+for faster reads if the load requires exponentially more reads than writes.</p></li>
+<li><p>Tracking the memory requirements and garbage collection pressure for phases or
+sub-systems of your program, or even defining unit tests based on the output
+of weigh.</p></li>
+</ul>
 </section>
 <section id="how-should-i-use-weigh">
 <h2><span class="section-number">2.5.2.4. </span>How should I use Weigh<a class="headerlink" href="#how-should-i-use-weigh" title="Permalink to this heading">¶</a></h2>
+<p>Weigh’s interface is similar to criterion’s and gauge’s. Our recommendation is
+to define a specific benchmark target to keep your project tidy and modular. For
+example, for this chapter our toy programs are weighed through this cabal target:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">benchmark weigh</span><span class="w"></span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">type</span><span class="w">            </span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">exitcode-stdio-1.0</span><span class="w"></span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">default-language</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Haskell2010</span><span class="w"></span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">ghc-options</span><span class="w">     </span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-O2 -fforce-recomp</span><span class="w"></span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">main-is</span><span class="w">         </span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Main.hs</span><span class="w"></span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">hs-source-dirs</span><span class="w">  </span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bench/Weigh</span><span class="w"></span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">build-depends</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">base &gt;= 4.15</span><span class="w"></span>
+<span class="w">               </span><span class="l l-Scalar l-Scalar-Plain">, containers</span><span class="w"></span>
+<span class="w">               </span><span class="l l-Scalar l-Scalar-Plain">, deepseq</span><span class="w"></span>
+<span class="w">               </span><span class="l l-Scalar l-Scalar-Plain">, weigh</span><span class="w"></span>
+<span class="w">               </span><span class="l l-Scalar l-Scalar-Plain">, random</span><span class="w"></span>
+</pre></div>
+</div>
+<p>Then <code class="docutils literal notranslate"><span class="pre">weigh</span></code> exports an API to run your code with. Here is a list of common
+functions to use:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">mainWith</span> <span class="pre">::</span> <span class="pre">Weigh</span> <span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">IO</span> <span class="pre">()</span></code>: Similar to <code class="docutils literal notranslate"><span class="pre">defaultMain</span></code> in criterion. This function is the
+main entry point to run the tests.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">value</span> <span class="pre">::</span> <span class="pre">NFData</span> <span class="pre">a</span> <span class="pre">=&gt;</span> <span class="pre">String</span> <span class="pre">-&gt;</span> <span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">Weigh</span> <span class="pre">()</span></code>: Measure the memory
+allocations of a single value.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">func</span> <span class="pre">::</span> <span class="pre">NFData</span> <span class="pre">a</span> <span class="pre">=&gt;</span> <span class="pre">String</span> <span class="pre">-&gt;</span> <span class="pre">(b</span> <span class="pre">-&gt;</span> <span class="pre">a)</span> <span class="pre">-&gt;</span> <span class="pre">b</span> <span class="pre">-&gt;</span> <span class="pre">Weigh</span> <span class="pre">()</span></code>: Measure the memory
+allocations that result from the input function.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">wgroup</span> <span class="pre">::</span> <span class="pre">String</span> <span class="pre">-&gt;</span> <span class="pre">Weigh</span> <span class="pre">()</span> <span class="pre">-&gt;</span> <span class="pre">Weigh</span> <span class="pre">()</span></code>: Define a group of tests.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">io</span> <span class="pre">::</span> <span class="pre">NFData</span> <span class="pre">a</span> <span class="pre">=&gt;</span> <span class="pre">String</span> <span class="pre">-&gt;</span> <span class="pre">(b</span> <span class="pre">-&gt;</span> <span class="pre">IO</span> <span class="pre">a)</span> <span class="pre">-&gt;</span> <span class="pre">b</span> <span class="pre">-&gt;</span> <span class="pre">Weigh</span> <span class="pre">()</span></code>: Weigh an IO
+action that is applied to the input argument <code class="docutils literal notranslate"><span class="pre">b</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">io</span> <span class="pre">::</span> <span class="pre">NFData</span> <span class="pre">a</span> <span class="pre">=&gt;</span> <span class="pre">String</span> <span class="pre">-&gt;</span> <span class="pre">IO</span> <span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">Weigh</span> <span class="pre">()</span></code>: Weigh an IO action.</p></li>
+</ul>
+<p>We recommend using <code class="docutils literal notranslate"><span class="pre">func</span></code> over <code class="docutils literal notranslate"><span class="pre">value</span></code> because GHC might float out a given
+value and thus not perform any allocations. For example, consider this program:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">data</span><span class="w"> </span><span class="kt">Foo0</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">Foo0</span><span class="w"></span>
+<span class="w">  </span><span class="kr">deriving</span><span class="w"> </span><span class="p">(</span><span class="kt">Generic</span><span class="p">,</span><span class="kt">NFData</span><span class="p">)</span><span class="w"></span>
+
+<span class="kr">data</span><span class="w"> </span><span class="kt">Foo1</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">Foo1</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">  </span><span class="kr">deriving</span><span class="w"> </span><span class="p">(</span><span class="kt">Generic</span><span class="p">,</span><span class="kt">NFData</span><span class="p">)</span><span class="w"></span>
+
+<span class="kr">data</span><span class="w"> </span><span class="kt">Foo2</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">Foo2</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="kt">String</span><span class="w"></span>
+<span class="w">  </span><span class="kr">deriving</span><span class="w"> </span><span class="p">(</span><span class="kt">Generic</span><span class="p">,</span><span class="kt">NFData</span><span class="p">)</span><span class="w"></span>
+
+<span class="nf">one</span><span class="p">,</span><span class="n">two</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">String</span><span class="w"></span>
+<span class="nf">one</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="s">&quot;one&quot;</span><span class="w"></span>
+<span class="nf">two</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="s">&quot;two&quot;</span><span class="w"></span>
+
+<span class="nf">main</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">IO</span><span class="w"> </span><span class="nb">()</span><span class="w"></span>
+<span class="nf">main</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">mainWith</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="kr">do</span><span class="w"></span>
+<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;()&quot;</span><span class="w"> </span><span class="nb">()</span><span class="w"></span>
+<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;1&quot;</span><span class="w">  </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="p">)</span><span class="w"></span>
+<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;True&quot;</span><span class="w">  </span><span class="kt">True</span><span class="w"></span>
+<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;[0..3]&quot;</span><span class="w">  </span><span class="p">([</span><span class="mi">0</span><span class="o">..</span><span class="mi">3</span><span class="p">]</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">[</span><span class="kt">Int</span><span class="p">])</span><span class="w"></span>
+<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;[0,1,2,3]&quot;</span><span class="w">  </span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">[</span><span class="kt">Int</span><span class="p">])</span><span class="w"></span>
+<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;Foo0&quot;</span><span class="w">  </span><span class="kt">Foo0</span><span class="w"></span>
+<span class="w">  </span><span class="n">func</span><span class="w">  </span><span class="s">&quot;Foo1-func&quot;</span><span class="w">  </span><span class="kt">Foo1</span><span class="w"> </span><span class="mi">1</span><span class="w"></span>
+<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;Foo1-value&quot;</span><span class="w">  </span><span class="p">(</span><span class="kt">Foo1</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"></span>
+<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;one&quot;</span><span class="w"> </span><span class="n">one</span><span class="w"></span>
+<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;Foo2&quot;</span><span class="w">  </span><span class="p">(</span><span class="kt">Foo2</span><span class="w"> </span><span class="n">one</span><span class="w"> </span><span class="n">two</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p>One might expect <code class="docutils literal notranslate"><span class="pre">()</span></code>, <code class="docutils literal notranslate"><span class="pre">1</span></code>, and <code class="docutils literal notranslate"><span class="pre">True</span></code> to be 0 machine words, 2 machine
+words and 0 words respectively. However, this is not the case; here is the
+output from weigh:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Running <span class="m">1</span> benchmarks...
+Benchmark weigh: RUNNING...
+
+Case        Allocated  GCs
+<span class="o">()</span>                  <span class="m">0</span>    <span class="m">0</span>
+<span class="m">1</span>                   <span class="m">0</span>    <span class="m">0</span>
+True                <span class="m">0</span>    <span class="m">0</span>
+<span class="o">[</span><span class="m">0</span>..3<span class="o">]</span>            <span class="m">192</span>    <span class="m">0</span>
+<span class="o">[</span><span class="m">0</span>,1,2,3<span class="o">]</span>           <span class="m">0</span>    <span class="m">0</span>
+Foo0                <span class="m">0</span>    <span class="m">0</span>
+Foo1-func          <span class="m">16</span>    <span class="m">0</span>
+Foo1-value          <span class="m">0</span>    <span class="m">0</span>
+one               <span class="m">144</span>    <span class="m">0</span>
+Foo2              <span class="m">336</span>    <span class="m">0</span>
+Benchmark weigh: FINISH
+</pre></div>
+</div>
+<p>A word of caution, some results might be puzzling at first: notice that built in
+types such as <code class="docutils literal notranslate"><span class="pre">()</span></code> and <code class="docutils literal notranslate"><span class="pre">True</span></code> do not do any allocation. This is because
+these types are <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/wikis/commentary/compiler/wired-in">wired-in</a> to
+GHC, which means that there is a single shared <code class="docutils literal notranslate"><span class="pre">()</span></code> in GHC and thus our call
+to <code class="docutils literal notranslate"><span class="pre">value</span> <span class="pre">&quot;()&quot;</span> <span class="pre">()</span></code> performs no allocation because it references the shared
+<code class="docutils literal notranslate"><span class="pre">()</span></code>. This is also true for <code class="docutils literal notranslate"><span class="pre">True</span></code>. <code class="docutils literal notranslate"><span class="pre">1</span></code> performs no allocation <em>during the
+runtime</em> of our program because GHC realizes its a static literal and floats it
+out; and similarly so for <code class="docutils literal notranslate"><span class="pre">[0,1,2,3]</span></code> and <code class="docutils literal notranslate"><span class="pre">Foo0</span></code> . In contrast, the list
+ranges <code class="docutils literal notranslate"><span class="pre">[0..3]</span></code> and <code class="docutils literal notranslate"><span class="pre">([0,1,2],[3,4,5])</span></code> do perform allocation during
+runtime. <code class="docutils literal notranslate"><span class="pre">Foo1-func</span></code> allocates because we used <code class="docutils literal notranslate"><span class="pre">func</span></code> which forces the
+creation of <code class="docutils literal notranslate"><span class="pre">Foo1</span></code> at runtime, in contrast <code class="docutils literal notranslate"><span class="pre">Foo1-value</span></code> performs no
+allocation and was likely optimized by GHC. Lastly, <code class="docutils literal notranslate"><span class="pre">Foo2</span></code> allocates because
+string literals and a <code class="docutils literal notranslate"><span class="pre">Foo2</span></code> value is constructed at runtime.</p>
 </section>
 <section id="examples">
 <h2><span class="section-number">2.5.2.5. </span>Examples<a class="headerlink" href="#examples" title="Permalink to this heading">¶</a></h2>
@@ -180,6 +308,9 @@ report larger results if the values are artificially inflated for profiling.</p>
 </section>
 <section id="references-and-further-reading">
 <h2><span class="section-number">2.5.2.7. </span>References and Further Reading<a class="headerlink" href="#references-and-further-reading" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>The FPComplete <a class="reference external" href="https://www.fpcomplete.com/blog/2016/05/weigh-package/">blog post</a> on weigh</p></li>
+</ol>
 </section>
 </section>
 
