@@ -152,29 +152,35 @@
 <li class="toctree-l2"><a class="reference internal" href="GHC_tech/ghc_flags.html">3.1.1. <span class="lightgrey">GHC Flags</span></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="Code_Changes_Libraries/index.html">3.2. Library Based Changes</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Code_Changes_Libraries/data_structures.html">3.2.1. <span class="lightgrey">Lower Impedance with Better Data Structures</span></a></li>
+<li class="toctree-l1"><a class="reference internal" href="GHC_opt/index.html">3.2. Manual GHC Optimizations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="GHC_opt/defunctionalization.html">3.2.1. <span class="lightgrey">Defunctionalization</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="GHC_opt/sat_transformation.html">3.2.2. <span class="lightgrey">The Static Arguments Transformation</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="GHC_opt/lambda_lifting.html">3.2.3. <span class="lightgrey">Lambda Lifting</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="GHC_opt/loopification.html">3.2.4. <span class="lightgrey">Loopification</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="GHC_opt/worker_wrapper.html">3.2.5. <span class="lightgrey">Manual Worker/Wrapper</span></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="Code_Changes/index.html">3.3. Library Agnostic Changes</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Code_Changes/ordering_constructors.html">3.3.1. <span class="lightgrey">Ordering Data Constructors</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Code_Changes/lazy_tuples.html">3.3.2. <span class="lightgrey">Wrangling Lazy Tuples</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Code_Changes/appropriate_folds.html">3.3.3. <span class="lightgrey">Appropriate Folding</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Code_Changes/parse_dont_validate.html">3.3.4. <span class="lightgrey">Avoid Runtime Checks with Parse Don’t Validate:</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Code_Changes/using_ghc_exts.html">3.3.5. <span class="lightgrey">Using GHC.Exts</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Code_Changes/inlining.html">3.3.6. <span class="lightgrey">Inlining Pragma and Friends</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Code_Changes/specialization.html">3.3.7. <span class="lightgrey">Specialization</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Code_Changes/fusion_and_rules.html">3.3.8. <span class="lightgrey">Fusion and Rules</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Code_Changes/unboxing.html">3.3.9. <span class="lightgrey">Unboxing</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Code_Changes/unpacking_product_types.html">3.3.10. <span class="lightgrey">Unpacked Product Types</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Code_Changes/loopification.html">3.3.11. <span class="lightgrey">Loopification</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Code_Changes/worker_wrapper.html">3.3.12. <span class="lightgrey">Manual Worker/Wrapper</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Code_Changes/nested_transformers.html">3.3.13. <span class="lightgrey">Avoiding Nested Monad Transformers</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Code_Changes/unroll_stacks.html">3.3.14. <span class="lightgrey">Unroll Monad Transformer Stacks</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Code_Changes/oneshot.html">3.3.15. <span class="lightgrey">The OneShot Monad Trick</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Code_Changes/continuation_passing_style.html">3.3.16. <span class="lightgrey">Continuation Passing Style</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Code_Changes/levity_polymorphism.html">3.3.17. <span class="lightgrey">Using Levity Polymorphism</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Code_Changes/backpack.html">3.3.18. <span class="lightgrey">Using Backpack to Unroll Data Structures</span></a></li>
+<li class="toctree-l1"><a class="reference internal" href="Code_Changes_Libraries/index.html">3.3. Library Based Changes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Code_Changes_Libraries/data_structures.html">3.3.1. <span class="lightgrey">Lower Impedance with Better Data Structures</span></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Code_Changes/index.html">3.4. Library Agnostic Changes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Code_Changes/ordering_constructors.html">3.4.1. <span class="lightgrey">Ordering Data Constructors</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Code_Changes/lazy_tuples.html">3.4.2. <span class="lightgrey">Wrangling Lazy Tuples</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Code_Changes/appropriate_folds.html">3.4.3. <span class="lightgrey">Appropriate Folding</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Code_Changes/parse_dont_validate.html">3.4.4. <span class="lightgrey">Avoid Runtime Checks with Parse Don’t Validate:</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Code_Changes/using_ghc_exts.html">3.4.5. <span class="lightgrey">Using GHC.Exts</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Code_Changes/inlining.html">3.4.6. <span class="lightgrey">Inlining Pragma and Friends</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Code_Changes/specialization.html">3.4.7. <span class="lightgrey">Specialization</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Code_Changes/fusion_and_rules.html">3.4.8. <span class="lightgrey">Fusion and Rules</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Code_Changes/unboxing.html">3.4.9. <span class="lightgrey">Unboxing</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Code_Changes/unpacking_product_types.html">3.4.10. <span class="lightgrey">Unpacked Product Types</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Code_Changes/nested_transformers.html">3.4.11. <span class="lightgrey">Avoiding Nested Monad Transformers</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Code_Changes/unroll_stacks.html">3.4.12. <span class="lightgrey">Unroll Monad Transformer Stacks</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Code_Changes/oneshot.html">3.4.13. <span class="lightgrey">The OneShot Monad Trick</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Code_Changes/continuation_passing_style.html">3.4.14. <span class="lightgrey">Continuation Passing Style</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Code_Changes/levity_polymorphism.html">3.4.15. <span class="lightgrey">Using Levity Polymorphism</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Code_Changes/backpack.html">3.4.16. <span class="lightgrey">Using Backpack to Unroll Data Structures</span></a></li>
 </ul>
 </li>
 </ul>

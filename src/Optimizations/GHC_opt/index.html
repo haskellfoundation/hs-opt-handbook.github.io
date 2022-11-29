@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-      <title>3.3.11. Loopification</title>
+      <title>3.2. Manual GHC Optimizations</title>
     
           <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
           <link rel="stylesheet" href="../../../_static/theme.css " type="text/css" />
@@ -28,8 +28,8 @@
     
   <link rel="index" title="Index" href="../../../genindex.html" />
   <link rel="search" title="Search" href="../../../search.html" />
-  <link rel="next" title="3.3.12. Manual Worker/Wrapper" href="worker_wrapper.html" />
-  <link rel="prev" title="3.3.10. Unpacked Product Types" href="unpacking_product_types.html" /> 
+  <link rel="next" title="3.2.1. Defunctionalization" href="defunctionalization.html" />
+  <link rel="prev" title="3.1.1. GHC Flags" href="../GHC_tech/ghc_flags.html" /> 
   </head>
 
   <body>
@@ -121,20 +121,18 @@
     
       <li><a href="../index.html"><span class="section-number">3. </span>Optimizations</a> &raquo;</li>
     
-      <li><a href="index.html"><span class="section-number">3.3. </span>Library Agnostic Changes</a> &raquo;</li>
-    
-    <li><span class="section-number">3.3.11. </span><span class="lightgrey">Loopification</span></li>
+    <li><span class="section-number">3.2. </span>Manual GHC Optimizations</li>
   </ul>
   
 
   <ul class="page-nav">
   <li class="prev">
-    <a href="unpacking_product_types.html"
-       title="previous chapter">← <span class="section-number">3.3.10. </span><span class="lightgrey">Unpacked Product Types</span></a>
+    <a href="../GHC_tech/ghc_flags.html"
+       title="previous chapter">← <span class="section-number">3.1.1. </span><span class="lightgrey">GHC Flags</span></a>
   </li>
   <li class="next">
-    <a href="worker_wrapper.html"
-       title="next chapter"><span class="section-number">3.3.12. </span><span class="lightgrey">Manual Worker/Wrapper</span> →</a>
+    <a href="defunctionalization.html"
+       title="next chapter"><span class="section-number">3.2.1. </span><span class="lightgrey">Defunctionalization</span> →</a>
   </li>
 </ul>
   
@@ -142,9 +140,17 @@
 <hr>
           <div class="content" role="main" v-pre>
             
-  <section id="loopification">
-<span id="loopification-chapter"></span><h1><span class="section-number">3.3.11. </span><span class="lightgrey">Loopification</span><a class="headerlink" href="#loopification" title="Permalink to this heading">¶</a></h1>
-<p><a class="reference external" href="https://github.com/input-output-hk/hs-opt-handbook.github.io/issues/48">TODO</a></p>
+  <section id="manual-ghc-optimizations">
+<h1><span class="section-number">3.2. </span>Manual GHC Optimizations<a class="headerlink" href="#manual-ghc-optimizations" title="Permalink to this heading">¶</a></h1>
+<div class="toctree-wrapper compound" id="man-ghc-opts">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="defunctionalization.html">3.2.1. <span class="lightgrey">Defunctionalization</span></a></li>
+<li class="toctree-l1"><a class="reference internal" href="sat_transformation.html">3.2.2. <span class="lightgrey">The Static Arguments Transformation</span></a></li>
+<li class="toctree-l1"><a class="reference internal" href="lambda_lifting.html">3.2.3. <span class="lightgrey">Lambda Lifting</span></a></li>
+<li class="toctree-l1"><a class="reference internal" href="loopification.html">3.2.4. <span class="lightgrey">Loopification</span></a></li>
+<li class="toctree-l1"><a class="reference internal" href="worker_wrapper.html">3.2.5. <span class="lightgrey">Manual Worker/Wrapper</span></a></li>
+</ul>
+</div>
 </section>
 
 
@@ -152,12 +158,12 @@
           <div class="page-nav">
             <div class="inner"><ul class="page-nav">
   <li class="prev">
-    <a href="unpacking_product_types.html"
-       title="previous chapter">← <span class="section-number">3.3.10. </span><span class="lightgrey">Unpacked Product Types</span></a>
+    <a href="../GHC_tech/ghc_flags.html"
+       title="previous chapter">← <span class="section-number">3.1.1. </span><span class="lightgrey">GHC Flags</span></a>
   </li>
   <li class="next">
-    <a href="worker_wrapper.html"
-       title="next chapter"><span class="section-number">3.3.12. </span><span class="lightgrey">Manual Worker/Wrapper</span> →</a>
+    <a href="defunctionalization.html"
+       title="next chapter"><span class="section-number">3.2.1. </span><span class="lightgrey">Defunctionalization</span> →</a>
   </li>
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2022-2022, Jeffrey Young (doyougnu).
