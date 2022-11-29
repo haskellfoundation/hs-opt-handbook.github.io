@@ -15,8 +15,6 @@ Library Agnostic Changes
    fusion_and_rules
    unboxing
    unpacking_product_types
-   loopification
-   worker_wrapper
    nested_transformers
    unroll_stacks
    oneshot
