@@ -61,9 +61,10 @@ Weigh is useful in the following scenarios:
 
 - Inspecting the memory footprint of a value, such as a data type. This could be
   useful to determine whether your data type will fit in a CPU cache line or not.
-- Inspecting the memory footprint of a function. This information could
-  inform the decision to manually apply certain GHC optimizations that might not
-  be firing. Such as Lambda Lifting or the SAT transformation.
+- Inspecting the memory footprint of a function. This information could inform
+  the decision to manually apply certain GHC optimizations that might not be
+  firing. Such as :ref:`Lambda Lifting <Lambda Lifting Chapter>` or the
+  :ref:`SAT transformation <SAT Chapter>`.
 - Inspecting the memory footprint of a data structure under a certain load. This
   is useful information to tune the data structure specifically for that load.
   For example, one might make tradeoffs that create slower writes in exchange
@@ -108,7 +109,8 @@ functions to use:
 - ``io :: NFData a => String -> IO a -> Weigh ()``: Weigh an IO action.
 
 We recommend using ``func`` over ``value`` because GHC might float out a given
-value and thus not perform any allocations. For example, consider this program:
+value and statically allocate it. Thus the measurement will not observe the
+allocation. For example, consider this program:
 
 .. code-block:: haskell
 
@@ -139,9 +141,9 @@ value and thus not perform any allocations. For example, consider this program:
     value "Foo2"  (Foo2 one two)
 
 
-One might expect ``()``, ``1``, and ``True`` to be 0 machine words, 2 machine
-words and 0 words respectively. However, this is not the case; here is the
-output from weigh:
+One might :ref:`expect <Memory Footprint>` ``()``, ``1``, and ``True`` to be 0
+machine words, 2 machine words and 0 words respectively. However, this is not
+the case; here is the output from weigh:
 
 .. code-block:: bash
 
@@ -173,12 +175,95 @@ out; and similarly so for ``[0,1,2,3]`` and ``Foo0`` . In contrast, the list
 ranges ``[0..3]`` and ``([0,1,2],[3,4,5])`` do perform allocation during
 runtime. ``Foo1-func`` allocates because we used ``func`` which forces the
 creation of ``Foo1`` at runtime, in contrast ``Foo1-value`` performs no
-allocation and was likely optimized by GHC. Lastly, ``Foo2`` allocates because
-string literals and a ``Foo2`` value is constructed at runtime.
+allocation and was likely optimized by GHC because it is a single constructor
+data type, this is also why ``Foo2`` allocates.
 
 
 Examples
 --------
+
+Better Output By Setting Columns
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Weigh's default configuration is good enough, but we can get more data than just
+allocations and garbage collections by altering the default with ``setColumns``,
+like so:
+
+.. code-block:: haskell
+
+   main :: IO ()
+   main = mainWith $ do
+     setColumns [Case, Allocated, Max, Live, GCs, MaxOS] -- new
+     value "()" ()
+     value "1"  (1 :: Int)
+     value "True"  True
+     value "[0..3]"  ([0..3] :: [Int])
+     value "[0,1,2,3]"  ([0,1,2,3] :: [Int])
+     value "Foo0"  Foo0
+     func  "Foo1-func"  Foo1 1
+     value "Foo1-value"  (Foo1 1)
+     value "one" one
+     value "Foo2"  (Foo2 one two)
+
+
+which yields:
+
+.. code-block:: bash
+
+   Running 1 benchmarks...
+   Benchmark weigh: RUNNING...
+
+   Case        Allocated  Max  Live  GCs  MaxOS
+   ()                  0  456   456    0      0
+   1                   0  456   456    0      0
+   True                0  456   456    0      0
+   [0..3]            192  504   504    0      0
+   [0,1,2,3]           0  456   456    0      0
+   Foo0                0  456   456    0      0
+   Foo1-func          16  472   472    0      0
+   Foo1-value          0  456   456    0      0
+   one               144  504   504    0      0
+   Foo2              336  552   552    0      0
+   Benchmark weigh: FINISH
+
+
+and now we can see total bytes allocated, the maximum residency memory, the
+total amount of live data on the heap, the number of garbage collections, and
+the maximum memory in use by the RTS, which in these simple examples is
+always 0.
+
+Test GHC Optimizations on your Data Type
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+GHC is a very good optimizing compiler and this is easy to observe using weigh.
+Consider these data types:
+
+.. code-block:: haskell
+
+   data SingleCons = SingleCons Int
+          deriving (Generic,NFData)
+
+   data LotsOfInts = A Int Int
+                   | B Int Int
+          deriving (Generic,NFData)
+
+ ..
+    start here tomorrow. Show that after 10 constructors we don't optimize into
+    registers anymore, and that single field constructors are heavily optimized and
+    don't allocate because of newtypes
+
+
+Weigh the impact of a Data Type
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+An easy low-level optimization is fitting crucial data types into a single line
+of CPU cache. This will be architecture dependant but a typical value on modern
+64 bit machines are 64 bytes. With ``weigh`` we can check to make sure that a
+given data type is 64 bytes or less (typically it is better to use all 64 bytes
+as any remaining bytes will end up being padding and thus wasted). Consider this
+type:
+
+
 
 
 Summary
@@ -189,3 +274,8 @@ References and Further Reading
 
 #. The FPComplete `blog post
    <https://www.fpcomplete.com/blog/2016/05/weigh-package/>`_ on weigh
+
+Related Work
+------------
+
+#. `ghc-datasize <https://github.com/def-/ghc-datasize>`_
