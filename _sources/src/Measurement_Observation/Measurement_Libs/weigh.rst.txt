@@ -341,19 +341,6 @@ five words; let's test this:
 
 which produces:
 
-.. code-block:: bash
-
-   Running 1 benchmarks...
-   Benchmark weigh: RUNNING...
-
-   Case        Allocated  Max  Live  GCs  MaxOS
-   SingleCons        416  544   544    0      0
-   Benchmark weigh: FINISH
-
-So a single ``SingleCons`` value allocates 416 bytes which is 52 words on a
-64-bit machine!
-
-
 
 
 Weigh the impact of a Data Type
