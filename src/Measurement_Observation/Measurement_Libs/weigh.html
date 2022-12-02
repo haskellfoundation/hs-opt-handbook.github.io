@@ -143,7 +143,7 @@
           <div class="content" role="main" v-pre>
             
   <section id="weigh">
-<h1><span class="section-number">2.5.2. </span><span class="incremental">Weigh</span><a class="headerlink" href="#weigh" title="Permalink to this heading">¶</a></h1>
+<span id="id1"></span><h1><span class="section-number">2.5.2. </span><span class="incremental">Weigh</span><a class="headerlink" href="#weigh" title="Permalink to this heading">¶</a></h1>
 <p><a class="reference external" href="https://hackage.haskell.org/package/weigh">Weigh</a> is a tiny Haskell package
 to measure allocations of data constructors and functions. It provides a similar
 interface to <span class="xref std std-ref">Criterion, Gauge, and Tasty-Bench</span> and is useful to confirm
@@ -295,12 +295,45 @@ GHC, which means that there is a single shared <code class="docutils literal not
 to <code class="docutils literal notranslate"><span class="pre">value</span> <span class="pre">&quot;()&quot;</span> <span class="pre">()</span></code> performs no allocation because it references the shared
 <code class="docutils literal notranslate"><span class="pre">()</span></code>. This is also true for <code class="docutils literal notranslate"><span class="pre">True</span></code>. <code class="docutils literal notranslate"><span class="pre">1</span></code> performs no allocation <em>during the
 runtime</em> of our program because GHC realizes its a static literal and floats it
-out; and similarly so for <code class="docutils literal notranslate"><span class="pre">[0,1,2,3]</span></code> and <code class="docutils literal notranslate"><span class="pre">Foo0</span></code> . In contrast, the list
-ranges <code class="docutils literal notranslate"><span class="pre">[0..3]</span></code> and <code class="docutils literal notranslate"><span class="pre">([0,1,2],[3,4,5])</span></code> do perform allocation during
-runtime. <code class="docutils literal notranslate"><span class="pre">Foo1-func</span></code> allocates because we used <code class="docutils literal notranslate"><span class="pre">func</span></code> which forces the
-creation of <code class="docutils literal notranslate"><span class="pre">Foo1</span></code> at runtime, in contrast <code class="docutils literal notranslate"><span class="pre">Foo1-value</span></code> performs no
-allocation and was likely optimized by GHC because it is a single constructor
-data type, this is also why <code class="docutils literal notranslate"><span class="pre">Foo2</span></code> allocates.</p>
+out of <code class="docutils literal notranslate"><span class="pre">main</span></code>; and similarly so for <code class="docutils literal notranslate"><span class="pre">[0,1,2,3]</span></code> and <code class="docutils literal notranslate"><span class="pre">Foo0</span></code> . In contrast,
+the list ranges <code class="docutils literal notranslate"><span class="pre">[0..3]</span></code> and <code class="docutils literal notranslate"><span class="pre">([0,1,2],[3,4,5])</span></code> do perform allocation
+during runtime. <code class="docutils literal notranslate"><span class="pre">Foo1-func</span></code> allocates because we used <code class="docutils literal notranslate"><span class="pre">func</span></code> which forces
+the creation of <code class="docutils literal notranslate"><span class="pre">Foo1</span></code> at runtime. <code class="docutils literal notranslate"><span class="pre">Foo1-value</span></code> performs no runtime
+allocation because GHC will recognize it as a <a class="reference internal" href="../../glossary.html#term-CAF"><span class="xref std std-term">CAF</span></a>, float it out of
+<code class="docutils literal notranslate"><span class="pre">main</span></code> and allocate it at compile time; just like <code class="docutils literal notranslate"><span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">()</span></code> and <code class="docutils literal notranslate"><span class="pre">1</span></code>.
+This is also why <code class="docutils literal notranslate"><span class="pre">Foo2</span></code> allocates; under the hood the <code class="docutils literal notranslate"><span class="pre">Foo2</span></code> value weigh
+will read is a <code class="docutils literal notranslate"><span class="pre">CAF</span></code>, and its fields <code class="docutils literal notranslate"><span class="pre">one</span></code> and <code class="docutils literal notranslate"><span class="pre">two</span></code> are shared, but
+<code class="docutils literal notranslate"><span class="pre">one</span></code> and <code class="docutils literal notranslate"><span class="pre">two</span></code> are allocated at runtime via the <code class="docutils literal notranslate"><span class="pre">unpackCString#</span></code>
+primitive. Here is the relevant <a class="reference internal" href="../Direct_Observation/core.html#core"><span class="std std-ref">Core</span></a>:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- RHS size: {terms: 3, types: 0, coercions: 0, joins: 0/0}</span><span class="w"></span>
+<span class="kt">Main</span><span class="o">.</span><span class="n">main_v2</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Foo2</span><span class="w"></span>
+<span class="p">[</span><span class="kt">GblId</span><span class="p">,</span><span class="w"></span>
+<span class="w"> </span><span class="kt">Unf</span><span class="ow">=</span><span class="kt">Unf</span><span class="p">{</span><span class="kt">Src</span><span class="o">=&lt;</span><span class="n">vanilla</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="kt">TopLvl</span><span class="ow">=</span><span class="kt">True</span><span class="p">,</span><span class="w"> </span><span class="kt">Value</span><span class="ow">=</span><span class="kt">True</span><span class="p">,</span><span class="w"> </span><span class="kt">ConLike</span><span class="ow">=</span><span class="kt">True</span><span class="p">,</span><span class="w"></span>
+<span class="w">         </span><span class="kt">WorkFree</span><span class="ow">=</span><span class="kt">True</span><span class="p">,</span><span class="w"> </span><span class="kt">Expandable</span><span class="ow">=</span><span class="kt">True</span><span class="p">,</span><span class="w"> </span><span class="kt">Guidance</span><span class="ow">=</span><span class="kt">IF_ARGS</span><span class="w"> </span><span class="kt">[]</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="mi">10</span><span class="p">}]</span><span class="w"></span>
+<span class="kt">Main</span><span class="o">.</span><span class="n">main_v2</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">Main</span><span class="o">.</span><span class="kt">Foo2</span><span class="w"> </span><span class="n">one</span><span class="w"> </span><span class="n">two</span><span class="w"></span>
+
+
+<span class="c1">-- RHS size: {terms: 1, types: 0, coercions: 0, joins: 0/0}</span><span class="w"></span>
+<span class="kt">Main</span><span class="o">.</span><span class="n">one1</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="n">ghc</span><span class="o">-</span><span class="n">prim</span><span class="kt">:GHC</span><span class="o">.</span><span class="kt">Prim</span><span class="o">.</span><span class="kt">Addr</span><span class="o">#</span><span class="w"></span>
+<span class="p">[</span><span class="kt">GblId</span><span class="p">,</span><span class="w"></span>
+<span class="w"> </span><span class="kt">Unf</span><span class="ow">=</span><span class="kt">Unf</span><span class="p">{</span><span class="kt">Src</span><span class="o">=&lt;</span><span class="n">vanilla</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="kt">TopLvl</span><span class="ow">=</span><span class="kt">True</span><span class="p">,</span><span class="w"> </span><span class="kt">Value</span><span class="ow">=</span><span class="kt">True</span><span class="p">,</span><span class="w"> </span><span class="kt">ConLike</span><span class="ow">=</span><span class="kt">True</span><span class="p">,</span><span class="w"></span>
+<span class="w">         </span><span class="kt">WorkFree</span><span class="ow">=</span><span class="kt">True</span><span class="p">,</span><span class="w"> </span><span class="kt">Expandable</span><span class="ow">=</span><span class="kt">True</span><span class="p">,</span><span class="w"> </span><span class="kt">Guidance</span><span class="ow">=</span><span class="kt">IF_ARGS</span><span class="w"> </span><span class="kt">[]</span><span class="w"> </span><span class="mi">20</span><span class="w"> </span><span class="mi">0</span><span class="p">}]</span><span class="w"></span>
+<span class="kt">Main</span><span class="o">.</span><span class="n">one1</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="s">&quot;one&quot;</span><span class="o">#</span><span class="w"></span>
+
+<span class="c1">-- RHS size: {terms: 2, types: 0, coercions: 0, joins: 0/0}</span><span class="w"></span>
+<span class="nf">one</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">String</span><span class="w"></span>
+<span class="p">[</span><span class="kt">GblId</span><span class="p">,</span><span class="w"></span>
+<span class="w"> </span><span class="kt">Unf</span><span class="ow">=</span><span class="kt">Unf</span><span class="p">{</span><span class="kt">Src</span><span class="o">=&lt;</span><span class="n">vanilla</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="kt">TopLvl</span><span class="ow">=</span><span class="kt">True</span><span class="p">,</span><span class="w"> </span><span class="kt">Value</span><span class="ow">=</span><span class="kt">False</span><span class="p">,</span><span class="w"> </span><span class="kt">ConLike</span><span class="ow">=</span><span class="kt">True</span><span class="p">,</span><span class="w"></span>
+<span class="w">         </span><span class="kt">WorkFree</span><span class="ow">=</span><span class="kt">False</span><span class="p">,</span><span class="w"> </span><span class="kt">Expandable</span><span class="ow">=</span><span class="kt">True</span><span class="p">,</span><span class="w"> </span><span class="kt">Guidance</span><span class="ow">=</span><span class="kt">IF_ARGS</span><span class="w"> </span><span class="kt">[]</span><span class="w"> </span><span class="mi">20</span><span class="w"> </span><span class="mi">0</span><span class="p">}]</span><span class="w"></span>
+<span class="nf">one</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">ghc</span><span class="o">-</span><span class="n">prim</span><span class="kt">:GHC</span><span class="o">.</span><span class="kt">CString</span><span class="o">.</span><span class="n">unpackCString</span><span class="o">#</span><span class="w"> </span><span class="kt">Main</span><span class="o">.</span><span class="n">one1</span><span class="w"></span>
+</pre></div>
+</div>
+<p>Notice that <code class="docutils literal notranslate"><span class="pre">Main.Foo2</span></code> calls <code class="docutils literal notranslate"><span class="pre">one</span></code> and <code class="docutils literal notranslate"><span class="pre">two</span></code>, and that <code class="docutils literal notranslate"><span class="pre">one</span></code> is a CAF
+because it has the properties <code class="docutils literal notranslate"><span class="pre">Workfree=True</span></code>, <code class="docutils literal notranslate"><span class="pre">Value=True</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">TopLvl=True</span></code>. But the payload of <code class="docutils literal notranslate"><span class="pre">one</span></code>, <code class="docutils literal notranslate"><span class="pre">Main.one1</span></code> <em>is not</em> a CAF
+because it is not a value and is not work free.</p>
+<blockquote>
+<div></div></blockquote>
 </section>
 <section id="examples">
 <h2><span class="section-number">2.5.2.5. </span>Examples<a class="headerlink" href="#examples" title="Permalink to this heading">¶</a></h2>
@@ -347,23 +380,79 @@ total amount of live data on the heap, the number of garbage collections, and
 the maximum memory in use by the RTS, which in these simple examples is
 always 0.</p>
 </section>
-<section id="test-ghc-optimizations-on-your-data-type">
-<h3><span class="section-number">2.5.2.5.2. </span>Test GHC Optimizations on your Data Type<a class="headerlink" href="#test-ghc-optimizations-on-your-data-type" title="Permalink to this heading">¶</a></h3>
-<p>GHC is a very good optimizing compiler and this is easy to observe using weigh.
+<section id="observe-ghc-optimizations-on-your-data-type">
+<h3><span class="section-number">2.5.2.5.2. </span>Observe GHC Optimizations on your Data Type<a class="headerlink" href="#observe-ghc-optimizations-on-your-data-type" title="Permalink to this heading">¶</a></h3>
+<p>GHC is a good optimizing compiler and this is easy to observe using weigh.
 Consider these data types:</p>
-<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="kr">data</span><span class="w"> </span><span class="kt">SingleCons</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">SingleCons</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
-<span class="w">         </span><span class="kr">deriving</span><span class="w"> </span><span class="p">(</span><span class="kt">Generic</span><span class="p">,</span><span class="kt">NFData</span><span class="p">)</span><span class="w"></span>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">data</span><span class="w"> </span><span class="kt">LotsOfInts</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">A</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                </span><span class="o">|</span><span class="w"> </span><span class="kt">B</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                </span><span class="o">|</span><span class="w"> </span><span class="kt">C</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                </span><span class="o">|</span><span class="w"> </span><span class="kt">D</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                </span><span class="o">|</span><span class="w"> </span><span class="kt">E</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">       </span><span class="kr">deriving</span><span class="w"> </span><span class="p">(</span><span class="kt">Generic</span><span class="p">,</span><span class="kt">NFData</span><span class="p">)</span><span class="w"></span>
 
-<span class="w">  </span><span class="kr">data</span><span class="w"> </span><span class="kt">LotsOfInts</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">A</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
-<span class="w">                  </span><span class="o">|</span><span class="w"> </span><span class="kt">B</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
-<span class="w">         </span><span class="kr">deriving</span><span class="w"> </span><span class="p">(</span><span class="kt">Generic</span><span class="p">,</span><span class="kt">NFData</span><span class="p">)</span><span class="w"></span>
-
-<span class="o">..</span><span class="w"></span>
-<span class="w">   </span><span class="n">start</span><span class="w"> </span><span class="n">here</span><span class="w"> </span><span class="n">tomorrow</span><span class="o">.</span><span class="w"> </span><span class="kt">Show</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="n">after</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="n">constructors</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">don&#39;t</span><span class="w"> </span><span class="n">optimize</span><span class="w"> </span><span class="n">into</span><span class="w"></span>
-<span class="w">   </span><span class="n">registers</span><span class="w"> </span><span class="n">anymore</span><span class="p">,</span><span class="w"> </span><span class="n">and</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="n">single</span><span class="w"> </span><span class="n">field</span><span class="w"> </span><span class="n">constructors</span><span class="w"> </span><span class="n">are</span><span class="w"> </span><span class="n">heavily</span><span class="w"> </span><span class="n">optimized</span><span class="w"> </span><span class="n">and</span><span class="w"></span>
-<span class="w">   </span><span class="n">don&#39;t</span><span class="w"> </span><span class="n">allocate</span><span class="w"> </span><span class="n">because</span><span class="w"> </span><span class="kr">of</span><span class="w"> </span><span class="n">newtypes</span><span class="w"></span>
+<span class="kr">data</span><span class="w"> </span><span class="kt">LotsOfInts2</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">A2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">B2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">C2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">D2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">E2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">F2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">G2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">H2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">I2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">J2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">K2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">          </span><span class="kr">deriving</span><span class="w"> </span><span class="p">(</span><span class="kt">Generic</span><span class="p">,</span><span class="kt">NFData</span><span class="p">)</span><span class="w"></span>
 </pre></div>
 </div>
+<p>With no optimizations taking place we would expect that a value of
+<code class="docutils literal notranslate"><span class="pre">LotsOfInts</span></code> requires 3 machine words: one for the data constructor header,
+one for each field. The payloads are simply <code class="docutils literal notranslate"><span class="pre">Int</span></code> which requires two machine
+words, thus we should expect that a value of <code class="docutils literal notranslate"><span class="pre">LotsOfInts</span></code> will use a total of
+five words; let’s test this:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="cm">{-# OPTIONS_GHC -O2 #-}</span><span class="w"></span>
+
+<span class="kr">module</span><span class="w"> </span><span class="nn">Main</span><span class="w"> </span><span class="kr">where</span><span class="w"></span>
+
+<span class="kr">import</span><span class="w"> </span><span class="nn">Weigh</span><span class="w"></span>
+
+<span class="kr">data</span><span class="w"> </span><span class="kt">LotsOfInts</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">A</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                </span><span class="o">|</span><span class="w"> </span><span class="kt">B</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                </span><span class="o">|</span><span class="w"> </span><span class="kt">C</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                </span><span class="o">|</span><span class="w"> </span><span class="kt">D</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                </span><span class="o">|</span><span class="w"> </span><span class="kt">E</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">       </span><span class="kr">deriving</span><span class="w"> </span><span class="p">(</span><span class="kt">Generic</span><span class="p">,</span><span class="kt">NFData</span><span class="p">)</span><span class="w"></span>
+
+<span class="kr">data</span><span class="w"> </span><span class="kt">LotsOfInts2</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">A2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">B2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">C2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">D2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">E2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">F2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">G2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">H2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">I2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">J2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">K2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">          </span><span class="kr">deriving</span><span class="w"> </span><span class="p">(</span><span class="kt">Generic</span><span class="p">,</span><span class="kt">NFData</span><span class="p">)</span><span class="w"></span>
+
+<span class="nf">main</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">IO</span><span class="w"> </span><span class="nb">()</span><span class="w"></span>
+<span class="nf">main</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">mainWith</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="kr">do</span><span class="w"></span>
+<span class="w">  </span><span class="n">setColumns</span><span class="w"> </span><span class="p">[</span><span class="kt">Case</span><span class="p">,</span><span class="w"> </span><span class="kt">Allocated</span><span class="p">,</span><span class="w"> </span><span class="kt">Max</span><span class="p">,</span><span class="w"> </span><span class="kt">Live</span><span class="p">,</span><span class="w"> </span><span class="kt">GCs</span><span class="p">,</span><span class="w"> </span><span class="kt">MaxOS</span><span class="p">]</span><span class="w"></span>
+<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;SingleCons&quot;</span><span class="w"> </span><span class="p">(</span><span class="kt">SingleCons</span><span class="w"> </span><span class="mi">1729</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p>which produces:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Running <span class="m">1</span> benchmarks...
+Benchmark weigh: RUNNING...
+
+Case        Allocated  Max  Live  GCs  MaxOS
+SingleCons        <span class="m">416</span>  <span class="m">544</span>   <span class="m">544</span>    <span class="m">0</span>      <span class="m">0</span>
+Benchmark weigh: FINISH
+</pre></div>
+</div>
+<p>So a single <code class="docutils literal notranslate"><span class="pre">SingleCons</span></code> value allocates 416 bytes which is 52 words on a
+64-bit machine!</p>
 </section>
 <section id="weigh-the-impact-of-a-data-type">
 <h3><span class="section-number">2.5.2.5.3. </span>Weigh the impact of a Data Type<a class="headerlink" href="#weigh-the-impact-of-a-data-type" title="Permalink to this heading">¶</a></h3>
