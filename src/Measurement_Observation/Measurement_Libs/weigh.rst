@@ -1,4 +1,4 @@
-.. Weigh
+.. _Weigh:
 
 `Weigh`
 =======
@@ -171,12 +171,52 @@ GHC, which means that there is a single shared ``()`` in GHC and thus our call
 to ``value "()" ()`` performs no allocation because it references the shared
 ``()``. This is also true for ``True``. ``1`` performs no allocation *during the
 runtime* of our program because GHC realizes its a static literal and floats it
-out; and similarly so for ``[0,1,2,3]`` and ``Foo0`` . In contrast, the list
-ranges ``[0..3]`` and ``([0,1,2],[3,4,5])`` do perform allocation during
-runtime. ``Foo1-func`` allocates because we used ``func`` which forces the
-creation of ``Foo1`` at runtime, in contrast ``Foo1-value`` performs no
-allocation and was likely optimized by GHC because it is a single constructor
-data type, this is also why ``Foo2`` allocates.
+out of ``main``; and similarly so for ``[0,1,2,3]`` and ``Foo0`` . In contrast,
+the list ranges ``[0..3]`` and ``([0,1,2],[3,4,5])`` do perform allocation
+during runtime. ``Foo1-func`` allocates because we used ``func`` which forces
+the creation of ``Foo1`` at runtime. ``Foo1-value`` performs no runtime
+allocation because GHC will recognize it as a :term:`CAF`, float it out of
+``main`` and allocate it at compile time; just like ``True``, ``()`` and ``1``.
+This is also why ``Foo2`` allocates; under the hood the ``Foo2`` value weigh
+will read is a ``CAF``, and its fields ``one`` and ``two`` are shared, but
+``one`` and ``two`` are allocated at runtime via the ``unpackCString#``
+primitive. Here is the relevant :ref:`Core <Core>`:
+
+.. code-block:: haskell
+
+   -- RHS size: {terms: 3, types: 0, coercions: 0, joins: 0/0}
+   Main.main_v2 :: Foo2
+   [GblId,
+    Unf=Unf{Src=<vanilla>, TopLvl=True, Value=True, ConLike=True,
+            WorkFree=True, Expandable=True, Guidance=IF_ARGS [] 10 10}]
+   Main.main_v2 = Main.Foo2 one two
+
+
+   -- RHS size: {terms: 1, types: 0, coercions: 0, joins: 0/0}
+   Main.one1 :: ghc-prim:GHC.Prim.Addr#
+   [GblId,
+    Unf=Unf{Src=<vanilla>, TopLvl=True, Value=True, ConLike=True,
+            WorkFree=True, Expandable=True, Guidance=IF_ARGS [] 20 0}]
+   Main.one1 = "one"#
+
+   -- RHS size: {terms: 2, types: 0, coercions: 0, joins: 0/0}
+   one :: String
+   [GblId,
+    Unf=Unf{Src=<vanilla>, TopLvl=True, Value=False, ConLike=True,
+            WorkFree=False, Expandable=True, Guidance=IF_ARGS [] 20 0}]
+   one = ghc-prim:GHC.CString.unpackCString# Main.one1
+
+Notice that ``Main.Foo2`` calls ``one`` and ``two``, and that ``one`` is a CAF
+because it has the properties ``Workfree=True``, ``Value=True``, and
+``TopLvl=True``. But the payload of ``one``, ``Main.one1`` *is not* a CAF
+because it is not a value and is not work free.
+
+ ..
+    start here tomorrow. Show that after 10 constructors we don't optimize into
+    registers anymore, and that single field constructors are heavily optimized and
+    don't allocate because of newtypes
+
+    start here, again tomorrow. Define CAF in the glossary then move on to the examples.
 
 
 Examples
@@ -232,25 +272,75 @@ total amount of live data on the heap, the number of garbage collections, and
 the maximum memory in use by the RTS, which in these simple examples is
 always 0.
 
-Test GHC Optimizations on your Data Type
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Observe GHC Optimizations on your Data Type
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-GHC is a very good optimizing compiler and this is easy to observe using weigh.
+GHC is a good optimizing compiler and this is easy to observe using weigh.
 Consider these data types:
 
 .. code-block:: haskell
 
-   data SingleCons = SingleCons Int
+   data LotsOfInts = A Int Int
+                   | B Int Int
+                   | C Int Int
+                   | D Int Int
+                   | E Int Int
           deriving (Generic,NFData)
+
+   data LotsOfInts2 = A2 Int Int
+                    | B2 Int Int
+                    | C2 Int Int
+                    | D2 Int Int
+                    | E2 Int Int
+                    | F2 Int Int
+                    | G2 Int Int
+                    | H2 Int Int
+                    | I2 Int Int
+                    | J2 Int Int
+                    | K2 Int Int
+             deriving (Generic,NFData)
+
+With no optimizations taking place we would expect that a value of
+``LotsOfInts`` requires 3 machine words: one for the data constructor header,
+one for each field. The payloads are simply ``Int`` which requires two machine
+words, thus we should expect that a value of ``LotsOfInts`` will use a total of
+five words; let's test this:
+
+.. code-block:: haskell
+
+   {-# OPTIONS_GHC -O2 #-}
+
+   module Main where
+
+   import Weigh
 
    data LotsOfInts = A Int Int
                    | B Int Int
+                   | C Int Int
+                   | D Int Int
+                   | E Int Int
           deriving (Generic,NFData)
 
- ..
-    start here tomorrow. Show that after 10 constructors we don't optimize into
-    registers anymore, and that single field constructors are heavily optimized and
-    don't allocate because of newtypes
+   data LotsOfInts2 = A2 Int Int
+                    | B2 Int Int
+                    | C2 Int Int
+                    | D2 Int Int
+                    | E2 Int Int
+                    | F2 Int Int
+                    | G2 Int Int
+                    | H2 Int Int
+                    | I2 Int Int
+                    | J2 Int Int
+                    | K2 Int Int
+             deriving (Generic,NFData)
+
+   main :: IO ()
+   main = mainWith $ do
+     setColumns [Case, Allocated, Max, Live, GCs, MaxOS]
+     value "SingleCons" (SingleCons 1729)
+
+which produces:
+
 
 
 Weigh the impact of a Data Type

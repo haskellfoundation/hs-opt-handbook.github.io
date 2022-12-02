@@ -56,6 +56,9 @@ Glossary
       provides Haskell's laziness. See :cite:t:`SpinelessTaglessGMachine`
       Section 3.1.2 for more details.
 
+   CAF
+
+     A CAF, or Constant Applicative Form, is ...
 
    Closure
 
