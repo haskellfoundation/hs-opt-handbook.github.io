@@ -29,6 +29,7 @@ Release History
 * November, 2022
 
   * Eventlog chapter now has interactive heap profiles
+  * Begin draft of Weigh chapter
 
 * October, 2022
 
