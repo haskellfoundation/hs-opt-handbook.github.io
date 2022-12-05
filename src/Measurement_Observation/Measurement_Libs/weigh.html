@@ -268,43 +268,42 @@ allocation. For example, consider this program:</p>
 <span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;Foo2&quot;</span><span class="w">  </span><span class="p">(</span><span class="kt">Foo2</span><span class="w"> </span><span class="n">one</span><span class="w"> </span><span class="n">two</span><span class="p">)</span><span class="w"></span>
 </pre></div>
 </div>
-<p>One might <a class="reference internal" href="../Direct_Observation/size.html#memory-footprint"><span class="std std-ref">expect</span></a> <code class="docutils literal notranslate"><span class="pre">()</span></code>, <code class="docutils literal notranslate"><span class="pre">1</span></code>, and <code class="docutils literal notranslate"><span class="pre">True</span></code> to be 0
-machine words, 2 machine words and 0 words respectively. However, this is not
-the case; here is the output from weigh:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Running <span class="m">1</span> benchmarks...
-Benchmark weigh: RUNNING...
+<p>One might <a class="reference internal" href="../Direct_Observation/size.html#memory-footprint"><span class="std std-ref">expect</span></a> <code class="docutils literal notranslate"><span class="pre">()</span></code>, <code class="docutils literal notranslate"><span class="pre">1</span></code>, and <code class="docutils literal notranslate"><span class="pre">True</span></code> to be 0,
+2 and 0 machine words respectively. However, this is not the case; here is the
+output from weigh:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>  Running <span class="m">1</span> benchmarks...
+  Benchmark weigh: RUNNING...
 
-Case        Allocated  GCs
-<span class="o">()</span>                  <span class="m">0</span>    <span class="m">0</span>
-<span class="m">1</span>                   <span class="m">0</span>    <span class="m">0</span>
-True                <span class="m">0</span>    <span class="m">0</span>
-<span class="o">[</span><span class="m">0</span>..3<span class="o">]</span>            <span class="m">192</span>    <span class="m">0</span>
-<span class="o">[</span><span class="m">0</span>,1,2,3<span class="o">]</span>           <span class="m">0</span>    <span class="m">0</span>
-Foo0                <span class="m">0</span>    <span class="m">0</span>
-Foo1-func          <span class="m">16</span>    <span class="m">0</span>
-Foo1-value          <span class="m">0</span>    <span class="m">0</span>
-one               <span class="m">144</span>    <span class="m">0</span>
-Foo2              <span class="m">336</span>    <span class="m">0</span>
-Benchmark weigh: FINISH
+  Case        Allocated  GCs
+  <span class="o">()</span>                  <span class="m">0</span>    <span class="m">0</span>
+  <span class="m">1</span>                   <span class="m">0</span>    <span class="m">0</span>
+  True                <span class="m">0</span>    <span class="m">0</span>
+  <span class="o">[</span><span class="m">0</span>..3<span class="o">]</span>            <span class="m">192</span>    <span class="m">0</span>
+  <span class="o">[</span><span class="m">0</span>,1,2,3<span class="o">]</span>           <span class="m">0</span>    <span class="m">0</span>
+  Foo0                <span class="m">0</span>    <span class="m">0</span>
+  Foo1-func          <span class="m">16</span>    <span class="m">0</span>
+  Foo1-value          <span class="m">0</span>    <span class="m">0</span>
+  one               <span class="m">144</span>    <span class="m">0</span>
+  Foo2              <span class="m">336</span>    <span class="m">0</span>
+  Benchmark weigh: FINISH
+
+Notice that built <span class="k">in</span> types such as <span class="sb">``</span><span class="o">()</span><span class="sb">``</span> and <span class="sb">``</span>True<span class="sb">``</span> <span class="k">do</span> not <span class="k">do</span> any
 </pre></div>
 </div>
-<p>A word of caution, some results might be puzzling at first: notice that built in
-types such as <code class="docutils literal notranslate"><span class="pre">()</span></code> and <code class="docutils literal notranslate"><span class="pre">True</span></code> do not do any allocation. This is because
-these types are <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/wikis/commentary/compiler/wired-in">wired-in</a> to
-GHC, which means that there is a single shared <code class="docutils literal notranslate"><span class="pre">()</span></code> in GHC and thus our call
-to <code class="docutils literal notranslate"><span class="pre">value</span> <span class="pre">&quot;()&quot;</span> <span class="pre">()</span></code> performs no allocation because it references the shared
+<p>allocation. This is because these types are <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/wikis/commentary/compiler/wired-in">wired-in</a> to
+GHC, which means that there is a single shared <code class="docutils literal notranslate"><span class="pre">()</span></code> in GHC, so our call to
+<code class="docutils literal notranslate"><span class="pre">value</span> <span class="pre">&quot;()&quot;</span> <span class="pre">()</span></code> performs no allocation because it references the shared
 <code class="docutils literal notranslate"><span class="pre">()</span></code>. This is also true for <code class="docutils literal notranslate"><span class="pre">True</span></code>. <code class="docutils literal notranslate"><span class="pre">1</span></code> performs no allocation <em>during the
-runtime</em> of our program because GHC realizes its a static literal and floats it
+runtime</em> of our program because GHC realizes it is a <a class="reference internal" href="../../glossary.html#term-CAF"><span class="xref std std-term">CAF</span></a> and float it
 out of <code class="docutils literal notranslate"><span class="pre">main</span></code>; and similarly so for <code class="docutils literal notranslate"><span class="pre">[0,1,2,3]</span></code> and <code class="docutils literal notranslate"><span class="pre">Foo0</span></code> . In contrast,
 the list ranges <code class="docutils literal notranslate"><span class="pre">[0..3]</span></code> and <code class="docutils literal notranslate"><span class="pre">([0,1,2],[3,4,5])</span></code> do perform allocation
 during runtime. <code class="docutils literal notranslate"><span class="pre">Foo1-func</span></code> allocates because we used <code class="docutils literal notranslate"><span class="pre">func</span></code> which forces
 the creation of <code class="docutils literal notranslate"><span class="pre">Foo1</span></code> at runtime. <code class="docutils literal notranslate"><span class="pre">Foo1-value</span></code> performs no runtime
-allocation because GHC will recognize it as a <a class="reference internal" href="../../glossary.html#term-CAF"><span class="xref std std-term">CAF</span></a>, float it out of
-<code class="docutils literal notranslate"><span class="pre">main</span></code> and allocate it at compile time; just like <code class="docutils literal notranslate"><span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">()</span></code> and <code class="docutils literal notranslate"><span class="pre">1</span></code>.
-This is also why <code class="docutils literal notranslate"><span class="pre">Foo2</span></code> allocates; under the hood the <code class="docutils literal notranslate"><span class="pre">Foo2</span></code> value weigh
-will read is a <code class="docutils literal notranslate"><span class="pre">CAF</span></code>, and its fields <code class="docutils literal notranslate"><span class="pre">one</span></code> and <code class="docutils literal notranslate"><span class="pre">two</span></code> are shared, but
-<code class="docutils literal notranslate"><span class="pre">one</span></code> and <code class="docutils literal notranslate"><span class="pre">two</span></code> are allocated at runtime via the <code class="docutils literal notranslate"><span class="pre">unpackCString#</span></code>
-primitive. Here is the relevant <a class="reference internal" href="../Direct_Observation/core.html#core"><span class="std std-ref">Core</span></a>:</p>
+allocation because GHC will detect it as a CAF just like <code class="docutils literal notranslate"><span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">()</span></code> and
+<code class="docutils literal notranslate"><span class="pre">1</span></code>. This is also why <code class="docutils literal notranslate"><span class="pre">Foo2</span></code> allocates; under the hood the <code class="docutils literal notranslate"><span class="pre">Foo2</span></code> value is
+a <code class="docutils literal notranslate"><span class="pre">CAF</span></code>, and its fields <code class="docutils literal notranslate"><span class="pre">one</span></code> and <code class="docutils literal notranslate"><span class="pre">two</span></code> are shared, but <code class="docutils literal notranslate"><span class="pre">one</span></code> and
+<code class="docutils literal notranslate"><span class="pre">two</span></code> are allocated at runtime via the <code class="docutils literal notranslate"><span class="pre">unpackCString#</span></code> primitive. Here is
+the relevant <a class="reference internal" href="../Direct_Observation/core.html#core"><span class="std std-ref">Core</span></a>:</p>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- RHS size: {terms: 3, types: 0, coercions: 0, joins: 0/0}</span><span class="w"></span>
 <span class="kt">Main</span><span class="o">.</span><span class="n">main_v2</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Foo2</span><span class="w"></span>
 <span class="p">[</span><span class="kt">GblId</span><span class="p">,</span><span class="w"></span>
@@ -332,8 +331,6 @@ primitive. Here is the relevant <a class="reference internal" href="../Direct_Ob
 because it has the properties <code class="docutils literal notranslate"><span class="pre">Workfree=True</span></code>, <code class="docutils literal notranslate"><span class="pre">Value=True</span></code>, and
 <code class="docutils literal notranslate"><span class="pre">TopLvl=True</span></code>. But the payload of <code class="docutils literal notranslate"><span class="pre">one</span></code>, <code class="docutils literal notranslate"><span class="pre">Main.one1</span></code> <em>is not</em> a CAF
 because it is not a value and is not work free.</p>
-<blockquote>
-<div></div></blockquote>
 </section>
 <section id="examples">
 <h2><span class="section-number">2.5.2.5. </span>Examples<a class="headerlink" href="#examples" title="Permalink to this heading">¶</a></h2>
@@ -443,6 +440,8 @@ five words; let’s test this:</p>
 </pre></div>
 </div>
 <p>which produces:</p>
+<blockquote>
+<div></div></blockquote>
 </section>
 <section id="weigh-the-impact-of-a-data-type">
 <h3><span class="section-number">2.5.2.5.3. </span>Weigh the impact of a Data Type<a class="headerlink" href="#weigh-the-impact-of-a-data-type" title="Permalink to this heading">¶</a></h3>

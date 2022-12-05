@@ -166,23 +166,24 @@ any free variables. Because they are constant they are floated (see
 <a class="reference internal" href="#term-Let-Floating"><span class="xref std std-term">Let Floating</span></a>) to the top of the program, and statically allocated
 during compile time. Since they are statically allocated at compile time
 CAFs are pinned memory and special treatment in the runtime system. Thus,
-heavily allocating CAFs can increase memory residency.</p>
+heavily allocating CAFs can increase memory residency. See
+<span id="id2">Jones <em>et al.</em> [<a class="reference internal" href="../contents.html#id2" title="Peyton Jones, Simon L, and Simon Peyton Jones. Implementing lazy functional languages on stock hardware: the spineless tagless g-machine. Journal of Functional Programming, 2:127-202, July 1992. URL: https://www.microsoft.com/en-us/research/publication/implementing-lazy-functional-languages-on-stock-hardware-the-spineless-tagless-g-machine/.">2</a>]</span> Section 10.8 for more details.</p>
 </dd>
 <dt id="term-DWARF">DWARF<a class="headerlink" href="#term-DWARF" title="Permalink to this term">¶</a></dt><dd><p>DWARF symbols are a widely used and standardized data format used to
 provide source level debugging. For more, see <a class="reference external" href="https://dwarfstd.org/">the official webpage</a></p>
 </dd>
 <dt id="term-Full-Laziness-transformation">Full Laziness transformation<a class="headerlink" href="#term-Full-Laziness-transformation" title="Permalink to this term">¶</a></dt><dd><p>A form of <a class="reference internal" href="#term-Let-Floating"><span class="xref std std-term">Let Floating</span></a> which moves let bindings out of lambda
 abstractions to avoid unnecessary allocation and computation. See
-<span id="id2">Peyton Jones and Santos [<a class="reference internal" href="../contents.html#id4" title="Simon Peyton Jones and Andre Santos. A transformation-based optimiser for haskell. Science of Computer Programming, October 1997. URL: https://www.microsoft.com/en-us/research/publication/a-transformation-based-optimiser-for-haskell/.">1</a>]</span> Section 7.2.</p>
+<span id="id3">Peyton Jones and Santos [<a class="reference internal" href="../contents.html#id4" title="Simon Peyton Jones and Andre Santos. A transformation-based optimiser for haskell. Science of Computer Programming, October 1997. URL: https://www.microsoft.com/en-us/research/publication/a-transformation-based-optimiser-for-haskell/.">1</a>]</span> Section 7.2.</p>
 </dd>
 <dt id="term-Levity-Polymorphism">Levity Polymorphism<a class="headerlink" href="#term-Levity-Polymorphism" title="Permalink to this term">¶</a></dt><dd><p>A kind of polymorphism that abstracts over calling conventions which
 allows levity polymorphic functions to be abstracted over memory layout.
-See <span id="id3">Eisenberg and Peyton Jones [<a class="reference internal" href="../contents.html#id8" title="Richard A. Eisenberg and Simon Peyton Jones. Levity polymorphism. SIGPLAN Not., 52(6):525–539, jun 2017. URL: https://doi.org/10.1145/3140587.3062357, doi:10.1145/3140587.3062357.">2</a>]</span> for a more precise technical definition
+See <span id="id4">Eisenberg and Peyton Jones [<a class="reference internal" href="../contents.html#id8" title="Richard A. Eisenberg and Simon Peyton Jones. Levity polymorphism. SIGPLAN Not., 52(6):525–539, jun 2017. URL: https://doi.org/10.1145/3140587.3062357, doi:10.1145/3140587.3062357.">3</a>]</span> for a more precise technical definition
 and discussion.</p>
 </dd>
 <dt id="term-Let-Floating">Let Floating<a class="headerlink" href="#term-Let-Floating" title="Permalink to this term">¶</a></dt><dd><p>A group of optimizing transformation’s that move <code class="docutils literal notranslate"><span class="pre">let</span></code> bindings to
-reduce heap allocations. See <span id="id4">Partain <em>et al.</em> [<a class="reference internal" href="../contents.html#id7" title="WD Partain, A Santos, and Simon Peyton Jones. Let-floating: moving bindings to give faster programs. May 1996. ACM SIGPLAN International Conference on Functional Programming (ICFP'96). URL: https://www.microsoft.com/en-us/research/publication/let-floating-moving-bindings-to-give-faster-programs/.">3</a>]</span> and
-<span id="id5">Peyton Jones and Santos [<a class="reference internal" href="../contents.html#id4" title="Simon Peyton Jones and Andre Santos. A transformation-based optimiser for haskell. Science of Computer Programming, October 1997. URL: https://www.microsoft.com/en-us/research/publication/a-transformation-based-optimiser-for-haskell/.">1</a>]</span> Section 7 for more details.</p>
+reduce heap allocations. See <span id="id5">Partain <em>et al.</em> [<a class="reference internal" href="../contents.html#id7" title="WD Partain, A Santos, and Simon Peyton Jones. Let-floating: moving bindings to give faster programs. May 1996. ACM SIGPLAN International Conference on Functional Programming (ICFP'96). URL: https://www.microsoft.com/en-us/research/publication/let-floating-moving-bindings-to-give-faster-programs/.">4</a>]</span> and
+<span id="id6">Peyton Jones and Santos [<a class="reference internal" href="../contents.html#id4" title="Simon Peyton Jones and Andre Santos. A transformation-based optimiser for haskell. Science of Computer Programming, October 1997. URL: https://www.microsoft.com/en-us/research/publication/a-transformation-based-optimiser-for-haskell/.">1</a>]</span> Section 7 for more details.</p>
 </dd>
 <dt id="term-Lifted">Lifted<a class="headerlink" href="#term-Lifted" title="Permalink to this term">¶</a></dt><dd><p>A Lifted type is a type that contains the value <span class="math notranslate nohighlight">\(\bot\)</span>;
 which represents non-terminating computation. For example, the <code class="docutils literal notranslate"><span class="pre">Bool</span></code>
@@ -198,7 +199,7 @@ for more.</p>
 </dd>
 <dt id="term-Thunk">Thunk<a class="headerlink" href="#term-Thunk" title="Permalink to this term">¶</a></dt><dd><p>A thunk is a special kind of <a class="reference internal" href="#term-Closure"><span class="xref std std-term">Closure</span></a> that represents a suspended
 computation. Thunks reside on the heap and are the key feature that
-provides Haskell’s laziness. See <span id="id6">Peyton Jones and Salkild [<a class="reference internal" href="../contents.html#id6" title="Simon L. Peyton Jones and Jon Salkild. The spineless tagless g-machine. In Proceedings of the Fourth International Conference on Functional Programming Languages and Computer Architecture, FPCA '89, 184–201. New York, NY, USA, 1989. Association for Computing Machinery. URL: https://doi.org/10.1145/99370.99385, doi:10.1145/99370.99385.">4</a>]</span>
+provides Haskell’s laziness. See <span id="id7">Peyton Jones and Salkild [<a class="reference internal" href="../contents.html#id6" title="Simon L. Peyton Jones and Jon Salkild. The spineless tagless g-machine. In Proceedings of the Fourth International Conference on Functional Programming Languages and Computer Architecture, FPCA '89, 184–201. New York, NY, USA, 1989. Association for Computing Machinery. URL: https://doi.org/10.1145/99370.99385, doi:10.1145/99370.99385.">5</a>]</span>
 Section 3.1.2 for more details.</p>
 </dd>
 <dt id="term-Unboxed">Unboxed<a class="headerlink" href="#term-Unboxed" title="Permalink to this term">¶</a></dt><dd><p>An UnBoxed value is a value that is represented by the value itself.

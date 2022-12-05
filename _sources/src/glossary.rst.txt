@@ -49,7 +49,9 @@ Glossary
      :term:`Let Floating`) to the top of the program, and statically allocated
      during compile time. Since they are statically allocated at compile time
      CAFs are pinned memory and special treatment in the runtime system. Thus,
-     heavily allocating CAFs can increase memory residency.
+     heavily allocating CAFs can increase memory residency. See
+     :cite:t:`jones1992implementing` Section 10.8 for more details.
+
 
    DWARF : Format
 
