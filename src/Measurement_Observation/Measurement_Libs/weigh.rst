@@ -141,9 +141,9 @@ allocation. For example, consider this program:
     value "Foo2"  (Foo2 one two)
 
 
-One might :ref:`expect <Memory Footprint>` ``()``, ``1``, and ``True`` to be 0
-machine words, 2 machine words and 0 words respectively. However, this is not
-the case; here is the output from weigh:
+One might :ref:`expect <Memory Footprint>` ``()``, ``1``, and ``True`` to be 0,
+2 and 0 machine words respectively. However, this is not the case; here is the
+output from weigh:
 
 .. code-block:: bash
 
@@ -163,24 +163,22 @@ the case; here is the output from weigh:
    Foo2              336    0
    Benchmark weigh: FINISH
 
-A word of caution, some results might be puzzling at first: notice that built in
-types such as ``()`` and ``True`` do not do any allocation. This is because
-these types are `wired-in
+ Notice that built in types such as ``()`` and ``True`` do not do any
+allocation. This is because these types are `wired-in
 <https://gitlab.haskell.org/ghc/ghc/-/wikis/commentary/compiler/wired-in>`_ to
-GHC, which means that there is a single shared ``()`` in GHC and thus our call
-to ``value "()" ()`` performs no allocation because it references the shared
+GHC, which means that there is a single shared ``()`` in GHC, so our call to
+``value "()" ()`` performs no allocation because it references the shared
 ``()``. This is also true for ``True``. ``1`` performs no allocation *during the
-runtime* of our program because GHC realizes its a static literal and floats it
+runtime* of our program because GHC realizes it is a :term:`CAF` and float it
 out of ``main``; and similarly so for ``[0,1,2,3]`` and ``Foo0`` . In contrast,
 the list ranges ``[0..3]`` and ``([0,1,2],[3,4,5])`` do perform allocation
 during runtime. ``Foo1-func`` allocates because we used ``func`` which forces
 the creation of ``Foo1`` at runtime. ``Foo1-value`` performs no runtime
-allocation because GHC will recognize it as a :term:`CAF`, float it out of
-``main`` and allocate it at compile time; just like ``True``, ``()`` and ``1``.
-This is also why ``Foo2`` allocates; under the hood the ``Foo2`` value weigh
-will read is a ``CAF``, and its fields ``one`` and ``two`` are shared, but
-``one`` and ``two`` are allocated at runtime via the ``unpackCString#``
-primitive. Here is the relevant :ref:`Core <Core>`:
+allocation because GHC will detect it as a CAF just like ``True``, ``()`` and
+``1``. This is also why ``Foo2`` allocates; under the hood the ``Foo2`` value is
+a ``CAF``, and its fields ``one`` and ``two`` are shared, but ``one`` and
+``two`` are allocated at runtime via the ``unpackCString#`` primitive. Here is
+the relevant :ref:`Core <Core>`:
 
 .. code-block:: haskell
 
@@ -210,14 +208,6 @@ Notice that ``Main.Foo2`` calls ``one`` and ``two``, and that ``one`` is a CAF
 because it has the properties ``Workfree=True``, ``Value=True``, and
 ``TopLvl=True``. But the payload of ``one``, ``Main.one1`` *is not* a CAF
 because it is not a value and is not work free.
-
- ..
-    start here tomorrow. Show that after 10 constructors we don't optimize into
-    registers anymore, and that single field constructors are heavily optimized and
-    don't allocate because of newtypes
-
-    start here, again tomorrow. Define CAF in the glossary then move on to the examples.
-
 
 Examples
 --------
@@ -341,7 +331,10 @@ five words; let's test this:
 
 which produces:
 
-
+ ..
+    start here tomorrow. Show that after 10 constructors we don't optimize into
+    registers anymore, and that single field constructors are heavily optimized and
+    don't allocate because of newtypes
 
 Weigh the impact of a Data Type
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
