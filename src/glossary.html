@@ -131,37 +131,8 @@
             
   <section id="glossary">
 <span id="id1"></span><h1>Glossary<a class="headerlink" href="#glossary" title="Permalink to this heading">¶</a></h1>
-<dl class="simple glossary">
-<dt id="term-WHNF">WHNF<a class="headerlink" href="#term-WHNF" title="Permalink to this term">¶</a></dt><dd><p>An expression is in <em>weak head normal form</em> if it has been evaluated to
-its’ outermost data constructor or lambda abstraction (i.e., <em>the head</em>).
-See <a class="reference external" href="https://stackoverflow.com/questions/6872898/what-is-weak-head-normal-form/6889335#6889335">this</a>
-post, <a class="reference external" href="https://wiki.haskell.org/Weak_head_normal_form">the wiki</a> , and
-<a class="reference external" href="https://en.wikipedia.org/wiki/Lambda_calculus_definition#Weak_head_normal_form">wikipedia</a>
-for more.</p>
-</dd>
+<dl class="glossary">
 <dt id="term-Boxed">Boxed<a class="headerlink" href="#term-Boxed" title="Permalink to this term">¶</a></dt><dd><p>A Boxed value is a value that is represented by a pointer to the heap.</p>
-</dd>
-<dt id="term-Unboxed">Unboxed<a class="headerlink" href="#term-Unboxed" title="Permalink to this term">¶</a></dt><dd><p>An UnBoxed value is a value that is represented by the value itself.
-UnBoxed values therefore cannot be lazy, like boxed values.</p>
-</dd>
-<dt id="term-Lifted">Lifted<a class="headerlink" href="#term-Lifted" title="Permalink to this term">¶</a></dt><dd><p>A Lifted type is a type that contains the value <span class="math notranslate nohighlight">\(\bot\)</span>;
-which represents non-terminating computation. For example, the <code class="docutils literal notranslate"><span class="pre">Bool</span></code>
-type is a set with three values: <code class="docutils literal notranslate"><span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">False</span></code>, and <span class="math notranslate nohighlight">\(\bot\)</span>.
-Therefore <code class="docutils literal notranslate"><span class="pre">Bool</span></code> is a Lifted type.</p>
-</dd>
-<dt id="term-Unlifted">Unlifted<a class="headerlink" href="#term-Unlifted" title="Permalink to this term">¶</a></dt><dd><p>An Unlifted type is a type where <span class="math notranslate nohighlight">\(\bot\)</span> <em>is not</em> an element of that type.</p>
-</dd>
-<dt id="term-Levity-Polymorphism">Levity Polymorphism<a class="headerlink" href="#term-Levity-Polymorphism" title="Permalink to this term">¶</a></dt><dd><p>A kind of polymorphism that abstracts over calling conventions which
-allows levity polymorphic functions to be abstracted over memory layout.
-See <span id="id2">Eisenberg and Peyton Jones [<a class="reference internal" href="../contents.html#id9" title="Richard A. Eisenberg and Simon Peyton Jones. Levity polymorphism. SIGPLAN Not., 52(6):525–539, jun 2017. URL: https://doi.org/10.1145/3140587.3062357, doi:10.1145/3140587.3062357.">2</a>]</span> for a more precise technical definition
-and discussion.</p>
-</dd>
-<dt id="term-Thunk">Thunk<a class="headerlink" href="#term-Thunk" title="Permalink to this term">¶</a></dt><dd><p>A thunk is a special kind of <a class="reference internal" href="#term-Closure"><span class="xref std std-term">Closure</span></a> that represents a suspended
-computation. Thunks reside on the heap and are the key feature that
-provides Haskell’s laziness. See <span id="id3">Peyton Jones and Salkild [<a class="reference internal" href="../contents.html#id3" title="Simon L. Peyton Jones and Jon Salkild. The spineless tagless g-machine. In Proceedings of the Fourth International Conference on Functional Programming Languages and Computer Architecture, FPCA '89, 184–201. New York, NY, USA, 1989. Association for Computing Machinery. URL: https://doi.org/10.1145/99370.99385, doi:10.1145/99370.99385.">3</a>]</span>
-Section 3.1.2 for more details.</p>
-</dd>
-<dt id="term-CAF">CAF<a class="headerlink" href="#term-CAF" title="Permalink to this term">¶</a></dt><dd><p>A CAF, or Constant Applicative Form, is …</p>
 </dd>
 <dt id="term-Closure">Closure<a class="headerlink" href="#term-Closure" title="Permalink to this term">¶</a></dt><dd><p>A closure is value that associates a function with an environment, where
 the environment maps every free variable in the function with a value or
@@ -170,16 +141,79 @@ created. Closure’s are the canonical way to realize lexical scoping in
 languages with first-class functions, such a Haskell. See <a class="reference external" href="https://en.wikipedia.org/wiki/Closure_(computer_programming)">the wikipedia</a> entry for
 more.</p>
 </dd>
-<dt id="term-Let-Floating">Let Floating<a class="headerlink" href="#term-Let-Floating" title="Permalink to this term">¶</a></dt><dd><p>A group of optimizing transformation’s that move <code class="docutils literal notranslate"><span class="pre">let</span></code> bindings to
-reduce heap allocations. See <span id="id4">Partain <em>et al.</em> [<a class="reference internal" href="../contents.html#id4" title="WD Partain, A Santos, and Simon Peyton Jones. Let-floating: moving bindings to give faster programs. May 1996. ACM SIGPLAN International Conference on Functional Programming (ICFP'96). URL: https://www.microsoft.com/en-us/research/publication/let-floating-moving-bindings-to-give-faster-programs/.">4</a>]</span> and
-<span id="id5">Peyton Jones and Santos [<a class="reference internal" href="../contents.html#id5" title="Simon Peyton Jones and Andre Santos. A transformation-based optimiser for haskell. Science of Computer Programming, October 1997. URL: https://www.microsoft.com/en-us/research/publication/a-transformation-based-optimiser-for-haskell/.">1</a>]</span> Section 7 for more details.</p>
-</dd>
-<dt id="term-Full-Laziness-transformation">Full Laziness transformation<a class="headerlink" href="#term-Full-Laziness-transformation" title="Permalink to this term">¶</a></dt><dd><p>A form of <a class="reference internal" href="#term-Let-Floating"><span class="xref std std-term">Let Floating</span></a> which moves let bindings out of lambda
-abstractions to avoid unnecessary allocation and computation. See
-<span id="id6">Peyton Jones and Santos [<a class="reference internal" href="../contents.html#id5" title="Simon Peyton Jones and Andre Santos. A transformation-based optimiser for haskell. Science of Computer Programming, October 1997. URL: https://www.microsoft.com/en-us/research/publication/a-transformation-based-optimiser-for-haskell/.">1</a>]</span> Section 7.2.</p>
+<dt id="term-CAF">CAF<a class="headerlink" href="#term-CAF" title="Permalink to this term">¶</a></dt><dd><p>A CAF, or Constant Applicative Form, is a Haskell value which contains no
+free variables and is not a function. Consider these examples:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- these are CAFs</span><span class="w"></span>
+<span class="nf">foo</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="nf">foo</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="mi">12</span><span class="w"></span>
+
+<span class="nf">bar</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">(</span><span class="kt">Int</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="kt">Int</span><span class="p">])</span><span class="w"></span>
+<span class="nf">bar</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="p">((</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="o">..</span><span class="p">])</span><span class="w"></span>
+
+<span class="nf">baz</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="nf">baz</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="mi">3</span><span class="w"></span>
+
+<span class="c1">-- not CAFs</span><span class="w"></span>
+<span class="nf">qux</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="nf">qux</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">3</span><span class="w">     </span><span class="c1">-- equivalent to baz but is a lambda so not a CAF</span><span class="w"></span>
+
+<span class="nf">quux</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="nf">quux</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="n">x</span><span class="w">   </span><span class="c1">-- x is free thus</span><span class="w"></span>
+</pre></div>
+</div>
+<p>These values are <em>constant</em> because they don’t bind any variables or have
+any free variables. Because they are constant they are floated (see
+<a class="reference internal" href="#term-Let-Floating"><span class="xref std std-term">Let Floating</span></a>) to the top of the program, and statically allocated
+during compile time. Since they are statically allocated at compile time
+CAFs are pinned memory and special treatment in the garbage collector and
+the runtime system. Thus, heavily allocating CAFs can increase memory
+residency.</p>
 </dd>
 <dt id="term-DWARF">DWARF<a class="headerlink" href="#term-DWARF" title="Permalink to this term">¶</a></dt><dd><p>DWARF symbols are a widely used and standardized data format used to
 provide source level debugging. For more, see <a class="reference external" href="https://dwarfstd.org/">the official webpage</a></p>
+</dd>
+<dt id="term-Full-Laziness-transformation">Full Laziness transformation<a class="headerlink" href="#term-Full-Laziness-transformation" title="Permalink to this term">¶</a></dt><dd><p>A form of <a class="reference internal" href="#term-Let-Floating"><span class="xref std std-term">Let Floating</span></a> which moves let bindings out of lambda
+abstractions to avoid unnecessary allocation and computation. See
+<span id="id2">Peyton Jones and Santos [<a class="reference internal" href="../contents.html#id5" title="Simon Peyton Jones and Andre Santos. A transformation-based optimiser for haskell. Science of Computer Programming, October 1997. URL: https://www.microsoft.com/en-us/research/publication/a-transformation-based-optimiser-for-haskell/.">1</a>]</span> Section 7.2.</p>
+</dd>
+<dt id="term-Levity-Polymorphism">Levity Polymorphism<a class="headerlink" href="#term-Levity-Polymorphism" title="Permalink to this term">¶</a></dt><dd><p>A kind of polymorphism that abstracts over calling conventions which
+allows levity polymorphic functions to be abstracted over memory layout.
+See <span id="id3">Eisenberg and Peyton Jones [<a class="reference internal" href="../contents.html#id9" title="Richard A. Eisenberg and Simon Peyton Jones. Levity polymorphism. SIGPLAN Not., 52(6):525–539, jun 2017. URL: https://doi.org/10.1145/3140587.3062357, doi:10.1145/3140587.3062357.">2</a>]</span> for a more precise technical definition
+and discussion.</p>
+</dd>
+<dt id="term-Let-Floating">Let Floating<a class="headerlink" href="#term-Let-Floating" title="Permalink to this term">¶</a></dt><dd><p>A group of optimizing transformation’s that move <code class="docutils literal notranslate"><span class="pre">let</span></code> bindings to
+reduce heap allocations. See <span id="id4">Partain <em>et al.</em> [<a class="reference internal" href="../contents.html#id4" title="WD Partain, A Santos, and Simon Peyton Jones. Let-floating: moving bindings to give faster programs. May 1996. ACM SIGPLAN International Conference on Functional Programming (ICFP'96). URL: https://www.microsoft.com/en-us/research/publication/let-floating-moving-bindings-to-give-faster-programs/.">3</a>]</span> and
+<span id="id5">Peyton Jones and Santos [<a class="reference internal" href="../contents.html#id5" title="Simon Peyton Jones and Andre Santos. A transformation-based optimiser for haskell. Science of Computer Programming, October 1997. URL: https://www.microsoft.com/en-us/research/publication/a-transformation-based-optimiser-for-haskell/.">1</a>]</span> Section 7 for more details.</p>
+</dd>
+<dt id="term-Lifted">Lifted<a class="headerlink" href="#term-Lifted" title="Permalink to this term">¶</a></dt><dd><p>A Lifted type is a type that contains the value <span class="math notranslate nohighlight">\(\bot\)</span>;
+which represents non-terminating computation. For example, the <code class="docutils literal notranslate"><span class="pre">Bool</span></code>
+type is a set with three values: <code class="docutils literal notranslate"><span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">False</span></code>, and <span class="math notranslate nohighlight">\(\bot\)</span>.
+Therefore <code class="docutils literal notranslate"><span class="pre">Bool</span></code> is a Lifted type.</p>
+</dd>
+<dt id="term-Pinned">Pinned<a class="headerlink" href="#term-Pinned" title="Permalink to this term">¶</a></dt><dd><p>Pinned memory is memory that is guaranteed to not be moved by GHC’s garbage
+collector. This is most often useful for interfacing with foreign code.
+Note that pinned memory may lead to memory fragmentation and increased slop
+because it never moves. See <a class="reference external" href="https://well-typed.com/blog/2020/08/memory-fragmentation/">Well Typed’s</a> post and the
+<a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/wikis/commentary/rts/storage/gc/pinned">wiki</a>
+for more.</p>
+</dd>
+<dt id="term-Thunk">Thunk<a class="headerlink" href="#term-Thunk" title="Permalink to this term">¶</a></dt><dd><p>A thunk is a special kind of <a class="reference internal" href="#term-Closure"><span class="xref std std-term">Closure</span></a> that represents a suspended
+computation. Thunks reside on the heap and are the key feature that
+provides Haskell’s laziness. See <span id="id6">Peyton Jones and Salkild [<a class="reference internal" href="../contents.html#id3" title="Simon L. Peyton Jones and Jon Salkild. The spineless tagless g-machine. In Proceedings of the Fourth International Conference on Functional Programming Languages and Computer Architecture, FPCA '89, 184–201. New York, NY, USA, 1989. Association for Computing Machinery. URL: https://doi.org/10.1145/99370.99385, doi:10.1145/99370.99385.">4</a>]</span>
+Section 3.1.2 for more details.</p>
+</dd>
+<dt id="term-Unboxed">Unboxed<a class="headerlink" href="#term-Unboxed" title="Permalink to this term">¶</a></dt><dd><p>An UnBoxed value is a value that is represented by the value itself.
+UnBoxed values therefore cannot be lazy, like boxed values.</p>
+</dd>
+<dt id="term-Unlifted">Unlifted<a class="headerlink" href="#term-Unlifted" title="Permalink to this term">¶</a></dt><dd><p>An Unlifted type is a type where <span class="math notranslate nohighlight">\(\bot\)</span> <em>is not</em> an element of that
+type. See <a class="reference internal" href="#term-Levity-Polymorphism"><span class="xref std std-term">Levity Polymorphism</span></a> and <a class="reference internal" href="#term-Lifted"><span class="xref std std-term">Lifted</span></a> types for more.</p>
+</dd>
+<dt id="term-WHNF">WHNF<a class="headerlink" href="#term-WHNF" title="Permalink to this term">¶</a></dt><dd><p>An expression is in <em>weak head normal form</em> if it has been evaluated to
+its’ outermost data constructor or lambda abstraction (i.e., <em>the head</em>).
+See <a class="reference external" href="https://stackoverflow.com/questions/6872898/what-is-weak-head-normal-form/6889335#6889335">this</a>
+post, <a class="reference external" href="https://wiki.haskell.org/Weak_head_normal_form">the wiki</a> , and
+<a class="reference external" href="https://en.wikipedia.org/wiki/Lambda_calculus_definition#Weak_head_normal_form">wikipedia</a>
+for more.</p>
 </dd>
 </dl>
 </section>
