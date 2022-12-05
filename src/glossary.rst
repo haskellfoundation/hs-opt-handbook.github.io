@@ -48,9 +48,8 @@ Glossary
      any free variables. Because they are constant they are floated (see
      :term:`Let Floating`) to the top of the program, and statically allocated
      during compile time. Since they are statically allocated at compile time
-     CAFs are pinned memory and special treatment in the garbage collector and
-     the runtime system. Thus, heavily allocating CAFs can increase memory
-     residency.
+     CAFs are pinned memory and special treatment in the runtime system. Thus,
+     heavily allocating CAFs can increase memory residency.
 
    DWARF : Format
 

@@ -1,3 +1,33 @@
+@article{jones1992implementing,
+author = {Jones, Peyton and L, Simon and Peyton Jones, Simon},
+title = {Implementing Lazy Functional Languages on Stock Hardware: The Spineless Tagless G-machine},
+year = {1992},
+month = {July},
+abstract = {The Spineless Tagless G-machine is an abstract machine designed to
+                  support non- strict higher-order functional languages. This
+                  presentation of the machine falls into three parts. Firstly,
+                  we give a general discussion of the design issues involved in
+                  implementing non-strict functional languages.Next, we
+                  present the STG language, an austere but
+                  recognisably-functional language, which as well as a
+                  denotational meaning has a well-defined operational semantics.
+                  The STG language is the \abstract machine code" for the
+                  Spineless Tagless G-machine.Lastly, we discuss the mapping
+                  of the STG language onto stock hardware. The success of an
+                  abstract machine model depends largely on how efficient this
+                  mapping can be made, though this topic is often relegated to a
+                  short section. Instead, we give a detailed discussion of the
+                  design issues and the choices we have made. Our principal
+                  target is the C language, treating the C compiler as a
+                  portable assembler.},
+publisher = {Cambridge University Press},
+url = {https://www.microsoft.com/en-us/research/publication/implementing-lazy-functional-languages-on-stock-hardware-the-spineless-tagless-g-machine/},
+pages = {127-202},
+journal = {Journal of Functional Programming},
+volume = {2},
+edition = {Journal of Functional Programming},
+}
+
 @article{GHCInliner,
 author = {Peyton Jones, Simon and Marlow, Simon},
 title = {Secrets of the Glasgow Haskell Compiler Inliner},
@@ -10,11 +40,82 @@ number = {5},
 issn = {0956-7968},
 url = {https://doi.org/10.1017/S0956796802004331},
 doi = {10.1017/S0956796802004331},
-abstract = {Higher-order languages such as Haskell encourage the programmer to build abstractions by composing functions. A good compiler must inline many of these calls to recover an efficiently executable program. In principle, inlining is dead simple: just replace the call of a function by an instance of its body. But any compiler-writer will tell you that inlining is a black art, full of delicate compromises that work together to give good performance without unnecessary code bloat. The purpose of this paper is, therefore, to articulate the key lessons we learned from a full-scale “production” inliner, the one used in the Glasgow Haskell compiler. We focus mainly on the algorithmic aspects, but we also provide some indicative measurements to substantiate the importance of various aspects of the inliner.},
+abstract = {Higher-order languages such as Haskell encourage the programmer to
+                  build abstractions by composing functions. A good compiler
+                  must inline many of these calls to recover an efficiently
+                  executable program. In principle, inlining is dead simple:
+                  just replace the call of a function by an instance of its
+                  body. But any compiler-writer will tell you that inlining is a
+                  black art, full of delicate compromises that work together to
+                  give good performance without unnecessary code bloat. The
+                  purpose of this paper is, therefore, to articulate the key
+                  lessons we learned from a full-scale “production” inliner, the
+                  one used in the Glasgow Haskell compiler. We focus mainly on
+                  the algorithmic aspects, but we also provide some indicative
+                  measurements to substantiate the importance of various aspects
+                  of the inliner.},
 journal = {J. Funct. Program.},
 month = {jul},
 pages = {393–434},
 numpages = {42}
+}
+
+@article{peytonjones1997a,
+author = {Peyton Jones, Simon and Santos, Andre},
+title = {A transformation-based optimiser for Haskell},
+year = {1997},
+month = {October},
+abstract = {Many compilers do some of their work by means of
+                  correctness-preserving, and hopefully performance-improving,
+                  program transformations. The Glasgow Haskell Compiler (GHC)
+                  takes this idea of "compilation by transformation" as its
+                  war-cry, trying to express as much as possible of the
+                  compilation process in the form of program transformations.
+                  This paper reports on our practical experience of the
+                  transformational approach to compilation, in the context of a
+                  substantial compiler. This is a journal version of
+                  "Compilation by program transformation: a report from the
+                  trenches" (ESOP'96)},
+url = {https://www.microsoft.com/en-us/research/publication/a-transformation-based-optimiser-for-haskell/},
+journal = {Science of Computer Programming},
+volume = {32},
+number = {1},
+}
+
+@phdthesis{santos1995compilation,
+author = {Santos, Andre and Peyton Jones, Simon},
+title = {Compilation by transformation for non-strict functional languages},
+organization = {University of Glasgow},
+year = {1995},
+month = {July},
+abstract = {In this thesis we present and analyse a set of automatic
+                  source-to-source program transformations that are suitable for
+                  incorporation in optimising compilers for lazy functional
+                  languages.  These transformations improve the quality of code
+                  in many different respects, such as execution time and memory
+                  usage. The transformations presented are divided into two
+                  sets: global transformations, which are performed once (or
+                  perhaps twice) during compilation; and a set of local
+                  transformations with are performed before and after each of
+                  the global transformations, so that they can simplify the code
+                  before applying the global transformations, and take advantage
+                  of them afterwards. Many of the local transformations are
+                  simple, well known, and do not have major effects on their
+                  own.  They become important as they interact with each other
+                  and with global transformations, sometimes in non-obvious
+                  ways.  We present how and why they improve the code, and
+                  perform extensive experiments with real application
+                  programs. We describe four global transformations, two of
+                  which have not been used in any lazy functional compiler we
+                  know of: the static argument transformations and let-floating
+                  transformations.  The other two are well known for lazy
+                  functional languages, but no major studies of their effects
+                  have been performed: full laziness and lambda lifting.  We
+                  also study and measure the effects of different inlining
+                  strategies. We also present a Cost Semantics as a way to
+                  reason about the effects of program transformations in lazy
+                  functional languages.},
+url = {https://www.microsoft.com/en-us/research/publication/compilation-transformation-non-strict-functional-languages/},
 }
 
 @inproceedings{SpinelessTaglessGMachine,
@@ -26,7 +127,8 @@ publisher = {Association for Computing Machinery},
 address = {New York, NY, USA},
 url = {https://doi.org/10.1145/99370.99385},
 doi = {10.1145/99370.99385},
-booktitle = {Proceedings of the Fourth International Conference on Functional Programming Languages and Computer Architecture},
+booktitle = {Proceedings of the Fourth International Conference on Functional
+                  Programming Languages and Computer Architecture},
 pages = {184–201},
 numpages = {18},
 location = {Imperial College, London, United Kingdom},
@@ -57,43 +159,24 @@ edition = {ACM SIGPLAN International Conference on Functional Programming (ICFP'
 note = {ACM SIGPLAN International Conference on Functional Programming (ICFP'96)},
 }
 
-@article{peytonjones1997a,
-author = {Peyton Jones, Simon and Santos, Andre},
-title = {A transformation-based optimiser for Haskell},
-year = {1997},
-month = {October},
-abstract = {Many compilers do some of their work by means of
-                  correctness-preserving, and hopefully performance-improving,
-                  program transformations. The Glasgow Haskell Compiler (GHC)
-                  takes this idea of "compilation by transformation" as its
-                  war-cry, trying to express as much as possible of the
-                  compilation process in the form of program transformations.
-                  This paper reports on our practical experience of the
-                  transformational approach to compilation, in the context of a
-                  substantial compiler. This is a journal version of
-                  "Compilation by program transformation: a report from the
-                  trenches" (ESOP'96)},
-url = {https://www.microsoft.com/en-us/research/publication/a-transformation-based-optimiser-for-haskell/},
-journal = {Science of Computer Programming},
-volume = {32},
-number = {1},
-}
-@inproceedings{10.1145/1640089.1640133,
-author = {Cook, William R.},
-title = {On Understanding Data Abstraction, Revisited},
-year = {2009},
-isbn = {9781605587660},
+@article{levityPolymorphism,
+author = {Eisenberg, Richard A. and Peyton Jones, Simon},
+title = {Levity Polymorphism},
+year = {2017},
+issue_date = {June 2017},
 publisher = {Association for Computing Machinery},
 address = {New York, NY, USA},
-url = {https://doi.org/10.1145/1640089.1640133},
-doi = {10.1145/1640089.1640133},
-abstract = {In 1985 Luca Cardelli and Peter Wegner, my advisor, published an ACM Computing Surveys paper called "On understanding types, data abstraction, and polymorphism". Their work kicked off a flood of research on semantics and type theory for object-oriented programming, which continues to this day. Despite 25 years of research, there is still widespread confusion about the two forms of data abstraction, abstract data types and objects. This essay attempts to explain the differences and also why the differences matter.},
-booktitle = {Proceedings of the 24th ACM SIGPLAN Conference on Object Oriented Programming Systems Languages and Applications},
-pages = {557–572},
-numpages = {16},
-keywords = {object, ADT, abstract data type, class},
-location = {Orlando, Florida, USA},
-series = {OOPSLA '09}
+volume = {52},
+number = {6},
+issn = {0362-1340},
+url = {https://doi.org/10.1145/3140587.3062357},
+doi = {10.1145/3140587.3062357},
+abstract = {Parametric polymorphism is one of the linchpins of modern typed programming, but it comes with a real performance penalty. We describe this penalty; offer a principled way to reason about it (kinds as calling conventions); and propose levity polymorphism. This new form of polymorphism allows abstractions over calling conventions; we detail and verify restrictions that are necessary in order to compile levity-polymorphic functions. Levity polymorphism has created new opportunities in Haskell, including the ability to generalize nearly half of the type classes in GHC's standard library.},
+journal = {SIGPLAN Not.},
+month = {jun},
+pages = {525–539},
+numpages = {15},
+keywords = {compilation, unboxed types, polymorphism}
 }
 
 @article{dataAbstractionRevisited,
@@ -114,42 +197,4 @@ month = {oct},
 pages = {557–572},
 numpages = {16},
 keywords = {object, class, abstract data type, ADT}
-}
-
-@inproceedings{10.1145/3062341.3062357,
-author = {Eisenberg, Richard A. and Peyton Jones, Simon},
-title = {Levity Polymorphism},
-year = {2017},
-isbn = {9781450349888},
-publisher = {Association for Computing Machinery},
-address = {New York, NY, USA},
-url = {https://doi.org/10.1145/3062341.3062357},
-doi = {10.1145/3062341.3062357},
-abstract = {Parametric polymorphism is one of the linchpins of modern typed programming, but it comes with a real performance penalty. We describe this penalty; offer a principled way to reason about it (kinds as calling conventions); and propose levity polymorphism. This new form of polymorphism allows abstractions over calling conventions; we detail and verify restrictions that are necessary in order to compile levity-polymorphic functions. Levity polymorphism has created new opportunities in Haskell, including the ability to generalize nearly half of the type classes in GHC's standard library.},
-booktitle = {Proceedings of the 38th ACM SIGPLAN Conference on Programming Language Design and Implementation},
-pages = {525–539},
-numpages = {15},
-keywords = {unboxed types, compilation, polymorphism},
-location = {Barcelona, Spain},
-series = {PLDI 2017}
-}
-
-@article{levityPolymorphism,
-author = {Eisenberg, Richard A. and Peyton Jones, Simon},
-title = {Levity Polymorphism},
-year = {2017},
-issue_date = {June 2017},
-publisher = {Association for Computing Machinery},
-address = {New York, NY, USA},
-volume = {52},
-number = {6},
-issn = {0362-1340},
-url = {https://doi.org/10.1145/3140587.3062357},
-doi = {10.1145/3140587.3062357},
-abstract = {Parametric polymorphism is one of the linchpins of modern typed programming, but it comes with a real performance penalty. We describe this penalty; offer a principled way to reason about it (kinds as calling conventions); and propose levity polymorphism. This new form of polymorphism allows abstractions over calling conventions; we detail and verify restrictions that are necessary in order to compile levity-polymorphic functions. Levity polymorphism has created new opportunities in Haskell, including the ability to generalize nearly half of the type classes in GHC's standard library.},
-journal = {SIGPLAN Not.},
-month = {jun},
-pages = {525–539},
-numpages = {15},
-keywords = {compilation, unboxed types, polymorphism}
 }
