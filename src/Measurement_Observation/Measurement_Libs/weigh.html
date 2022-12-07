@@ -256,16 +256,16 @@ allocation. For example, consider this program:</p>
 
 <span class="nf">main</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">IO</span><span class="w"> </span><span class="nb">()</span><span class="w"></span>
 <span class="nf">main</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">mainWith</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="kr">do</span><span class="w"></span>
-<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;()&quot;</span><span class="w"> </span><span class="nb">()</span><span class="w"></span>
-<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;1&quot;</span><span class="w">  </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="p">)</span><span class="w"></span>
-<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;True&quot;</span><span class="w">  </span><span class="kt">True</span><span class="w"></span>
-<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;[0..3]&quot;</span><span class="w">  </span><span class="p">([</span><span class="mi">0</span><span class="o">..</span><span class="mi">3</span><span class="p">]</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">[</span><span class="kt">Int</span><span class="p">])</span><span class="w"></span>
+<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;()&quot;</span><span class="w">         </span><span class="nb">()</span><span class="w"></span>
+<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;1&quot;</span><span class="w">          </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="p">)</span><span class="w"></span>
+<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;True&quot;</span><span class="w">       </span><span class="kt">True</span><span class="w"></span>
+<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;[0..3]&quot;</span><span class="w">     </span><span class="p">([</span><span class="mi">0</span><span class="o">..</span><span class="mi">3</span><span class="p">]</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">[</span><span class="kt">Int</span><span class="p">])</span><span class="w"></span>
 <span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;[0,1,2,3]&quot;</span><span class="w">  </span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">[</span><span class="kt">Int</span><span class="p">])</span><span class="w"></span>
-<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;Foo0&quot;</span><span class="w">  </span><span class="kt">Foo0</span><span class="w"></span>
+<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;Foo0&quot;</span><span class="w">       </span><span class="kt">Foo0</span><span class="w"></span>
 <span class="w">  </span><span class="n">func</span><span class="w">  </span><span class="s">&quot;Foo1-func&quot;</span><span class="w">  </span><span class="kt">Foo1</span><span class="w"> </span><span class="mi">1</span><span class="w"></span>
-<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;Foo1-value&quot;</span><span class="w">  </span><span class="p">(</span><span class="kt">Foo1</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"></span>
-<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;one&quot;</span><span class="w"> </span><span class="n">one</span><span class="w"></span>
-<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;Foo2&quot;</span><span class="w">  </span><span class="p">(</span><span class="kt">Foo2</span><span class="w"> </span><span class="n">one</span><span class="w"> </span><span class="n">two</span><span class="p">)</span><span class="w"></span>
+<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;Foo1-value&quot;</span><span class="w"> </span><span class="p">(</span><span class="kt">Foo1</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"></span>
+<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;one&quot;</span><span class="w">        </span><span class="n">one</span><span class="w"></span>
+<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;Foo2&quot;</span><span class="w">       </span><span class="p">(</span><span class="kt">Foo2</span><span class="w"> </span><span class="n">one</span><span class="w"> </span><span class="n">two</span><span class="p">)</span><span class="w"></span>
 </pre></div>
 </div>
 <p>One might <a class="reference internal" href="../Direct_Observation/size.html#memory-footprint"><span class="std std-ref">expect</span></a> <code class="docutils literal notranslate"><span class="pre">()</span></code>, <code class="docutils literal notranslate"><span class="pre">1</span></code>, and <code class="docutils literal notranslate"><span class="pre">True</span></code> to be 0,
@@ -342,16 +342,16 @@ like so:</p>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">main</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">IO</span><span class="w"> </span><span class="nb">()</span><span class="w"></span>
 <span class="nf">main</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">mainWith</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="kr">do</span><span class="w"></span>
 <span class="w">  </span><span class="n">setColumns</span><span class="w"> </span><span class="p">[</span><span class="kt">Case</span><span class="p">,</span><span class="w"> </span><span class="kt">Allocated</span><span class="p">,</span><span class="w"> </span><span class="kt">Max</span><span class="p">,</span><span class="w"> </span><span class="kt">Live</span><span class="p">,</span><span class="w"> </span><span class="kt">GCs</span><span class="p">,</span><span class="w"> </span><span class="kt">MaxOS</span><span class="p">]</span><span class="w"> </span><span class="c1">-- new</span><span class="w"></span>
-<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;()&quot;</span><span class="w"> </span><span class="nb">()</span><span class="w"></span>
-<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;1&quot;</span><span class="w">  </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="p">)</span><span class="w"></span>
-<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;True&quot;</span><span class="w">  </span><span class="kt">True</span><span class="w"></span>
-<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;[0..3]&quot;</span><span class="w">  </span><span class="p">([</span><span class="mi">0</span><span class="o">..</span><span class="mi">3</span><span class="p">]</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">[</span><span class="kt">Int</span><span class="p">])</span><span class="w"></span>
+<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;()&quot;</span><span class="w">         </span><span class="nb">()</span><span class="w"></span>
+<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;1&quot;</span><span class="w">          </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="p">)</span><span class="w"></span>
+<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;True&quot;</span><span class="w">       </span><span class="kt">True</span><span class="w"></span>
+<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;[0..3]&quot;</span><span class="w">     </span><span class="p">([</span><span class="mi">0</span><span class="o">..</span><span class="mi">3</span><span class="p">]</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">[</span><span class="kt">Int</span><span class="p">])</span><span class="w"></span>
 <span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;[0,1,2,3]&quot;</span><span class="w">  </span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">[</span><span class="kt">Int</span><span class="p">])</span><span class="w"></span>
-<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;Foo0&quot;</span><span class="w">  </span><span class="kt">Foo0</span><span class="w"></span>
+<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;Foo0&quot;</span><span class="w">       </span><span class="kt">Foo0</span><span class="w"></span>
 <span class="w">  </span><span class="n">func</span><span class="w">  </span><span class="s">&quot;Foo1-func&quot;</span><span class="w">  </span><span class="kt">Foo1</span><span class="w"> </span><span class="mi">1</span><span class="w"></span>
-<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;Foo1-value&quot;</span><span class="w">  </span><span class="p">(</span><span class="kt">Foo1</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"></span>
-<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;one&quot;</span><span class="w"> </span><span class="n">one</span><span class="w"></span>
-<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;Foo2&quot;</span><span class="w">  </span><span class="p">(</span><span class="kt">Foo2</span><span class="w"> </span><span class="n">one</span><span class="w"> </span><span class="n">two</span><span class="p">)</span><span class="w"></span>
+<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;Foo1-value&quot;</span><span class="w"> </span><span class="p">(</span><span class="kt">Foo1</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"></span>
+<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;one&quot;</span><span class="w">        </span><span class="n">one</span><span class="w"></span>
+<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;Foo2&quot;</span><span class="w">       </span><span class="p">(</span><span class="kt">Foo2</span><span class="w"> </span><span class="n">one</span><span class="w"> </span><span class="n">two</span><span class="p">)</span><span class="w"></span>
 </pre></div>
 </div>
 <p>which yields:</p>
@@ -396,17 +396,18 @@ Consider these data types:</p>
 <span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">F2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
 <span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">G2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
 <span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">H2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
-<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">I2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
-<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">J2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
-<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">K2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
 <span class="w">          </span><span class="kr">deriving</span><span class="w"> </span><span class="p">(</span><span class="kt">Generic</span><span class="p">,</span><span class="kt">NFData</span><span class="p">)</span><span class="w"></span>
 </pre></div>
 </div>
 <p>With no optimizations taking place we would expect that a value of
 <code class="docutils literal notranslate"><span class="pre">LotsOfInts</span></code> requires 3 machine words: one for the data constructor header,
-one for each field. The payloads are simply <code class="docutils literal notranslate"><span class="pre">Int</span></code> which requires two machine
-words, thus we should expect that a value of <code class="docutils literal notranslate"><span class="pre">LotsOfInts</span></code> will use a total of
-five words; let’s test this:</p>
+one for a pointer for each field. The payloads are simply <code class="docutils literal notranslate"><span class="pre">Int</span></code> which requires
+two machine words each, one for the <code class="docutils literal notranslate"><span class="pre">I#</span></code> constructor and one for the payload
+<code class="docutils literal notranslate"><span class="pre">Int#</span></code> . Note that we could directly use <a class="reference internal" href="../../glossary.html#term-Unboxed"><span class="xref std std-term">unboxed</span></a> Ints (that is store
+<code class="docutils literal notranslate"><span class="pre">Int#</span></code> instead of <code class="docutils literal notranslate"><span class="pre">Int</span></code> in <code class="docutils literal notranslate"><span class="pre">LotsOfInts</span></code>), each constructor would still
+require three words only instead of storing pointers we would be storing the
+actual payload. Let’s measure how many bytes a value of <code class="docutils literal notranslate"><span class="pre">LotsOfInts</span></code> and
+<code class="docutils literal notranslate"><span class="pre">LotsOfInts2</span></code> requires:</p>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="cm">{-# OPTIONS_GHC -O2 #-}</span><span class="w"></span>
 
 <span class="kr">module</span><span class="w"> </span><span class="nn">Main</span><span class="w"> </span><span class="kr">where</span><span class="w"></span>
@@ -429,19 +430,83 @@ five words; let’s test this:</p>
 <span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">G2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
 <span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">H2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
 <span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">I2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
-<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">J2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
-<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">K2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
 <span class="w">          </span><span class="kr">deriving</span><span class="w"> </span><span class="p">(</span><span class="kt">Generic</span><span class="p">,</span><span class="kt">NFData</span><span class="p">)</span><span class="w"></span>
 
+<span class="c1">-- notice that we&#39;ll use both value, and func to cover our bases</span><span class="w"></span>
 <span class="nf">main</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">IO</span><span class="w"> </span><span class="nb">()</span><span class="w"></span>
 <span class="nf">main</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">mainWith</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="kr">do</span><span class="w"></span>
 <span class="w">  </span><span class="n">setColumns</span><span class="w"> </span><span class="p">[</span><span class="kt">Case</span><span class="p">,</span><span class="w"> </span><span class="kt">Allocated</span><span class="p">,</span><span class="w"> </span><span class="kt">Max</span><span class="p">,</span><span class="w"> </span><span class="kt">Live</span><span class="p">,</span><span class="w"> </span><span class="kt">GCs</span><span class="p">,</span><span class="w"> </span><span class="kt">MaxOS</span><span class="p">]</span><span class="w"></span>
-<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;SingleCons&quot;</span><span class="w"> </span><span class="p">(</span><span class="kt">SingleCons</span><span class="w"> </span><span class="mi">1729</span><span class="p">)</span><span class="w"></span>
+<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;value: A Lot Of Ints&quot;</span><span class="w">  </span><span class="p">(</span><span class="kt">A</span><span class="w"> </span><span class="mi">1000</span><span class="w"> </span><span class="mi">1001</span><span class="p">)</span><span class="w"></span>
+<span class="w">  </span><span class="n">func</span><span class="w">  </span><span class="s">&quot;func:  A Lot Of Ints&quot;</span><span class="w">  </span><span class="p">(</span><span class="kt">A</span><span class="w"> </span><span class="mi">1000</span><span class="p">)</span><span class="w"> </span><span class="mi">1001</span><span class="w"></span>
+<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;value: A Lot Of Ints2&quot;</span><span class="w"> </span><span class="p">(</span><span class="kt">A2</span><span class="w"> </span><span class="mi">1000</span><span class="w"> </span><span class="mi">1001</span><span class="p">)</span><span class="w"></span>
+<span class="w">  </span><span class="n">func</span><span class="w">  </span><span class="s">&quot;func:  A Lot Of Ints2&quot;</span><span class="w"> </span><span class="p">(</span><span class="kt">A2</span><span class="w"> </span><span class="mi">1000</span><span class="p">)</span><span class="w"> </span><span class="mi">1001</span><span class="w"></span>
 </pre></div>
 </div>
 <p>which produces:</p>
-<blockquote>
-<div></div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Benchmark</span> <span class="n">weigh</span><span class="p">:</span> <span class="n">RUNNING</span><span class="o">...</span>
+
+<span class="n">Case</span>                   <span class="n">Allocated</span>  <span class="n">Max</span>  <span class="n">Live</span>  <span class="n">GCs</span>  <span class="n">MaxOS</span>
+<span class="n">value</span><span class="p">:</span> <span class="n">A</span> <span class="n">Lot</span> <span class="n">Of</span> <span class="n">Ints</span>           <span class="mi">0</span>  <span class="mi">456</span>   <span class="mi">456</span>    <span class="mi">0</span>      <span class="mi">0</span>
+<span class="n">func</span><span class="p">:</span>  <span class="n">A</span> <span class="n">Lot</span> <span class="n">Of</span> <span class="n">Ints</span>          <span class="mi">24</span>  <span class="mi">480</span>   <span class="mi">480</span>    <span class="mi">0</span>      <span class="mi">0</span>
+<span class="n">value</span><span class="p">:</span> <span class="n">A</span> <span class="n">Lot</span> <span class="n">Of</span> <span class="n">Ints2</span>         <span class="mi">72</span>  <span class="mi">456</span>   <span class="mi">456</span>    <span class="mi">0</span>      <span class="mi">0</span>
+<span class="n">func</span><span class="p">:</span>  <span class="n">A</span> <span class="n">Lot</span> <span class="n">Of</span> <span class="n">Ints2</span>         <span class="mi">96</span>  <span class="mi">480</span>   <span class="mi">480</span>    <span class="mi">0</span>      <span class="mi">0</span>
+<span class="n">Benchmark</span> <span class="n">weigh</span><span class="p">:</span> <span class="n">FINISH</span>
+</pre></div>
+</div>
+<p>We expected <code class="docutils literal notranslate"><span class="pre">LotsOfInts</span></code> to take a 3 machine words (or 24 bytes on a 64-bit
+machine, 12 on a 32-bit machine) for a single value. However, we find that
+instead of 24 bytes a new value allocates 0, and when used as a function a
+<code class="docutils literal notranslate"><span class="pre">LotsOfInts</span></code> value allocates 24 bytes! There are several things happening
+here: First, <code class="docutils literal notranslate"><span class="pre">A</span> <span class="pre">1000</span> <span class="pre">1001</span></code> is recognized as a <a class="reference internal" href="../../glossary.html#term-CAF"><span class="xref std std-term">CAF</span></a> by GHC and allocated
+at compiled time; which is why we do not see any allocation measured by weigh at
+runtime. Second, GHC allocates 24 bytes for the function version because
+partially applying <code class="docutils literal notranslate"><span class="pre">(A</span> <span class="pre">1000)</span></code> to <code class="docutils literal notranslate"><span class="pre">1001</span></code> requires allocating <code class="docutils literal notranslate"><span class="pre">1001</span></code> (two
+words) <em>and</em> a pointer to <code class="docutils literal notranslate"><span class="pre">1001</span></code> (one word).</p>
+<p>We should expect that <code class="docutils literal notranslate"><span class="pre">LotsOfInts</span></code> and <code class="docutils literal notranslate"><span class="pre">LotsOfInts2</span></code> would have identical
+memory characteristics because the only difference between them is the number of
+constructors (five vs nine). However, that is not the case, instead we find that
+<code class="docutils literal notranslate"><span class="pre">LotsOfInts2</span></code> allocates much more memory (3x!) than <code class="docutils literal notranslate"><span class="pre">LotsOfInts</span></code>.
+Furthermore, a value of <code class="docutils literal notranslate"><span class="pre">LotsOfInts2</span></code> allocates 9 words (72 bytes), which is 6
+more words than expected <em>and</em> indicates that the value was not detected as a
+CAF. What we’re observing is the benefits of pointer-tagging optimizations (see
+<span id="id3">Marlow <em>et al.</em> [<a class="reference internal" href="../../../contents.html#id10" title="Simon Marlow, Alexey Rodriguez Yakushev, and Simon Peyton Jones. Faster laziness using dynamic pointer tagging. SIGPLAN Not., 42(9):277–288, oct 2007. URL: https://doi.org/10.1145/1291220.1291194, doi:10.1145/1291220.1291194.">2</a>]</span>). When a datatype has 8 or less (4 or less on
+32-bit machines) constructors GHC uses the last 3-bits (2-bits on 32-bit) of the
+constructor’s pointer to store information about the constructor. This produces
+a significant speedup and lowers memory costs in many ways: It allows the
+runtime system to avoid checking the <span class="xref std std-term">Static Info Table</span> for arity and
+payload information, which improves branch prediction and function calls. It
+similarly speeds up case-expressions because the runtime system does not need to
+enter the scrutinee to determine the constructor. Thus, it is a good idea to
+keep the number of constructors for crucial datatypes at 8 or less.</p>
+<p>We can double check that pointer-tagging is the culprit by removing a
+constructor from <code class="docutils literal notranslate"><span class="pre">LotsOfInts2</span></code>:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">data</span><span class="w"> </span><span class="kt">LotsOfInts2</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">A2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">B2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">C2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">D2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">E2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">F2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">G2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">H2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                 </span><span class="c1">-- now we have exactly 8 constructors</span><span class="w"></span>
+<span class="w">                 </span><span class="c1">-- | I2 Int Int</span><span class="w"></span>
+<span class="w">          </span><span class="kr">deriving</span><span class="w"> </span><span class="p">(</span><span class="kt">Generic</span><span class="p">,</span><span class="kt">NFData</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p>which produces:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Benchmark weigh: RUNNING...
+
+Case                   Allocated  Max  Live  GCs  MaxOS
+value: A Lot Of Ints           <span class="m">0</span>  <span class="m">456</span>   <span class="m">456</span>    <span class="m">0</span>      <span class="m">0</span>
+func:  A Lot Of Ints          <span class="m">24</span>  <span class="m">480</span>   <span class="m">480</span>    <span class="m">0</span>      <span class="m">0</span>
+value: A Lot Of Ints2          <span class="m">0</span>  <span class="m">456</span>   <span class="m">456</span>    <span class="m">0</span>      <span class="m">0</span>
+func:  A Lot Of Ints2         <span class="m">24</span>  <span class="m">480</span>   <span class="m">480</span>    <span class="m">0</span>      <span class="m">0</span>
+Benchmark weigh: FINISH
+</pre></div>
+</div>
+<p>And now <code class="docutils literal notranslate"><span class="pre">LotsOfInts2</span></code> behaves exactly like <code class="docutils literal notranslate"><span class="pre">LotsOfInts</span></code>.</p>
+<p>But what about the extra memory that the nine constructor version of
+<code class="docutils literal notranslate"><span class="pre">LotsOfInts2</span></code> allocated?</p>
 </section>
 <section id="weigh-the-impact-of-a-data-type">
 <h3><span class="section-number">2.5.2.5.3. </span>Weigh the impact of a Data Type<a class="headerlink" href="#weigh-the-impact-of-a-data-type" title="Permalink to this heading">¶</a></h3>

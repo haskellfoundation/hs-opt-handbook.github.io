@@ -98,9 +98,7 @@ data LotsOfInts2 = A2 Int Int
                  | F2 Int Int
                  | G2 Int Int
                  | H2 Int Int
-                 | I2 Int Int
-                 | J2 Int Int
-                 | K2 Int Int
+                 -- | I2 Int Int
           deriving (Generic,NFData)
 
 one,two :: String
@@ -132,14 +130,16 @@ myTuple = (3, 4)
 main :: IO ()
 main = mainWith $ do
   setColumns [Case, Allocated, Max, Live, GCs, MaxOS]
+  value "value: A Lot Of Ints"  (A 1000 1001)
+  func  "func:  A Lot Of Ints"  (A 1000) 1001
+  value "value: A Lot Of Ints2" (A2 1000 1001)
+  func  "func:  A Lot Of Ints2" (A2 1000) 1001
   -- value "SingleCons" (SingleCons 1729)
-  value "A Lot Of Ints" (A 1000 1001)
-  func "A Lot Of Ints" (A 1000) 1001
   -- value "Irregular" (E 1)
   -- value "1" (1 :: Int)
-  value "Foo2"  (Foo2 one two)
-  value "myTuple" myTuple
-  value "one" one
+  -- value "Foo2"  (Foo2 one two)
+  -- value "myTuple" myTuple
+  -- value "one" one
   -- func  "f"  (f 5) 10000
   -- func  "f'"  (f 5) 10000
   -- value  "fx"  x
