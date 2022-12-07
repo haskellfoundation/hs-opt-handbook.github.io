@@ -129,16 +129,16 @@ allocation. For example, consider this program:
 
   main :: IO ()
   main = mainWith $ do
-    value "()" ()
-    value "1"  (1 :: Int)
-    value "True"  True
-    value "[0..3]"  ([0..3] :: [Int])
+    value "()"         ()
+    value "1"          (1 :: Int)
+    value "True"       True
+    value "[0..3]"     ([0..3] :: [Int])
     value "[0,1,2,3]"  ([0,1,2,3] :: [Int])
-    value "Foo0"  Foo0
+    value "Foo0"       Foo0
     func  "Foo1-func"  Foo1 1
-    value "Foo1-value"  (Foo1 1)
-    value "one" one
-    value "Foo2"  (Foo2 one two)
+    value "Foo1-value" (Foo1 1)
+    value "one"        one
+    value "Foo2"       (Foo2 one two)
 
 
 One might :ref:`expect <Memory Footprint>` ``()``, ``1``, and ``True`` to be 0,
@@ -224,16 +224,16 @@ like so:
    main :: IO ()
    main = mainWith $ do
      setColumns [Case, Allocated, Max, Live, GCs, MaxOS] -- new
-     value "()" ()
-     value "1"  (1 :: Int)
-     value "True"  True
-     value "[0..3]"  ([0..3] :: [Int])
+     value "()"         ()
+     value "1"          (1 :: Int)
+     value "True"       True
+     value "[0..3]"     ([0..3] :: [Int])
      value "[0,1,2,3]"  ([0,1,2,3] :: [Int])
-     value "Foo0"  Foo0
+     value "Foo0"       Foo0
      func  "Foo1-func"  Foo1 1
-     value "Foo1-value"  (Foo1 1)
-     value "one" one
-     value "Foo2"  (Foo2 one two)
+     value "Foo1-value" (Foo1 1)
+     value "one"        one
+     value "Foo2"       (Foo2 one two)
 
 
 which yields:
@@ -285,16 +285,17 @@ Consider these data types:
                     | F2 Int Int
                     | G2 Int Int
                     | H2 Int Int
-                    | I2 Int Int
-                    | J2 Int Int
-                    | K2 Int Int
              deriving (Generic,NFData)
 
 With no optimizations taking place we would expect that a value of
 ``LotsOfInts`` requires 3 machine words: one for the data constructor header,
-one for each field. The payloads are simply ``Int`` which requires two machine
-words, thus we should expect that a value of ``LotsOfInts`` will use a total of
-five words; let's test this:
+one for a pointer for each field. The payloads are simply ``Int`` which requires
+two machine words each, one for the ``I#`` constructor and one for the payload
+``Int#`` . Note that we could directly use :term:`unboxed` Ints (that is store
+``Int#`` instead of ``Int`` in ``LotsOfInts``), each constructor would still
+require three words only instead of storing pointers we would be storing the
+actual payload. Let's measure how many bytes a value of ``LotsOfInts`` and
+``LotsOfInts2`` requires:
 
 .. code-block:: haskell
 
@@ -320,21 +321,95 @@ five words; let's test this:
                     | G2 Int Int
                     | H2 Int Int
                     | I2 Int Int
-                    | J2 Int Int
-                    | K2 Int Int
              deriving (Generic,NFData)
 
+   -- notice that we'll use both value, and func to cover our bases
    main :: IO ()
    main = mainWith $ do
      setColumns [Case, Allocated, Max, Live, GCs, MaxOS]
-     value "SingleCons" (SingleCons 1729)
+     value "value: A Lot Of Ints"  (A 1000 1001)
+     func  "func:  A Lot Of Ints"  (A 1000) 1001
+     value "value: A Lot Of Ints2" (A2 1000 1001)
+     func  "func:  A Lot Of Ints2" (A2 1000) 1001
 
 which produces:
 
- ..
-    start here tomorrow. Show that after 10 constructors we don't optimize into
-    registers anymore, and that single field constructors are heavily optimized and
-    don't allocate because of newtypes
+.. code-block::
+
+   Benchmark weigh: RUNNING...
+
+   Case                   Allocated  Max  Live  GCs  MaxOS
+   value: A Lot Of Ints           0  456   456    0      0
+   func:  A Lot Of Ints          24  480   480    0      0
+   value: A Lot Of Ints2         72  456   456    0      0
+   func:  A Lot Of Ints2         96  480   480    0      0
+   Benchmark weigh: FINISH
+
+We expected ``LotsOfInts`` to take a 3 machine words (or 24 bytes on a 64-bit
+machine, 12 on a 32-bit machine) for a single value. However, we find that
+instead of 24 bytes a new value allocates 0, and when used as a function a
+``LotsOfInts`` value allocates 24 bytes! There are several things happening
+here: First, ``A 1000 1001`` is recognized as a :term:`CAF` by GHC and allocated
+at compiled time; which is why we do not see any allocation measured by weigh at
+runtime. Second, GHC allocates 24 bytes for the function version because
+partially applying ``(A 1000)`` to ``1001`` requires allocating ``1001`` (two
+words) *and* a pointer to ``1001`` (one word).
+
+We should expect that ``LotsOfInts`` and ``LotsOfInts2`` would have identical
+memory characteristics because the only difference between them is the number of
+constructors (five vs nine). However, that is not the case, instead we find that
+``LotsOfInts2`` allocates much more memory (3x!) than ``LotsOfInts``.
+Furthermore, a value of ``LotsOfInts2`` allocates 9 words (72 bytes), which is 6
+more words than expected *and* indicates that the value was not detected as a
+CAF. What we're observing is the benefits of pointer-tagging optimizations (see
+:cite:t:`pointerTaggingLaziness`). When a datatype has 8 or less (4 or less on
+32-bit machines) constructors GHC uses the last 3-bits (2-bits on 32-bit) of the
+constructor's pointer to store information about the constructor. This produces
+a significant speedup and lowers memory costs in many ways: It allows the
+runtime system to avoid checking the :term:`Static Info Table` for arity and
+payload information, which improves branch prediction and function calls. It
+similarly speeds up case-expressions because the runtime system does not need to
+enter the scrutinee to determine the constructor. Thus, it is a good idea to
+keep the number of constructors for crucial datatypes at 8 or less.
+
+We can double check that pointer-tagging is the culprit by removing a
+constructor from ``LotsOfInts2``:
+
+.. code-block:: haskell
+
+   data LotsOfInts2 = A2 Int Int
+                    | B2 Int Int
+                    | C2 Int Int
+                    | D2 Int Int
+                    | E2 Int Int
+                    | F2 Int Int
+                    | G2 Int Int
+                    | H2 Int Int
+                    -- now we have exactly 8 constructors
+                    -- | I2 Int Int
+             deriving (Generic,NFData)
+
+which produces:
+
+.. code-block:: bash
+
+   Benchmark weigh: RUNNING...
+
+   Case                   Allocated  Max  Live  GCs  MaxOS
+   value: A Lot Of Ints           0  456   456    0      0
+   func:  A Lot Of Ints          24  480   480    0      0
+   value: A Lot Of Ints2          0  456   456    0      0
+   func:  A Lot Of Ints2         24  480   480    0      0
+   Benchmark weigh: FINISH
+
+And now ``LotsOfInts2`` behaves exactly like ``LotsOfInts``.
+
+But what about the extra memory that the nine constructor version of
+``LotsOfInts2`` allocated?
+
+..
+  start here tomorrow, explain where the extra memory came from and move on to
+  the next example or cut it and move on
 
 Weigh the impact of a Data Type
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
