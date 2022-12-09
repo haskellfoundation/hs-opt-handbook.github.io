@@ -505,17 +505,16 @@ Benchmark weigh: FINISH
 </pre></div>
 </div>
 <p>And now <code class="docutils literal notranslate"><span class="pre">LotsOfInts2</span></code> behaves exactly like <code class="docutils literal notranslate"><span class="pre">LotsOfInts</span></code>.</p>
-<p>But what about the extra memory that the nine constructor version of
-<code class="docutils literal notranslate"><span class="pre">LotsOfInts2</span></code> allocated?</p>
-</section>
-<section id="weigh-the-impact-of-a-data-type">
-<h3><span class="section-number">2.5.2.5.3. </span>Weigh the impact of a Data Type<a class="headerlink" href="#weigh-the-impact-of-a-data-type" title="Permalink to this heading">¶</a></h3>
-<p>An easy low-level optimization is fitting crucial data types into a single line
-of CPU cache. This will be architecture dependant but a typical value on modern
-64 bit machines are 64 bytes. With <code class="docutils literal notranslate"><span class="pre">weigh</span></code> we can check to make sure that a
-given data type is 64 bytes or less (typically it is better to use all 64 bytes
-as any remaining bytes will end up being padding and thus wasted). Consider this
-type:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you check the STG for the nine constructor version of <code class="docutils literal notranslate"><span class="pre">LotsOfInts2</span></code>
+you’ll find that the root of the allocations come from the <code class="docutils literal notranslate"><span class="pre">Generic</span></code> and
+<code class="docutils literal notranslate"><span class="pre">NFData</span></code> instances. Essentially the functions these instances generate now
+use an extra case-expression to scrutinize a value of <code class="docutils literal notranslate"><span class="pre">LotsOfInts2</span></code>. In
+addition to the extra case-expression, the nine constructor version disables
+<a class="reference internal" href="../../Optimizations/Code_Changes/inlining.html#inlining-chapter"><span class="std std-ref">inlining</span></a> and <a class="reference internal" href="../../Optimizations/GHC_opt/sat_transformation.html#sat-chapter"><span class="std std-ref">SAT</span></a>
+optimizations.</p>
+</div>
 </section>
 </section>
 <section id="summary">

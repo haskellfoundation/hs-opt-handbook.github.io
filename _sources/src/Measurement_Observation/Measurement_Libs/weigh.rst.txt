@@ -404,24 +404,15 @@ which produces:
 
 And now ``LotsOfInts2`` behaves exactly like ``LotsOfInts``.
 
-But what about the extra memory that the nine constructor version of
-``LotsOfInts2`` allocated?
+.. note::
 
-..
-  start here tomorrow, explain where the extra memory came from and move on to
-  the next example or cut it and move on
-
-Weigh the impact of a Data Type
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-An easy low-level optimization is fitting crucial data types into a single line
-of CPU cache. This will be architecture dependant but a typical value on modern
-64 bit machines are 64 bytes. With ``weigh`` we can check to make sure that a
-given data type is 64 bytes or less (typically it is better to use all 64 bytes
-as any remaining bytes will end up being padding and thus wasted). Consider this
-type:
-
-
+   If you check the STG for the nine constructor version of ``LotsOfInts2``
+   you'll find that the root of the allocations come from the ``Generic`` and
+   ``NFData`` instances. Essentially the functions these instances generate now
+   use an extra case-expression to scrutinize a value of ``LotsOfInts2``. In
+   addition to the extra case-expression, the nine constructor version disables
+   :ref:`inlining <Inlining Chapter>` and :ref:`SAT <SAT Chapter>`
+   optimizations.
 
 
 Summary

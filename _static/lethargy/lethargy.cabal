@@ -93,5 +93,6 @@ benchmark weigh
                , containers
                , deepseq
                , weigh
+               , gauge
                , text
                , random
