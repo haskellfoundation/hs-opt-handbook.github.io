@@ -58,8 +58,8 @@ import Weigh
 -- data Foo1 = Foo1 Int
 --   deriving (Generic,NFData)
 
-data Foo2 = Foo2 String String
-  deriving (Generic,NFData)
+-- data Foo2 = Foo2 String String
+--   deriving (Generic,NFData)
 
 -- data Foo3 = One Int
 --           | Two Int Int
@@ -79,9 +79,9 @@ data Foo2 = Foo2 String String
 -- data SingleCons = SingleCons Int
 --           deriving (Generic,NFData)
 
-data TwoConsReg = FirstCon Int
-                | SecondCon Int
-          deriving (Generic,NFData)
+-- data TwoConsReg = FirstCon Int
+--                 | SecondCon Int
+--           deriving (Generic,NFData)
 
 data LotsOfInts  = A Int Int
                  | B Int Int
@@ -98,17 +98,17 @@ data LotsOfInts2 = A2 Int Int
                  | F2 Int Int
                  | G2 Int Int
                  | H2 Int Int
-                 -- | I2 Int Int
+                 | I2 Int Int
           deriving (Generic,NFData)
 
-one,two :: String
-one = "one"
-two = "two"
+-- one,two :: String
+-- one = "one"
+-- two = "two"
 
-type Mytuple = (Int, Int)
+-- type Mytuple = (Int, Int)
 
-myTuple :: Mytuple
-myTuple = (3, 4)
+-- myTuple :: Mytuple
+-- myTuple = (3, 4)
 
 -- text_one :: T.Text
 -- text_one = T.pack one
