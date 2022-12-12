@@ -5,9 +5,13 @@
 
 `Weigh <https://hackage.haskell.org/package/weigh>`_ is a tiny Haskell package
 to measure allocations of data constructors and functions. It provides a similar
-interface to :ref:`Criterion, Gauge, and Tasty-Bench` and is useful to confirm
+interface to :ref:`Criterion, Gauge, and Tasty-Bench <Criterion>` and is useful to confirm
 that a data structure or function has the memory performance you anticipate it
-to have at runtime.
+to have at *runtime*. ``Weigh`` is easy to setup and non-invasive; requiring no
+changes to source code. Thus, it is a good *initial* tool to use before trying
+more advanced methods with higher setup costs, such as :ref:`Cachegrind
+<Cachegrind>`.
+
 
 Requirements
 ------------
@@ -16,17 +20,22 @@ Requirements
 2. The program must not be compiled with profiling enabled.
 
 Weigh works by tracking the allocation and garbage collection behavior of the
-runtime system, but it does so by taking snapshots before and after forcing
-whatever value you are passing to it. Thus, it will report incorrect
-measurements if another thread changes the heap unexpectedly. Similarly, it will
-report larger results if the values are artificially inflated for profiling.
+runtime system. It takes snapshots before and after forcing whatever value or
+function you are passing to it. Thus, it will report incorrect measurements if
+another thread changes the heap unexpectedly. Similarly, it will report larger
+results if the values are artificially inflated for profiling.
+
+Restrictions
+------------
+
+Weigh is portable, and should work anywhere GHC's native runtime system will work.
 
 
 What Information Do I Receive From Weigh?
 --------------------------------------------
 
 Weigh reports a table similar to ``criterion`` or ``gauge`` except displays
-allocations in bytes and garbage collections. For example:
+allocations in bytes and garbage collections by default. For example:
 
 .. code-block:: bash
 
@@ -38,9 +47,9 @@ allocations in bytes and garbage collections. For example:
 
 Notice that ``()``, ``1``, ``True`` do not allocate any memory. This is because
 ``weigh`` measures *heap* allocations. Thus, anything that GHC concludes can be
-floated out of ``main`` and treated like a constant will return 0 allocations.
-The list allocates due to the use of List Ranges. Contrast that with a static
-literal version:
+allocated at compile time, floated out of ``main`` and treated like a constant
+will return 0 allocations. The list allocates due to the use of List Ranges.
+Contrast that with a static literal version:
 
 .. code-block:: bash
 
@@ -65,13 +74,16 @@ Weigh is useful in the following scenarios:
   the decision to manually apply certain GHC optimizations that might not be
   firing. Such as :ref:`Lambda Lifting <Lambda Lifting Chapter>` or the
   :ref:`SAT transformation <SAT Chapter>`.
-- Inspecting the memory footprint of a data structure under a certain load. This
-  is useful information to tune the data structure specifically for that load.
-  For example, one might make tradeoffs that create slower writes in exchange
-  for faster reads if the load requires exponentially more reads than writes.
+- Inspecting the memory footprint of a data structure or a function under a
+  *particular* load. This is useful information to tune the data structure
+  specifically for that load. For example, one might make tradeoffs that create
+  slower writes in exchange for faster reads if the load requires exponentially
+  more reads than writes.
 - Tracking the memory requirements and garbage collection pressure for phases or
   sub-systems of your program, or even defining unit tests based on the output
   of weigh.
+- Inspecting the performance differences of the same code compiled with
+  different versions of GHC.
 
 How should I use Weigh
 ----------------------
@@ -206,7 +218,7 @@ the relevant :ref:`Core <Core>`:
 
 Notice that ``Main.Foo2`` calls ``one`` and ``two``, and that ``one`` is a CAF
 because it has the properties ``Workfree=True``, ``Value=True``, and
-``TopLvl=True``. But the payload of ``one``, ``Main.one1`` *is not* a CAF
+``TopLvl=True``. But the payload of ``one``, ``Main.one1``, *is not* a CAF
 because it is not a value and is not work free.
 
 Examples
@@ -215,9 +227,8 @@ Examples
 Better Output By Setting Columns
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Weigh's default configuration is good enough, but we can get more data than just
-allocations and garbage collections by altering the default with ``setColumns``,
-like so:
+Weigh's default configuration is good enough, but we can query for more data
+than just allocations and garbage collections using the function ``setColumns``:
 
 .. code-block:: haskell
 
@@ -265,8 +276,8 @@ always 0.
 Observe GHC Optimizations on your Data Type
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-GHC is a good optimizing compiler and this is easy to observe using weigh.
-Consider these data types:
+GHC is a good optimizing compiler and by using weigh we can investigate how GHC
+is optimizing our program. Consider these data types:
 
 .. code-block:: haskell
 
@@ -291,7 +302,7 @@ With no optimizations taking place we would expect that a value of
 ``LotsOfInts`` requires 3 machine words: one for the data constructor header,
 one for a pointer for each field. The payloads are simply ``Int`` which requires
 two machine words each, one for the ``I#`` constructor and one for the payload
-``Int#`` . Note that we could directly use :term:`unboxed` Ints (that is store
+``Int#``. Note that we could directly use :term:`unboxed` Ints (that is store
 ``Int#`` instead of ``Int`` in ``LotsOfInts``), each constructor would still
 require three words only instead of storing pointers we would be storing the
 actual payload. Let's measure how many bytes a value of ``LotsOfInts`` and
@@ -347,17 +358,17 @@ which produces:
 
 We expected ``LotsOfInts`` to take a 3 machine words (or 24 bytes on a 64-bit
 machine, 12 on a 32-bit machine) for a single value. However, we find that
-instead of 24 bytes a new value allocates 0, and when used as a function a
-``LotsOfInts`` value allocates 24 bytes! There are several things happening
-here: First, ``A 1000 1001`` is recognized as a :term:`CAF` by GHC and allocated
-at compiled time; which is why we do not see any allocation measured by weigh at
+instead of 24 bytes a new value allocates 0. In contrast, the function version
+of ``LotsOfInts`` allocates 24 bytes. There are several things happening here:
+First, ``A 1000 1001`` is recognized as a :term:`CAF` by GHC and allocated at
+compiled time; which is why we do not see any allocation measured by weigh at
 runtime. Second, GHC allocates 24 bytes for the function version because
 partially applying ``(A 1000)`` to ``1001`` requires allocating ``1001`` (two
 words) *and* a pointer to ``1001`` (one word).
 
 We should expect that ``LotsOfInts`` and ``LotsOfInts2`` would have identical
 memory characteristics because the only difference between them is the number of
-constructors (five vs nine). However, that is not the case, instead we find that
+constructors (five vs nine). We find that is not the case, instead
 ``LotsOfInts2`` allocates much more memory (3x!) than ``LotsOfInts``.
 Furthermore, a value of ``LotsOfInts2`` allocates 9 words (72 bytes), which is 6
 more words than expected *and* indicates that the value was not detected as a
@@ -366,11 +377,11 @@ CAF. What we're observing is the benefits of pointer-tagging optimizations (see
 32-bit machines) constructors GHC uses the last 3-bits (2-bits on 32-bit) of the
 constructor's pointer to store information about the constructor. This produces
 a significant speedup and lowers memory costs in many ways: It allows the
-runtime system to avoid checking the :term:`Static Info Table` for arity and
-payload information, which improves branch prediction and function calls. It
-similarly speeds up case-expressions because the runtime system does not need to
-enter the scrutinee to determine the constructor. Thus, it is a good idea to
-keep the number of constructors for crucial datatypes at 8 or less.
+runtime system to avoid checking the :term:`Info Table` for arity and payload
+information, which improves branch prediction and function calls. It speeds up
+case-expressions because the runtime system does not need to enter the scrutinee
+to determine the constructor. Thus, it is a good idea to keep the number of
+constructors for crucial datatypes at 8 or less.
 
 We can double check that pointer-tagging is the culprit by removing a
 constructor from ``LotsOfInts2``:
@@ -408,15 +419,22 @@ And now ``LotsOfInts2`` behaves exactly like ``LotsOfInts``.
 
    If you check the STG for the nine constructor version of ``LotsOfInts2``
    you'll find that the root of the allocations come from the ``Generic`` and
-   ``NFData`` instances. Essentially the functions these instances generate now
-   use an extra case-expression to scrutinize a value of ``LotsOfInts2``. In
-   addition to the extra case-expression, the nine constructor version disables
-   :ref:`inlining <Inlining Chapter>` and :ref:`SAT <SAT Chapter>`
-   optimizations.
+   ``NFData`` instances. The functions these instances generate use an extra
+   case-expression to scrutinize a value of ``LotsOfInts2``, and in STG (and
+   Core) that extra case expression means extra allocation. In addition to the
+   extra case-expression, the nine constructor version disables :ref:`inlining
+   <Inlining Chapter>` and :ref:`SAT <SAT Chapter>` optimizations.
 
 
 Summary
 -------
+
+We have explored using the ``weigh`` library to do a shallow inspection of the
+memory performance of a data type or function. Weigh is easy to setup and low
+weight, so it a useful tool before reaching for more invasive methods. One
+should use weigh to collect data for memory regressions, to verify mental models
+of GHC's optimizations on data types in micro-benchmarks, or to inspect memory
+behavior of a program under a particular load.
 
 References and Further Reading
 ------------------------------

@@ -97,6 +97,15 @@ Glossary
      <https://gitlab.haskell.org/ghc/ghc/-/wikis/commentary/rts/storage/gc/pinned>`_
      for more.
 
+   Info Table : Runtime
+
+      Every heap allocated object in the runtime system keeps an information
+      table that stores data such as: the object type (function, data
+      constructor, thunk etc.) before the payload of the object. This is called
+      the info table. See :cite:t:`pointerTaggingLaziness` and the `wiki
+      <https://gitlab.haskell.org/ghc/ghc/-/wikis/commentary/rts/storage/heap-objects#info-tables>`_
+      for more details.
+
    Thunk
 
       A thunk is a special kind of :term:`Closure` that represents a suspended

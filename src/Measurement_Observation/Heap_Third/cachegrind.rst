@@ -1,4 +1,4 @@
-.. Using Cachegrind
+.. _Cachegrind:
 
 :lightgrey:`Using Cachegrind`
 =============================
