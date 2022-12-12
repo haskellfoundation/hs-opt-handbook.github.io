@@ -38,6 +38,10 @@ Requirements
    ``<program>.eventlog`` file using the `ghc-events
    <https://hackage.haskell.org/package/ghc-events>`_ library.
 
+Restrictions
+------------
+
+Eventlog is portable, and should work anywhere GHC's native runtime system will work.
 
 What Information Do I Receive From Eventlog?
 --------------------------------------------

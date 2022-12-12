@@ -146,9 +146,11 @@
 <span id="id1"></span><h1><span class="section-number">2.5.2. </span><span class="incremental">Weigh</span><a class="headerlink" href="#weigh" title="Permalink to this heading">¶</a></h1>
 <p><a class="reference external" href="https://hackage.haskell.org/package/weigh">Weigh</a> is a tiny Haskell package
 to measure allocations of data constructors and functions. It provides a similar
-interface to <span class="xref std std-ref">Criterion, Gauge, and Tasty-Bench</span> and is useful to confirm
+interface to <a class="reference internal" href="criterion.html#criterion"><span class="std std-ref">Criterion, Gauge, and Tasty-Bench</span></a> and is useful to confirm
 that a data structure or function has the memory performance you anticipate it
-to have at runtime.</p>
+to have at <em>runtime</em>. <code class="docutils literal notranslate"><span class="pre">Weigh</span></code> is easy to setup and non-invasive; requiring no
+changes to source code. Thus, it is a good <em>initial</em> tool to use before trying
+more advanced methods with higher setup costs, such as <a class="reference internal" href="../Heap_Third/cachegrind.html#cachegrind"><span class="std std-ref">Cachegrind</span></a>.</p>
 <section id="requirements">
 <h2><span class="section-number">2.5.2.1. </span>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading">¶</a></h2>
 <ol class="arabic simple">
@@ -156,15 +158,19 @@ to have at runtime.</p>
 <li><p>The program must not be compiled with profiling enabled.</p></li>
 </ol>
 <p>Weigh works by tracking the allocation and garbage collection behavior of the
-runtime system, but it does so by taking snapshots before and after forcing
-whatever value you are passing to it. Thus, it will report incorrect
-measurements if another thread changes the heap unexpectedly. Similarly, it will
-report larger results if the values are artificially inflated for profiling.</p>
+runtime system. It takes snapshots before and after forcing whatever value or
+function you are passing to it. Thus, it will report incorrect measurements if
+another thread changes the heap unexpectedly. Similarly, it will report larger
+results if the values are artificially inflated for profiling.</p>
+</section>
+<section id="restrictions">
+<h2><span class="section-number">2.5.2.2. </span>Restrictions<a class="headerlink" href="#restrictions" title="Permalink to this heading">¶</a></h2>
+<p>Weigh is portable, and should work anywhere GHC’s native runtime system will work.</p>
 </section>
 <section id="what-information-do-i-receive-from-weigh">
-<h2><span class="section-number">2.5.2.2. </span>What Information Do I Receive From Weigh?<a class="headerlink" href="#what-information-do-i-receive-from-weigh" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">2.5.2.3. </span>What Information Do I Receive From Weigh?<a class="headerlink" href="#what-information-do-i-receive-from-weigh" title="Permalink to this heading">¶</a></h2>
 <p>Weigh reports a table similar to <code class="docutils literal notranslate"><span class="pre">criterion</span></code> or <code class="docutils literal notranslate"><span class="pre">gauge</span></code> except displays
-allocations in bytes and garbage collections. For example:</p>
+allocations in bytes and garbage collections by default. For example:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Case       Allocated  GCs
 <span class="o">()</span>                 <span class="m">0</span>    <span class="m">0</span>
 <span class="m">1</span>                  <span class="m">0</span>    <span class="m">0</span>
@@ -174,9 +180,9 @@ True               <span class="m">0</span>    <span class="m">0</span>
 </div>
 <p>Notice that <code class="docutils literal notranslate"><span class="pre">()</span></code>, <code class="docutils literal notranslate"><span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">True</span></code> do not allocate any memory. This is because
 <code class="docutils literal notranslate"><span class="pre">weigh</span></code> measures <em>heap</em> allocations. Thus, anything that GHC concludes can be
-floated out of <code class="docutils literal notranslate"><span class="pre">main</span></code> and treated like a constant will return 0 allocations.
-The list allocates due to the use of List Ranges. Contrast that with a static
-literal version:</p>
+allocated at compile time, floated out of <code class="docutils literal notranslate"><span class="pre">main</span></code> and treated like a constant
+will return 0 allocations. The list allocates due to the use of List Ranges.
+Contrast that with a static literal version:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Base             Allocated  GCs
 <span class="o">()</span>                       <span class="m">0</span>    <span class="m">0</span>
 <span class="m">1</span>                        <span class="m">0</span>    <span class="m">0</span>
@@ -188,7 +194,7 @@ True                     <span class="m">0</span>    <span class="m">0</span>
 <p>which does no allocation as expected.</p>
 </section>
 <section id="when-should-i-use-weigh">
-<h2><span class="section-number">2.5.2.3. </span>When should I use Weigh<a class="headerlink" href="#when-should-i-use-weigh" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">2.5.2.4. </span>When should I use Weigh<a class="headerlink" href="#when-should-i-use-weigh" title="Permalink to this heading">¶</a></h2>
 <p>Weigh is useful in the following scenarios:</p>
 <ul class="simple">
 <li><p>Inspecting the memory footprint of a value, such as a data type. This could be
@@ -197,17 +203,20 @@ useful to determine whether your data type will fit in a CPU cache line or not.<
 the decision to manually apply certain GHC optimizations that might not be
 firing. Such as <a class="reference internal" href="../../Optimizations/GHC_opt/lambda_lifting.html#lambda-lifting-chapter"><span class="std std-ref">Lambda Lifting</span></a> or the
 <a class="reference internal" href="../../Optimizations/GHC_opt/sat_transformation.html#sat-chapter"><span class="std std-ref">SAT transformation</span></a>.</p></li>
-<li><p>Inspecting the memory footprint of a data structure under a certain load. This
-is useful information to tune the data structure specifically for that load.
-For example, one might make tradeoffs that create slower writes in exchange
-for faster reads if the load requires exponentially more reads than writes.</p></li>
+<li><p>Inspecting the memory footprint of a data structure or a function under a
+<em>particular</em> load. This is useful information to tune the data structure
+specifically for that load. For example, one might make tradeoffs that create
+slower writes in exchange for faster reads if the load requires exponentially
+more reads than writes.</p></li>
 <li><p>Tracking the memory requirements and garbage collection pressure for phases or
 sub-systems of your program, or even defining unit tests based on the output
 of weigh.</p></li>
+<li><p>Inspecting the performance differences of the same code compiled with
+different versions of GHC.</p></li>
 </ul>
 </section>
 <section id="how-should-i-use-weigh">
-<h2><span class="section-number">2.5.2.4. </span>How should I use Weigh<a class="headerlink" href="#how-should-i-use-weigh" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">2.5.2.5. </span>How should I use Weigh<a class="headerlink" href="#how-should-i-use-weigh" title="Permalink to this heading">¶</a></h2>
 <p>Weigh’s interface is similar to criterion’s and gauge’s. Our recommendation is
 to define a specific benchmark target to keep your project tidy and modular. For
 example, for this chapter our toy programs are weighed through this cabal target:</p>
@@ -329,16 +338,15 @@ the relevant <a class="reference internal" href="../Direct_Observation/core.html
 </div>
 <p>Notice that <code class="docutils literal notranslate"><span class="pre">Main.Foo2</span></code> calls <code class="docutils literal notranslate"><span class="pre">one</span></code> and <code class="docutils literal notranslate"><span class="pre">two</span></code>, and that <code class="docutils literal notranslate"><span class="pre">one</span></code> is a CAF
 because it has the properties <code class="docutils literal notranslate"><span class="pre">Workfree=True</span></code>, <code class="docutils literal notranslate"><span class="pre">Value=True</span></code>, and
-<code class="docutils literal notranslate"><span class="pre">TopLvl=True</span></code>. But the payload of <code class="docutils literal notranslate"><span class="pre">one</span></code>, <code class="docutils literal notranslate"><span class="pre">Main.one1</span></code> <em>is not</em> a CAF
+<code class="docutils literal notranslate"><span class="pre">TopLvl=True</span></code>. But the payload of <code class="docutils literal notranslate"><span class="pre">one</span></code>, <code class="docutils literal notranslate"><span class="pre">Main.one1</span></code>, <em>is not</em> a CAF
 because it is not a value and is not work free.</p>
 </section>
 <section id="examples">
-<h2><span class="section-number">2.5.2.5. </span>Examples<a class="headerlink" href="#examples" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">2.5.2.6. </span>Examples<a class="headerlink" href="#examples" title="Permalink to this heading">¶</a></h2>
 <section id="better-output-by-setting-columns">
-<h3><span class="section-number">2.5.2.5.1. </span>Better Output By Setting Columns<a class="headerlink" href="#better-output-by-setting-columns" title="Permalink to this heading">¶</a></h3>
-<p>Weigh’s default configuration is good enough, but we can get more data than just
-allocations and garbage collections by altering the default with <code class="docutils literal notranslate"><span class="pre">setColumns</span></code>,
-like so:</p>
+<h3><span class="section-number">2.5.2.6.1. </span>Better Output By Setting Columns<a class="headerlink" href="#better-output-by-setting-columns" title="Permalink to this heading">¶</a></h3>
+<p>Weigh’s default configuration is good enough, but we can query for more data
+than just allocations and garbage collections using the function <code class="docutils literal notranslate"><span class="pre">setColumns</span></code>:</p>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">main</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">IO</span><span class="w"> </span><span class="nb">()</span><span class="w"></span>
 <span class="nf">main</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">mainWith</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="kr">do</span><span class="w"></span>
 <span class="w">  </span><span class="n">setColumns</span><span class="w"> </span><span class="p">[</span><span class="kt">Case</span><span class="p">,</span><span class="w"> </span><span class="kt">Allocated</span><span class="p">,</span><span class="w"> </span><span class="kt">Max</span><span class="p">,</span><span class="w"> </span><span class="kt">Live</span><span class="p">,</span><span class="w"> </span><span class="kt">GCs</span><span class="p">,</span><span class="w"> </span><span class="kt">MaxOS</span><span class="p">]</span><span class="w"> </span><span class="c1">-- new</span><span class="w"></span>
@@ -378,9 +386,9 @@ the maximum memory in use by the RTS, which in these simple examples is
 always 0.</p>
 </section>
 <section id="observe-ghc-optimizations-on-your-data-type">
-<h3><span class="section-number">2.5.2.5.2. </span>Observe GHC Optimizations on your Data Type<a class="headerlink" href="#observe-ghc-optimizations-on-your-data-type" title="Permalink to this heading">¶</a></h3>
-<p>GHC is a good optimizing compiler and this is easy to observe using weigh.
-Consider these data types:</p>
+<h3><span class="section-number">2.5.2.6.2. </span>Observe GHC Optimizations on your Data Type<a class="headerlink" href="#observe-ghc-optimizations-on-your-data-type" title="Permalink to this heading">¶</a></h3>
+<p>GHC is a good optimizing compiler and by using weigh we can investigate how GHC
+is optimizing our program. Consider these data types:</p>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">data</span><span class="w"> </span><span class="kt">LotsOfInts</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">A</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
 <span class="w">                </span><span class="o">|</span><span class="w"> </span><span class="kt">B</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
 <span class="w">                </span><span class="o">|</span><span class="w"> </span><span class="kt">C</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
@@ -403,7 +411,7 @@ Consider these data types:</p>
 <code class="docutils literal notranslate"><span class="pre">LotsOfInts</span></code> requires 3 machine words: one for the data constructor header,
 one for a pointer for each field. The payloads are simply <code class="docutils literal notranslate"><span class="pre">Int</span></code> which requires
 two machine words each, one for the <code class="docutils literal notranslate"><span class="pre">I#</span></code> constructor and one for the payload
-<code class="docutils literal notranslate"><span class="pre">Int#</span></code> . Note that we could directly use <a class="reference internal" href="../../glossary.html#term-Unboxed"><span class="xref std std-term">unboxed</span></a> Ints (that is store
+<code class="docutils literal notranslate"><span class="pre">Int#</span></code>. Note that we could directly use <a class="reference internal" href="../../glossary.html#term-Unboxed"><span class="xref std std-term">unboxed</span></a> Ints (that is store
 <code class="docutils literal notranslate"><span class="pre">Int#</span></code> instead of <code class="docutils literal notranslate"><span class="pre">Int</span></code> in <code class="docutils literal notranslate"><span class="pre">LotsOfInts</span></code>), each constructor would still
 require three words only instead of storing pointers we would be storing the
 actual payload. Let’s measure how many bytes a value of <code class="docutils literal notranslate"><span class="pre">LotsOfInts</span></code> and
@@ -455,16 +463,16 @@ actual payload. Let’s measure how many bytes a value of <code class="docutils 
 </div>
 <p>We expected <code class="docutils literal notranslate"><span class="pre">LotsOfInts</span></code> to take a 3 machine words (or 24 bytes on a 64-bit
 machine, 12 on a 32-bit machine) for a single value. However, we find that
-instead of 24 bytes a new value allocates 0, and when used as a function a
-<code class="docutils literal notranslate"><span class="pre">LotsOfInts</span></code> value allocates 24 bytes! There are several things happening
-here: First, <code class="docutils literal notranslate"><span class="pre">A</span> <span class="pre">1000</span> <span class="pre">1001</span></code> is recognized as a <a class="reference internal" href="../../glossary.html#term-CAF"><span class="xref std std-term">CAF</span></a> by GHC and allocated
-at compiled time; which is why we do not see any allocation measured by weigh at
+instead of 24 bytes a new value allocates 0. In contrast, the function version
+of <code class="docutils literal notranslate"><span class="pre">LotsOfInts</span></code> allocates 24 bytes. There are several things happening here:
+First, <code class="docutils literal notranslate"><span class="pre">A</span> <span class="pre">1000</span> <span class="pre">1001</span></code> is recognized as a <a class="reference internal" href="../../glossary.html#term-CAF"><span class="xref std std-term">CAF</span></a> by GHC and allocated at
+compiled time; which is why we do not see any allocation measured by weigh at
 runtime. Second, GHC allocates 24 bytes for the function version because
 partially applying <code class="docutils literal notranslate"><span class="pre">(A</span> <span class="pre">1000)</span></code> to <code class="docutils literal notranslate"><span class="pre">1001</span></code> requires allocating <code class="docutils literal notranslate"><span class="pre">1001</span></code> (two
 words) <em>and</em> a pointer to <code class="docutils literal notranslate"><span class="pre">1001</span></code> (one word).</p>
 <p>We should expect that <code class="docutils literal notranslate"><span class="pre">LotsOfInts</span></code> and <code class="docutils literal notranslate"><span class="pre">LotsOfInts2</span></code> would have identical
 memory characteristics because the only difference between them is the number of
-constructors (five vs nine). However, that is not the case, instead we find that
+constructors (five vs nine). We find that is not the case, instead
 <code class="docutils literal notranslate"><span class="pre">LotsOfInts2</span></code> allocates much more memory (3x!) than <code class="docutils literal notranslate"><span class="pre">LotsOfInts</span></code>.
 Furthermore, a value of <code class="docutils literal notranslate"><span class="pre">LotsOfInts2</span></code> allocates 9 words (72 bytes), which is 6
 more words than expected <em>and</em> indicates that the value was not detected as a
@@ -473,11 +481,11 @@ CAF. What we’re observing is the benefits of pointer-tagging optimizations (se
 32-bit machines) constructors GHC uses the last 3-bits (2-bits on 32-bit) of the
 constructor’s pointer to store information about the constructor. This produces
 a significant speedup and lowers memory costs in many ways: It allows the
-runtime system to avoid checking the <span class="xref std std-term">Static Info Table</span> for arity and
-payload information, which improves branch prediction and function calls. It
-similarly speeds up case-expressions because the runtime system does not need to
-enter the scrutinee to determine the constructor. Thus, it is a good idea to
-keep the number of constructors for crucial datatypes at 8 or less.</p>
+runtime system to avoid checking the <a class="reference internal" href="../../glossary.html#term-Info-Table"><span class="xref std std-term">Info Table</span></a> for arity and payload
+information, which improves branch prediction and function calls. It speeds up
+case-expressions because the runtime system does not need to enter the scrutinee
+to determine the constructor. Thus, it is a good idea to keep the number of
+constructors for crucial datatypes at 8 or less.</p>
 <p>We can double check that pointer-tagging is the culprit by removing a
 constructor from <code class="docutils literal notranslate"><span class="pre">LotsOfInts2</span></code>:</p>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">data</span><span class="w"> </span><span class="kt">LotsOfInts2</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">A2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
@@ -509,25 +517,30 @@ Benchmark weigh: FINISH
 <p class="admonition-title">Note</p>
 <p>If you check the STG for the nine constructor version of <code class="docutils literal notranslate"><span class="pre">LotsOfInts2</span></code>
 you’ll find that the root of the allocations come from the <code class="docutils literal notranslate"><span class="pre">Generic</span></code> and
-<code class="docutils literal notranslate"><span class="pre">NFData</span></code> instances. Essentially the functions these instances generate now
-use an extra case-expression to scrutinize a value of <code class="docutils literal notranslate"><span class="pre">LotsOfInts2</span></code>. In
-addition to the extra case-expression, the nine constructor version disables
-<a class="reference internal" href="../../Optimizations/Code_Changes/inlining.html#inlining-chapter"><span class="std std-ref">inlining</span></a> and <a class="reference internal" href="../../Optimizations/GHC_opt/sat_transformation.html#sat-chapter"><span class="std std-ref">SAT</span></a>
-optimizations.</p>
+<code class="docutils literal notranslate"><span class="pre">NFData</span></code> instances. The functions these instances generate use an extra
+case-expression to scrutinize a value of <code class="docutils literal notranslate"><span class="pre">LotsOfInts2</span></code>, and in STG (and
+Core) that extra case expression means extra allocation. In addition to the
+extra case-expression, the nine constructor version disables <a class="reference internal" href="../../Optimizations/Code_Changes/inlining.html#inlining-chapter"><span class="std std-ref">inlining</span></a> and <a class="reference internal" href="../../Optimizations/GHC_opt/sat_transformation.html#sat-chapter"><span class="std std-ref">SAT</span></a> optimizations.</p>
 </div>
 </section>
 </section>
 <section id="summary">
-<h2><span class="section-number">2.5.2.6. </span>Summary<a class="headerlink" href="#summary" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">2.5.2.7. </span>Summary<a class="headerlink" href="#summary" title="Permalink to this heading">¶</a></h2>
+<p>We have explored using the <code class="docutils literal notranslate"><span class="pre">weigh</span></code> library to do a shallow inspection of the
+memory performance of a data type or function. Weigh is easy to setup and low
+weight, so it a useful tool before reaching for more invasive methods. One
+should use weigh to collect data for memory regressions, to verify mental models
+of GHC’s optimizations on data types in micro-benchmarks, or to inspect memory
+behavior of a program under a particular load.</p>
 </section>
 <section id="references-and-further-reading">
-<h2><span class="section-number">2.5.2.7. </span>References and Further Reading<a class="headerlink" href="#references-and-further-reading" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">2.5.2.8. </span>References and Further Reading<a class="headerlink" href="#references-and-further-reading" title="Permalink to this heading">¶</a></h2>
 <ol class="arabic simple">
 <li><p>The FPComplete <a class="reference external" href="https://www.fpcomplete.com/blog/2016/05/weigh-package/">blog post</a> on weigh</p></li>
 </ol>
 </section>
 <section id="related-work">
-<h2><span class="section-number">2.5.2.8. </span>Related Work<a class="headerlink" href="#related-work" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">2.5.2.9. </span>Related Work<a class="headerlink" href="#related-work" title="Permalink to this heading">¶</a></h2>
 <ol class="arabic simple">
 <li><p><a class="reference external" href="https://github.com/def-/ghc-datasize">ghc-datasize</a></p></li>
 </ol>

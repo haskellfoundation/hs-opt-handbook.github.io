@@ -197,9 +197,15 @@ because it never moves. See <a class="reference external" href="https://well-typ
 <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/wikis/commentary/rts/storage/gc/pinned">wiki</a>
 for more.</p>
 </dd>
+<dt id="term-Info-Table">Info Table<a class="headerlink" href="#term-Info-Table" title="Permalink to this term">¶</a></dt><dd><p>Every heap allocated object in the runtime system keeps an information
+table that stores data such as: the object type (function, data
+constructor, thunk etc.) before the payload of the object. This is called
+the info table. See <span id="id7">Marlow <em>et al.</em> [<a class="reference internal" href="../contents.html#id10" title="Simon Marlow, Alexey Rodriguez Yakushev, and Simon Peyton Jones. Faster laziness using dynamic pointer tagging. SIGPLAN Not., 42(9):277–288, oct 2007. URL: https://doi.org/10.1145/1291220.1291194, doi:10.1145/1291220.1291194.">2</a>]</span> and the <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/wikis/commentary/rts/storage/heap-objects#info-tables">wiki</a>
+for more details.</p>
+</dd>
 <dt id="term-Thunk">Thunk<a class="headerlink" href="#term-Thunk" title="Permalink to this term">¶</a></dt><dd><p>A thunk is a special kind of <a class="reference internal" href="#term-Closure"><span class="xref std std-term">Closure</span></a> that represents a suspended
 computation. Thunks reside on the heap and are the key feature that
-provides Haskell’s laziness. See <span id="id7">Peyton Jones and Salkild [<a class="reference internal" href="../contents.html#id6" title="Simon L. Peyton Jones and Jon Salkild. The spineless tagless g-machine. In Proceedings of the Fourth International Conference on Functional Programming Languages and Computer Architecture, FPCA '89, 184–201. New York, NY, USA, 1989. Association for Computing Machinery. URL: https://doi.org/10.1145/99370.99385, doi:10.1145/99370.99385.">6</a>]</span>
+provides Haskell’s laziness. See <span id="id9">Peyton Jones and Salkild [<a class="reference internal" href="../contents.html#id6" title="Simon L. Peyton Jones and Jon Salkild. The spineless tagless g-machine. In Proceedings of the Fourth International Conference on Functional Programming Languages and Computer Architecture, FPCA '89, 184–201. New York, NY, USA, 1989. Association for Computing Machinery. URL: https://doi.org/10.1145/99370.99385, doi:10.1145/99370.99385.">6</a>]</span>
 Section 3.1.2 for more details.</p>
 </dd>
 <dt id="term-Unboxed">Unboxed<a class="headerlink" href="#term-Unboxed" title="Permalink to this term">¶</a></dt><dd><p>An UnBoxed value is a value that is represented by the value itself.

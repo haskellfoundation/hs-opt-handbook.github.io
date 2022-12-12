@@ -173,15 +173,19 @@ Guide</a>. You can also parse the
 <code class="docutils literal notranslate"><span class="pre">&lt;program&gt;.eventlog</span></code> file using the <a class="reference external" href="https://hackage.haskell.org/package/ghc-events">ghc-events</a> library.</p></li>
 </ol>
 </section>
+<section id="restrictions">
+<h2><span class="section-number">2.2.2.2. </span>Restrictions<a class="headerlink" href="#restrictions" title="Permalink to this heading">¶</a></h2>
+<p>Eventlog is portable, and should work anywhere GHC’s native runtime system will work.</p>
+</section>
 <section id="what-information-do-i-receive-from-eventlog">
-<h2><span class="section-number">2.2.2.2. </span>What Information Do I Receive From Eventlog?<a class="headerlink" href="#what-information-do-i-receive-from-eventlog" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">2.2.2.3. </span>What Information Do I Receive From Eventlog?<a class="headerlink" href="#what-information-do-i-receive-from-eventlog" title="Permalink to this heading">¶</a></h2>
 <p>Eventlog logs events as a function of elapsed walltime. A full list of possible
 events is available in <a class="reference external" href="https://downloads.haskell.org/~ghc/9.2.4/docs/html/users_guide/runtime_control.html#rts-eventlog">GHC User’s Guide</a>. In general, the most common use case is to
 track heap events; which will be the focus of this chapter. However, a user may
 define and track their own events using the base functions <a class="reference external" href="https://downloads.haskell.org/~ghc/9.2.4/docs/html/libraries/base-4.16.3.0/Debug-Trace.html#v:traceMarker">traceEvent</a>.</p>
 </section>
 <section id="when-should-i-use-eventlog">
-<h2><span class="section-number">2.2.2.3. </span>When should I use Eventlog<a class="headerlink" href="#when-should-i-use-eventlog" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">2.2.2.4. </span>When should I use Eventlog<a class="headerlink" href="#when-should-i-use-eventlog" title="Permalink to this heading">¶</a></h2>
 <p>Eventlog is most useful when you need to <span class="xref std std-ref">Characterize the Problem</span>. It
 yields runtime information on the specific subsystems the program relies on.
 Thus, it allows you to drill down into the behavior of the garbage collector,
@@ -193,7 +197,7 @@ allocation of megablocks, attempts to return them to the operating system, and
 heap fragmentation.</p>
 </section>
 <section id="the-running-example">
-<h2><span class="section-number">2.2.2.4. </span>The Running Example<a class="headerlink" href="#the-running-example" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">2.2.2.5. </span>The Running Example<a class="headerlink" href="#the-running-example" title="Permalink to this heading">¶</a></h2>
 <p>We’ll use a toy program to demonstrate heap profiling with eventlog. Our toy
 program is an example of excessive pointer chasing and should be familiar to
 most Haskellers’ as a traditional example of a memory leak:</p>
@@ -252,7 +256,7 @@ just a value for <code class="docutils literal notranslate"><span class="pre">Do
 with the <code class="docutils literal notranslate"><span class="pre">OPTIONS_GHC</span> <span class="pre">-O0</span></code> pragma.</p>
 </section>
 <section id="the-setup">
-<h2><span class="section-number">2.2.2.5. </span>The Setup<a class="headerlink" href="#the-setup" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">2.2.2.6. </span>The Setup<a class="headerlink" href="#the-setup" title="Permalink to this heading">¶</a></h2>
 <p>Using Eventlog requires three pieces of setup. First, you must build your
 programs with the <code class="docutils literal notranslate"><span class="pre">-eventlog</span> <span class="pre">-rtsopts</span> <span class="pre">-prof</span></code> GHC flags (or alternatively set
 <code class="docutils literal notranslate"><span class="pre">profiling:</span> <span class="pre">True</span></code> in <code class="docutils literal notranslate"><span class="pre">cabal.project</span></code> or enable <code class="docutils literal notranslate"><span class="pre">library-profiling</span></code> and
@@ -286,7 +290,7 @@ and produce a heap profile by biography (<code class="docutils literal notransla
 </ol>
 </section>
 <section id="visualizing-the-heap-eventlog-by-type">
-<h2><span class="section-number">2.2.2.6. </span>Visualizing the Heap: Eventlog by Type<a class="headerlink" href="#visualizing-the-heap-eventlog-by-type" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">2.2.2.7. </span>Visualizing the Heap: Eventlog by Type<a class="headerlink" href="#visualizing-the-heap-eventlog-by-type" title="Permalink to this heading">¶</a></h2>
 <p>To view the heap profile we’ll use <a class="reference external" href="https://mpickering.github.io/eventlog2html/">eventlog2html</a>. To begin we’ll inspect the
 heap by type. Our initial goal is to determine if we have a memory leak and if
 so which type is leaking. Here is the cabal file entry and invocation:</p>
@@ -384,7 +388,7 @@ provides an easy way to search and inspect a particular heap object which may be
 buried in noise.</p>
 </section>
 <section id="adding-our-own-events">
-<h2><span class="section-number">2.2.2.7. </span>Adding Our Own Events<a class="headerlink" href="#adding-our-own-events" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">2.2.2.8. </span>Adding Our Own Events<a class="headerlink" href="#adding-our-own-events" title="Permalink to this heading">¶</a></h2>
 <p>Thus far we have seen memory leaks coming from the types <code class="docutils literal notranslate"><span class="pre">Double</span></code> and <code class="docutils literal notranslate"><span class="pre">[]</span></code>,
 but we have not yet distinguished <em>in the profile</em> between <code class="docutils literal notranslate"><span class="pre">lazy_mean</span></code>,
 <code class="docutils literal notranslate"><span class="pre">stricter_mean</span></code>, and <code class="docutils literal notranslate"><span class="pre">strict_mean</span></code>. Consider these functions as different
@@ -655,7 +659,7 @@ this value should remove the memory leak. Our final <code class="docutils litera
 <code class="docutils literal notranslate"><span class="pre">stricter_mean</span></code> validating the lazy tuple hypothesis.</p>
 <iframe id="scaled-frame" src="../../../_static/eventlog/pc_heap_marker_final.html"></iframe></section>
 <section id="summary">
-<h2><span class="section-number">2.2.2.8. </span>Summary<a class="headerlink" href="#summary" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">2.2.2.9. </span>Summary<a class="headerlink" href="#summary" title="Permalink to this heading">¶</a></h2>
 <p>In sum, we’ve demonstrated heap profiling using GHC’s eventlog and
 <a class="reference external" href="https://mpickering.github.io/eventlog2html/">eventlog2html</a>. Eventlog records event specific data produced by GHC as a
 function of walltime. One can embed and emit custom events using the functions
@@ -667,7 +671,7 @@ fixing, and debugging memory leaks or when correlating heap information to a
 particular function or phase of the program.</p>
 </section>
 <section id="references-and-further-reading">
-<h2><span class="section-number">2.2.2.9. </span>References and Further Reading<a class="headerlink" href="#references-and-further-reading" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">2.2.2.10. </span>References and Further Reading<a class="headerlink" href="#references-and-further-reading" title="Permalink to this heading">¶</a></h2>
 <ol class="arabic simple">
 <li><p>The eventlog section in the <a class="reference external" href="https://downloads.haskell.org/~ghc/9.2.4/docs/html/users_guide/runtime_control.html#rts-eventlog">GHC User’s
 Guide</a>.</p></li>

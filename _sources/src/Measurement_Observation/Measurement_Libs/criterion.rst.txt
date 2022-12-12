@@ -1,4 +1,4 @@
-.. Criterion
+.. _Criterion:
 
 :lightgrey:`Criterion, Gauge, and Tasty-Bench`
 ==============================================
