@@ -176,14 +176,20 @@ provide source level debugging. For more, see <a class="reference external" href
 abstractions to avoid unnecessary allocation and computation. See
 <span id="id3">Peyton Jones and Santos [<a class="reference internal" href="../contents.html#id4" title="Simon Peyton Jones and Andre Santos. A transformation-based optimiser for haskell. Science of Computer Programming, October 1997. URL: https://www.microsoft.com/en-us/research/publication/a-transformation-based-optimiser-for-haskell/.">1</a>]</span> Section 7.2.</p>
 </dd>
+<dt id="term-Info-Table">Info Table<a class="headerlink" href="#term-Info-Table" title="Permalink to this term">¶</a></dt><dd><p>Every heap allocated object in the runtime system keeps an information
+table that stores data such as: the object type (function, data
+constructor, thunk etc.) before the payload of the object. This is called
+the info table. See <span id="id4">Marlow <em>et al.</em> [<a class="reference internal" href="../contents.html#id10" title="Simon Marlow, Alexey Rodriguez Yakushev, and Simon Peyton Jones. Faster laziness using dynamic pointer tagging. SIGPLAN Not., 42(9):277–288, oct 2007. URL: https://doi.org/10.1145/1291220.1291194, doi:10.1145/1291220.1291194.">2</a>]</span> and the <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/wikis/commentary/rts/storage/heap-objects#info-tables">wiki</a>
+for more details.</p>
+</dd>
 <dt id="term-Levity-Polymorphism">Levity Polymorphism<a class="headerlink" href="#term-Levity-Polymorphism" title="Permalink to this term">¶</a></dt><dd><p>A kind of polymorphism that abstracts over calling conventions which
 allows levity polymorphic functions to be abstracted over memory layout.
-See <span id="id4">Eisenberg and Peyton Jones [<a class="reference internal" href="../contents.html#id8" title="Richard A. Eisenberg and Simon Peyton Jones. Levity polymorphism. SIGPLAN Not., 52(6):525–539, jun 2017. URL: https://doi.org/10.1145/3140587.3062357, doi:10.1145/3140587.3062357.">4</a>]</span> for a more precise technical definition
+See <span id="id5">Eisenberg and Peyton Jones [<a class="reference internal" href="../contents.html#id8" title="Richard A. Eisenberg and Simon Peyton Jones. Levity polymorphism. SIGPLAN Not., 52(6):525–539, jun 2017. URL: https://doi.org/10.1145/3140587.3062357, doi:10.1145/3140587.3062357.">4</a>]</span> for a more precise technical definition
 and discussion.</p>
 </dd>
 <dt id="term-Let-Floating">Let Floating<a class="headerlink" href="#term-Let-Floating" title="Permalink to this term">¶</a></dt><dd><p>A group of optimizing transformation’s that move <code class="docutils literal notranslate"><span class="pre">let</span></code> bindings to
-reduce heap allocations. See <span id="id5">Partain <em>et al.</em> [<a class="reference internal" href="../contents.html#id7" title="WD Partain, A Santos, and Simon Peyton Jones. Let-floating: moving bindings to give faster programs. May 1996. ACM SIGPLAN International Conference on Functional Programming (ICFP'96). URL: https://www.microsoft.com/en-us/research/publication/let-floating-moving-bindings-to-give-faster-programs/.">5</a>]</span> and
-<span id="id6">Peyton Jones and Santos [<a class="reference internal" href="../contents.html#id4" title="Simon Peyton Jones and Andre Santos. A transformation-based optimiser for haskell. Science of Computer Programming, October 1997. URL: https://www.microsoft.com/en-us/research/publication/a-transformation-based-optimiser-for-haskell/.">1</a>]</span> Section 7 for more details.</p>
+reduce heap allocations. See <span id="id6">Partain <em>et al.</em> [<a class="reference internal" href="../contents.html#id7" title="WD Partain, A Santos, and Simon Peyton Jones. Let-floating: moving bindings to give faster programs. May 1996. ACM SIGPLAN International Conference on Functional Programming (ICFP'96). URL: https://www.microsoft.com/en-us/research/publication/let-floating-moving-bindings-to-give-faster-programs/.">5</a>]</span> and
+<span id="id7">Peyton Jones and Santos [<a class="reference internal" href="../contents.html#id4" title="Simon Peyton Jones and Andre Santos. A transformation-based optimiser for haskell. Science of Computer Programming, October 1997. URL: https://www.microsoft.com/en-us/research/publication/a-transformation-based-optimiser-for-haskell/.">1</a>]</span> Section 7 for more details.</p>
 </dd>
 <dt id="term-Lifted">Lifted<a class="headerlink" href="#term-Lifted" title="Permalink to this term">¶</a></dt><dd><p>A Lifted type is a type that contains the value <span class="math notranslate nohighlight">\(\bot\)</span>;
 which represents non-terminating computation. For example, the <code class="docutils literal notranslate"><span class="pre">Bool</span></code>
@@ -196,12 +202,6 @@ Note that pinned memory may lead to memory fragmentation and increased slop
 because it never moves. See <a class="reference external" href="https://well-typed.com/blog/2020/08/memory-fragmentation/">Well Typed’s</a> post and the
 <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/wikis/commentary/rts/storage/gc/pinned">wiki</a>
 for more.</p>
-</dd>
-<dt id="term-Info-Table">Info Table<a class="headerlink" href="#term-Info-Table" title="Permalink to this term">¶</a></dt><dd><p>Every heap allocated object in the runtime system keeps an information
-table that stores data such as: the object type (function, data
-constructor, thunk etc.) before the payload of the object. This is called
-the info table. See <span id="id7">Marlow <em>et al.</em> [<a class="reference internal" href="../contents.html#id10" title="Simon Marlow, Alexey Rodriguez Yakushev, and Simon Peyton Jones. Faster laziness using dynamic pointer tagging. SIGPLAN Not., 42(9):277–288, oct 2007. URL: https://doi.org/10.1145/1291220.1291194, doi:10.1145/1291220.1291194.">2</a>]</span> and the <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/wikis/commentary/rts/storage/heap-objects#info-tables">wiki</a>
-for more details.</p>
 </dd>
 <dt id="term-Thunk">Thunk<a class="headerlink" href="#term-Thunk" title="Permalink to this term">¶</a></dt><dd><p>A thunk is a special kind of <a class="reference internal" href="#term-Closure"><span class="xref std std-term">Closure</span></a> that represents a suspended
 computation. Thunks reside on the heap and are the key feature that
