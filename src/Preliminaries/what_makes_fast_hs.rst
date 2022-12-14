@@ -143,7 +143,7 @@ What is Excessive Pointer Chasing
 
 Excessive pointer chasing is a form of superfluous computation; our program is
 doing more work than it needs in order to compute the result. It occurs anytime
-our programs dereference a pointer to retrieve a value instead of just
+our programs de-reference a pointer to retrieve a value instead of just
 referencing the value itself, thereby creating an extra layer of unnecessary
 indirection. In Haskell programs this most often occurs when we write programs
 without thinking about their memory representation; and especially around
@@ -237,8 +237,7 @@ pragma and a bang pattern:
 
 This pragma instructs GHC to store the contents of ``Int`` directly in the
 ``Counter`` constructor, rather than storing a pointer to an ``Int`` on the heap
-in the constructor. We'll return to these fixes in the :ref:`Excessive Pointer
-Chasing` section.
+in the constructor. We'll return to these fixes in the :ref:`Unboxing` chapter.
 
 .. _canonical-closure-alloc:
 
@@ -354,9 +353,7 @@ This version is the full laziness version because we have moved ``let n = ..``
 out of the lambda in the body of ``g``. This version is much more efficient by
 utilizing laziness and avoiding repeated, wasteful computations of ``n``. ``n``
 will be a thunk for the first iteration of ``g``, but for every other iteration
-of ``g``, ``n`` will be evaluated to value thus saving time and space. We'll see
-more cases of let floating and detecting excessive closure allocation in the
-:ref:`Excessive Closure Allocation` section.
+of ``g``, ``n`` will be evaluated to value thus saving time and space.
 
 .. _canonical-domain-modeling:
 
