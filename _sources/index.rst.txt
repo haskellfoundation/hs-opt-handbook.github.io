@@ -26,6 +26,10 @@ by `Input Output Global <https://iohk.io/>`_.
 Release History
 ---------------
 
+* December, 2022
+
+  * Weigh chapter first draft finished.
+
 * November, 2022
 
   * Eventlog chapter now has interactive heap profiles

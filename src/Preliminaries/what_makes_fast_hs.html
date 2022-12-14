@@ -257,7 +257,7 @@ fuse in the chapter dedicated <a class="reference internal" href="../Optimizatio
 <h3><span class="section-number">1.2.3.1. </span>What is Excessive Pointer Chasing<a class="headerlink" href="#what-is-excessive-pointer-chasing" title="Permalink to this heading">¶</a></h3>
 <p>Excessive pointer chasing is a form of superfluous computation; our program is
 doing more work than it needs in order to compute the result. It occurs anytime
-our programs dereference a pointer to retrieve a value instead of just
+our programs de-reference a pointer to retrieve a value instead of just
 referencing the value itself, thereby creating an extra layer of unnecessary
 indirection. In Haskell programs this most often occurs when we write programs
 without thinking about their memory representation; and especially around
@@ -340,8 +340,7 @@ pragma and a bang pattern:</p>
 </div>
 <p>This pragma instructs GHC to store the contents of <code class="docutils literal notranslate"><span class="pre">Int</span></code> directly in the
 <code class="docutils literal notranslate"><span class="pre">Counter</span></code> constructor, rather than storing a pointer to an <code class="docutils literal notranslate"><span class="pre">Int</span></code> on the heap
-in the constructor. We’ll return to these fixes in the <span class="xref std std-ref">Excessive Pointer
-Chasing</span> section.</p>
+in the constructor. We’ll return to these fixes in the <a class="reference internal" href="../Optimizations/Code_Changes/unboxing.html#unboxing"><span class="std std-ref">Unboxing</span></a> chapter.</p>
 </section>
 </section>
 <section id="excessive-closure-allocation">
