@@ -353,9 +353,7 @@ This version is the full laziness version because we have moved ``let n = ..``
 out of the lambda in the body of ``g``. This version is much more efficient by
 utilizing laziness and avoiding repeated, wasteful computations of ``n``. ``n``
 will be a thunk for the first iteration of ``g``, but for every other iteration
-of ``g``, ``n`` will be evaluated to value thus saving time and space. We'll see
-more cases of let floating and detecting excessive closure allocation in the
-:ref:`Excessive Closure Allocation` section.
+of ``g``, ``n`` will be evaluated to value thus saving time and space.
 
 .. _canonical-domain-modeling:
 

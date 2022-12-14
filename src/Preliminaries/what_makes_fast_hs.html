@@ -434,9 +434,7 @@ once. Fortunately, <code class="docutils literal notranslate"><span class="pre">
 out of the lambda in the body of <code class="docutils literal notranslate"><span class="pre">g</span></code>. This version is much more efficient by
 utilizing laziness and avoiding repeated, wasteful computations of <code class="docutils literal notranslate"><span class="pre">n</span></code>. <code class="docutils literal notranslate"><span class="pre">n</span></code>
 will be a thunk for the first iteration of <code class="docutils literal notranslate"><span class="pre">g</span></code>, but for every other iteration
-of <code class="docutils literal notranslate"><span class="pre">g</span></code>, <code class="docutils literal notranslate"><span class="pre">n</span></code> will be evaluated to value thus saving time and space. We’ll see
-more cases of let floating and detecting excessive closure allocation in the
-<span class="xref std std-ref">Excessive Closure Allocation</span> section.</p>
+of <code class="docutils literal notranslate"><span class="pre">g</span></code>, <code class="docutils literal notranslate"><span class="pre">n</span></code> will be evaluated to value thus saving time and space.</p>
 </section>
 </section>
 <section id="poor-domain-modeling">
