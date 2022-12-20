@@ -58,9 +58,9 @@
 
         rec {
           packages = {
-            default = import ./hoh.nix { inherit pkgs; target = "html"; };
-            epub    = import ./hoh.nix { inherit pkgs; target = "epub"; };
-            pdf     = import ./hoh.nix { inherit pkgs; target = "pdf"; };
+            default = import ./nix/hoh.nix { inherit pkgs; target = "html"; };
+            epub    = import ./nix/hoh.nix { inherit pkgs; target = "epub"; };
+            pdf     = import ./nix/hoh.nix { inherit pkgs; target = "pdf"; };
           };
           devShells = {
             default = packages.default;
