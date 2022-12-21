@@ -39,8 +39,8 @@
           };
         };
 
-        sphinx-exec-haskell-overlay = sys: final: prev: {
-          sphinx-exec-haskell = sphinx-exec-haskell.packages.${sys}.default;
+        sphinx-exec-haskell-overlay = final: prev: {
+          sphinx-exec-haskell = sphinx-exec-haskell.packages.system.default;
         };
 
     in
@@ -50,7 +50,7 @@
               { inherit system;
                 overlays = [ press-theme-overlay
                              copy-button-overlay
-                             (sphinx-exec-haskell-overlay system)
+                             sphinx-exec-haskell-overlay
                            ];
               };
 

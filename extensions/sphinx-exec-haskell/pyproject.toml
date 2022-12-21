@@ -1,22 +1,15 @@
-[build-system]
-requires = ["setuptools>=61.0"]
-build-backend = "setuptools.build_meta"
-
-[project]
-name = "sphinx_exec_haskell_doyougnu"
-version = "0.0.1"
-authors = [
-  { name="doyougnu", email="jeff@doyougnu.xyz" },
-]
-description = "A sphinx extension to execute and test haskell code blocks"
+[tool.poetry]
+name = "sphinx-exec-haskell"
+version = "0.1.0"
+description = ""
+authors = ["doyougnu <jeffrey.young@iohk.io>"]
 readme = "README.md"
-requires-python = ">=3.7"
-classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
-]
+packages = [{include = "sphinx_exec_haskell"}]
 
-[project.urls]
-"Homepage"    = "https://github.com/input-output-hk/hs-opt-handbook.github.io"
-"Bug Tracker" = "https://github.com/pypa/sampleproject/issues"
+[tool.poetry.dependencies]
+python = "^3.10"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

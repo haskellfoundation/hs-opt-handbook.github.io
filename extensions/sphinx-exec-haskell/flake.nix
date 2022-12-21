@@ -12,14 +12,14 @@
 
     flake-utils.lib.eachDefaultSystem
       (system:
-        let pkgs = import nixpkgs {};
+        let pkgs = import nixpkgs { inherit system; };
 
         in
 
         rec {
           packages = {
-            default = import ./sphinx-exec-haskell.nix {inherit pkgs;
-                                                       };
+            default = pkgs.poetry2nix.mkPoetryApplication {projectDir = self;};
+            # default = import ./sphinx-exec-haskell.nix { inherit pkgs; };
           };
           devShells = {
             default = packages.default;
