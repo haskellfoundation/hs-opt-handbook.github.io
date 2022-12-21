@@ -6,9 +6,11 @@
     flake-compat = {
       url = "github:edolstra/flake-compat";
       flake = false;
-    };};
+    };
+    sphinx-exec-haskell.url = "path:./extensions/sphinx-exec-haskell";
+  };
 
-  outputs = { self, nixpkgs, flake-utils, flake-compat }:
+  outputs = { self, nixpkgs, flake-utils, flake-compat, sphinx-exec-haskell }:
     let press-theme-overlay = final: prev: {
           sphinx-press-theme = prev.python310Packages.buildPythonPackage rec {
             pname = "sphinx_press_theme";
@@ -23,7 +25,7 @@
           };
         };
 
-        copy-button = final: prev: {
+        copy-button-overlay = final: prev: {
           sphinx-copybutton = prev.python310Packages.buildPythonPackage rec {
             pname = "sphinx-copybutton";
             version = "0.5.0";
@@ -37,12 +39,19 @@
           };
         };
 
+        sphinx-exec-haskell-overlay = sys: final: prev: {
+          sphinx-exec-haskell = sphinx-exec-haskell.packages.${sys}.default;
+        };
+
     in
     flake-utils.lib.eachDefaultSystem
       (system:
         let pkgs = import nixpkgs
               { inherit system;
-                overlays = [ press-theme-overlay copy-button ];
+                overlays = [ press-theme-overlay
+                             copy-button-overlay
+                             (sphinx-exec-haskell-overlay system)
+                           ];
               };
 
             ourTexLive = pkgs.texlive.combine {
@@ -58,9 +67,17 @@
 
         rec {
           packages = {
-            default = import ./nix/hoh.nix { inherit pkgs; target = "html"; };
-            epub    = import ./nix/hoh.nix { inherit pkgs; target = "epub"; };
-            pdf     = import ./nix/hoh.nix { inherit pkgs; target = "pdf"; };
+            default = import ./nix/hoh.nix { inherit pkgs;
+                                             target = "html";
+                                           };
+
+            epub    = import ./nix/hoh.nix { inherit pkgs;
+                                             target = "epub";
+                                           };
+
+            pdf     = import ./nix/hoh.nix { inherit pkgs;
+                                             target = "pdf";
+                                           };
           };
           devShells = {
             default = packages.default;

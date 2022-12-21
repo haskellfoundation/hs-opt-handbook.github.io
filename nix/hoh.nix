@@ -15,6 +15,7 @@ let
    ];
    nonPythonInputs = with pkgs; [ sphinx-press-theme # this comes from the overlay
                                   sphinx-copybutton  # this comes from the overlay
+                                  sphinx-exec-haskell
                                   pandoc
                                   rst2html5
                                 ];

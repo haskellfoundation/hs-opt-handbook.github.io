@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sphinx_exec_haskell_doyougnu"
+version = "0.0.1"
+authors = [
+  { name="doyougnu", email="jeff@doyougnu.xyz" },
+]
+description = "A sphinx extension to execute and test haskell code blocks"
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage"    = "https://github.com/input-output-hk/hs-opt-handbook.github.io"
+"Bug Tracker" = "https://github.com/pypa/sampleproject/issues"
