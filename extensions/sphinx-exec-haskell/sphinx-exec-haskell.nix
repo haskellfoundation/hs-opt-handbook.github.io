@@ -11,7 +11,7 @@ python3.pkgs.buildPythonPackage rec {
 
   doCheck = false;
 
-  propogatedBuildInputs = with python3.pkgs; [ pip ];
+  BuildInputs = with python3.pkgs; [ python poetry ];
 
   meta = with lib; {
     homepage    = "https://github.com/input-output-hk/hs-opt-handbook.github.io";
