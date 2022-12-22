@@ -40,7 +40,7 @@
         };
 
         sphinx-exec-haskell-overlay = final: prev: {
-          sphinx-exec-haskell = sphinx-exec-haskell.packages.system.default;
+          sphinx-exec-haskell = sphinx-exec-haskell.packages.default;
         };
 
     in

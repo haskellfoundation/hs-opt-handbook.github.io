@@ -18,7 +18,7 @@
 
         rec {
           packages = {
-            default = pkgs.poetry2nix.mkPoetryApplication {projectDir = self;};
+            default = pkgs.poetry2nix.mkPoetryApplication { projectDir = self; };
             # default = import ./sphinx-exec-haskell.nix { inherit pkgs; };
           };
           devShells = {
