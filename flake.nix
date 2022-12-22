@@ -7,7 +7,7 @@
       url = "github:edolstra/flake-compat";
       flake = false;
     };
-    sphinx-exec-haskell.url = "path:./extensions/sphinx-exec-haskell";
+    sphinx-exec-haskell.url = "github:doyougnu/sphinx-exec-haskell";
   };
 
   outputs = { self, nixpkgs, flake-utils, flake-compat, sphinx-exec-haskell }:
