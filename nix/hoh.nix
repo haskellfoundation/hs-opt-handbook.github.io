@@ -5,7 +5,6 @@
 let
    pythonInputs = with pkgs.python310Packages; [
      sphinx
-     sphinx-autobuild
      sphinxcontrib-bibtex
      sphinxcontrib-tikz
      # marked as broken in nixpkgs unfortunately
@@ -15,9 +14,10 @@ let
    ];
    nonPythonInputs = with pkgs; [ sphinx-press-theme # this comes from the overlay
                                   sphinx-copybutton  # this comes from the overlay
-                                  sphinx-exec-haskell
                                   pandoc
                                   rst2html5
+                                  sphinx-autobuild
+                                  sphinx-exec-haskell
                                 ];
 in
 pkgs.stdenv.mkDerivation {

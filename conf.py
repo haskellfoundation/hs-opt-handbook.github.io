@@ -42,6 +42,7 @@ extensions = [ 'sphinx.ext.mathjax'
                                          ## underscore
              , 'sphinxcontrib.bibtex'
              , 'sphinx_copybutton'
+             , 'sphinxcontrib.execHS.ext'
              ]
 
 # flags

@@ -105,11 +105,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1672240549,
-        "narHash": "sha256-aTPy/hcq/RPGmj7LbM8nIA58wd/j1RwkEfd9CQxcyDE=",
+        "lastModified": 1672244151,
+        "narHash": "sha256-G9xyJ+1aTAL+ktsHQ42UK67ZC6wvFHSuukFFzgk1tAc=",
         "owner": "doyougnu",
         "repo": "sphinx-exec-haskell",
-        "rev": "e0c2d02fc6bc6853d788566b5b66d07f41ef2fde",
+        "rev": "1ecb00cc5ce34826eadcff73eb3a4289b128f3bd",
         "type": "github"
       },
       "original": {
