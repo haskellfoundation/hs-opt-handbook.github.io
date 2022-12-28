@@ -64,11 +64,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1672057183,
-        "narHash": "sha256-GN7/10DNNvs1FPj9tlZA2qgNdFuYKKuS3qlHTqAxasQ=",
+        "lastModified": 1672189105,
+        "narHash": "sha256-X//0p1bO07KTU5+HEmPIWIypKGEFc9nBZ2c4sKh0hg4=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "b139e44d78c36c69bcbb825b20dbfa51e7738347",
+        "rev": "8f08140d734c9b07dde8ac591d6baf158134a7a1",
         "type": "github"
       },
       "original": {
@@ -78,11 +78,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1671458120,
-        "narHash": "sha256-2+k/OONN4OF21TeoNjKB5sXVZv6Zvm/uEyQIW9OYCg8=",
+        "lastModified": 1672189105,
+        "narHash": "sha256-X//0p1bO07KTU5+HEmPIWIypKGEFc9nBZ2c4sKh0hg4=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "e37ef84b478fa8da0ced96522adfd956fde9047a",
+        "rev": "8f08140d734c9b07dde8ac591d6baf158134a7a1",
         "type": "github"
       },
       "original": {
@@ -105,11 +105,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1671719373,
-        "narHash": "sha256-131o0QOVVz2ElsV1QFEE9ZdIuL/dCnQVDTioIGuV+18=",
+        "lastModified": 1672240549,
+        "narHash": "sha256-aTPy/hcq/RPGmj7LbM8nIA58wd/j1RwkEfd9CQxcyDE=",
         "owner": "doyougnu",
         "repo": "sphinx-exec-haskell",
-        "rev": "fb154c12ffb6fbd5a7fe8a15f7120e182ec9b2d4",
+        "rev": "e0c2d02fc6bc6853d788566b5b66d07f41ef2fde",
         "type": "github"
       },
       "original": {

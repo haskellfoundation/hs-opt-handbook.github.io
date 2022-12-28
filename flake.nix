@@ -50,6 +50,7 @@
               { inherit system;
                 overlays = [ press-theme-overlay
                              copy-button-overlay
+                             (sphinx-exec-haskell-overlay system)
                            ];
               } ;
 
