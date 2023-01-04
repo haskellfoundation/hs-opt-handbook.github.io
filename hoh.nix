@@ -15,6 +15,7 @@ let
    nonPythonInputs = with pkgs; [ sphinx-press-theme # this comes from the overlay
                                   sphinx-copybutton  # this comes from the overlay
                                   pandoc
+                                  sphinx-exec-directive
                                   rst2html5
                                   sphinx-autobuild
                                   sphinx-exec-haskell
@@ -25,11 +26,22 @@ pkgs.stdenv.mkDerivation {
    version = "0.0.1";
    src     = ./.;
    buildInputs = pythonInputs ++ nonPythonInputs;
-   # non python packages
+
+   preBuild = ''
+   unset SOURCE_DATE_EPOCH
+   SOURCE_DATE_EPOCH=$(date +%s)
+   '';
 
    buildPhase = ''
+   runHook preBuild
+
    make ${target}
    touch "_build/.nojekyll"
    touch "_build/html/.nojekyll"
+   '';
+
+   installPhase = ''
+   mkdir -p $out/
+   cp -r _build/${target}/ $out/
    '';
 }

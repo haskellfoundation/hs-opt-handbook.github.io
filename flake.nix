@@ -39,6 +39,20 @@
           };
         };
 
+        sphinx-exec-directive-overlay = final: prev: {
+          sphinx-exec-directive = prev.python310Packages.buildPythonPackage rec {
+            pname   = "sphinx-exec-directive";
+            version = "0.6";
+
+            src = prev.python310Packages.fetchPypi {
+              inherit pname;
+              inherit version;
+              sha256 = "sha256-lMo4QILqt6pEiIatN/LNxhiUGX3ziSWV+bfRahzmZWU=";
+            };
+            propagatedBuildInputs = [ prev.sphinx prev.python310Packages.matplotlib ];
+          };
+        };
+
         sphinx-exec-haskell-overlay = system: final: prev: {
           sphinx-exec-haskell = sphinx-exec-haskell.packages.${system}.default;
         };
@@ -50,6 +64,7 @@
               { inherit system;
                 overlays = [ press-theme-overlay
                              copy-button-overlay
+                             sphinx-exec-directive-overlay
                              (sphinx-exec-haskell-overlay system)
                            ];
               } ;
@@ -67,17 +82,17 @@
 
         rec {
           packages = {
-            default = import ./nix/hoh.nix { inherit pkgs;
-                                             target = "html";
-                                           };
+            default = import ./hoh.nix { inherit pkgs;
+                                         target = "html";
+                                       };
 
-            epub    = import ./nix/hoh.nix { inherit pkgs;
-                                             target = "epub";
-                                           };
+            epub    = import ./hoh.nix { inherit pkgs;
+                                         target = "epub";
+                                       };
 
-            pdf     = import ./nix/hoh.nix { inherit pkgs;
-                                             target = "pdf";
-                                           };
+            pdf     = import ./hoh.nix { inherit pkgs;
+                                         target = "pdf";
+                                       };
           };
           devShells = {
             default = packages.default;
