@@ -13,7 +13,8 @@
 import os
 import sys
 import time
-sys.path.insert(0, os.path.abspath('.'))
+
+sys.path.insert(0, os.path.abspath('extensions'))
 
 # -- Project information -----------------------------------------------------
 
@@ -42,7 +43,8 @@ extensions = [ 'sphinx.ext.mathjax'
                                          ## underscore
              , 'sphinxcontrib.bibtex'
              , 'sphinx_copybutton'
-             , 'sphinxcontrib.execHS.ext'
+             # , 'sphinxcontrib.execHS.ext'
+             , 'sphinx_exec_directive'
              ]
 
 # flags

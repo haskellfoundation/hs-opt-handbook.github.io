@@ -2,11 +2,13 @@ book
 _build
 *.el
 
+
 # profiling outputs
 *.eventlog
 *.eventlog.*
 *.hp
 *.prof
+*/__pycache__
 
 # nix stuff
 .direnv/

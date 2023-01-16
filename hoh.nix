@@ -15,17 +15,20 @@ let
    nonPythonInputs = with pkgs; [ sphinx-press-theme # this comes from the overlay
                                   sphinx-copybutton  # this comes from the overlay
                                   pandoc
-                                  sphinx-exec-directive
+                                  # change once extension fixes are upstreamed
+                                  # sphinx-exec-directive
                                   rst2html5
                                   sphinx-autobuild
                                   sphinx-exec-haskell
+                                  ghc
+                                  cabal-install
                                 ];
 in
 pkgs.stdenv.mkDerivation {
    pname   = "hoh";
    version = "0.0.1";
    src     = ./.;
-   buildInputs = pythonInputs ++ nonPythonInputs;
+   propagatedBuildInputs = pythonInputs ++ nonPythonInputs;
 
    preBuild = ''
    unset SOURCE_DATE_EPOCH

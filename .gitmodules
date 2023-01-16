@@ -1,0 +1,3 @@
+[submodule "extensions/sphinx_exec_directive"]
+	path = extensions/sphinx_exec_directive
+	url = https://github.com/doyougnu/sphinx_exec_directive.git
