@@ -144,8 +144,209 @@
             
   <section id="lambda-lifting">
 <span id="lambda-lifting-chapter"></span><h1><span class="section-number">3.2.3. </span><span class="incremental">Lambda Lifting</span><a class="headerlink" href="#lambda-lifting" title="Permalink to this heading">¶</a></h1>
-<p><a class="reference external" href="https://github.com/input-output-hk/hs-opt-handbook.github.io/issues/63">TODO</a></p>
-<p>Hello World!</p>
+<p>Lambda Lifting is a classic optimization technique…</p>
+<p>Testing Exec</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">module</span><span class="w"> </span><span class="nn">Main</span><span class="w"> </span><span class="kr">where</span><span class="w"></span>
+
+<span class="nf">main</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">IO</span><span class="w"> </span><span class="nb">()</span><span class="w"></span>
+<span class="nf">main</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kr">do</span><span class="w"></span>
+<span class="w">  </span><span class="kr">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">fmap</span><span class="w"> </span><span class="p">(</span><span class="o">+</span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="o">..</span><span class="mi">10</span><span class="p">]</span><span class="w"></span>
+<span class="w">  </span><span class="n">print</span><span class="w"> </span><span class="n">x</span><span class="w"></span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[11,12,13,14,15,16,17,18,19,20]
+</pre></div>
+</div>
+<p>Great that worked now lets try <code class="docutils literal notranslate"><span class="pre">ghci</span></code></p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kt">:</span><span class="n">t</span><span class="w"> </span><span class="s">&quot;Hello&quot;</span><span class="w"></span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span> &quot;Hello&quot; :: String
+</pre></div>
+</div>
+<p>and also we can load a package</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kt">:</span><span class="n">m</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="kt">Data</span><span class="o">.</span><span class="kt">List</span><span class="w"></span>
+<span class="kt">:</span><span class="n">t</span><span class="w"> </span><span class="n">span</span><span class="w"></span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  span :: (a -&gt; Bool) -&gt; [a] -&gt; ([a], [a])
+</pre></div>
+</div>
+<p>and we can also run from cabal target!</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="cm">{-# LANGUAGE DeriveGeneric  #-}</span><span class="w"></span>
+<span class="cm">{-# LANGUAGE DeriveAnyClass #-}</span><span class="w"></span>
+<span class="c1">-----------------------------------------------------------------------------</span><span class="w"></span>
+<span class="c1">-- |</span><span class="w"></span>
+<span class="c1">-- Module      :  Weigh</span><span class="w"></span>
+<span class="c1">-- Copyright   :  (c) IOG 2022</span><span class="w"></span>
+<span class="c1">-- License     :  CCC (see the file LICENSE)</span><span class="w"></span>
+<span class="c1">--</span><span class="w"></span>
+<span class="c1">-- Maintainer  :  Jeffrey Young  &lt;jeffrey.young@iohk.io&gt;</span><span class="w"></span>
+<span class="c1">-- Stability   :  stable</span><span class="w"></span>
+<span class="c1">--</span><span class="w"></span>
+<span class="c1">--</span><span class="w"></span>
+<span class="c1">-- Module that demonstrates use of the weigh library</span><span class="w"></span>
+<span class="c1">--</span><span class="w"></span>
+<span class="c1">-- Tested with GHC 9.2.4</span><span class="w"></span>
+<span class="c1">-----------------------------------------------------------------------------</span><span class="w"></span>
+<span class="cm">{-# OPTIONS_GHC -ddump-simpl -ddump-to-file -ddump-stg-final</span>
+<span class="cm">#-}</span><span class="w"></span>
+
+<span class="kr">module</span><span class="w"> </span><span class="nn">Main</span><span class="w"> </span><span class="kr">where</span><span class="w"></span>
+
+<span class="kr">import</span><span class="w"> </span><span class="nn">Data.List</span><span class="w">              </span><span class="p">(</span><span class="nf">foldl&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="kr">import</span><span class="w"> </span><span class="nn">System.Random</span><span class="w">          </span><span class="p">(</span><span class="nf">mkStdGen</span><span class="p">)</span><span class="w"></span>
+<span class="kr">import</span><span class="w"> </span><span class="nn">System.Random.Stateful</span><span class="w"> </span><span class="p">(</span><span class="nf">newIOGenM</span><span class="p">,</span><span class="w"> </span><span class="nf">uniformRM</span><span class="p">)</span><span class="w"></span>
+<span class="kr">import</span><span class="w"> </span><span class="nn">Control.Concurrent</span><span class="w">     </span><span class="p">(</span><span class="nf">threadDelay</span><span class="p">)</span><span class="w"></span>
+<span class="kr">import</span><span class="w"> </span><span class="nn">Control.Monad</span><span class="w">          </span><span class="p">(</span><span class="nf">replicateM</span><span class="p">)</span><span class="w"></span>
+<span class="kr">import</span><span class="w"> </span><span class="nn">Control.Exception</span><span class="w">      </span><span class="p">(</span><span class="nf">evaluate</span><span class="p">)</span><span class="w"></span>
+<span class="kr">import</span><span class="w"> </span><span class="nn">Control.DeepSeq</span><span class="w"></span>
+<span class="kr">import</span><span class="w"> </span><span class="nn">GHC.Generics</span><span class="w"></span>
+
+<span class="kr">import</span><span class="w"> </span><span class="k">qualified</span><span class="w"> </span><span class="nn">Data.Map</span><span class="w">    </span><span class="k">as</span><span class="w"> </span><span class="n">M</span><span class="w"></span>
+<span class="kr">import</span><span class="w"> </span><span class="k">qualified</span><span class="w"> </span><span class="nn">Data.IntMap</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">IM</span><span class="w"></span>
+<span class="kr">import</span><span class="w"> </span><span class="k">qualified</span><span class="w"> </span><span class="nn">Data.Set</span><span class="w">    </span><span class="k">as</span><span class="w"> </span><span class="n">Set</span><span class="w"></span>
+
+<span class="kr">import</span><span class="w"> </span><span class="k">qualified</span><span class="w"> </span><span class="nn">Data.Text</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">T</span><span class="w"></span>
+<span class="kr">import</span><span class="w"> </span><span class="k">qualified</span><span class="w"> </span><span class="nn">Data.Text.Lazy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">TL</span><span class="w"></span>
+
+<span class="kr">import</span><span class="w"> </span><span class="nn">Weigh</span><span class="w"></span>
+
+<span class="c1">-- f,f&#39;,g_lifted :: Int -&gt; Int -&gt; Int</span><span class="w"></span>
+<span class="c1">-- f a 0 = a</span><span class="w"></span>
+<span class="c1">-- f a n = f (g (n `mod` 2)) (n - 1)</span><span class="w"></span>
+<span class="c1">--   where g 0 = a</span><span class="w"></span>
+<span class="c1">--         g n = 1 + g (n - 1)</span><span class="w"></span>
+
+<span class="c1">-- f&#39; a 0 = a</span><span class="w"></span>
+<span class="c1">-- f&#39; a n = f&#39; (g_lifted a (n `mod` 2)) (n - 1)</span><span class="w"></span>
+
+<span class="c1">-- g_lifted a 0 = a</span><span class="w"></span>
+<span class="c1">-- g_lifted a n = 1 + g_lifted a (n - 1)</span><span class="w"></span>
+
+<span class="c1">-- list_o_tuples :: [Int] -&gt; [Int] -&gt; [(Int,Int)]</span><span class="w"></span>
+<span class="c1">-- list_o_tuples xs ys = [(x,y) | x &lt;- xs, y &lt;- ys]</span><span class="w"></span>
+
+<span class="c1">-- data Foo0 = Foo0</span><span class="w"></span>
+<span class="c1">--   deriving (Generic,NFData)</span><span class="w"></span>
+
+<span class="c1">-- data Foo1 = Foo1 Int</span><span class="w"></span>
+<span class="c1">--   deriving (Generic,NFData)</span><span class="w"></span>
+
+<span class="c1">-- data Foo2 = Foo2 String String</span><span class="w"></span>
+<span class="c1">--   deriving (Generic,NFData)</span><span class="w"></span>
+
+<span class="c1">-- data Foo3 = One Int</span><span class="w"></span>
+<span class="c1">--           | Two Int Int</span><span class="w"></span>
+<span class="c1">--           | TTT Int</span><span class="w"></span>
+<span class="c1">--           | TTTT Int</span><span class="w"></span>
+<span class="c1">--           | TTTTT Int</span><span class="w"></span>
+<span class="c1">--           | TTTTTT Int</span><span class="w"></span>
+<span class="c1">--           | TTTTTTT Int</span><span class="w"></span>
+<span class="c1">--           | TTTTTTTT Int</span><span class="w"></span>
+<span class="c1">--           | TTTTTTTTT Int</span><span class="w"></span>
+<span class="c1">--           | TTTTTTTTTT Int</span><span class="w"></span>
+<span class="c1">--           | TTTTTTTTTTT Int</span><span class="w"></span>
+<span class="c1">--           | TTTTTTTTTTTT Int</span><span class="w"></span>
+<span class="c1">--           | TTTTTTTTTTTTT Int</span><span class="w"></span>
+<span class="c1">--           deriving (Generic,NFData)</span><span class="w"></span>
+
+<span class="c1">-- data SingleCons = SingleCons Int</span><span class="w"></span>
+<span class="c1">--           deriving (Generic,NFData)</span><span class="w"></span>
+
+<span class="c1">-- data TwoConsReg = FirstCon Int</span><span class="w"></span>
+<span class="c1">--                 | SecondCon Int</span><span class="w"></span>
+<span class="c1">--           deriving (Generic,NFData)</span><span class="w"></span>
+
+<span class="kr">data</span><span class="w"> </span><span class="kt">LotsOfInts</span><span class="w">  </span><span class="ow">=</span><span class="w"> </span><span class="kt">A</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">B</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">C</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">D</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">E</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">          </span><span class="kr">deriving</span><span class="w"> </span><span class="p">(</span><span class="kt">Generic</span><span class="p">,</span><span class="kt">NFData</span><span class="p">)</span><span class="w"></span>
+
+<span class="kr">data</span><span class="w"> </span><span class="kt">LotsOfInts2</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">A2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">B2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">C2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">D2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">E2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">F2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">G2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">H2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">                 </span><span class="o">|</span><span class="w"> </span><span class="kt">I2</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="w">          </span><span class="kr">deriving</span><span class="w"> </span><span class="p">(</span><span class="kt">Generic</span><span class="p">,</span><span class="kt">NFData</span><span class="p">)</span><span class="w"></span>
+
+<span class="c1">-- one,two :: String</span><span class="w"></span>
+<span class="c1">-- one = &quot;one&quot;</span><span class="w"></span>
+<span class="c1">-- two = &quot;two&quot;</span><span class="w"></span>
+
+<span class="c1">-- type Mytuple = (Int, Int)</span><span class="w"></span>
+
+<span class="c1">-- myTuple :: Mytuple</span><span class="w"></span>
+<span class="c1">-- myTuple = (3, 4)</span><span class="w"></span>
+
+<span class="c1">-- text_one :: T.Text</span><span class="w"></span>
+<span class="c1">-- text_one = T.pack one</span><span class="w"></span>
+
+<span class="c1">-- x,y :: Int</span><span class="w"></span>
+
+<span class="c1">-- x = f 100 10000</span><span class="w"></span>
+<span class="c1">-- y = f&#39; 100 10000</span><span class="w"></span>
+
+<span class="w">  </span><span class="c1">-- value &quot;()&quot; ()</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- value &quot;1&quot;  (1 :: Int)</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- value &quot;True&quot;  True</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- value &quot;[0..3]&quot;  ([0..3] :: [Int])</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- value &quot;[0,1,2,3]&quot;  ([0,1,2,3] :: [Int])</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- value &quot;Foo0&quot;  Foo0</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- func  &quot;Foo1-func&quot;  Foo1 1</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- value &quot;Foo1-value&quot;  (Foo1 1)</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- value &quot;Foo3-value&quot;  (  TTTTTTTTTTTTT 1)</span><span class="w"></span>
+<span class="nf">main</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">IO</span><span class="w"> </span><span class="nb">()</span><span class="w"></span>
+<span class="nf">main</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">mainWith</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="kr">do</span><span class="w"></span>
+<span class="w">  </span><span class="n">setColumns</span><span class="w"> </span><span class="p">[</span><span class="kt">Case</span><span class="p">,</span><span class="w"> </span><span class="kt">Allocated</span><span class="p">,</span><span class="w"> </span><span class="kt">Max</span><span class="p">,</span><span class="w"> </span><span class="kt">Live</span><span class="p">,</span><span class="w"> </span><span class="kt">GCs</span><span class="p">,</span><span class="w"> </span><span class="kt">MaxOS</span><span class="p">]</span><span class="w"></span>
+<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;value: A Lot Of Ints&quot;</span><span class="w">  </span><span class="p">(</span><span class="kt">A</span><span class="w"> </span><span class="mi">1000</span><span class="w"> </span><span class="mi">1001</span><span class="p">)</span><span class="w"></span>
+<span class="w">  </span><span class="n">func</span><span class="w">  </span><span class="s">&quot;func:  A Lot Of Ints&quot;</span><span class="w">  </span><span class="p">(</span><span class="kt">A</span><span class="w"> </span><span class="mi">1000</span><span class="p">)</span><span class="w"> </span><span class="mi">1001</span><span class="w"></span>
+<span class="w">  </span><span class="n">value</span><span class="w"> </span><span class="s">&quot;value: A Lot Of Ints2&quot;</span><span class="w"> </span><span class="p">(</span><span class="kt">A2</span><span class="w"> </span><span class="mi">1000</span><span class="w"> </span><span class="mi">1001</span><span class="p">)</span><span class="w"></span>
+<span class="w">  </span><span class="n">func</span><span class="w">  </span><span class="s">&quot;func:  A Lot Of Ints2&quot;</span><span class="w"> </span><span class="p">(</span><span class="kt">A2</span><span class="w"> </span><span class="mi">1000</span><span class="p">)</span><span class="w"> </span><span class="mi">1001</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- value &quot;SingleCons&quot; (SingleCons 1729)</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- value &quot;Irregular&quot; (E 1)</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- value &quot;1&quot; (1 :: Int)</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- value &quot;Foo2&quot;  (Foo2 one two)</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- value &quot;myTuple&quot; myTuple</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- value &quot;one&quot; one</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- func  &quot;f&quot;  (f 5) 10000</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- func  &quot;f&#39;&quot;  (f 5) 10000</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- value  &quot;fx&quot;  x</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- value  &quot;fy&quot;  y</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- value &quot;([0,1,2],[3,4,5])&quot;  ([[0..2], [3..5]] :: [[Int]])</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- value &quot;IntMap.Empty&quot; (IM.empty :: IM.IntMap Int)</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- value &quot;Map.Empty&quot;    (M.empty  :: M.Map Int Int)</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- value &quot;Set.Empty&quot;    (Set.empty :: Set.Set Int)</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- value &quot;IntMap singleton&quot; (IM.insert 2 IM.empty)</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- value &quot;Map.Empty&quot;    (M.insert 1 2 mempty  :: M.Map Int Int)</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- value &quot;Set.Empty&quot;    (Set.insert 2 mempty:: Set.Set Int)</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- func &quot;count2&quot;  (count2 1) 2</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- func &quot;count3&quot; (count3 1) 2</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- func &quot;count4&quot; (count4 1) 2</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- func &quot;count5&quot; (count5 1) 2</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- func &quot;count6&quot; (count6 1) 2</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- func &quot;count9&quot; (count9 1) 2</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- func &quot;ListOTups&quot; (list_o_tuples [0..1]) [2..3]</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- func &quot;text strict&quot; T.pack &quot;very-long-text&quot;</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- value &quot;text lazy&quot; (TL.pack &quot;a&quot;)</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- value &quot;text_string&quot; &quot;&#39;&quot;</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- value &quot;text_one&quot; text_one</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- value &quot;string_one&quot; one</span><span class="w"></span>
+<span class="w">  </span><span class="c1">-- value &quot;a char&quot; &#39;.&#39;</span><span class="w"></span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Config file path source is default config file.
+Config file not found: /home/runner/.cabal/config
+Writing default configuration to /home/runner/.cabal/config
+Resolving dependencies...
+</pre></div>
+</div>
 </section>
 
 
