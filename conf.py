@@ -14,6 +14,8 @@ import os
 import sys
 import time
 
+## FIXME for the time being I've cloned relevant extensions into a submodule,
+## and then hard linked the __init__.py file until my changes can be upstreamed
 sys.path.insert(0, os.path.abspath('extensions'))
 
 # -- Project information -----------------------------------------------------
