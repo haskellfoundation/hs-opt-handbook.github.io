@@ -8,16 +8,19 @@ if you have!
 ..
    Variables. Please add the contributor as a variable even if they will only be
    represented once (they might do another contribution!).
-.. |doyougnu| replace:: Jeffrey young (@doyougnu)
+.. |jeff|    replace:: Jeffrey Young (`@doyougnu <https://github.com/doyougnu>`)
+.. |sylvain| replace:: Sylvain Henry (`@hsyl20 <https://hsyl20.fr/home/>`)
 
 Writers:
 
-- |doyougnu|
+- |jeff|
 
 Editors:
 
-- |doyougnu|
+- |jeff|
+- |sylvain|
+
 
 Reviewers:
 
-- |doyougnu|
+- |jeff|
