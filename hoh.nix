@@ -33,8 +33,6 @@ pkgs.stdenv.mkDerivation {
    preBuild = ''
    unset SOURCE_DATE_EPOCH
    SOURCE_DATE_EPOCH=$(date +%s)
-
-   cabal update
    '';
 
    buildPhase = ''
