@@ -249,7 +249,7 @@ What is Excessive Closure Allocation
 
 Excessive closure allocation is another form of superfluous computation and
 superfluous memory allocation; it means that our program is doing more memory
-allocation and likely more computation then required to compute the result.
+allocation and likely more computation than required to compute the result.
 Excessive closure allocation is subtle for two reasons: first, because GHC is
 typically very good at optimizing it away via :term:`Let Floating` most
 Haskeller's never have to confront it (which is a good indication of GHC's
