@@ -303,6 +303,8 @@ not occur.</p></li>
 </section>
 <section id="define-a-hypothesis">
 <h2><span class="section-number">2.1.5. </span>Define a Hypothesis<a class="headerlink" href="#define-a-hypothesis" title="Permalink to this heading">¶</a></h2>
+<section id="the-objects-of-the-hypothesis">
+<h3><span class="section-number">2.1.5.1. </span>The Objects of the Hypothesis<a class="headerlink" href="#the-objects-of-the-hypothesis" title="Permalink to this heading">¶</a></h3>
 <p>Think of each sub-system, external system, and component of your system as
 characters in a story. Any system that takes an action to produce a result that
 your code interacts with or causes, is a character. Each data structure your
@@ -310,6 +312,9 @@ code directly or indirectly uses, is a character. Each function you have
 written, is a character; and so on. These are the objects of your hypothesis;
 they are what the hypothesis makes a statement about, and define the sequence of
 interactions that constitutes the failure mode.</p>
+</section>
+<section id="defining-a-good-hypothesis">
+<h3><span class="section-number">2.1.5.2. </span>Defining a Good Hypothesis<a class="headerlink" href="#defining-a-good-hypothesis" title="Permalink to this heading">¶</a></h3>
 <p>Of course, not all hypotheses are equal. Good hypotheses have the following
 properties:</p>
 <ol class="arabic simple">
@@ -330,6 +335,7 @@ not</em> dominated by garbage collection, or it could be the case that the cache
 <em>is not</em> storing thunks. Either way, by testing an invalidating the
 hypothesis we learn where runtime is spent, and what is stored in the cache.</p></li>
 </ol>
+</section>
 </section>
 <section id="predict-the-response-and-test">
 <h2><span class="section-number">2.1.6. </span>Predict the Response and Test<a class="headerlink" href="#predict-the-response-and-test" title="Permalink to this heading">¶</a></h2>
