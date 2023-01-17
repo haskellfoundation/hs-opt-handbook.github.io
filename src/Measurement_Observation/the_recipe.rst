@@ -186,7 +186,7 @@ Define a Hypothesis
 -------------------
 
 The Objects of the Hypothesis
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+"""""""""""""""""""""""""""""
 
 Think of each sub-system, external system, and component of your system as
 characters in a story. Any system that takes an action to produce a result that
@@ -197,7 +197,7 @@ they are what the hypothesis makes a statement about, and define the sequence of
 interactions that constitutes the failure mode.
 
 Defining a Good Hypothesis
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+""""""""""""""""""""""""""
 
 Of course, not all hypotheses are equal. Good hypotheses have the following
 properties:
