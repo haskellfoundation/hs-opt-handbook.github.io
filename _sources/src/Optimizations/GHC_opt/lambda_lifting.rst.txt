@@ -47,4 +47,4 @@ and we can also run from cabal target!
    :process: haskell
    :project_dir: code/lethargy/
    :with: cabal
-   :args: bench lethargy:weigh; pwd
+   :args: bench lethargy:weigh ; pwd
