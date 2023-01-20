@@ -86,6 +86,7 @@ def execute_code(runner, globals_dict=None):
                     comp_proc = subprocess.run(payload, capture_output=True, text=True)
                     out       = comp_proc.stdout
                     err       = comp_proc.stderr
+                    print(os.listdir())
                 # Log
                 if err is not None and err.strip() != "":
                     print(err) # should use sphinx logger
