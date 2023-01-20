@@ -2,3 +2,4 @@ packages:
     lethargy
 
 profiling: True
+tests: True
