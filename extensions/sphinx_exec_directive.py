@@ -86,8 +86,18 @@ def execute_code(runner, globals_dict=None):
                     comp_proc = subprocess.run(payload, capture_output=True, text=True)
                     out       = comp_proc.stdout
                     err       = comp_proc.stderr
-                    print(os.listdir())
-                # Log
+                    code_out = ''
+                    found    = False
+
+                    print("ALL OUT", out)
+                    for index, line in enumerate(out.splitlines()):
+                        if "Linking" in line:
+                            code_out = out[index:]
+                            print(out[index:])
+                            break # only want first hit, and we are guarenteed
+                                  # that linking is in the list because you
+                                  # cannot run a binary without linking! Log
+
                 if err is not None and err.strip() != "":
                     print(err) # should use sphinx logger
                 code_out = out
