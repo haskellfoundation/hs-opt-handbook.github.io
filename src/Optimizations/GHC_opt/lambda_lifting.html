@@ -172,7 +172,7 @@
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  span :: (a -&gt; Bool) -&gt; [a] -&gt; ([a], [a])
 </pre></div>
 </div>
-<p>and we can also run from cabal target!</p>
+<p>and we can also run from cabal target!!</p>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="cm">{-# LANGUAGE DeriveGeneric  #-}</span><span class="w"></span>
 <span class="cm">{-# LANGUAGE DeriveAnyClass #-}</span><span class="w"></span>
 <span class="c1">-----------------------------------------------------------------------------</span><span class="w"></span>
@@ -341,87 +341,7 @@
 <span class="w">  </span><span class="c1">-- value &quot;a char&quot; &#39;.&#39;</span><span class="w"></span>
 </pre></div>
 </div>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Resolving dependencies...
-Build profile: -w ghc-9.2.4 -O1
-In order, the following will be built (use -v for more details):
- - basement-0.0.15 (lib) (requires download &amp; build)
- - primitive-0.7.4.0 (lib) (requires download &amp; build)
- - split-0.2.3.5 (lib) (requires download &amp; build)
- - splitmix-0.1.0.4 (lib) (requires download &amp; build)
- - vector-stream-0.1.0.0 (lib) (requires download &amp; build)
- - random-1.2.1.1 (lib) (requires download &amp; build)
- - vector-0.13.0.0 (lib) (requires download &amp; build)
- - temporary-1.3 (lib) (requires download &amp; build)
- - gauge-0.2.5 (lib) (requires download &amp; build)
- - weigh-0.0.16 (lib) (requires download &amp; build)
- - lethargy-0.1.0.0 (bench:weigh)  --enable-profiling (first run)
-Downloading  basement-0.0.15
-Downloaded   basement-0.0.15
-Downloading  split-0.2.3.5
-Starting     basement-0.0.15 (lib)
-Downloaded   split-0.2.3.5
-Downloading  vector-stream-0.1.0.0
-Downloaded   vector-stream-0.1.0.0
-Downloading  primitive-0.7.4.0
-Downloaded   primitive-0.7.4.0
-Downloading  splitmix-0.1.0.4
-Starting     primitive-0.7.4.0 (lib)
-Downloaded   splitmix-0.1.0.4
-Downloading  random-1.2.1.1
-Downloaded   random-1.2.1.1
-Downloading  vector-0.13.0.0
-Downloaded   vector-0.13.0.0
-Downloading  gauge-0.2.5
-Downloaded   gauge-0.2.5
-Downloading  temporary-1.3
-Building     basement-0.0.15 (lib)
-Downloaded   temporary-1.3
-Downloading  weigh-0.0.16
-Downloaded   weigh-0.0.16
-Building     primitive-0.7.4.0 (lib)
-Installing   primitive-0.7.4.0 (lib)
-Completed    primitive-0.7.4.0 (lib)
-Starting     split-0.2.3.5 (lib)
-Building     split-0.2.3.5 (lib)
-Installing   split-0.2.3.5 (lib)
-Completed    split-0.2.3.5 (lib)
-Starting     splitmix-0.1.0.4 (lib)
-Building     splitmix-0.1.0.4 (lib)
-Installing   splitmix-0.1.0.4 (lib)
-Completed    splitmix-0.1.0.4 (lib)
-Starting     vector-stream-0.1.0.0 (lib)
-Building     vector-stream-0.1.0.0 (lib)
-Installing   vector-stream-0.1.0.0 (lib)
-Completed    vector-stream-0.1.0.0 (lib)
-Starting     random-1.2.1.1 (lib)
-Building     random-1.2.1.1 (lib)
-Installing   random-1.2.1.1 (lib)
-Installing   basement-0.0.15 (lib)
-Completed    random-1.2.1.1 (lib)
-Starting     vector-0.13.0.0 (lib)
-Completed    basement-0.0.15 (lib)
-Starting     temporary-1.3 (lib)
-Building     vector-0.13.0.0 (lib)
-Building     temporary-1.3 (lib)
-Installing   temporary-1.3 (lib)
-Completed    temporary-1.3 (lib)
-Starting     weigh-0.0.16 (lib)
-Building     weigh-0.0.16 (lib)
-Installing   weigh-0.0.16 (lib)
-Completed    weigh-0.0.16 (lib)
-Installing   vector-0.13.0.0 (lib)
-Completed    vector-0.13.0.0 (lib)
-Starting     gauge-0.2.5 (lib)
-Building     gauge-0.2.5 (lib)
-Installing   gauge-0.2.5 (lib)
-Completed    gauge-0.2.5 (lib)
-Configuring benchmark &#39;weigh&#39; for lethargy-0.1.0.0..
-Preprocessing benchmark &#39;weigh&#39; for lethargy-0.1.0.0..
-Building benchmark &#39;weigh&#39; for lethargy-0.1.0.0..
-[1 of 1] Compiling Main             ( bench/Weigh/Main.hs, /home/runner/work/hs-opt-handbook.github.io/hs-opt-handbook.github.io/code/dist-newstyle/build/x86_64-linux/ghc-9.2.4/lethargy-0.1.0.0/b/weigh/build/weigh/weigh-tmp/Main.p_o )
-[1 of 1] Compiling Main             ( bench/Weigh/Main.hs, /home/runner/work/hs-opt-handbook.github.io/hs-opt-handbook.github.io/code/dist-newstyle/build/x86_64-linux/ghc-9.2.4/lethargy-0.1.0.0/b/weigh/build/weigh/weigh-tmp/Main.p_o )
-Linking /home/runner/work/hs-opt-handbook.github.io/hs-opt-handbook.github.io/code/dist-newstyle/build/x86_64-linux/ghc-9.2.4/lethargy-0.1.0.0/b/weigh/build/weigh/weigh ...
-Running 1 benchmarks...
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Running 1 benchmarks...
 Benchmark weigh: RUNNING...
 
 Case                   Allocated    Max   Live  GCs  MaxOS

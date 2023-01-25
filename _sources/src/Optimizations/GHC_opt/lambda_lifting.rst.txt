@@ -40,7 +40,7 @@ and also we can load a package
    :m + Data.List
    :t span
 
-and we can also run from cabal target!
+and we can also run from cabal target!!
 
 .. exec:: code/lethargy/bench/Weigh/Main.hs
    :context: true
