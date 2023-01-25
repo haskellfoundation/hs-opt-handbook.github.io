@@ -6,34 +6,34 @@
 
       <title>How to Contribute</title>
     
-          <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-          <link rel="stylesheet" href="../_static/theme.css " type="text/css" />
-          <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
-          <link rel="stylesheet" href="../_static/css/s4defs-roles.css" type="text/css" />
-          <link rel="stylesheet" href="../_static/css/iframe.css" type="text/css" />
+          <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+          <link rel="stylesheet" href="_static/theme.css " type="text/css" />
+          <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
+          <link rel="stylesheet" href="_static/css/s4defs-roles.css" type="text/css" />
+          <link rel="stylesheet" href="_static/css/iframe.css" type="text/css" />
       
       <!-- sphinx script_files -->
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/clipboard.min.js"></script>
-        <script src="../_static/copybutton.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/clipboard.min.js"></script>
+        <script src="_static/copybutton.js"></script>
 
       
       <!-- bundled in js (rollup iife) -->
-      <!-- <script src="../_static/theme-vendors.js"></script> -->
-      <script src="../_static/theme.js" defer></script>
+      <!-- <script src="_static/theme-vendors.js"></script> -->
+      <script src="_static/theme.js" defer></script>
     
-  <link rel="index" title="Index" href="../genindex.html" />
-  <link rel="search" title="Search" href="../search.html" /> 
+  <link rel="index" title="Index" href="genindex.html" />
+  <link rel="search" title="Search" href="search.html" /> 
   </head>
 
   <body>
     <div id="app">
     <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
-  <router-link to="../contents.html" class="home-link">
+  <router-link to="contents.html" class="home-link">
     
       <span class="site-name">Haskell Optimization Handbook</span>
     
@@ -62,7 +62,7 @@
           </navlinks><div id="searchbox" class="searchbox" role="search">
   <div class="caption"><span class="caption-text">Quick search</span>
     <div class="searchformwrapper">
-      <form class="search" action="../search.html" method="get">
+      <form class="search" action="search.html" method="get">
         <input type="text" name="q" />
         <input type="submit" value="Search" />
         <input type="hidden" name="check_keywords" value="yes" />
@@ -74,13 +74,13 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../contents.html#haskell-optimization-handbook">Table of Contents</a></span>
+        <span class="caption-text"><a href="contents.html#haskell-optimization-handbook">Table of Contents</a></span>
       </p>
       <ul class="">
         
           <li class="toctree-l1 ">
             
-              <a href="../src/Preliminaries/index.html" class="reference internal ">Preliminaries</a>
+              <a href="src/Preliminaries/index.html" class="reference internal ">Preliminaries</a>
             
 
             
@@ -89,7 +89,7 @@
         
           <li class="toctree-l1 ">
             
-              <a href="../src/Measurement_Observation/index.html" class="reference internal ">Measurement, Profiling, and Observation</a>
+              <a href="src/Measurement_Observation/index.html" class="reference internal ">Measurement, Profiling, and Observation</a>
             
 
             
@@ -98,7 +98,7 @@
         
           <li class="toctree-l1 ">
             
-              <a href="../src/Optimizations/index.html" class="reference internal ">Optimizations</a>
+              <a href="src/Optimizations/index.html" class="reference internal ">Optimizations</a>
             
 
             
@@ -115,7 +115,7 @@
           <div class="body-header" role="navigation" aria-label="navigation">
   
   <ul class="breadcrumbs">
-    <li><a href="../contents.html">Docs</a> &raquo;</li>
+    <li><a href="contents.html">Docs</a> &raquo;</li>
     
     <li>How to Contribute</li>
   </ul>
@@ -132,6 +132,24 @@
 <span id="contributing-readme"></span><h1>How to Contribute<a class="headerlink" href="#how-to-contribute" title="Permalink to this heading">¶</a></h1>
 <section id="general-procedure-and-working-convention">
 <h2>General Procedure and Working Convention<a class="headerlink" href="#general-procedure-and-working-convention" title="Permalink to this heading">¶</a></h2>
+<p>There are many ways to contribute and each have their
+own contributing guide. Please start by reading through the <a class="reference external" href="https://github.com/input-output-hk/hs-opt-handbook.github.io/tree/main/Contributing">Working Conventions</a>
+and <a class="reference external" href="https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/style-guide.rst">Style Guide</a>
+to familiarize yourself with the project expectations and workflow. We make
+extensive use of checklists to track and manage state, so If you:</p>
+<ul class="simple">
+<li><p>Want to suggest a new section, please open an issue and we’ll triage in the issue.</p></li>
+<li><p>Want to be an editor, please read the <a class="reference external" href="https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/Contributing/Editing.rst">Editor Contribution guide</a>.</p></li>
+<li><p>Want to be a writer. We split the writing by book topic, so:</p>
+<ul>
+<li><p>Write a Case Study; see the <a class="reference external" href="https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/Contributing/CaseStudies.rst">Case Study Contribution Guide</a>.</p></li>
+<li><p>Write a profiling or debugging section; see the <a class="reference external" href="https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/Contributing/Measurement_Observation.rst">Part 1: Measurement and Observation Contribution Guide</a>.</p></li>
+<li><p>Write an optimization section; see the <a class="reference external" href="https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/Contributing/Optimizations.rst">Part 2: Optimizations Contribution Guide</a>.</p></li>
+</ul>
+</li>
+</ul>
+<p>Lastly, you might also benefit from reading the original <a class="reference external" href="https://github.com/doyougnu/tech-proposals/blob/hs-opt-handbook/proposals/2022-01-31-haskell-optimization-handbook.md">Haskell Foundation
+proposal</a></p>
 <section id="kinds-of-contributors">
 <h3>Kinds of Contributors<a class="headerlink" href="#kinds-of-contributors" title="Permalink to this heading">¶</a></h3>
 <p>There are 2 kinds of contributors to this project:</p>
