@@ -86,21 +86,24 @@ def execute_code(runner, globals_dict=None):
                     comp_proc = subprocess.run(payload, capture_output=True, text=True)
                     out       = comp_proc.stdout
                     err       = comp_proc.stderr
-                    code_out = ''
+                    code_out = out
                     found    = False
 
-                    print("ALL OUT", out)
-                    for index, line in enumerate(out.splitlines()):
+                    out_stream = code_out.splitlines()
+                    for index, line in enumerate(out_stream):
                         if "Linking" in line:
-                            code_out = out[index:]
-                            print(out[index:])
+                            i = index + 1
+                            code_out = '\n'.join(out_stream[i:])
                             break # only want first hit, and we are guarenteed
                                   # that linking is in the list because you
                                   # cannot run a binary without linking! Log
 
                 if err is not None and err.strip() != "":
                     print(err) # should use sphinx logger
-                code_out = out
+
+            else:
+                raise ValueError("Project_dir must be set to run with Cabal or Stack backends")
+
         else:
             code_out = execute_code_with_pipe(runner['with'], runner['code_in'], post_process)
 
