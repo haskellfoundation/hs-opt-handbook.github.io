@@ -132,24 +132,23 @@
 <span id="contributing-readme"></span><h1>How to Contribute<a class="headerlink" href="#how-to-contribute" title="Permalink to this heading">¶</a></h1>
 <section id="general-procedure-and-working-convention">
 <h2>General Procedure and Working Convention<a class="headerlink" href="#general-procedure-and-working-convention" title="Permalink to this heading">¶</a></h2>
-<p>There are many ways to contribute and each have their
-own contributing guide. Please start by reading through the <a class="reference external" href="https://github.com/input-output-hk/hs-opt-handbook.github.io/tree/main/Contributing">Working Conventions</a>
-and <a class="reference external" href="https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/style-guide.rst">Style Guide</a>
-to familiarize yourself with the project expectations and workflow. We make
-extensive use of checklists to track and manage state, so If you:</p>
+<p>There are many ways to contribute and each have their own contributing guide. If
+you intend to contribute text then please start by reading through the <a class="reference external" href="https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/style-guide.rst">Style
+Guide</a>
+. We make extensive use of checklists to track and manage state, so If you:</p>
 <ul class="simple">
 <li><p>Want to suggest a new section, please open an issue and we’ll triage in the issue.</p></li>
 <li><p>Want to be an editor, please read the <a class="reference external" href="https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/Contributing/Editing.rst">Editor Contribution guide</a>.</p></li>
 <li><p>Want to be a writer. We split the writing by book topic, so:</p>
 <ul>
+<li><p>Write a profiling or debugging section; see the <a class="reference external" href="https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/Contributing/Measurement_Observation.rst">Measurement and Observation Contribution Guide</a>.</p></li>
+<li><p>Write an optimization section; see the <a class="reference external" href="https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/Contributing/Optimizations.rst">Optimizations Contribution Guide</a>.</p></li>
 <li><p>Write a Case Study; see the <a class="reference external" href="https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/Contributing/CaseStudies.rst">Case Study Contribution Guide</a>.</p></li>
-<li><p>Write a profiling or debugging section; see the <a class="reference external" href="https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/Contributing/Measurement_Observation.rst">Part 1: Measurement and Observation Contribution Guide</a>.</p></li>
-<li><p>Write an optimization section; see the <a class="reference external" href="https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/Contributing/Optimizations.rst">Part 2: Optimizations Contribution Guide</a>.</p></li>
 </ul>
 </li>
 </ul>
 <p>Lastly, you might also benefit from reading the original <a class="reference external" href="https://github.com/doyougnu/tech-proposals/blob/hs-opt-handbook/proposals/2022-01-31-haskell-optimization-handbook.md">Haskell Foundation
-proposal</a></p>
+proposal</a>.</p>
 <section id="kinds-of-contributors">
 <h3>Kinds of Contributors<a class="headerlink" href="#kinds-of-contributors" title="Permalink to this heading">¶</a></h3>
 <p>There are 2 kinds of contributors to this project:</p>
@@ -167,7 +166,12 @@ corresponding github issue exists in the book repository. Each issue can then
 have one or more tags, where each tag tracks properties of the section; these
 are:</p>
 <blockquote>
-<div><p><strong>Phase n</strong>: The issue belongs to phase 0, 1, or 2.</p>
+<div><p><strong>Phase n</strong>: The issue belongs to phase 0, 1, or 2. Phase’s are an index to
+roughly track <em>when</em> an issue will be worked on. Almost all issues should
+now be Phase 1 or above. Phase 0 is for issues pertinent to the pre-public
+release of the book. Phase 1 is for issues that <em>should</em> be in the first
+public release, and Phase 2 is for issues that should eventually make it
+into the book, but are okay to skip for now.</p>
 <p><strong>Kind</strong>: one of Optimization, Measurement, Case Study, etc. These are
 roughly the parts of the book as listing in the table of contents.</p>
 <p><strong>Platform</strong>: a tag which states the target platform of the technique, for
