@@ -10,7 +10,7 @@ What is the Point?
 
 In not so many words:
 
-1. Haskell is a great and fast language
+1. Haskell is a great and fast language.
 2. Understanding the performance of Haskell programs is hard, because:
 
    1. Not many developers have direct experience with lazy evaluation.
@@ -43,7 +43,7 @@ Contributing
 Yes! We need your help! It does not matter if you're a new Haskeller, a grey
 beard, or an arcane functional wizard, there is a way for you to contribute!
 Please see the `Contributing guide
-<https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/Contributing.rst>`_
+<https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/Contributing.rst>`_.
 
 What's in it for me?
 --------------------
