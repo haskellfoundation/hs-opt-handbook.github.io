@@ -2,10 +2,8 @@
 Haskell Optimization Handbook
 *****************************
 
-
 Welcome! This repository contains the source of `Haskell Optimization Handbook
 <https://input-output-hk.github.io/hs-opt-handbook.github.io/>`_
-
 
 What is the Point?
 ==================
@@ -20,7 +18,7 @@ In not so many words:
       wikis, blog posts etc.
    3. Performance optimization in Haskell requires a lot of up front knowledge,
       including profiling techniques, the memory model or understanding GHC's
-      intermediate representations
+      intermediate representations.
 
 The Goal
 ========
@@ -33,33 +31,19 @@ topics ranging from profiling/debugging and choosing appropriate libraries to
 low level optimization techniques such as exploiting ``Levity polymorphism`` to
 control memory representation and layout.
 
+Sponsors
+========
+
+This work has been generously sponsored by `IOG <https://iohk.io/>`_. We thank
+them for their contribution and enrichment of the Haskell ecosystem.
 
 Contributing
 ============
 
-Yes! We need your help! There are many ways to contribute and each have their
-own contributing guide. Please start by reading through the `Working Conventions
-<https://github.com/input-output-hk/hs-opt-handbook.github.io/tree/main/Contributing>`_
-and `Style Guide
-<https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/style-guide.rst>`_
-to familiarize yourself with the project expectations and workflow. We make
-extensive use of checklists to track and manage state, so If you:
-
-- Want to suggest a new section, please open an issue and we'll triage in the issue.
-- Want to be an editor, please read the `Editor Contribution guide
-  <https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/Contributing/Editing.rst>`_.
-- Want to be a writer. We split the writing by book topic, so:
-
-  - Write a Case Study; see the `Case Study Contribution Guide
-    <https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/Contributing/CaseStudies.rst>`_.
-  - Write a profiling or debugging section; see the `Part 1: Measurement and Observation Contribution Guide
-    <https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/Contributing/Measurement_Observation.rst>`_.
-  - Write an optimization section; see the `Part 2: Optimizations Contribution Guide
-    <https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/Contributing/Optimizations.rst>`_.
-
-Lastly, you might also benefit from reading the original `Haskell Foundation
-proposal
-<https://github.com/doyougnu/tech-proposals/blob/hs-opt-handbook/proposals/2022-01-31-haskell-optimization-handbook.md>`_
+Yes! We need your help! It does not matter if you're a new Haskeller, a grey
+beard, or an arcane functional wizard, there is a way for you to contribute!
+Please see the `Contributing guide
+<https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/Contributing.rst>`_
 
 What's in it for me?
 --------------------
