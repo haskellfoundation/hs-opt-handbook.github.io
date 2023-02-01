@@ -1,4 +1,3 @@
-
 :orphan:
 .. _contributing-readme:
 
