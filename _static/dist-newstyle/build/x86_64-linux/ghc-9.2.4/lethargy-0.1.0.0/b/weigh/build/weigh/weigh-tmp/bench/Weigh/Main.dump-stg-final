@@ -1,6 +1,6 @@
 
 ==================== Final STG: ====================
-2023-01-25 13:01:12.886693931 UTC
+2023-02-01 13:29:23.302160452 UTC
 
 Main.E [InlPrag=CONLIKE]
   :: GHC.Types.Int %1 -> GHC.Types.Int %1 -> Main.LotsOfInts
