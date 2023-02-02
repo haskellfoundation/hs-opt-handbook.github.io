@@ -26,6 +26,12 @@ by `Input Output Global <https://iohk.io/>`_.
 Release History
 ---------------
 
+* January, 2023
+
+  * Patched `sphinx-exec-directive
+    <https://github.com/yongrenjie/sphinx-exec-directive>`_ to run Haskell code
+    with ``runghc``, ``ghci`` and a ``cabal`` or ``stack`` target.
+
 * December, 2022
 
   * Weigh chapter first draft finished.
