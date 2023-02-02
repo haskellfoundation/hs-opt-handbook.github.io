@@ -1,0 +1,139 @@
+
+==================== Final STG: ====================
+2023-02-02 11:35:24.502567917 UTC
+
+Main.bad :: [GHC.Types.Int] -> GHC.Types.Int
+[GblId, Arity=1, Unf=OtherCon []] =
+    CCS_DONT_CARE {} \r [xs_s1Lh]
+        let {
+          sat_s1Lp [Occ=Once1] :: [GHC.Types.Int]
+          [LclId] =
+              CCCS {xs_s1Lh} \u []
+                  let {
+                    sat_s1Lo [Occ=Once1] :: GHC.Types.Int -> GHC.Types.Int
+                    [LclId] =
+                        CCCS {} \r [x_s1Lj]
+                            let {
+                              sat_s1Ln [Occ=Once1] :: GHC.Types.Int
+                              [LclId] =
+                                  CCCS {} \u []
+                                      let {
+                                        sat_s1Lm [Occ=Once1] :: [GHC.Num.Integer.Integer]
+                                        [LclId] =
+                                            CCCS {} \u []
+                                                let {
+                                                  sat_s1Ll [Occ=Once1] :: GHC.Num.Integer.Integer
+                                                  [LclId] =
+                                                      CCCS GHC.Num.Integer.IS! [10000#]; } in
+                                                let {
+                                                  sat_s1Lk [Occ=Once1] :: GHC.Num.Integer.Integer
+                                                  [LclId] =
+                                                      CCCS GHC.Num.Integer.IS! [1#];
+                                                } in 
+                                                  GHC.Enum.enumFromTo
+                                                      GHC.Enum.$fEnumInteger sat_s1Lk sat_s1Ll;
+                                      } in 
+                                        Data.Foldable.length Data.Foldable.$fFoldable[] sat_s1Lm;
+                            } in  GHC.Num.+ GHC.Num.$fNumInt x_s1Lj sat_s1Ln;
+                  } in  GHC.Base.fmap GHC.Base.$fFunctor[] sat_s1Lo xs_s1Lh; } in
+        let {
+          sat_s1Li [Occ=Once1] :: [GHC.Types.Int] -> GHC.Types.Int
+          [LclId] =
+              CCCS {} \u []
+                  Data.Foldable.sum Data.Foldable.$fFoldable[] GHC.Num.$fNumInt;
+        } in  GHC.Base.$ sat_s1Li sat_s1Lp;
+
+Main.main :: GHC.Types.IO ()
+[GblId] =
+    CAF_ccs {} \u []
+        let {
+          sat_s1Lv [Occ=Once1] :: GHC.Types.Int
+          [LclId] =
+              CCCS {} \u []
+                  let {
+                    sat_s1Lu [Occ=Once1] :: [GHC.Types.Int]
+                    [LclId] =
+                        CCCS {} \u []
+                            let {
+                              sat_s1Lt [Occ=Once1] :: GHC.Types.Int
+                              [LclId] =
+                                  CCCS GHC.Types.I#! [1#]; } in
+                            let {
+                              sat_s1Ls [Occ=Once1] :: GHC.Types.Int
+                              [LclId] =
+                                  CCCS GHC.Types.I#! [5000#];
+                            } in  GHC.List.replicate sat_s1Ls sat_s1Lt;
+                  } in  Main.bad sat_s1Lu; } in
+        let {
+          sat_s1Lr [Occ=Once1] :: GHC.Types.Int -> GHC.Types.IO ()
+          [LclId] =
+              CCCS {} \u []
+                  let {
+                    sat_s1Lq [Occ=Once1] :: GHC.Types.Int -> GHC.Base.String
+                    [LclId] =
+                        CCCS {} \u [] GHC.Show.show GHC.Show.$fShowInt;
+                  } in  GHC.Base.. System.IO.putStrLn sat_s1Lq;
+        } in  GHC.Base.$ sat_s1Lr sat_s1Lv;
+
+:Main.main :: GHC.Types.IO ()
+[GblId] =
+    CAF_ccs {} \u [] GHC.TopHandler.runMainIO Main.main;
+
+Main.good :: [GHC.Types.Int] -> GHC.Types.Int
+[GblId, Arity=1, Unf=OtherCon []] =
+    CCS_DONT_CARE {} \r [xs_s1L8]
+        let {
+          n_s1L9 [Occ=OnceL1] :: GHC.Types.Int
+          [LclId] =
+              CCCS {} \u []
+                  let {
+                    sat_s1Lc [Occ=Once1] :: [GHC.Num.Integer.Integer]
+                    [LclId] =
+                        CCCS {} \u []
+                            let {
+                              sat_s1Lb [Occ=Once1] :: GHC.Num.Integer.Integer
+                              [LclId] =
+                                  CCCS GHC.Num.Integer.IS! [10000#]; } in
+                            let {
+                              sat_s1La [Occ=Once1] :: GHC.Num.Integer.Integer
+                              [LclId] =
+                                  CCCS GHC.Num.Integer.IS! [1#];
+                            } in  GHC.Enum.enumFromTo GHC.Enum.$fEnumInteger sat_s1La sat_s1Lb;
+                  } in 
+                    Data.Foldable.length Data.Foldable.$fFoldable[] sat_s1Lc; } in
+        let {
+          sat_s1Lg [Occ=Once1] :: [GHC.Types.Int]
+          [LclId] =
+              CCCS {n_s1L9, xs_s1L8} \u []
+                  let {
+                    sat_s1Lf [Occ=Once1] :: GHC.Types.Int -> GHC.Types.Int
+                    [LclId] =
+                        CCCS {n_s1L9} \r [x_s1Le] GHC.Num.+ GHC.Num.$fNumInt x_s1Le n_s1L9;
+                  } in  GHC.Base.fmap GHC.Base.$fFunctor[] sat_s1Lf xs_s1L8; } in
+        let {
+          sat_s1Ld [Occ=Once1] :: [GHC.Types.Int] -> GHC.Types.Int
+          [LclId] =
+              CCCS {} \u []
+                  Data.Foldable.sum Data.Foldable.$fFoldable[] GHC.Num.$fNumInt;
+        } in  GHC.Base.$ sat_s1Ld sat_s1Lg;
+
+$trModule3_r1Iw :: GHC.Prim.Addr#
+[GblId, Unf=OtherCon []] =
+    "Main"#;
+
+$trModule4_r1Ix :: GHC.Types.TrName
+[GblId, Unf=OtherCon []] =
+    CCS_DONT_CARE GHC.Types.TrNameS! [$trModule3_r1Iw];
+
+$trModule1_r1Im :: GHC.Prim.Addr#
+[GblId, Unf=OtherCon []] =
+    "main"#;
+
+$trModule2_r1Iv :: GHC.Types.TrName
+[GblId, Unf=OtherCon []] =
+    CCS_DONT_CARE GHC.Types.TrNameS! [$trModule1_r1Im];
+
+Main.$trModule :: GHC.Types.Module
+[GblId, Unf=OtherCon []] =
+    CCS_DONT_CARE GHC.Types.Module! [$trModule2_r1Iv $trModule4_r1Ix];
+

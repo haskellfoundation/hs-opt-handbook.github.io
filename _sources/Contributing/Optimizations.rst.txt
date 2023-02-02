@@ -10,11 +10,11 @@ Part 2
 Introduction
 ============
 
-This is a checklist for contributors of Part 2 (Optimizations) of the Handbook.
-Please make sure that your for part 2 satisfies all items on the checklist. We
+This is a checklist for contributors of optimizations portion of the Handbook.
+Please make sure that your contribution satisfies all items on the checklist. We
 use checklists to check the quality of each section of the handbook. If this is
-news to you then please see `the README
-<https://github.com/input-output-hk/hs-opt-handbook.github.io/tree/main/Contributing>`_
+news to you then please see `the contributing guide
+<https://github.com/input-output-hk/hs-opt-handbook.github.io/tree/main/Contributing.rst>`_
 to get up to speed on the expected project workflow as a writer.
 
 The Checklist
