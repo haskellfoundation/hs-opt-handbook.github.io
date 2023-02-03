@@ -142,35 +142,65 @@
 <hr>
           <div class="content" role="main" v-pre>
             
-  <section id="lambda-lifting">
-<span id="lambda-lifting-chapter"></span><h1><span class="section-number">3.2.3. </span><span class="incremental">Lambda Lifting</span><a class="headerlink" href="#lambda-lifting" title="Permalink to this heading">¶</a></h1>
+  <blockquote id="lambda-lifting-chapter">
+<div><p>Local Variables</p>
+</div></blockquote>
+<section id="lambda-lifting">
+<h1><span class="section-number">3.2.3. </span><span class="incremental">Lambda Lifting</span><a class="headerlink" href="#lambda-lifting" title="Permalink to this heading">¶</a></h1>
 <p>Lambda Lifting <span id="id1">[<a class="reference internal" href="../../../contents.html#id11" title="Thomas Johnsson. Lambda lifting: transforming programs to recursive equations. In Jean-Pierre Jouannaud, editor, Functional Programming Languages and Computer Architecture, 190–203. Berlin, Heidelberg, 1985. Springer Berlin Heidelberg.">3</a>]</span> is a classic rewriting technique that
-rewrites functions to avoid excess allocations. It optimizes function
-definitions by moving local functions to the global scope of the program;
-thereby closure allocations, and by adding parameters to the function definition
-to capture free variables.</p>
+that avoids excess closure allocations. It avoids closure allocation by moving
+local functions to the global scope of the program, and by adding parameters to
+the function definition to capture free variables. Thus, when a lifted function
+is called no heap allocation is needed because the lifted function no longer
+contains closures, rather it only references global names.</p>
 <section id="a-working-example">
 <h2><span class="section-number">3.2.3.1. </span>A Working Example<a class="headerlink" href="#a-working-example" title="Permalink to this heading">¶</a></h2>
 <p>Consider the following program <a class="footnote-reference brackets" href="#id3" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>:</p>
-<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">module</span><span class="w"> </span><span class="nn">Main</span><span class="w"> </span><span class="kr">where</span><span class="w"></span>
-
-<span class="nf">f</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">f</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
 <span class="nf">f</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">a</span><span class="w"></span>
 <span class="nf">f</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="n">g</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="p">`</span><span class="n">mod</span><span class="p">`</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"></span>
 <span class="w">  </span><span class="kr">where</span><span class="w"></span>
 <span class="w">    </span><span class="n">g</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">a</span><span class="w"></span>
 <span class="w">    </span><span class="n">g</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"></span>
-
-<span class="nf">main</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">IO</span><span class="w"> </span><span class="nb">()</span><span class="w"></span>
-<span class="nf">main</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">print</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="mi">100</span><span class="w"></span>
 </pre></div>
 </div>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>60
+<p>The function <code class="docutils literal notranslate"><span class="pre">f</span></code> defines one local function, <code class="docutils literal notranslate"><span class="pre">g</span></code>, which appears as a free
+variable in <code class="docutils literal notranslate"><span class="pre">f</span></code>. Similarly, the variable <code class="docutils literal notranslate"><span class="pre">a</span></code> is a free variable in <code class="docutils literal notranslate"><span class="pre">g</span></code>. A
+lambda lifted <code class="docutils literal notranslate"><span class="pre">g</span></code>, will convert all free variables in <code class="docutils literal notranslate"><span class="pre">g</span></code> to parameters.
+Thus <code class="docutils literal notranslate"><span class="pre">g_lifted</span></code> turns into:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">g_lifted</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">a</span><span class="w"></span>
+<span class="nf">g_lifted</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"></span>
 </pre></div>
+</div>
+<p>Now <code class="docutils literal notranslate"><span class="pre">a</span></code> is an input, which means that <code class="docutils literal notranslate"><span class="pre">g_lifted</span></code> can be floated out of <code class="docutils literal notranslate"><span class="pre">f</span></code>
+to the top level producing the final program:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">g</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="nf">g_lifted</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">a</span><span class="w"></span>
+<span class="nf">g_lifted</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"></span>
+
+<span class="nf">f</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
+<span class="nf">f</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">a</span><span class="w"></span>
+<span class="nf">f</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="n">g_lifted</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="p">`</span><span class="n">mod</span><span class="p">`</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p>This new program will be much faster because <code class="docutils literal notranslate"><span class="pre">f</span></code> becomes essentially
+non-allocating. Before the lambda lifting transformation <code class="docutils literal notranslate"><span class="pre">f</span></code> had to allocate a
+closure for <code class="docutils literal notranslate"><span class="pre">g</span></code> in order to pass <code class="docutils literal notranslate"><span class="pre">a</span></code> to <code class="docutils literal notranslate"><span class="pre">g</span></code>. After the lambda lifting on
+<code class="docutils literal notranslate"><span class="pre">g</span></code> this is no longer the case; <code class="docutils literal notranslate"><span class="pre">g_lifted</span></code> is a top level function so <code class="docutils literal notranslate"><span class="pre">f</span></code> can
+simply reference it; no closures needed!</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The fundamental tradeoff is decreased heap allocation for an increase in
+function parameters at each call site. This means that lambda lifting is not
+always a performance win. See <a class="reference internal" href="#when-to-manually-apply-lambda-lifting">When to Manually Apply Lambda Lifting</a> for
+guidance on recognizing when your program may benefit.</p>
 </div>
 </section>
 <section id="how-lambda-lifting-works-in-ghc">
 <h2><span class="section-number">3.2.3.2. </span>How Lambda Lifting Works in GHC<a class="headerlink" href="#how-lambda-lifting-works-in-ghc" title="Permalink to this heading">¶</a></h2>
+<p>GHC does have a lambda lifting pass in STG, however lambda lifting is not the
+default method GHC uses for handling local functions. GHC uses an alternative
+strategy called <a class="reference internal" href="../../glossary.html#term-Closure-Conversion"><span class="xref std std-term">Closure Conversion</span></a>…</p>
 </section>
 <section id="observing-the-effect-of-lambda-lifting">
 <h2><span class="section-number">3.2.3.3. </span>Observing the Effect of Lambda Lifting<a class="headerlink" href="#observing-the-effect-of-lambda-lifting" title="Permalink to this heading">¶</a></h2>
@@ -258,7 +288,7 @@ Benchmark tooManyClosures: FINISH
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="id3" role="note">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">1</a><span class="fn-bracket">]</span></span>
-<p>This program comes from Sebastian Graf and Simon Peyton Jones
+<p>This program and example comes from Sebastian Graf and Simon Peyton Jones
 <span id="id4">[<a class="reference internal" href="../../../contents.html#id12" title="Sebastian Graf and Simon Peyton Jones. Selective lambda lifting. 2019. URL: https://arxiv.org/abs/1910.11717, doi:10.48550/ARXIV.1910.11717.">4</a>]</span>; thank you for your labor!:</p>
 </aside>
 </aside>
