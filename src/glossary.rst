@@ -20,6 +20,10 @@ Glossary
       <https://en.wikipedia.org/wiki/Closure_(computer_programming)>`_ entry for
       more.
 
+   Closure Conversion
+
+      Start here tomorrow!
+
    CAF
 
      A CAF, or Constant Applicative Form, is a Haskell value which contains no
