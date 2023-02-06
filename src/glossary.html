@@ -141,7 +141,46 @@ created. Closure’s are the canonical way to realize lexical scoping in
 languages with first-class functions, such a Haskell. See <a class="reference external" href="https://en.wikipedia.org/wiki/Closure_(computer_programming)">the wikipedia</a> entry for
 more.</p>
 </dd>
-<dt id="term-Closure-Conversion">Closure Conversion<a class="headerlink" href="#term-Closure-Conversion" title="Permalink to this term">¶</a></dt><dd><p>Start here tomorrow!</p>
+<dt id="term-Closure-Conversion">Closure Conversion<a class="headerlink" href="#term-Closure-Conversion" title="Permalink to this term">¶</a></dt><dd><p>Closure conversion is the default way GHC treats free variables in a
+function body. Closure Conversion creates a top level record for the
+original function, called the function environment, whose fields are the
+free variables of the function. The environment is passed to the function
+as an implicit parameter and the free variable call sites are rewritten as
+field accesses. Then the function and the record are grouped in a tuple,
+i.e., a closure (pair of environment and function) is created causing some
+extra heap allocation. Finally the call sites of the original function are
+rewritten to pass the environment with the original function. Consider
+this example:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="o">...</span><span class="w"></span>
+<span class="kr">let</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">foldl</span><span class="w"> </span><span class="p">(</span><span class="nf">\</span><span class="n">acc</span><span class="w"> </span><span class="kr">_</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="n">acc</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="n">xs</span><span class="w"></span>
+<span class="kr">in</span><span class="w">  </span><span class="n">f</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="o">..</span><span class="mi">100</span><span class="p">]</span><span class="w"></span>
+<span class="o">...</span><span class="w"></span>
+</pre></div>
+</div>
+<p>In this example <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> are free variables in the function <code class="docutils literal notranslate"><span class="pre">f</span></code> .
+Closure conversion will capture them and transform this function to:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="o">...</span><span class="w"></span>
+<span class="c1">-- the function environment</span><span class="w"></span>
+<span class="kr">data</span><span class="w"> </span><span class="kt">EnvF</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">EnvF</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+
+<span class="c1">-- the new function</span><span class="w"></span>
+<span class="nf">f_cc</span><span class="w"> </span><span class="n">env</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">foldl</span><span class="w"> </span><span class="p">(</span><span class="nf">\</span><span class="n">acc</span><span class="w"> </span><span class="kr">_</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="n">acc</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">env</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">y</span><span class="w"> </span><span class="n">env</span><span class="p">)</span><span class="w"> </span><span class="n">xs</span><span class="w"></span>
+
+<span class="c1">-- the closure that replaces the original function in the same scope</span><span class="w"></span>
+<span class="kr">let</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="p">(</span><span class="n">f_cc</span><span class="p">,</span><span class="w"> </span><span class="kt">EnvF</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"></span>
+<span class="kr">in</span><span class="w"> </span><span class="p">(</span><span class="n">fst</span><span class="w"> </span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">snd</span><span class="w"> </span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="o">..</span><span class="mi">100</span><span class="p">]</span><span class="w"></span>
+<span class="o">...</span><span class="w"></span>
+</pre></div>
+</div>
+<p>Notice closure conversion has <em>added</em> an extra <code class="docutils literal notranslate"><span class="pre">let</span></code> expression for the
+closure and the reference to <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> have been replaced with
+accesses to <code class="docutils literal notranslate"><span class="pre">env</span></code> . The let expression can be a source of extra heap
+allocations and is one of the costs of closure conversion. However, the
+benefits are uniformity; every function can be treated as a closure.
+Closure conversion is often contrasted with Lambda Lifting which is
+another strategy to handle free variables that does not incur extra heap
+allocation. See <span id="id2">Johnsson [<a class="reference internal" href="../contents.html#id11" title="Thomas Johnsson. Lambda lifting: transforming programs to recursive equations. In Jean-Pierre Jouannaud, editor, Functional Programming Languages and Computer Architecture, 190–203. Berlin, Heidelberg, 1985. Springer Berlin Heidelberg.">3</a>]</span> and
+<span id="id3">Graf and Jones [<a class="reference internal" href="../contents.html#id12" title="Sebastian Graf and Simon Peyton Jones. Selective lambda lifting. 2019. URL: https://arxiv.org/abs/1910.11717, doi:10.48550/ARXIV.1910.11717.">4</a>]</span> for more.</p>
 </dd>
 <dt id="term-CAF">CAF<a class="headerlink" href="#term-CAF" title="Permalink to this term">¶</a></dt><dd><p>A CAF, or Constant Applicative Form, is a Haskell value which contains no
 free variables and is not a function. Consider these examples:</p>
@@ -152,6 +191,8 @@ free variables and is not a function. Consider these examples:</p>
 <span class="nf">bar</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">(</span><span class="kt">Int</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="kt">Int</span><span class="p">])</span><span class="w"></span>
 <span class="nf">bar</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="p">((</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="o">..</span><span class="p">])</span><span class="w"></span>
 
+<span class="c1">-- not a lambda, curried functions that can be reduced when given an</span><span class="w"></span>
+<span class="c1">-- input are CAFs</span><span class="w"></span>
 <span class="nf">baz</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
 <span class="nf">baz</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="mi">3</span><span class="w"></span>
 
@@ -160,7 +201,7 @@ free variables and is not a function. Consider these examples:</p>
 <span class="nf">qux</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">3</span><span class="w">     </span><span class="c1">-- equivalent to baz but is a lambda so not a CAF</span><span class="w"></span>
 
 <span class="nf">quux</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
-<span class="nf">quux</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="n">x</span><span class="w">   </span><span class="c1">-- x is free thus</span><span class="w"></span>
+<span class="nf">quux</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">x</span><span class="w">      </span><span class="c1">-- x is free thus not a CAF</span><span class="w"></span>
 </pre></div>
 </div>
 <p>These values are <em>constant</em> because they don’t bind any variables or have
@@ -169,29 +210,29 @@ any free variables. Because they are constant they are floated (see
 during compile time. Since they are statically allocated at compile time
 CAFs are pinned memory and special treatment in the runtime system. Thus,
 heavily allocating CAFs can increase memory residency. See
-<span id="id2">Jones <em>et al.</em> [<a class="reference internal" href="../contents.html#id2" title="Peyton Jones, Simon L, and Simon Peyton Jones. Implementing lazy functional languages on stock hardware: the spineless tagless g-machine. Journal of Functional Programming, 2:127-202, July 1992. URL: https://www.microsoft.com/en-us/research/publication/implementing-lazy-functional-languages-on-stock-hardware-the-spineless-tagless-g-machine/.">5</a>]</span> Section 10.8 for more details.</p>
+<span id="id4">Jones <em>et al.</em> [<a class="reference internal" href="../contents.html#id2" title="Peyton Jones, Simon L, and Simon Peyton Jones. Implementing lazy functional languages on stock hardware: the spineless tagless g-machine. Journal of Functional Programming, 2:127-202, July 1992. URL: https://www.microsoft.com/en-us/research/publication/implementing-lazy-functional-languages-on-stock-hardware-the-spineless-tagless-g-machine/.">5</a>]</span> Section 10.8 for more details.</p>
 </dd>
 <dt id="term-DWARF">DWARF<a class="headerlink" href="#term-DWARF" title="Permalink to this term">¶</a></dt><dd><p>DWARF symbols are a widely used and standardized data format used to
 provide source level debugging. For more, see <a class="reference external" href="https://dwarfstd.org/">the official webpage</a></p>
 </dd>
 <dt id="term-Full-Laziness-transformation">Full Laziness transformation<a class="headerlink" href="#term-Full-Laziness-transformation" title="Permalink to this term">¶</a></dt><dd><p>A form of <a class="reference internal" href="#term-Let-Floating"><span class="xref std std-term">Let Floating</span></a> which moves let bindings out of lambda
 abstractions to avoid unnecessary allocation and computation. See
-<span id="id3">Peyton Jones and Santos [<a class="reference internal" href="../contents.html#id4" title="Simon Peyton Jones and Andre Santos. A transformation-based optimiser for haskell. Science of Computer Programming, October 1997. URL: https://www.microsoft.com/en-us/research/publication/a-transformation-based-optimiser-for-haskell/.">1</a>]</span> Section 7.2.</p>
+<span id="id5">Peyton Jones and Santos [<a class="reference internal" href="../contents.html#id4" title="Simon Peyton Jones and Andre Santos. A transformation-based optimiser for haskell. Science of Computer Programming, October 1997. URL: https://www.microsoft.com/en-us/research/publication/a-transformation-based-optimiser-for-haskell/.">1</a>]</span> Section 7.2.</p>
 </dd>
 <dt id="term-Info-Table">Info Table<a class="headerlink" href="#term-Info-Table" title="Permalink to this term">¶</a></dt><dd><p>Every heap allocated object in the runtime system keeps an information
 table that stores data such as: the object type (function, data
 constructor, thunk etc.) before the payload of the object. This is called
-the info table. See <span id="id4">Marlow <em>et al.</em> [<a class="reference internal" href="../contents.html#id10" title="Simon Marlow, Alexey Rodriguez Yakushev, and Simon Peyton Jones. Faster laziness using dynamic pointer tagging. SIGPLAN Not., 42(9):277–288, oct 2007. URL: https://doi.org/10.1145/1291220.1291194, doi:10.1145/1291220.1291194.">2</a>]</span> and the <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/wikis/commentary/rts/storage/heap-objects#info-tables">wiki</a>
+the info table. See <span id="id6">Marlow <em>et al.</em> [<a class="reference internal" href="../contents.html#id10" title="Simon Marlow, Alexey Rodriguez Yakushev, and Simon Peyton Jones. Faster laziness using dynamic pointer tagging. SIGPLAN Not., 42(9):277–288, oct 2007. URL: https://doi.org/10.1145/1291220.1291194, doi:10.1145/1291220.1291194.">2</a>]</span> and the <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/wikis/commentary/rts/storage/heap-objects#info-tables">wiki</a>
 for more details.</p>
 </dd>
 <dt id="term-Levity-Polymorphism">Levity Polymorphism<a class="headerlink" href="#term-Levity-Polymorphism" title="Permalink to this term">¶</a></dt><dd><p>A kind of polymorphism that abstracts over calling conventions which
 allows levity polymorphic functions to be abstracted over memory layout.
-See <span id="id5">Eisenberg and Peyton Jones [<a class="reference internal" href="../contents.html#id8" title="Richard A. Eisenberg and Simon Peyton Jones. Levity polymorphism. SIGPLAN Not., 52(6):525–539, jun 2017. URL: https://doi.org/10.1145/3140587.3062357, doi:10.1145/3140587.3062357.">6</a>]</span> for a more precise technical definition
+See <span id="id7">Eisenberg and Peyton Jones [<a class="reference internal" href="../contents.html#id8" title="Richard A. Eisenberg and Simon Peyton Jones. Levity polymorphism. SIGPLAN Not., 52(6):525–539, jun 2017. URL: https://doi.org/10.1145/3140587.3062357, doi:10.1145/3140587.3062357.">6</a>]</span> for a more precise technical definition
 and discussion.</p>
 </dd>
 <dt id="term-Let-Floating">Let Floating<a class="headerlink" href="#term-Let-Floating" title="Permalink to this term">¶</a></dt><dd><p>A group of optimizing transformation’s that move <code class="docutils literal notranslate"><span class="pre">let</span></code> bindings to
-reduce heap allocations. See <span id="id6">Partain <em>et al.</em> [<a class="reference internal" href="../contents.html#id7" title="WD Partain, A Santos, and Simon Peyton Jones. Let-floating: moving bindings to give faster programs. May 1996. ACM SIGPLAN International Conference on Functional Programming (ICFP'96). URL: https://www.microsoft.com/en-us/research/publication/let-floating-moving-bindings-to-give-faster-programs/.">7</a>]</span> and
-<span id="id7">Peyton Jones and Santos [<a class="reference internal" href="../contents.html#id4" title="Simon Peyton Jones and Andre Santos. A transformation-based optimiser for haskell. Science of Computer Programming, October 1997. URL: https://www.microsoft.com/en-us/research/publication/a-transformation-based-optimiser-for-haskell/.">1</a>]</span> Section 7 for more details.</p>
+reduce heap allocations. See <span id="id8">Partain <em>et al.</em> [<a class="reference internal" href="../contents.html#id7" title="WD Partain, A Santos, and Simon Peyton Jones. Let-floating: moving bindings to give faster programs. May 1996. ACM SIGPLAN International Conference on Functional Programming (ICFP'96). URL: https://www.microsoft.com/en-us/research/publication/let-floating-moving-bindings-to-give-faster-programs/.">7</a>]</span> and
+<span id="id9">Peyton Jones and Santos [<a class="reference internal" href="../contents.html#id4" title="Simon Peyton Jones and Andre Santos. A transformation-based optimiser for haskell. Science of Computer Programming, October 1997. URL: https://www.microsoft.com/en-us/research/publication/a-transformation-based-optimiser-for-haskell/.">1</a>]</span> Section 7 for more details.</p>
 </dd>
 <dt id="term-Lifted">Lifted<a class="headerlink" href="#term-Lifted" title="Permalink to this term">¶</a></dt><dd><p>A Lifted type is a type that contains the value <span class="math notranslate nohighlight">\(\bot\)</span>;
 which represents non-terminating computation. For example, the <code class="docutils literal notranslate"><span class="pre">Bool</span></code>
@@ -207,7 +248,7 @@ for more.</p>
 </dd>
 <dt id="term-Thunk">Thunk<a class="headerlink" href="#term-Thunk" title="Permalink to this term">¶</a></dt><dd><p>A thunk is a special kind of <a class="reference internal" href="#term-Closure"><span class="xref std std-term">Closure</span></a> that represents a suspended
 computation. Thunks reside on the heap and are the key feature that
-provides Haskell’s laziness. See <span id="id9">Peyton Jones and Salkild [<a class="reference internal" href="../contents.html#id6" title="Simon L. Peyton Jones and Jon Salkild. The spineless tagless g-machine. In Proceedings of the Fourth International Conference on Functional Programming Languages and Computer Architecture, FPCA '89, 184–201. New York, NY, USA, 1989. Association for Computing Machinery. URL: https://doi.org/10.1145/99370.99385, doi:10.1145/99370.99385.">8</a>]</span>
+provides Haskell’s laziness. See <span id="id11">Peyton Jones and Salkild [<a class="reference internal" href="../contents.html#id6" title="Simon L. Peyton Jones and Jon Salkild. The spineless tagless g-machine. In Proceedings of the Fourth International Conference on Functional Programming Languages and Computer Architecture, FPCA '89, 184–201. New York, NY, USA, 1989. Association for Computing Machinery. URL: https://doi.org/10.1145/99370.99385, doi:10.1145/99370.99385.">8</a>]</span>
 Section 3.1.2 for more details.</p>
 </dd>
 <dt id="term-Unboxed">Unboxed<a class="headerlink" href="#term-Unboxed" title="Permalink to this term">¶</a></dt><dd><p>An UnBoxed value is a value that is represented by the value itself.

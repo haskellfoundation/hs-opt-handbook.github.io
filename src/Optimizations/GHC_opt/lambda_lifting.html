@@ -199,8 +199,10 @@ guidance on recognizing when your program may benefit.</p>
 <section id="how-lambda-lifting-works-in-ghc">
 <h2><span class="section-number">3.2.3.2. </span>How Lambda Lifting Works in GHC<a class="headerlink" href="#how-lambda-lifting-works-in-ghc" title="Permalink to this heading">¶</a></h2>
 <p>GHC does have a lambda lifting pass in STG, however lambda lifting is not the
-default method GHC uses for handling local functions. GHC uses an alternative
-strategy called <a class="reference internal" href="../../glossary.html#term-Closure-Conversion"><span class="xref std std-term">Closure Conversion</span></a>…</p>
+default method GHC uses for handling local functions and free variables.
+Instead, GHC uses an alternative strategy called <a class="reference internal" href="../../glossary.html#term-Closure-Conversion"><span class="xref std std-term">Closure Conversion</span></a>,
+which creates more uniformity at the cost of extra heap allocation.</p>
+<p>Automated Lambda Lifting in GHC is <em>Selective</em> and based on several heuristics:</p>
 </section>
 <section id="observing-the-effect-of-lambda-lifting">
 <h2><span class="section-number">3.2.3.3. </span>Observing the Effect of Lambda Lifting<a class="headerlink" href="#observing-the-effect-of-lambda-lifting" title="Permalink to this heading">¶</a></h2>

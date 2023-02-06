@@ -68,8 +68,11 @@ How Lambda Lifting Works in GHC
 -------------------------------
 
 GHC does have a lambda lifting pass in STG, however lambda lifting is not the
-default method GHC uses for handling local functions. GHC uses an alternative
-strategy called :term:`Closure Conversion`...
+default method GHC uses for handling local functions and free variables.
+Instead, GHC uses an alternative strategy called :term:`Closure Conversion`,
+which creates more uniformity at the cost of extra heap allocation.
+
+Automated Lambda Lifting in GHC is *Selective* and based on several heuristics:
 
 
 Observing the Effect of Lambda Lifting

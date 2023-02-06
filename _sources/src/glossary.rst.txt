@@ -22,7 +22,50 @@ Glossary
 
    Closure Conversion
 
-      Start here tomorrow!
+      Closure conversion is the default way GHC treats free variables in a
+      function body. Closure Conversion creates a top level record for the
+      original function, called the function environment, whose fields are the
+      free variables of the function. The environment is passed to the function
+      as an implicit parameter and the free variable call sites are rewritten as
+      field accesses. Then the function and the record are grouped in a tuple,
+      i.e., a closure (pair of environment and function) is created causing some
+      extra heap allocation. Finally the call sites of the original function are
+      rewritten to pass the environment with the original function. Consider
+      this example:
+
+      .. code-block:: haskell
+
+         ...
+         let f = foldl (\acc _ -> acc + x) y xs
+         in  f [1..100]
+         ...
+
+      In this example ``x`` and ``y`` are free variables in the function ``f`` .
+      Closure conversion will capture them and transform this function to:
+
+      .. code-block:: haskell
+
+         ...
+         -- the function environment
+         data EnvF = EnvF { x :: Int, y :: Int }
+
+         -- the new function
+         f_cc env xs = foldl (\acc _ -> acc + x env) (y env) xs
+
+         -- the closure that replaces the original function in the same scope
+         let f = (f_cc, EnvF x y)
+         in (fst f) (snd f) [1..100]
+         ...
+
+      Notice closure conversion has *added* an extra ``let`` expression for the
+      closure and the reference to ``x`` and ``y`` have been replaced with
+      accesses to ``env`` . The let expression can be a source of extra heap
+      allocations and is one of the costs of closure conversion. However, the
+      benefits are uniformity; every function can be treated as a closure.
+      Closure conversion is often contrasted with Lambda Lifting which is
+      another strategy to handle free variables that does not incur extra heap
+      allocation. See :cite:t:`lambdaLifting` and
+      :cite:t:`selectiveLambdaLifting` for more.
 
    CAF
 
@@ -38,6 +81,8 @@ Glossary
         bar :: (Int, [Int])
         bar = ((*) 10 10, [1..])
 
+        -- not a lambda, curried functions that can be reduced when given an
+        -- input are CAFs
         baz :: Int -> Int
         baz = (*) 3
 
@@ -46,7 +91,7 @@ Glossary
         qux e = e * 3     -- equivalent to baz but is a lambda so not a CAF
 
         quux :: Int -> Int
-        quux = (*) 10 x   -- x is free thus
+        quux = (*) x      -- x is free thus not a CAF
 
      These values are *constant* because they don't bind any variables or have
      any free variables. Because they are constant they are floated (see
