@@ -155,7 +155,7 @@ is called no heap allocation is needed because the lifted function no longer
 contains closures, rather it only references global names.</p>
 <section id="a-working-example">
 <h2><span class="section-number">3.2.3.1. </span>A Working Example<a class="headerlink" href="#a-working-example" title="Permalink to this heading">¶</a></h2>
-<p>Consider the following program <a class="footnote-reference brackets" href="#id4" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>:</p>
+<p>Consider the following program <a class="footnote-reference brackets" href="#f1" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>:</p>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">f</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
 <span class="nf">f</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">a</span><span class="w"></span>
 <span class="nf">f</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="n">g</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="p">`</span><span class="n">mod</span><span class="p">`</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"></span>
@@ -191,9 +191,10 @@ simply reference it; no closures needed!</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The fundamental tradeoff is decreased heap allocation for an increase in
-function parameters at each call site. This means that lambda lifting is not
-always a performance win. See <a class="reference internal" href="#when-to-manually-apply-lambda-lifting">When to Manually Apply Lambda Lifting</a> for
-guidance on recognizing when your program may benefit.</p>
+function parameters at each call site. This means that lambda lifting trades
+heap for stack and is not always a performance win. See <a class="reference internal" href="#when-to-manually-apply-lambda-lifting">When to Manually
+Apply Lambda Lifting</a> for guidance on recognizing when your program may
+benefit.</p>
 </div>
 </section>
 <section id="how-lambda-lifting-works-in-ghc">
@@ -253,7 +254,92 @@ occurrences of parameters.</p></li>
 </section>
 <section id="when-to-manually-apply-lambda-lifting">
 <h2><span class="section-number">3.2.3.4. </span>When to Manually Apply Lambda Lifting<a class="headerlink" href="#when-to-manually-apply-lambda-lifting" title="Permalink to this heading">¶</a></h2>
-<p>tomorrow: update glossary, start here</p>
+<p>GHC does a good job finding beneficial instances of lambda lifting. However, you
+might want to manually lambda lift to save compile time, or to increase
+the performance of your without relying on GHC’s optimizer.</p>
+<p>There are three considerations you should have when deciding when to manually
+lambda lift:</p>
+<ol class="arabic simple">
+<li><p>Are the functions that would be lifted in hot loops.</p></li>
+<li><p>How many more parameters would be passed to these functions.</p></li>
+<li><p>Would this transformation sacrifice readability and maintainability.</p></li>
+</ol>
+<p>Let’s take these in order: (1) lambda lifting trades heap (the let bindings that
+it removes), for stack (the increased function parameters). Thus it is not
+always a performance win and in some cases can be a performance loss. The losses
+occur when existing closures grow as a result of the lambda lift. This extra
+allocation slows the program down and increases pressure on the garbage
+collector. Consider this example from <span id="id4">Graf and Jones [<a class="reference internal" href="../../../contents.html#id12" title="Sebastian Graf and Simon Peyton Jones. Selective lambda lifting. 2019. URL: https://arxiv.org/abs/1910.11717, doi:10.48550/ARXIV.1910.11717.">4</a>]</span>:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- unlifted.</span><span class="w"></span>
+
+<span class="c1">-- f&#39;s increases heap because it must have a closure that includes the &#39;x&#39;</span><span class="w"></span>
+<span class="c1">-- and &#39;y&#39; free variables</span><span class="w"></span>
+
+<span class="c1">-- &#39;g&#39; increases heap because of the let and must have &#39;f&#39; and &#39;x&#39; in its</span><span class="w"></span>
+<span class="c1">-- closure (not assuming other optimizations such as constant propagation)</span><span class="w"></span>
+
+<span class="c1">-- &#39;h&#39; increases heap because &#39;f&#39; is free in &#39;h&#39;</span><span class="w"></span>
+
+<span class="kr">let</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">y</span><span class="w"></span>
+<span class="w">    </span><span class="n">g</span><span class="w"> </span><span class="n">d</span><span class="w">   </span><span class="ow">=</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="n">e</span><span class="w"></span>
+<span class="w">            </span><span class="kr">in</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="n">x</span><span class="w"></span>
+<span class="kr">in</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="mi">3</span><span class="w"></span>
+</pre></div>
+</div>
+<p>Let’s say we lift <code class="docutils literal notranslate"><span class="pre">f</span></code>, now we have:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- lifted f</span><span class="w"></span>
+
+<span class="nf">f_lifted</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">y</span><span class="w"></span>
+
+<span class="kr">let</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="n">d</span><span class="w">   </span><span class="ow">=</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">f_lifted</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="n">e</span><span class="w"></span>
+<span class="w">            </span><span class="kr">in</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="n">x</span><span class="w"></span>
+<span class="kr">in</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="mi">3</span><span class="w"></span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">f_lifted</span></code> is now a top level function, thus any closure that contained <code class="docutils literal notranslate"><span class="pre">f</span></code>
+before the lift will save one slot of memory. With <code class="docutils literal notranslate"><span class="pre">f_lifted</span></code> we additionally
+save two slots of memory because <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> are now parameters. Thus
+<code class="docutils literal notranslate"><span class="pre">f_lifted</span></code> does not need to allocate a closure with <a class="reference internal" href="../../glossary.html#term-Closure-Conversion"><span class="xref std std-term">Closure
+Conversion</span></a>. <code class="docutils literal notranslate"><span class="pre">g</span></code>’s allocations do not change since <code class="docutils literal notranslate"><span class="pre">f_lifted</span></code> can be
+directly referenced just as before and because <code class="docutils literal notranslate"><span class="pre">x</span></code> is still free in <code class="docutils literal notranslate"><span class="pre">g</span></code>.
+Thus <code class="docutils literal notranslate"><span class="pre">g</span></code>’s closure will contain <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">f_lifted</span></code> will be inlined, same
+as <code class="docutils literal notranslate"><span class="pre">f</span></code> in the unlifted version. <code class="docutils literal notranslate"><span class="pre">h</span></code>’s allocations grow by one slot since
+<code class="docutils literal notranslate"><span class="pre">y</span></code> <em>is now also</em> free in <code class="docutils literal notranslate"><span class="pre">h</span></code>, just as <code class="docutils literal notranslate"><span class="pre">x</span></code> was. So it would seem that in
+total lambda lifting <code class="docutils literal notranslate"><span class="pre">f</span></code> saves one slot of memory because two slots were lost
+in <code class="docutils literal notranslate"><span class="pre">f</span></code> and one was gained in <code class="docutils literal notranslate"><span class="pre">h</span></code>. However, <code class="docutils literal notranslate"><span class="pre">g</span></code> is a <span class="xref std std-term">multi-shot</span>
+lambda, thus <code class="docutils literal notranslate"><span class="pre">h</span></code> will be allocated <em>for each</em> call of <code class="docutils literal notranslate"><span class="pre">g</span></code>, whereas <code class="docutils literal notranslate"><span class="pre">f</span></code> and
+<code class="docutils literal notranslate"><span class="pre">g</span></code> are only allocated once. Therefore the lift is a net loss.</p>
+<p>This example illustrates how tricky good lifts can be and especially for hot
+loops. In general, you should try to train your eye to determine when to
+manually lift. Try to roughly determine allocations by counting the <code class="docutils literal notranslate"><span class="pre">let</span></code>
+expressions, the number of free variables, and the likely number of times a
+function is called and allocated.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Recall, due to closure conversion GHC allocates one slot of memory for each
+free variable. Local functions are allocated <em>once per call</em> of the enclosing
+function. Top level functions are always only allocated once.</p>
+</div>
+<p>The next determining factor is counting the number of new parameters that will
+be passed to lifted function. Should this number become greater than the number
+of available argument registers on the target platform then you’ll incur slow
+downs in the STG machine……</p>
+<p>tomorrow: update glossary, genapply and calling conventions. start here</p>
+</section>
+<section id="summary">
+<h2><span class="section-number">3.2.3.5. </span>Summary<a class="headerlink" href="#summary" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Lambda lifting is a classic optimization technique for compiling local
+functions and removing free variables.</p></li>
+<li><p>Lambda lifting trades heap for stack and is therefore effective for tight,
+closed, hot loops where fetching from the heap would be slow.</p></li>
+<li><p>GHC automatically performs lambda lifting, but does so only selectively. This
+transformation is late in the compilation pipeline at STG and right before
+code generation. GHC’s lambda lifting transformation can be toggled via the
+<code class="docutils literal notranslate"><span class="pre">-f-stg-lift-lams</span></code> and <code class="docutils literal notranslate"><span class="pre">-fno-stg-lift-lams</span></code> flags.</p></li>
+<li><p>To tell if your program has undergone lifting you can compare the Core with
+the STG. Or, you may compare STG with and without lifting explicitly enabled.</p></li>
+</ol>
 <p>Testing Exec</p>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">module</span><span class="w"> </span><span class="nn">Main</span><span class="w"> </span><span class="kr">where</span><span class="w"></span>
 
@@ -333,10 +419,10 @@ Benchmark tooManyClosures: FINISH
 </pre></div>
 </div>
 <aside class="footnote-list brackets">
-<aside class="footnote brackets" id="id4" role="note">
+<aside class="footnote brackets" id="f1" role="note">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">1</a><span class="fn-bracket">]</span></span>
-<p>This program and example comes from Sebastian Graf and Simon Peyton Jones
-<span id="id5">[<a class="reference internal" href="../../../contents.html#id12" title="Sebastian Graf and Simon Peyton Jones. Selective lambda lifting. 2019. URL: https://arxiv.org/abs/1910.11717, doi:10.48550/ARXIV.1910.11717.">4</a>]</span>; thank you for your labor!:</p>
+<p>This program and example comes from <span id="id5">Graf and Jones [<a class="reference internal" href="../../../contents.html#id12" title="Sebastian Graf and Simon Peyton Jones. Selective lambda lifting. 2019. URL: https://arxiv.org/abs/1910.11717, doi:10.48550/ARXIV.1910.11717.">4</a>]</span>;
+thank you for your labor!:</p>
 </aside>
 </aside>
 </section>
