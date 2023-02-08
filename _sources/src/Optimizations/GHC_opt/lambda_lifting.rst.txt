@@ -126,8 +126,8 @@ syntactic changes:
 #. All non-top-level variables (i.e., free variables) in the let's body become
    occurrences of parameters.
 
-When to Manually Apply Lambda Lifting
--------------------------------------
+When to Manually Lambda Lifting
+-------------------------------
 
 GHC does a good job finding beneficial instances of lambda lifting. However, you
 might want to manually lambda lift to save compile time, or to increase

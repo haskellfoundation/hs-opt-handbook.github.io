@@ -192,8 +192,8 @@ simply reference it; no closures needed!</p>
 <p class="admonition-title">Note</p>
 <p>The fundamental tradeoff is decreased heap allocation for an increase in
 function parameters at each call site. This means that lambda lifting trades
-heap for stack and is not always a performance win. See <a class="reference internal" href="#when-to-manually-apply-lambda-lifting">When to Manually
-Apply Lambda Lifting</a> for guidance on recognizing when your program may
+heap for stack and is not always a performance win. See <a href="#id6"><span class="problematic" id="id7">`When to Manually
+Apply Lambda Lifting`_</span></a> for guidance on recognizing when your program may
 benefit.</p>
 </div>
 </section>
@@ -252,8 +252,8 @@ partial application. For example, all occurrences of <code class="docutils liter
 occurrences of parameters.</p></li>
 </ol>
 </section>
-<section id="when-to-manually-apply-lambda-lifting">
-<h2><span class="section-number">3.2.3.4. </span>When to Manually Apply Lambda Lifting<a class="headerlink" href="#when-to-manually-apply-lambda-lifting" title="Permalink to this heading">¶</a></h2>
+<section id="when-to-manually-lambda-lifting">
+<h2><span class="section-number">3.2.3.4. </span>When to Manually Lambda Lifting<a class="headerlink" href="#when-to-manually-lambda-lifting" title="Permalink to this heading">¶</a></h2>
 <p>GHC does a good job finding beneficial instances of lambda lifting. However, you
 might want to manually lambda lift to save compile time, or to increase
 the performance of your without relying on GHC’s optimizer.</p>
