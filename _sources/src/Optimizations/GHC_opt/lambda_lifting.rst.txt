@@ -1,5 +1,6 @@
 .. _Lambda Lifting Chapter:
 
+..
    Local Variables
 .. |glift| replace:: ``g_lifted``
 
