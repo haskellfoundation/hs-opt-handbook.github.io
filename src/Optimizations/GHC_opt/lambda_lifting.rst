@@ -1,5 +1,6 @@
 .. _Lambda Lifting Chapter:
 
+..
    Local Variables
 .. |glift| replace:: ``g_lifted``
 
@@ -16,7 +17,7 @@ contains closures, rather it only references global names.
 A Working Example
 -----------------
 
-Consider the following program [#]_:
+Consider the following program [#f1]_:
 
 .. code-block:: haskell
 
@@ -59,9 +60,10 @@ simply reference it; no closures needed!
 .. note::
 
    The fundamental tradeoff is decreased heap allocation for an increase in
-   function parameters at each call site. This means that lambda lifting is not
-   always a performance win. See `When to Manually Apply Lambda Lifting`_ for
-   guidance on recognizing when your program may benefit.
+   function parameters at each call site. This means that lambda lifting trades
+   heap for stack and is not always a performance win. See `When to Manually
+   Apply Lambda Lifting`_ for guidance on recognizing when your program may
+   benefit.
 
 
 How Lambda Lifting Works in GHC
@@ -125,11 +127,103 @@ syntactic changes:
 #. All non-top-level variables (i.e., free variables) in the let's body become
    occurrences of parameters.
 
-When to Manually Apply Lambda Lifting
--------------------------------------
+When to Manually Lambda Lift
+----------------------------
 
-tomorrow: update glossary, start here
+GHC does a good job finding beneficial instances of lambda lifting. However, you
+might want to manually lambda lift to save compile time, or to increase
+the performance of your without relying on GHC's optimizer.
 
+There are three considerations you should have when deciding when to manually
+lambda lift:
+
+1. Are the functions that would be lifted in hot loops.
+2. How many more parameters would be passed to these functions.
+3. Would this transformation sacrifice readability and maintainability.
+
+Let's take these in order: (1) lambda lifting trades heap (the let bindings that
+it removes), for stack (the increased function parameters). Thus it is not
+always a performance win and in some cases can be a performance loss. The losses
+occur when existing closures grow as a result of the lambda lift. This extra
+allocation slows the program down and increases pressure on the garbage
+collector. Consider this example from :cite:t:`selectiveLambdaLifting`:
+
+.. code-block:: haskell
+
+   -- unlifted.
+
+   -- f's increases heap because it must have a closure that includes the 'x'
+   -- and 'y' free variables
+
+   -- 'g' increases heap because of the let and must have 'f' and 'x' in its
+   -- closure (not assuming other optimizations such as constant propagation)
+
+   -- 'h' increases heap because 'f' is free in 'h'
+
+   let f a b = a + x + b + y
+       g d   = let h e = f e e
+               in h x
+   in g 1 + g 2 + g 3
+
+Let's say we lift ``f``, now we have:
+
+
+.. code-block:: haskell
+
+   -- lifted f
+
+   f_lifted x y a b = a + x + b + y
+
+   let g d   = let h e = f_lifted x y e e
+               in h x
+   in g 1 + g 2 + g 3
+
+``f_lifted`` is now a top level function, thus any closure that contained ``f``
+before the lift will save one slot of memory. With ``f_lifted`` we additionally
+save two slots of memory because ``x`` and ``y`` are now parameters. Thus
+``f_lifted`` does not need to allocate a closure with :term:`Closure
+Conversion`. ``g``'s allocations do not change since ``f_lifted`` can be
+directly referenced just as before and because ``x`` is still free in ``g``.
+Thus ``g``'s closure will contain ``x`` and ``f_lifted`` will be inlined, same
+as ``f`` in the unlifted version. ``h``'s allocations grow by one slot since
+``y`` *is now also* free in ``h``, just as ``x`` was. So it would seem that in
+total lambda lifting ``f`` saves one slot of memory because two slots were lost
+in ``f`` and one was gained in ``h``. However, ``g`` is a :term:`multi-shot`
+lambda, thus ``h`` will be allocated *for each* call of ``g``, whereas ``f`` and
+``g`` are only allocated once. Therefore the lift is a net loss.
+
+This example illustrates how tricky good lifts can be and especially for hot
+loops. In general, you should try to train your eye to determine when to
+manually lift. Try to roughly determine allocations by counting the ``let``
+expressions, the number of free variables, and the likely number of times a
+function is called and allocated.
+
+.. note::
+
+   Recall, due to closure conversion GHC allocates one slot of memory for each
+   free variable. Local functions are allocated *once per call* of the enclosing
+   function. Top level functions are always only allocated once.
+
+The next determining factor is counting the number of new parameters that will
+be passed to lifted function. Should this number become greater than the number
+of available argument registers on the target platform then you'll incur slow
+downs in the STG machine......
+
+tomorrow: update glossary, genapply and calling conventions. start here
+
+Summary
+-------
+
+#. Lambda lifting is a classic optimization technique for compiling local
+   functions and removing free variables.
+#. Lambda lifting trades heap for stack and is therefore effective for tight,
+   closed, hot loops where fetching from the heap would be slow.
+#. GHC automatically performs lambda lifting, but does so only selectively. This
+   transformation is late in the compilation pipeline at STG and right before
+   code generation. GHC's lambda lifting transformation can be toggled via the
+   ``-f-stg-lift-lams`` and ``-fno-stg-lift-lams`` flags.
+#. To tell if your program has undergone lifting you can compare the Core with
+   the STG. Or, you may compare STG with and without lifting explicitly enabled.
 
 Testing Exec
 
@@ -175,5 +269,5 @@ and we can also run from cabal target!!
    :args: bench lethargy:tooManyClosures
 
 
-.. [#] This program and example comes from Sebastian Graf and Simon Peyton Jones
-       :cite:p:`selectiveLambdaLifting`; thank you for your labor!:
+.. [#f1] This program and example comes from :cite:t:`selectiveLambdaLifting`;
+         thank you for your labor!:
