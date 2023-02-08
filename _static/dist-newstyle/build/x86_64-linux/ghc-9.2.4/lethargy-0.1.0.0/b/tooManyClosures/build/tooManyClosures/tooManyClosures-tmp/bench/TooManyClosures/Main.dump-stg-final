@@ -1,6 +1,6 @@
 
 ==================== Final STG: ====================
-2023-02-08 12:52:58.945514447 UTC
+2023-02-08 12:53:10.655503869 UTC
 
 Main.bad :: [GHC.Types.Int] -> GHC.Types.Int
 [GblId, Arity=1, Unf=OtherCon []] =
