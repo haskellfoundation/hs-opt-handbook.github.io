@@ -390,7 +390,7 @@ form is semantically identical but more efficient because our program may avoid
 <p class="admonition-title">Note</p>
 <p>Let Floating can change <a class="reference internal" href="../glossary.html#term-Thunk"><span class="xref std std-term">Thunk</span></a> sizes.</p>
 </div>
-<p>Consider this example from <span id="id8">Peyton Jones and Santos [<a class="reference internal" href="../../contents.html#id4" title="Simon Peyton Jones and Andre Santos. A transformation-based optimiser for haskell. Science of Computer Programming, October 1997. URL: https://www.microsoft.com/en-us/research/publication/a-transformation-based-optimiser-for-haskell/.">1</a>]</span>, Section 7.1:</p>
+<p>Consider this example from <span id="id8">Peyton Jones and Santos [<a class="reference internal" href="../../contents.html#id5" title="Simon Peyton Jones and Andre Santos. A transformation-based optimiser for haskell. Science of Computer Programming, October 1997. URL: https://www.microsoft.com/en-us/research/publication/a-transformation-based-optimiser-for-haskell/.">1</a>]</span>, Section 7.1:</p>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">w</span><span class="w">     </span><span class="c1">-- v and w are free variables in x</span><span class="w"></span>
 <span class="w">    </span><span class="n">y</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="o">...</span><span class="n">x</span><span class="o">...</span><span class="n">x</span><span class="w">  </span><span class="c1">-- y mentions x</span><span class="w"></span>
 <span class="kr">in</span><span class="w"> </span><span class="kt">B</span><span class="w">              </span><span class="c1">-- B does not mention x</span><span class="w"></span>
@@ -545,7 +545,7 @@ from redundant checks and poor branch prediction, for example:</p>
 </aside>
 <aside class="footnote brackets" id="id15" role="note">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id7">5</a><span class="fn-bracket">]</span></span>
-<p>This code adapted from <span id="id16">Peyton Jones and Santos [<a class="reference internal" href="../../contents.html#id4" title="Simon Peyton Jones and Andre Santos. A transformation-based optimiser for haskell. Science of Computer Programming, October 1997. URL: https://www.microsoft.com/en-us/research/publication/a-transformation-based-optimiser-for-haskell/.">1</a>]</span> Section 7.</p>
+<p>This code adapted from <span id="id16">Peyton Jones and Santos [<a class="reference internal" href="../../contents.html#id5" title="Simon Peyton Jones and Andre Santos. A transformation-based optimiser for haskell. Science of Computer Programming, October 1997. URL: https://www.microsoft.com/en-us/research/publication/a-transformation-based-optimiser-for-haskell/.">1</a>]</span> Section 7.</p>
 </aside>
 </aside>
 </section>
