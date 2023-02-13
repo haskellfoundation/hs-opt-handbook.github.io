@@ -1,3 +1,22 @@
+@inproceedings{compilingWithoutCont,
+author = {Maurer, Luke and Downen, Paul and Ariola, Zena M. and Peyton Jones, Simon},
+title = {Compiling without Continuations},
+year = {2017},
+isbn = {9781450349888},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3062341.3062380},
+doi = {10.1145/3062341.3062380},
+abstract = {Many fields of study in compilers give rise to the concept of a join point—a place where different execution paths come together. Join points are often treated as functions or continuations, but we believe it is time to study them in their own right. We show that adding join points to a direct-style functional intermediate language is a simple but powerful change that allows new optimizations to be performed, including a significant improvement to list fusion. Finally, we report on recent work on adding join points to the intermediate language of the Glasgow Haskell Compiler.},
+booktitle = {Proceedings of the 38th ACM SIGPLAN Conference on Programming Language Design and Implementation},
+pages = {482–494},
+numpages = {13},
+keywords = {CPS, ANF, Haskell, GHC, list fusion, intermediate languages},
+location = {Barcelona, Spain},
+series = {PLDI 2017}
+}
+
+
 @article{jones1992implementing,
 author = {Jones, Peyton and L, Simon and Peyton Jones, Simon},
 title = {Implementing Lazy Functional Languages on Stock Hardware: The Spineless Tagless G-machine},
@@ -240,4 +259,21 @@ isbn="978-3-540-39677-2"
   publisher = {arXiv},
   year = {2019},
   copyright = {arXiv.org perpetual, non-exclusive license}
+}
+
+@inproceedings{fastCurry,
+author = {Marlow, Simon and Jones, Simon Peyton},
+title = {Making a Fast Curry: Push/Enter vs. Eval/Apply for Higher-Order Languages},
+year = {2004},
+isbn = {1581139055},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/1016850.1016856},
+doi = {10.1145/1016850.1016856},
+abstract = {Higher-order languages that encourage currying are implemented using one of two basic evaluation models: push/enter or eval/apply. Implementors use their intuition and qualitative judgements to choose one model or the other.Our goal in this paper is to provide, for the first time, a more substantial basis for this choice, based on our qualitative and quantitative experience of implementing both models in a state-of-the-art compiler for Haskell.Our conclusion is simple, and contradicts our initial intuition: compiled implementations should use eval/apply.},
+booktitle = {Proceedings of the Ninth ACM SIGPLAN International Conference on Functional Programming},
+pages = {4–15},
+numpages = {12},
+location = {Snow Bird, UT, USA},
+series = {ICFP '04}
 }

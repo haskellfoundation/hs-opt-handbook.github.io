@@ -5,6 +5,10 @@ Glossary
 
 .. glossary::
 
+   Arity
+
+      The arity of a function is the number of arguments the function must take
+      to conclude to a result.
 
    Boxed : Levity
 
@@ -101,18 +105,34 @@ Glossary
      heavily allocating CAFs can increase memory residency. See
      :cite:t:`jones1992implementing` Section 10.8 for more details.
 
-
    DWARF : Format
 
       DWARF symbols are a widely used and standardized data format used to
       provide source level debugging. For more, see `the official webpage
-      <https://dwarfstd.org/>`_
+      <https://dwarfstd.org/>`_.
+
+   Entry Code
+
+      The entry code for a closure on the heap is the code that will evaluate
+      that closure. There are some nuances and exceptions: For functions the
+      entry code applies the function to its arguments, which the entry code
+      assumes are all present; that is, the entry code assumes all arguments are
+      either loaded into registers or are already on the stack. Should the
+      function be applied to too few arguments or should the function be an
+      :term:`Unknown function` then a generic apply is used. For a :term:`PAP`,
+      there is no entry code. PAPs can only be applied to more arguments using
+      the generic apply functions. Lastly, :term:`Unlifted` Objects cannot be
+      evaluated and thus have no entry code.
 
    Full Laziness transformation : Optimization
 
       A form of :term:`Let Floating` which moves let bindings out of lambda
       abstractions to avoid unnecessary allocation and computation. See
       :cite:t:`peytonjones1997a` Section 7.2.
+
+   Fusion : Optimization
+
+      See :ref:`What is Fusion <canonical-fusion>`.
 
    Info Table : Runtime
 
@@ -122,6 +142,41 @@ Glossary
       the info table. See :cite:t:`pointerTaggingLaziness` and the `wiki
       <https://gitlab.haskell.org/ghc/ghc/-/wikis/commentary/rts/storage/heap-objects#info-tables>`_
       for more details.
+
+   Join Point :  Optimization
+
+      A join point is a place where different execution paths come together or
+      *join*. Consider this example slightly modified from
+      :cite:t:`compilingWithoutCont`:
+
+      .. code-block:: haskell
+
+         let join1 _ = some_large_expression
+             join2 _ = some_other_large_expr
+         in if e1 then (if e2 then join1 () else join2 ())
+                  else (if e3 then join1 () else join2 ())
+
+      In this example, ``join1`` and ``join2`` are join points because the
+      branches described by each if-expression conclude by calling them. Thus,
+      the control flow described by the if-expressions joins at specifically
+      ``join1`` and ``join2``. Join points are an important optimization
+      technique that GHC performs automatically to remove redundant allocations.
+      Had we not wrapped ``some_large_expression`` and ``some_other_large_expr``
+      in a ``let``, then these expressions would be duplicated *and* would be
+      captured in an additionally allocated closure unnecessarily. Join points
+      avoid these problems and are particularly relevant for Stream
+      :term:`Fusion` performance.
+
+    Known Function
+
+      A known function is a function in the STG machine of which GHC statically
+      knows the :term:`Entry Code` pointer and the :term:`Arity` of. This means
+      that the function binding site is statically visible, that is, the
+      function is :term:`Top-Level`, or the function is bound by an enclosing
+      ``let``. With this information the STG machine can use a faster function
+      application procedure because the function pointer does not need to be
+      scrutinized. See also :term:`Unknown Function`.
+
 
    Levity Polymorphism
 
@@ -144,6 +199,16 @@ Glossary
       type is a set with three values: ``True``, ``False``, and :math:`\bot`.
       Therefore ``Bool`` is a Lifted type.
 
+   PAP
+
+      A PAP is a partial application. PAPs are heap objects and thus a type of
+      closure that represents a function applied to *too few* arguments. PAPs
+      should never be entered, and are only applied using the generic apply
+      functions in the STG machine. See the file ``rts/Apply.cmm`` in GHC or the
+      `heap object
+      <https://gitlab.haskell.org/ghc/ghc/-/wikis/commentary/rts/storage/heap-objects>`_
+      wiki page for more.
+
    Pinned : Memory
 
      Pinned memory is memory that is guaranteed to not be moved by GHC's garbage
@@ -162,6 +227,11 @@ Glossary
       provides Haskell's laziness. See :cite:t:`SpinelessTaglessGMachine`
       Section 3.1.2 for more details.
 
+   Top-level binding
+
+      A top level binding is any binding that exists in the most outer-most or
+      global scope of the program.
+
    Unboxed : Levity
 
       An UnBoxed value is a value that is represented by the value itself.
@@ -171,6 +241,18 @@ Glossary
 
       An Unlifted type is a type where :math:`\bot` *is not* an element of that
       type. See :term:`Levity Polymorphism` and :term:`Lifted` types for more.
+
+   Unknown function
+
+      An unknown function is a function in the STG machine whose :term:`Entry
+      Code` pointer and :term:`Arity` are not statically known by GHC. Unknown
+      functions require GHC to generate code that first scrutinizes the function
+      pointer to determine its arity and then dispatch to the normal function
+      call handling procedures. This in known has a generic apply in the STG
+      machine and is slower (due to needing to scrutinize the function) than a
+      :term:`Known function`. See :cite:t:`fastCurry` for more details on STG
+      calling conventions.
+
 
    WHNF : Normal Forms
 

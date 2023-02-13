@@ -61,9 +61,9 @@ simply reference it; no closures needed!
 
    The fundamental tradeoff is decreased heap allocation for an increase in
    function parameters at each call site. This means that lambda lifting trades
-   heap for stack and is not always a performance win. See `When to Manually
-   Apply Lambda Lifting`_ for guidance on recognizing when your program may
-   benefit.
+   heap for stack and is not always a performance win. See :ref:`When to
+   Manually Apply Lambda Lifting <when>` for guidance on recognizing when your
+   program may benefit.
 
 
 How Lambda Lifting Works in GHC
@@ -89,8 +89,7 @@ details.
 
 GHC does not lambda lift:
 
-#. :term:`Top-level` bindings. By definition these
-   cannot be lifted.
+#.  A :term:`Top-level binding`. By definition these cannot be lifted.
 #. :term:`Thunk` and Data Constructors. Lifting either of these would destroy
    sharing.
 #. :term:`Join Point` because there is no lifting possible in a join point.
@@ -126,6 +125,8 @@ syntactic changes:
    ``$lf b`` in the let's body.
 #. All non-top-level variables (i.e., free variables) in the let's body become
    occurrences of parameters.
+
+.. _when:
 
 When to Manually Lambda Lift
 ----------------------------
@@ -205,11 +206,13 @@ function is called and allocated.
    function. Top level functions are always only allocated once.
 
 The next determining factor is counting the number of new parameters that will
-be passed to lifted function. Should this number become greater than the number
-of available argument registers on the target platform then you'll incur slow
-downs in the STG machine......
-
-tomorrow: update glossary, genapply and calling conventions. start here
+be passed to the lifted function. Should this number become greater than the
+number of available argument registers on the target platform then you'll incur
+slow downs in the STG machine. These slowdowns result from more work the STG
+machine will need to do. It will need to generate code that pops arguments from
+the stack instead of just applying the function to arguments that are already
+loaded into registers. In a hot loop this extra manipulation can have a large
+impact.
 
 Summary
 -------
@@ -224,50 +227,6 @@ Summary
    ``-f-stg-lift-lams`` and ``-fno-stg-lift-lams`` flags.
 #. To tell if your program has undergone lifting you can compare the Core with
    the STG. Or, you may compare STG with and without lifting explicitly enabled.
-
-Testing Exec
-
-.. exec::
-   :context: false
-   :process: haskell
-
-   module Main where
-
-   main :: IO ()
-   main = do
-     let x = fmap (+10) [1..10]
-     print x
-
-
-Great that worked now lets try ``ghci``
-
-
-.. exec::
-   :context: true
-   :process: haskell
-   :with: ghci
-
-   :t "Hello"
-
-and also we can load a package
-
-.. exec::
-   :context: true
-   :process: haskell
-   :with: ghci
-
-   :m + Data.List
-   :t span
-
-and we can also run from cabal target!!
-
-.. exec:: code/lethargy/bench/TooManyClosures.hs
-   :context: true
-   :process: haskell
-   :project_dir: code/lethargy/
-   :with: cabal
-   :args: bench lethargy:tooManyClosures
-
 
 .. [#f1] This program and example comes from :cite:t:`selectiveLambdaLifting`;
          thank you for your labor!:
