@@ -228,51 +228,5 @@ Summary
 #. To tell if your program has undergone lifting you can compare the Core with
    the STG. Or, you may compare STG with and without lifting explicitly enabled.
 
-tomorrow...start here: clean up these code examples and patch PR for exec directive
-
-Testing Exec
-
-.. exec::
-   :context: false
-   :process: haskell
-
-   module Main where
-
-   main :: IO ()
-   main = do
-     let x = fmap (+10) [1..10]
-     print x
-
-
-Great that worked now lets try ``ghci``
-
-
-.. exec::
-   :context: true
-   :process: haskell
-   :with: ghci
-
-   :t "Hello"
-
-and also we can load a package
-
-.. exec::
-   :context: true
-   :process: haskell
-   :with: ghci
-
-   :m + Data.List
-   :t span
-
-and we can also run from cabal target!!
-
-.. exec:: code/lethargy/bench/TooManyClosures.hs
-   :context: true
-   :process: haskell
-   :project_dir: code/lethargy/
-   :with: cabal
-   :args: bench lethargy:tooManyClosures
-
-
 .. [#f1] This program and example comes from :cite:t:`selectiveLambdaLifting`;
          thank you for your labor!:
