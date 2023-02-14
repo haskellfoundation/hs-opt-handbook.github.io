@@ -26,6 +26,13 @@ by `Input Output Global <https://iohk.io/>`_.
 Release History
 ---------------
 
+* February, 2023
+
+  * Lambda lifting chapter first draft finished.
+  * Update `sphinx-exec-directive
+    <https://github.com/yongrenjie/sphinx-exec-directive>`_ documentation on
+    ways to run Haskell code.
+
 * January, 2023
 
   * Patched `sphinx-exec-directive
