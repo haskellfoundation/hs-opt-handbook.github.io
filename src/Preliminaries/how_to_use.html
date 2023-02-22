@@ -180,8 +180,12 @@ discourse:</p>
 <ol class="arabic simple">
 <li><p><span class="math notranslate nohighlight">\(\perp\)</span> to mean the <em>bottom</em> value</p></li>
 <li><p><span class="math notranslate nohighlight">\(Foo[x \rightarrow e]\)</span> to mean the result of substituting <span class="math notranslate nohighlight">\(e\)</span> for
-<span class="math notranslate nohighlight">\(x\)</span> in <span class="math notranslate nohighlight">\(Foo\)</span>.</p></li>
-<li><p><span class="math notranslate nohighlight">\(\mathcal{O}(n\log{}n)\)</span> to mean the minimum bound time complexity of an algorithm is <span class="math notranslate nohighlight">\(n\log{}n\)</span></p></li>
+<span class="math notranslate nohighlight">\(x\)</span> in <span class="math notranslate nohighlight">\(Foo\)</span>, and</p></li>
+<li><p>Big-O notation: <span class="math notranslate nohighlight">\(\mathcal{O}(n\log{}n)\)</span>, to mean the asymptotic running
+times of algorithms. In particular, if an algorithm takes
+<span class="math notranslate nohighlight">\(\mathcal{O}(n \log{} n)\)</span> time, then it can process any set of
+<span class="math notranslate nohighlight">\(n\)</span> input items in at most <span class="math notranslate nohighlight">\(c*n \log{} n\)</span> time, for some fixed
+constant <span class="math notranslate nohighlight">\(c\)</span>.</p></li>
 </ol>
 </section>
 <section id="where-to-begin">
@@ -189,7 +193,7 @@ discourse:</p>
 <p>The book is structured into discrete independent parts to better serve as a
 handbook. Thus, the book is not meant to be read in a linear order. Instead, one
 should pick and choose which chapter to read next based on their needs because
-<em>The book assumes you have a problem that needs solving</em>.</p>
+<em>the book assumes you have a problem that needs solving</em>.</p>
 <p>There are two general sections; both are ordered from the least time consuming
 to most time consuming topics. The first section, Part 1, aids the developer in
 identifying performance issues in their own code. Part 1 is primarily concerned

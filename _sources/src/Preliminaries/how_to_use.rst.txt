@@ -50,8 +50,12 @@ discourse:
 
 1. :math:`\perp` to mean the *bottom* value
 2. :math:`Foo[x \rightarrow e]` to mean the result of substituting :math:`e` for
-   :math:`x` in :math:`Foo`.
-3. :math:`\mathcal{O}(n\log{}n)` to mean the minimum bound time complexity of an algorithm is :math:`n\log{}n`
+   :math:`x` in :math:`Foo`, and
+3. Big-O notation: :math:`\mathcal{O}(n\log{}n)`, to mean the asymptotic running
+   times of algorithms. In particular, if an algorithm takes
+   :math:`\mathcal{O}(n \log{} n)` time, then it can process any set of
+   :math:`n` input items in at most :math:`c*n \log{} n` time, for some fixed
+   constant :math:`c`.
 
 Where to Begin
 --------------
@@ -59,7 +63,7 @@ Where to Begin
 The book is structured into discrete independent parts to better serve as a
 handbook. Thus, the book is not meant to be read in a linear order. Instead, one
 should pick and choose which chapter to read next based on their needs because
-*The book assumes you have a problem that needs solving*.
+*the book assumes you have a problem that needs solving*.
 
 There are two general sections; both are ordered from the least time consuming
 to most time consuming topics. The first section, Part 1, aids the developer in
