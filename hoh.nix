@@ -37,8 +37,7 @@ pkgs.stdenv.mkDerivation {
 
    buildPhase = ''
    runHook preBuild
-
-   make ${target}
+   make ${target} SPHINXOPTS="-W"
    touch "_build/.nojekyll"
    touch "_build/html/.nojekyll"
    '';
