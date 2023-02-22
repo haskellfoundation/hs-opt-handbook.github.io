@@ -48,7 +48,7 @@ Code examples are written in Haskell unless otherwise noted. Other notation
 follows standards in programming language theory and computer science academic
 discourse:
 
-1. :math:`\perp` to mean the *bottom* value
+1. th:`\perp` to mean the *bottom* value
 2. :math:`Foo[x \rightarrow e]` to mean the result of substituting :math:`e` for
    :math:`x` in :math:`Foo`, and
 3. Big-O notation: :math:`\mathcal{O}(n\log{}n)`, to mean the asymptotic running
