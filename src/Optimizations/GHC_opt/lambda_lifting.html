@@ -211,14 +211,14 @@ when <em>not</em> to lambda lift in <a class="reference external" href="https://
 details.</p>
 <p>GHC does not lambda lift:</p>
 <ol class="arabic simple">
-<li><p>A <a class="reference internal" href="../../glossary.html#term-Top-level-binding"><span class="xref std std-term">Top-level binding</span></a>. By definition these cannot be lifted.</p></li>
+<li><p>A <a class="reference internal" href="../../glossary.html#term-Top-level"><span class="xref std std-term">Top-level</span></a> binding. By definition these cannot be lifted.</p></li>
 <li><p><a class="reference internal" href="../../glossary.html#term-Thunk"><span class="xref std std-term">Thunk</span></a> and Data Constructors. Lifting either of these would destroy
 sharing.</p></li>
 <li><p><a class="reference internal" href="../../glossary.html#term-Join-Point"><span class="xref std std-term">Join Point</span></a> because there is no lifting possible in a join point.
 Similarly, abstracting over join points destroys the join point by turning it
 into an argument to a lifted function.</p></li>
-<li><p>Any local <span class="xref std std-term">known function</span>. This would turn a known function call into
-an <a class="reference internal" href="../../glossary.html#term-Unknown-function"><span class="xref std std-term">unknown function</span></a> call, which is slower. The flag
+<li><p>Any local <a class="reference internal" href="../../glossary.html#term-Known-Function"><span class="xref std std-term">known function</span></a>. This would turn a known function call into
+an <a class="reference internal" href="../../glossary.html#term-Unknown-Function"><span class="xref std std-term">unknown function</span></a> call, which is slower. The flag
 <code class="docutils literal notranslate"><span class="pre">-fstg-lift-lams-known</span></code> disables this restriction and enables lifting of
 known functions.</p></li>
 <li><p>Any function whose lifted form would have a higher arity than the available
@@ -240,7 +240,7 @@ late lambda lifting with the flags <code class="docutils literal notranslate"><s
 syntactic changes:</p>
 <ol class="arabic simple">
 <li><p>It eliminates a let binding.</p></li>
-<li><p>It creates a new <span class="xref std std-term">Top-level</span> binding.</p></li>
+<li><p>It creates a new <a class="reference internal" href="../../glossary.html#term-Top-level"><span class="xref std std-term">Top-level</span></a> binding.</p></li>
 <li><p>It replaces all occurrences of the lifted function in the let’s body with a
 partial application. For example, all occurrences of <code class="docutils literal notranslate"><span class="pre">f</span></code> are replaced with
 <code class="docutils literal notranslate"><span class="pre">$lf</span> <span class="pre">b</span></code> in the let’s body.</p></li>

@@ -224,7 +224,7 @@ entry code applies the function to its arguments, which the entry code
 assumes are all present; that is, the entry code assumes all arguments are
 either loaded into registers or are already on the stack. Should the
 function be applied to too few arguments or should the function be an
-<a class="reference internal" href="#term-Unknown-function"><span class="xref std std-term">Unknown function</span></a> then a generic apply is used. For a <a class="reference internal" href="#term-PAP"><span class="xref std std-term">PAP</span></a>,
+<a class="reference internal" href="#term-Unknown-Function"><span class="xref std std-term">Unknown function</span></a> then a generic apply is used. For a <a class="reference internal" href="#term-PAP"><span class="xref std std-term">PAP</span></a>,
 there is no entry code. PAPs can only be applied to more arguments using
 the generic apply functions. Lastly, <a class="reference internal" href="#term-Unlifted"><span class="xref std std-term">Unlifted</span></a> Objects cannot be
 evaluated and thus have no entry code.</p>
@@ -260,14 +260,14 @@ in a <code class="docutils literal notranslate"><span class="pre">let</span></co
 captured in an additionally allocated closure unnecessarily. Join points
 avoid these problems and are particularly relevant for Stream
 <a class="reference internal" href="#term-Fusion"><span class="xref std std-term">Fusion</span></a> performance.</p>
-<p>own Function</p>
-<p>A known function is a function in the STG machine of which GHC statically
+</dd>
+<dt id="term-Known-Function">Known Function<a class="headerlink" href="#term-Known-Function" title="Permalink to this term">¶</a></dt><dd><p>A known function is a function in the STG machine of which GHC statically
 knows the <a class="reference internal" href="#term-Entry-Code"><span class="xref std std-term">Entry Code</span></a> pointer and the <a class="reference internal" href="#term-Arity"><span class="xref std std-term">Arity</span></a> of. This means
 that the function binding site is statically visible, that is, the
-function is <span class="xref std std-term">Top-Level</span>, or the function is bound by an enclosing
+function is <a class="reference internal" href="#term-Top-level"><span class="xref std std-term">Top-Level</span></a>, or the function is bound by an enclosing
 <code class="docutils literal notranslate"><span class="pre">let</span></code>. With this information the STG machine can use a faster function
 application procedure because the function pointer does not need to be
-scrutinized. See also <a class="reference internal" href="#term-Unknown-function"><span class="xref std std-term">Unknown Function</span></a>.</p>
+scrutinized. See also <a class="reference internal" href="#term-Unknown-Function"><span class="xref std std-term">Unknown Function</span></a>.</p>
 </dd>
 <dt id="term-Levity-Polymorphism">Levity Polymorphism<a class="headerlink" href="#term-Levity-Polymorphism" title="Permalink to this term">¶</a></dt><dd><p>A kind of polymorphism that abstracts over calling conventions which
 allows levity polymorphic functions to be abstracted over memory layout.
@@ -282,6 +282,24 @@ reduce heap allocations. See <span id="id9">Partain <em>et al.</em> [<a class="r
 which represents non-terminating computation. For example, the <code class="docutils literal notranslate"><span class="pre">Bool</span></code>
 type is a set with three values: <code class="docutils literal notranslate"><span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">False</span></code>, and <span class="math notranslate nohighlight">\(\bot\)</span>.
 Therefore <code class="docutils literal notranslate"><span class="pre">Bool</span></code> is a Lifted type.</p>
+</dd>
+<dt id="term-Multi-Shot-Lambda">Multi-Shot Lambda<a class="headerlink" href="#term-Multi-Shot-Lambda" title="Permalink to this term">¶</a></dt><dd><p>A multi-shot lambda is a lambda that is called <em>more</em> than once. In
+contrast to a <a class="reference internal" href="#term-One-Shot-Lambda"><span class="xref std std-term">one-shot lambda</span></a>, a multi-shot lambda has a high risk
+of destroying <span class="xref std std-term">sharing</span> if subject to certain optimizations, such as
+Inlining. GHC determines whether a lambda is one-shot or multi-shot during
+<span class="xref std std-term">Cardinality Analysis</span>. See <span id="id11">Sergey <em>et al.</em> [<a class="reference internal" href="../contents.html#id16" title="Ilya Sergey, Dimitrios Vytiniotis, and Simon Peyton Jones. Modular, higher-order cardinality analysis in theory and practice. SIGPLAN Not., 49(1):335–347, jan 2014. URL: https://doi.org/10.1145/2578855.2535861, doi:10.1145/2578855.2535861.">9</a>]</span> and
+<span id="id12">Graf [<a class="reference internal" href="../contents.html#id14" title="Sebastian Graf. Call arity vs. demand analysis. August 2017.">10</a>]</span> for more.</p>
+</dd>
+<dt id="term-One-Shot-Lambda">One-Shot Lambda<a class="headerlink" href="#term-One-Shot-Lambda" title="Permalink to this term">¶</a></dt><dd><p>A one-shot lambda is a lambda that is called <em>exactly</em> once. These
+lambda’s are common in functional programming and can be subject to more
+aggressive optimizations due to their one-shot nature. For example, there
+is no risk of losing <span class="xref std std-term">sharing</span> in a one-shot lambda as a result of
+inlining free variables or floating let expressions <em>into</em> the lambda;
+something that GHC usually avoids. See <span id="id13">Sergey <em>et al.</em> [<a class="reference internal" href="../contents.html#id16" title="Ilya Sergey, Dimitrios Vytiniotis, and Simon Peyton Jones. Modular, higher-order cardinality analysis in theory and practice. SIGPLAN Not., 49(1):335–347, jan 2014. URL: https://doi.org/10.1145/2578855.2535861, doi:10.1145/2578855.2535861.">9</a>]</span> and
+<span id="id14">Graf [<a class="reference internal" href="../contents.html#id14" title="Sebastian Graf. Call arity vs. demand analysis. August 2017.">10</a>]</span> for more background. See the magic
+<a class="reference external" href="https://hackage.haskell.org/package/base-4.17.0.0/docs/GHC-Exts.html#v:oneShot">oneShot</a>
+function in <a class="reference external" href="https://hackage.haskell.org/package/base-4.17.0.0/docs/GHC-Exts.html">GHC.Exts</a>
+for an unsafe way to instruct GHC that you have a one-shot lambda.</p>
 </dd>
 <dt id="term-PAP">PAP<a class="headerlink" href="#term-PAP" title="Permalink to this term">¶</a></dt><dd><p>A PAP is a partial application. PAPs are heap objects and thus a type of
 closure that represents a function applied to <em>too few</em> arguments. PAPs
@@ -299,11 +317,10 @@ for more.</p>
 </dd>
 <dt id="term-Thunk">Thunk<a class="headerlink" href="#term-Thunk" title="Permalink to this term">¶</a></dt><dd><p>A thunk is a special kind of <a class="reference internal" href="#term-Closure"><span class="xref std std-term">Closure</span></a> that represents a suspended
 computation. Thunks reside on the heap and are the key feature that
-provides Haskell’s laziness. See <span id="id12">Peyton Jones and Salkild [<a class="reference internal" href="../contents.html#id7" title="Simon L. Peyton Jones and Jon Salkild. The spineless tagless g-machine. In Proceedings of the Fourth International Conference on Functional Programming Languages and Computer Architecture, FPCA '89, 184–201. New York, NY, USA, 1989. Association for Computing Machinery. URL: https://doi.org/10.1145/99370.99385, doi:10.1145/99370.99385.">9</a>]</span>
+provides Haskell’s laziness. See <span id="id16">Peyton Jones and Salkild [<a class="reference internal" href="../contents.html#id7" title="Simon L. Peyton Jones and Jon Salkild. The spineless tagless g-machine. In Proceedings of the Fourth International Conference on Functional Programming Languages and Computer Architecture, FPCA '89, 184–201. New York, NY, USA, 1989. Association for Computing Machinery. URL: https://doi.org/10.1145/99370.99385, doi:10.1145/99370.99385.">11</a>]</span>
 Section 3.1.2 for more details.</p>
 </dd>
-<dt id="term-Top-level-binding">Top-level binding<a class="headerlink" href="#term-Top-level-binding" title="Permalink to this term">¶</a></dt><dd><p>A top level binding is any binding that exists in the most outer-most or
-global scope of the program.</p>
+<dt id="term-Top-level">Top-level<a class="headerlink" href="#term-Top-level" title="Permalink to this term">¶</a></dt><dd><p>The top level is the outer-most or global scope of a program.</p>
 </dd>
 <dt id="term-Unboxed">Unboxed<a class="headerlink" href="#term-Unboxed" title="Permalink to this term">¶</a></dt><dd><p>An UnBoxed value is a value that is represented by the value itself.
 UnBoxed values therefore cannot be lazy, like boxed values.</p>
@@ -311,13 +328,13 @@ UnBoxed values therefore cannot be lazy, like boxed values.</p>
 <dt id="term-Unlifted">Unlifted<a class="headerlink" href="#term-Unlifted" title="Permalink to this term">¶</a></dt><dd><p>An Unlifted type is a type where <span class="math notranslate nohighlight">\(\bot\)</span> <em>is not</em> an element of that
 type. See <a class="reference internal" href="#term-Levity-Polymorphism"><span class="xref std std-term">Levity Polymorphism</span></a> and <a class="reference internal" href="#term-Lifted"><span class="xref std std-term">Lifted</span></a> types for more.</p>
 </dd>
-<dt id="term-Unknown-function">Unknown function<a class="headerlink" href="#term-Unknown-function" title="Permalink to this term">¶</a></dt><dd><p>An unknown function is a function in the STG machine whose <a class="reference internal" href="#term-Entry-Code"><span class="xref std std-term">Entry
+<dt id="term-Unknown-Function">Unknown Function<a class="headerlink" href="#term-Unknown-Function" title="Permalink to this term">¶</a></dt><dd><p>An unknown function is a function in the STG machine whose <a class="reference internal" href="#term-Entry-Code"><span class="xref std std-term">Entry
 Code</span></a> pointer and <a class="reference internal" href="#term-Arity"><span class="xref std std-term">Arity</span></a> are not statically known by GHC. Unknown
 functions require GHC to generate code that first scrutinizes the function
 pointer to determine its arity and then dispatch to the normal function
 call handling procedures. This in known has a generic apply in the STG
 machine and is slower (due to needing to scrutinize the function) than a
-<span class="xref std std-term">Known function</span>. See <span id="id13">Marlow and Jones [<a class="reference internal" href="../contents.html#id14" title="Simon Marlow and Simon Peyton Jones. Making a fast curry: push/enter vs. eval/apply for higher-order languages. In Proceedings of the Ninth ACM SIGPLAN International Conference on Functional Programming, ICFP '04, 4–15. New York, NY, USA, 2004. Association for Computing Machinery. URL: https://doi.org/10.1145/1016850.1016856, doi:10.1145/1016850.1016856.">10</a>]</span> for more details on STG
+<a class="reference internal" href="#term-Known-Function"><span class="xref std std-term">Known function</span></a>. See <span id="id17">Marlow and Jones [<a class="reference internal" href="../contents.html#id15" title="Simon Marlow and Simon Peyton Jones. Making a fast curry: push/enter vs. eval/apply for higher-order languages. In Proceedings of the Ninth ACM SIGPLAN International Conference on Functional Programming, ICFP '04, 4–15. New York, NY, USA, 2004. Association for Computing Machinery. URL: https://doi.org/10.1145/1016850.1016856, doi:10.1145/1016850.1016856.">12</a>]</span> for more details on STG
 calling conventions.</p>
 </dd>
 <dt id="term-WHNF">WHNF<a class="headerlink" href="#term-WHNF" title="Permalink to this term">¶</a></dt><dd><p>An expression is in <em>weak head normal form</em> if it has been evaluated to
