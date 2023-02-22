@@ -89,7 +89,7 @@ details.
 
 GHC does not lambda lift:
 
-#.  A :term:`Top-level` binding. By definition these cannot be lifted.
+#.  A :term:`Top-level binding`. By definition these cannot be lifted.
 #. :term:`Thunk` and Data Constructors. Lifting either of these would destroy
    sharing.
 #. :term:`Join Point` because there is no lifting possible in a join point.
