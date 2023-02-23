@@ -139,9 +139,9 @@ Glossary
       Every heap allocated object in the runtime system keeps an information
       table that stores data such as: the object type (function, data
       constructor, thunk etc.) before the payload of the object. This is called
-      the info table. See :cite:t:`pointerTaggingLaziness` and the `wiki
-      <https://gitlab.haskell.org/ghc/ghc/-/wikis/commentary/rts/storage/heap-objects#info-tables>`_
-      for more details.
+      the info table. See :cite:t:`pointerTaggingLaziness` and the
+      :ghcWiki:`wiki <commentary/rts/storage/heap-objects#info-tables>` for more
+      details.
 
    Join Point :  Optimization
 
@@ -167,15 +167,15 @@ Glossary
       avoid these problems and are particularly relevant for Stream
       :term:`Fusion` performance.
 
-    Known Function
+   Known Function
 
-      A known function is a function in the STG machine of which GHC statically
-      knows the :term:`Entry Code` pointer and the :term:`Arity` of. This means
-      that the function binding site is statically visible, that is, the
-      function is :term:`Top-Level`, or the function is bound by an enclosing
-      ``let``. With this information the STG machine can use a faster function
-      application procedure because the function pointer does not need to be
-      scrutinized. See also :term:`Unknown Function`.
+     A known function is a function in the STG machine of which GHC statically
+     knows the :term:`Entry Code` pointer and the :term:`Arity` of. This means
+     that the function binding site is statically visible, that is, the
+     function is :term:`Top-Level`, or the function is bound by an enclosing
+     ``let``. With this information the STG machine can use a faster function
+     application procedure because the function pointer does not need to be
+     scrutinized. See also :term:`Unknown Function`.
 
 
    Levity Polymorphism
@@ -205,9 +205,8 @@ Glossary
       closure that represents a function applied to *too few* arguments. PAPs
       should never be entered, and are only applied using the generic apply
       functions in the STG machine. See the file ``rts/Apply.cmm`` in GHC or the
-      `heap object
-      <https://gitlab.haskell.org/ghc/ghc/-/wikis/commentary/rts/storage/heap-objects>`_
-      wiki page for more.
+      :ghcWiki:`heap object <commentary/rts/storage/heap-objects>` wiki page for
+      more.
 
    Pinned : Memory
 

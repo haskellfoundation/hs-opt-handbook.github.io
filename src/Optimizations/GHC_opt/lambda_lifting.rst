@@ -83,9 +83,7 @@ hypothetical heap allocations a function will induce. GHC lists heuristics for
 when *not* to lambda lift in `Note [When to lift]
 <https://gitlab.haskell.org/ghc/ghc/-/blob/master/compiler/GHC/Stg/Lift/Analysis.hs#L46>`_
 , we repeat the basic ideas here. See :cite:t:`selectiveLambdaLifting`, and the
-`lambda lifting wiki
-<https://gitlab.haskell.org/ghc/ghc/-/wikis/late-lam-lift>`_ entry for more
-details.
+:ghcWiki:`lambda lifting wiki <late-lam-lift>` entry for more details.
 
 GHC does not lambda lift:
 

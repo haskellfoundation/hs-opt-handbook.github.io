@@ -21,6 +21,11 @@ Haskell Optimization Handbook
 Indices and tables
 ==================
 
+.. toctree::
+   :hidden:
+
+   src/glossary
+
 * :ref:`genindex`
 * :ref:`search`
 * :ref:`glossary`

@@ -1,4 +1,4 @@
-.. GHC Flags
+.. _GHC Flags:
 
 :lightgrey:`GHC Flags`
 ======================

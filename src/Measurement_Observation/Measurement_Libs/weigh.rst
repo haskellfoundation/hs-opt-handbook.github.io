@@ -1,4 +1,4 @@
-.. _Weigh:
+.. _Weigh Chapter:
 
 `Weigh`
 =======
@@ -175,8 +175,8 @@ output from weigh:
    Foo2              336    0
    Benchmark weigh: FINISH
 
- Notice that built in types such as ``()`` and ``True`` do not do any
-allocation. This is because these types are `wired-in
+Notice that built in types such as ``()`` and ``True`` do not do any allocation.
+This is because these types are `wired-in
 <https://gitlab.haskell.org/ghc/ghc/-/wikis/commentary/compiler/wired-in>`_ to
 GHC, which means that there is a single shared ``()`` in GHC, so our call to
 ``value "()" ()`` performs no allocation because it references the shared
