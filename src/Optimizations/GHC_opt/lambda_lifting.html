@@ -44,6 +44,22 @@
   <div class="links">
     <navlinks class="can-hide">
 
+  
+    <div class="nav-item">
+      <a href="../../../contents.html#haskell-optimization-handbook"
+         class="nav-link ">
+         Table of Contents
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../contents.html#indices-and-tables"
+         class="nav-link ">
+         indices and tables
+      </a>
+    </div>
+  
+
 
 
     </navlinks>
@@ -57,6 +73,22 @@
           
           <navlinks>
             
+
+  
+    <div class="nav-item">
+      <a href="../../../contents.html#haskell-optimization-handbook"
+         class="nav-link ">
+         Table of Contents
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../contents.html#indices-and-tables"
+         class="nav-link ">
+         indices and tables
+      </a>
+    </div>
+  
 
 
 
@@ -101,6 +133,33 @@
           <li class="toctree-l1 ">
             
               <a href="../index.html" class="reference internal ">Optimizations</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../../Case_Studies/index.html" class="reference internal ">Case Studies</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../contents.html#indices-and-tables">indices and tables</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../../glossary.html" class="reference internal ">Glossary</a>
             
 
             
@@ -207,17 +266,16 @@ lambda lifting interferes with other optimizations.</p>
 hypothetical heap allocations a function will induce. GHC lists heuristics for
 when <em>not</em> to lambda lift in <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/blob/master/compiler/GHC/Stg/Lift/Analysis.hs#L46">Note [When to lift]</a>
 , we repeat the basic ideas here. See <span id="id3">Graf and Jones [<a class="reference internal" href="../../../contents.html#id13" title="Sebastian Graf and Simon Peyton Jones. Selective lambda lifting. 2019. URL: https://arxiv.org/abs/1910.11717, doi:10.48550/ARXIV.1910.11717.">4</a>]</span>, and the
-<a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/wikis/late-lam-lift">lambda lifting wiki</a> entry for more
-details.</p>
+<a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/wikis/late-lam-lift">lambda lifting wiki</a> entry for more details.</p>
 <p>GHC does not lambda lift:</p>
 <ol class="arabic simple">
-<li><p>A <a class="reference internal" href="../../glossary.html#term-Top-level-binding"><span class="xref std std-term">Top-level binding</span></a>. By definition these cannot be lifted.</p></li>
+<li><p>A <a class="reference internal" href="../../glossary.html#term-Top-Level"><span class="xref std std-term">top-level</span></a> binding. By definition these cannot be lifted.</p></li>
 <li><p><a class="reference internal" href="../../glossary.html#term-Thunk"><span class="xref std std-term">Thunk</span></a> and Data Constructors. Lifting either of these would destroy
 sharing.</p></li>
 <li><p><a class="reference internal" href="../../glossary.html#term-Join-Point"><span class="xref std std-term">Join Point</span></a> because there is no lifting possible in a join point.
 Similarly, abstracting over join points destroys the join point by turning it
 into an argument to a lifted function.</p></li>
-<li><p>Any local <span class="xref std std-term">known function</span>. This would turn a known function call into
+<li><p>Any local <a class="reference internal" href="../../glossary.html#term-Known-Function"><span class="xref std std-term">known function</span></a>. This would turn a known function call into
 an <a class="reference internal" href="../../glossary.html#term-Unknown-function"><span class="xref std std-term">unknown function</span></a> call, which is slower. The flag
 <code class="docutils literal notranslate"><span class="pre">-fstg-lift-lams-known</span></code> disables this restriction and enables lifting of
 known functions.</p></li>
@@ -227,8 +285,8 @@ number of registers for the function’s calling convention. See flags
 <li><p>Any function whose lifted form will result in <em>closure grawth</em>. Closure
 growth occurs when formerly free variables, that are now additional
 arguments, did not previously occur in the closure, thereby increasing
-allocations. This is especially bad for <span class="xref std std-term">multi-shot</span> lambdas which will
-allocate many times.</p></li>
+allocations. This is especially bad for any <a class="reference internal" href="../../glossary.html#term-Multi-Shot-Lambda"><span class="xref std std-term">multi-shot lambda</span></a>, which
+will allocate many times.</p></li>
 </ol>
 </section>
 <section id="observing-the-effect-of-lambda-lifting">
@@ -240,7 +298,7 @@ late lambda lifting with the flags <code class="docutils literal notranslate"><s
 syntactic changes:</p>
 <ol class="arabic simple">
 <li><p>It eliminates a let binding.</p></li>
-<li><p>It creates a new <span class="xref std std-term">Top-level</span> binding.</p></li>
+<li><p>It creates a new <a class="reference internal" href="../../glossary.html#term-Top-Level"><span class="xref std std-term">top-level</span></a> binding.</p></li>
 <li><p>It replaces all occurrences of the lifted function in the let’s body with a
 partial application. For example, all occurrences of <code class="docutils literal notranslate"><span class="pre">f</span></code> are replaced with
 <code class="docutils literal notranslate"><span class="pre">$lf</span> <span class="pre">b</span></code> in the let’s body.</p></li>
@@ -302,9 +360,9 @@ Thus <code class="docutils literal notranslate"><span class="pre">g</span></code
 as <code class="docutils literal notranslate"><span class="pre">f</span></code> in the unlifted version. <code class="docutils literal notranslate"><span class="pre">h</span></code>’s allocations grow by one slot since
 <code class="docutils literal notranslate"><span class="pre">y</span></code> <em>is now also</em> free in <code class="docutils literal notranslate"><span class="pre">h</span></code>, just as <code class="docutils literal notranslate"><span class="pre">x</span></code> was. So it would seem that in
 total lambda lifting <code class="docutils literal notranslate"><span class="pre">f</span></code> saves one slot of memory because two slots were lost
-in <code class="docutils literal notranslate"><span class="pre">f</span></code> and one was gained in <code class="docutils literal notranslate"><span class="pre">h</span></code>. However, <code class="docutils literal notranslate"><span class="pre">g</span></code> is a <span class="xref std std-term">multi-shot</span>
-lambda, thus <code class="docutils literal notranslate"><span class="pre">h</span></code> will be allocated <em>for each</em> call of <code class="docutils literal notranslate"><span class="pre">g</span></code>, whereas <code class="docutils literal notranslate"><span class="pre">f</span></code> and
-<code class="docutils literal notranslate"><span class="pre">g</span></code> are only allocated once. Therefore the lift is a net loss.</p>
+in <code class="docutils literal notranslate"><span class="pre">f</span></code> and one was gained in <code class="docutils literal notranslate"><span class="pre">h</span></code>. However, <code class="docutils literal notranslate"><span class="pre">g</span></code> is a <a class="reference internal" href="../../glossary.html#term-Multi-Shot-Lambda"><span class="xref std std-term">multi-shot
+lambda</span></a>, thus <code class="docutils literal notranslate"><span class="pre">h</span></code> will be allocated <em>for each</em> call of <code class="docutils literal notranslate"><span class="pre">g</span></code>, whereas <code class="docutils literal notranslate"><span class="pre">f</span></code>
+and <code class="docutils literal notranslate"><span class="pre">g</span></code> are only allocated once. Therefore the lift is a net loss.</p>
 <p>This example illustrates how tricky good lifts can be and especially for hot
 loops. In general, you should try to train your eye to determine when to
 manually lift. Try to roughly determine allocations by counting the <code class="docutils literal notranslate"><span class="pre">let</span></code>

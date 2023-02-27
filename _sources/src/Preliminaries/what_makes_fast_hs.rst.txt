@@ -254,10 +254,10 @@ Excessive closure allocation is subtle for two reasons: first, because GHC is
 typically very good at optimizing it away via :term:`Let Floating` most
 Haskeller's never have to confront it (which is a good indication of GHC's
 quality); second, in order to observe it, the programmer must track the memory
-allocation of their program across many functions or even modules, which is not
-a common experience when writing Haskell. For our purposes', we'll inspect
-examples that GHC should have no problem finding and optimizing. See
-:ref:`Case_Study_SBV`
+allocation of their program across many functions, modules and packages, which
+is not a common experience when writing Haskell. For our purposes', we'll
+inspect examples that GHC should have no problem finding and optimizing. See the
+:ref:`Impact of seq Removal on SBV's cache <SBV572>` case study for more.
 
 .. todo::
    Not yet written, see `#18 <https://github.com/input-output-hk/hs-opt-handbook.github.io/issues/18>`_

@@ -83,13 +83,11 @@ hypothetical heap allocations a function will induce. GHC lists heuristics for
 when *not* to lambda lift in `Note [When to lift]
 <https://gitlab.haskell.org/ghc/ghc/-/blob/master/compiler/GHC/Stg/Lift/Analysis.hs#L46>`_
 , we repeat the basic ideas here. See :cite:t:`selectiveLambdaLifting`, and the
-`lambda lifting wiki
-<https://gitlab.haskell.org/ghc/ghc/-/wikis/late-lam-lift>`_ entry for more
-details.
+:ghcWiki:`lambda lifting wiki <late-lam-lift>` entry for more details.
 
 GHC does not lambda lift:
 
-#.  A :term:`Top-level binding`. By definition these cannot be lifted.
+#.  A :term:`top-level` binding. By definition these cannot be lifted.
 #. :term:`Thunk` and Data Constructors. Lifting either of these would destroy
    sharing.
 #. :term:`Join Point` because there is no lifting possible in a join point.
@@ -105,8 +103,8 @@ GHC does not lambda lift:
 #. Any function whose lifted form will result in *closure grawth*. Closure
    growth occurs when formerly free variables, that are now additional
    arguments, did not previously occur in the closure, thereby increasing
-   allocations. This is especially bad for :term:`multi-shot` lambdas which will
-   allocate many times.
+   allocations. This is especially bad for any :term:`multi-shot lambda`, which
+   will allocate many times.
 
 
 Observing the Effect of Lambda Lifting
@@ -119,7 +117,7 @@ late lambda lifting with the flags ``-f-stg-lift-lams`` and
 syntactic changes:
 
 #. It eliminates a let binding.
-#. It creates a new :term:`Top-level` binding.
+#. It creates a new :term:`top-level` binding.
 #. It replaces all occurrences of the lifted function in the let's body with a
    partial application. For example, all occurrences of ``f`` are replaced with
    ``$lf b`` in the let's body.
@@ -189,9 +187,9 @@ Thus ``g``'s closure will contain ``x`` and ``f_lifted`` will be inlined, same
 as ``f`` in the unlifted version. ``h``'s allocations grow by one slot since
 ``y`` *is now also* free in ``h``, just as ``x`` was. So it would seem that in
 total lambda lifting ``f`` saves one slot of memory because two slots were lost
-in ``f`` and one was gained in ``h``. However, ``g`` is a :term:`multi-shot`
-lambda, thus ``h`` will be allocated *for each* call of ``g``, whereas ``f`` and
-``g`` are only allocated once. Therefore the lift is a net loss.
+in ``f`` and one was gained in ``h``. However, ``g`` is a :term:`multi-shot
+lambda`, thus ``h`` will be allocated *for each* call of ``g``, whereas ``f``
+and ``g`` are only allocated once. Therefore the lift is a net loss.
 
 This example illustrates how tricky good lifts can be and especially for hot
 loops. In general, you should try to train your eye to determine when to

@@ -8,17 +8,16 @@
 Eventlog
 ========
 
-`Eventlog
-<https://downloads.haskell.org/ghc/latest/docs/users_guide/runtime_control.html#rts-eventlog>`_
-is a GHC runtime system feature that logs events at runtime of a compiled
-program. It provides runtime information on the heap, the garbage collector, the
-scheduler, and arbitrary events that a user inserts into their own code.
-Eventlog is a versatile profiling tool, and should be one of the first tools in
-the profiling toolbox you reach for. Use eventlog when you are just beginning to
-diagnose the problem and are gathering data. Specifically when you want to
-inspect the heap or some other subsystem, such as the garbage collector. This
-chapter walks through using eventlog to inspect a small program that suffers
-from :ref:`Excessive Pointer Chasing`. By the end of the chapter you should
+:userGuide:`Eventlog <runtime_control.html#rts-eventlog>` is a GHC runtime
+system feature that logs events at runtime of a compiled program. It provides
+runtime information on the heap, the garbage collector, the scheduler, and
+arbitrary events that a user inserts into their own code. Eventlog is a
+versatile profiling tool, and should be one of the first tools in the profiling
+toolbox you reach for. Use eventlog when you are just beginning to diagnose the
+problem and are gathering data. Specifically when you want to inspect the heap
+or some other subsystem, such as the garbage collector. This chapter walks
+through using eventlog to inspect a small program that suffers from
+:ref:`Excessive Pointer Chasing <canonical-pointer-chasing>`. By the end of the chapter you should
 understand:
 
 #. What information can you retrieve by using eventlog.
@@ -56,15 +55,15 @@ define and track their own events using the base functions `traceEvent
 When should I use Eventlog
 --------------------------
 
-Eventlog is most useful when you need to :ref:`Characterize the Problem`. It
-yields runtime information on the specific subsystems the program relies on.
-Thus, it allows you to drill down into the behavior of the garbage collector,
-the scheduler, the heap and so. For example, using the flag ``+RTS -lg`` you can
-collect the ``CONC_MARK_BEGIN`` and ``CONC_MARK_END`` events which log the
-beginning and end of the concurrent garbage collectors marking phase. Similarly,
-you can collect ``MEM_RETURN`` which provides information about the current
-allocation of megablocks, attempts to return them to the operating system, and
-heap fragmentation.
+Eventlog is most useful when you need to :ref:`Characterize the Problem
+<characterize-the-problem>`. It yields runtime information on the specific
+subsystems the program relies on. Thus, it allows you to drill down into the
+behavior of the garbage collector, the scheduler, the heap and so. For example,
+using the flag ``+RTS -lg`` you can collect the ``CONC_MARK_BEGIN`` and
+``CONC_MARK_END`` events which log the beginning and end of the concurrent
+garbage collectors marking phase. Similarly, you can collect ``MEM_RETURN``
+which provides information about the current allocation of megablocks, attempts
+to return them to the operating system, and heap fragmentation.
 
 
 The Running Example

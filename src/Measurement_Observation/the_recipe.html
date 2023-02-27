@@ -44,6 +44,22 @@
   <div class="links">
     <navlinks class="can-hide">
 
+  
+    <div class="nav-item">
+      <a href="../../contents.html#haskell-optimization-handbook"
+         class="nav-link ">
+         Table of Contents
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../contents.html#indices-and-tables"
+         class="nav-link ">
+         indices and tables
+      </a>
+    </div>
+  
+
 
 
     </navlinks>
@@ -57,6 +73,22 @@
           
           <navlinks>
             
+
+  
+    <div class="nav-item">
+      <a href="../../contents.html#haskell-optimization-handbook"
+         class="nav-link ">
+         Table of Contents
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../contents.html#indices-and-tables"
+         class="nav-link ">
+         indices and tables
+      </a>
+    </div>
+  
 
 
 
@@ -101,6 +133,33 @@
           <li class="toctree-l1 ">
             
               <a href="../Optimizations/index.html" class="reference internal ">Optimizations</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../Case_Studies/index.html" class="reference internal ">Case Studies</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../contents.html#indices-and-tables">indices and tables</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../glossary.html" class="reference internal ">Glossary</a>
             
 
             
@@ -181,7 +240,7 @@ problem.</p></li>
 </ol>
 </section>
 <section id="characterize-the-problem">
-<h2><span class="section-number">2.1.2. </span>Characterize the Problem<a class="headerlink" href="#characterize-the-problem" title="Permalink to this heading">¶</a></h2>
+<span id="id1"></span><h2><span class="section-number">2.1.2. </span>Characterize the Problem<a class="headerlink" href="#characterize-the-problem" title="Permalink to this heading">¶</a></h2>
 <p>The first step to solving any kind of problem is characterization. The goal of
 this step is to observe how the problem <em>presents</em> itself in the system in terms
 of the sub-systems the system uses. No phenomena exists without leaving a trail
@@ -205,7 +264,7 @@ the git logs and begin bisecting!</p></li>
 </ol>
 <section id="precisely-restate-the-problem">
 <h3><span class="section-number">2.1.2.1. </span>Precisely Restate the Problem<a class="headerlink" href="#precisely-restate-the-problem" title="Permalink to this heading">¶</a></h3>
-<p>With these questions in mind, the next step is to gather data <a class="footnote-reference brackets" href="#id3" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> . You want to
+<p>With these questions in mind, the next step is to gather data <a class="footnote-reference brackets" href="#id4" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> . You want to
 gather enough data to be able to precisely describe the problem in terms of
 metrics your system cares about. For example, in a high performance application
 our system likely cares about any decrease in instructions per cycle (IPC) of
@@ -342,7 +401,7 @@ hypothesis we learn where runtime is spent, and what is stored in the cache.</p>
 <p>Now that you have a hypothesis, a hypothetical failure mode and a minimal test
 case you can begin testing. Each change made to your code should be in pursuit
 of validating or invalidating the hypothesis. Do your best to resist the urge to
-begin shotgun debugging! <a class="footnote-reference brackets" href="#id4" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> The work flow should be:</p>
+begin shotgun debugging! <a class="footnote-reference brackets" href="#id5" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> The work flow should be:</p>
 <ol class="arabic simple">
 <li><p>Review the hypothesis and predict the response. State “if the hypothesis is
 true, then <code class="docutils literal notranslate"><span class="pre">Foo</span></code> should happen, or I should observe <code class="docutils literal notranslate"><span class="pre">Bar</span></code>”.</p></li>
@@ -359,13 +418,13 @@ hypothesis.</p></li>
 <section id="summary">
 <h2><span class="section-number">2.1.7. </span>Summary<a class="headerlink" href="#summary" title="Permalink to this heading">¶</a></h2>
 <aside class="footnote-list brackets">
-<aside class="footnote brackets" id="id3" role="note">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<aside class="footnote brackets" id="id4" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">1</a><span class="fn-bracket">]</span></span>
 <p>Be sure to have a reproducible testing environment setup before you begin
 gathering data. <a class="reference internal" href="../Preliminaries/repeatable_measurements.html#repeatable-measurements"><span class="std std-ref">Setting up a Reproducible Test Environment</span></a></p>
 </aside>
-<aside class="footnote brackets" id="id4" role="note">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<aside class="footnote brackets" id="id5" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">2</a><span class="fn-bracket">]</span></span>
 <p>Shotgun debugging is usually an indication that you have not properly
 characterized the problem. The need to shotgun debug comes from not
 having identified the failure mode of the problem yet. In essence, when

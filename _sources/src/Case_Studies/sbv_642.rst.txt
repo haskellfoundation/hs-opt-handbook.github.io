@@ -1,0 +1,4 @@
+.. _SBV642:
+
+SBV and the Bizarre GHC Regression
+==================================

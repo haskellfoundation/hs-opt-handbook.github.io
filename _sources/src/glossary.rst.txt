@@ -14,10 +14,20 @@ Glossary
 
       A Boxed value is a value that is represented by a pointer to the heap.
 
+   Cardinality Analysis
+
+      A static analysis that GHC performs to determine:
+      #. How many times a lambda-expression is called.
+      #. Which components of a data structure are never evaluated.
+      #. How many times a particular thunk is evaluated.
+
+      See :cite:t:`callArityVsDemandAnalysis` and :cite:t:`hoCardinality` for
+      more.
+
    Closure
 
-      A closure is value that associates a function with an environment, where
-      the environment maps every free variable in the function with a value or
+      A closure is value that pairs a function with an environment, where the
+      environment maps every free variable in the function with a value or
       reference to which the free variable was bound when the closure was
       created. Closure's are the canonical way to realize lexical scoping in
       languages with first-class functions, such a Haskell. See `the wikipedia
@@ -139,9 +149,9 @@ Glossary
       Every heap allocated object in the runtime system keeps an information
       table that stores data such as: the object type (function, data
       constructor, thunk etc.) before the payload of the object. This is called
-      the info table. See :cite:t:`pointerTaggingLaziness` and the `wiki
-      <https://gitlab.haskell.org/ghc/ghc/-/wikis/commentary/rts/storage/heap-objects#info-tables>`_
-      for more details.
+      the info table. See :cite:t:`pointerTaggingLaziness` and the
+      :ghcWiki:`wiki <commentary/rts/storage/heap-objects#info-tables>` for more
+      details.
 
    Join Point :  Optimization
 
@@ -167,15 +177,15 @@ Glossary
       avoid these problems and are particularly relevant for Stream
       :term:`Fusion` performance.
 
-    Known Function
+   Known Function
 
-      A known function is a function in the STG machine of which GHC statically
-      knows the :term:`Entry Code` pointer and the :term:`Arity` of. This means
-      that the function binding site is statically visible, that is, the
-      function is :term:`Top-Level`, or the function is bound by an enclosing
-      ``let``. With this information the STG machine can use a faster function
-      application procedure because the function pointer does not need to be
-      scrutinized. See also :term:`Unknown Function`.
+     A known function is a function in the STG machine of which GHC statically
+     knows the :term:`Entry Code` pointer and the :term:`Arity` of. This means
+     that the function binding site is statically visible, that is, the
+     function is :term:`Top-Level`, or the function is bound by an enclosing
+     ``let``. With this information the STG machine can use a faster function
+     application procedure because the function pointer does not need to be
+     scrutinized. See also :term:`Unknown Function`.
 
 
    Levity Polymorphism
@@ -199,15 +209,38 @@ Glossary
       type is a set with three values: ``True``, ``False``, and :math:`\bot`.
       Therefore ``Bool`` is a Lifted type.
 
+   Multi-Shot Lambda
+
+      A multi-shot lambda is a lambda that is called *more* than once. In
+      contrast to a :term:`one-shot lambda`, a multi-shot lambda has a high risk
+      of destroying :term:`sharing` if subject to certain optimizations, such as
+      Inlining. GHC determines whether a lambda is one-shot or multi-shot during
+      :term:`Cardinality Analysis`. See :cite:t:`hoCardinality` and
+      :cite:t:`callArityVsDemandAnalysis` for more.
+
+   One-Shot Lambda
+
+      A one-shot lambda is a lambda that is called *exactly* once. These
+      lambda's are common in functional programming and can be subject to more
+      aggressive optimizations due to their one-shot nature. For example, there
+      is no risk of losing :term:`sharing` in a one-shot lambda as a result of
+      inlining free variables or floating let expressions *into* the lambda;
+      something that GHC usually avoids. See :cite:t:`hoCardinality` and
+      :cite:t:`callArityVsDemandAnalysis` for more background. See the magic
+      `oneShot
+      <https://hackage.haskell.org/package/base-4.17.0.0/docs/GHC-Exts.html#v:oneShot>`_
+      function in `GHC.Exts
+      <https://hackage.haskell.org/package/base-4.17.0.0/docs/GHC-Exts.html>`_
+      for an unsafe way to instruct GHC that you have a one-shot lambda.
+
    PAP
 
       A PAP is a partial application. PAPs are heap objects and thus a type of
       closure that represents a function applied to *too few* arguments. PAPs
       should never be entered, and are only applied using the generic apply
       functions in the STG machine. See the file ``rts/Apply.cmm`` in GHC or the
-      `heap object
-      <https://gitlab.haskell.org/ghc/ghc/-/wikis/commentary/rts/storage/heap-objects>`_
-      wiki page for more.
+      :ghcWiki:`heap object <commentary/rts/storage/heap-objects>` wiki page for
+      more.
 
    Pinned : Memory
 
@@ -220,6 +253,23 @@ Glossary
      <https://gitlab.haskell.org/ghc/ghc/-/wikis/commentary/rts/storage/gc/pinned>`_
      for more.
 
+   Sharing
+
+      Consider the following program:
+
+      .. code-block:: haskell
+
+         foo :: Int -> Int
+         foo n = let x = [1..n]
+                     in zip (fmap (* (last x)) x) x
+
+      We say that ``x`` is *shared* in this program because each of the three
+      references of ``x`` refer to the ``x`` defined in the ``let``. If ``x`` is
+      not shared that the list ``[1..n]`` would be allocated *for each*
+      reference of ``x``. Thus, sharing is fundamental to performance oriented
+      Haskell because it reduces allocations, leverages call-by-need, and saves
+      work.
+
    Thunk
 
       A thunk is a special kind of :term:`Closure` that represents a suspended
@@ -227,10 +277,9 @@ Glossary
       provides Haskell's laziness. See :cite:t:`SpinelessTaglessGMachine`
       Section 3.1.2 for more details.
 
-   Top-level binding
+   Top-Level
 
-      A top level binding is any binding that exists in the most outer-most or
-      global scope of the program.
+      The most outer-most or global scope of the program.
 
    Unboxed : Levity
 

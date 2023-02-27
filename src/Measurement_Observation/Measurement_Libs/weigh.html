@@ -44,6 +44,22 @@
   <div class="links">
     <navlinks class="can-hide">
 
+  
+    <div class="nav-item">
+      <a href="../../../contents.html#haskell-optimization-handbook"
+         class="nav-link ">
+         Table of Contents
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../contents.html#indices-and-tables"
+         class="nav-link ">
+         indices and tables
+      </a>
+    </div>
+  
+
 
 
     </navlinks>
@@ -57,6 +73,22 @@
           
           <navlinks>
             
+
+  
+    <div class="nav-item">
+      <a href="../../../contents.html#haskell-optimization-handbook"
+         class="nav-link ">
+         Table of Contents
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../contents.html#indices-and-tables"
+         class="nav-link ">
+         indices and tables
+      </a>
+    </div>
+  
 
 
 
@@ -107,6 +139,33 @@
           </li>
 
         
+          <li class="toctree-l1 ">
+            
+              <a href="../../Case_Studies/index.html" class="reference internal ">Case Studies</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../contents.html#indices-and-tables">indices and tables</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../../glossary.html" class="reference internal ">Glossary</a>
+            
+
+            
+          </li>
+
+        
       </ul>
     </div>
   
@@ -143,7 +202,7 @@
           <div class="content" role="main" v-pre>
             
   <section id="weigh">
-<span id="id1"></span><h1><span class="section-number">2.5.2. </span><span class="incremental">Weigh</span><a class="headerlink" href="#weigh" title="Permalink to this heading">¶</a></h1>
+<span id="weigh-chapter"></span><h1><span class="section-number">2.5.2. </span><span class="incremental">Weigh</span><a class="headerlink" href="#weigh" title="Permalink to this heading">¶</a></h1>
 <p><a class="reference external" href="https://hackage.haskell.org/package/weigh">Weigh</a> is a tiny Haskell package
 to measure allocations of data constructors and functions. It provides a similar
 interface to <a class="reference internal" href="criterion.html#criterion"><span class="std std-ref">Criterion, Gauge, and Tasty-Bench</span></a> and is useful to confirm
@@ -280,26 +339,25 @@ allocation. For example, consider this program:</p>
 <p>One might <a class="reference internal" href="../Direct_Observation/size.html#memory-footprint"><span class="std std-ref">expect</span></a> <code class="docutils literal notranslate"><span class="pre">()</span></code>, <code class="docutils literal notranslate"><span class="pre">1</span></code>, and <code class="docutils literal notranslate"><span class="pre">True</span></code> to be 0,
 2 and 0 machine words respectively. However, this is not the case; here is the
 output from weigh:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>  Running <span class="m">1</span> benchmarks...
-  Benchmark weigh: RUNNING...
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Running <span class="m">1</span> benchmarks...
+Benchmark weigh: RUNNING...
 
-  Case        Allocated  GCs
-  <span class="o">()</span>                  <span class="m">0</span>    <span class="m">0</span>
-  <span class="m">1</span>                   <span class="m">0</span>    <span class="m">0</span>
-  True                <span class="m">0</span>    <span class="m">0</span>
-  <span class="o">[</span><span class="m">0</span>..3<span class="o">]</span>            <span class="m">192</span>    <span class="m">0</span>
-  <span class="o">[</span><span class="m">0</span>,1,2,3<span class="o">]</span>           <span class="m">0</span>    <span class="m">0</span>
-  Foo0                <span class="m">0</span>    <span class="m">0</span>
-  Foo1-func          <span class="m">16</span>    <span class="m">0</span>
-  Foo1-value          <span class="m">0</span>    <span class="m">0</span>
-  one               <span class="m">144</span>    <span class="m">0</span>
-  Foo2              <span class="m">336</span>    <span class="m">0</span>
-  Benchmark weigh: FINISH
-
-Notice that built <span class="k">in</span> types such as <span class="sb">``</span><span class="o">()</span><span class="sb">``</span> and <span class="sb">``</span>True<span class="sb">``</span> <span class="k">do</span> not <span class="k">do</span> any
+Case        Allocated  GCs
+<span class="o">()</span>                  <span class="m">0</span>    <span class="m">0</span>
+<span class="m">1</span>                   <span class="m">0</span>    <span class="m">0</span>
+True                <span class="m">0</span>    <span class="m">0</span>
+<span class="o">[</span><span class="m">0</span>..3<span class="o">]</span>            <span class="m">192</span>    <span class="m">0</span>
+<span class="o">[</span><span class="m">0</span>,1,2,3<span class="o">]</span>           <span class="m">0</span>    <span class="m">0</span>
+Foo0                <span class="m">0</span>    <span class="m">0</span>
+Foo1-func          <span class="m">16</span>    <span class="m">0</span>
+Foo1-value          <span class="m">0</span>    <span class="m">0</span>
+one               <span class="m">144</span>    <span class="m">0</span>
+Foo2              <span class="m">336</span>    <span class="m">0</span>
+Benchmark weigh: FINISH
 </pre></div>
 </div>
-<p>allocation. This is because these types are <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/wikis/commentary/compiler/wired-in">wired-in</a> to
+<p>Notice that built in types such as <code class="docutils literal notranslate"><span class="pre">()</span></code> and <code class="docutils literal notranslate"><span class="pre">True</span></code> do not do any allocation.
+This is because these types are <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/wikis/commentary/compiler/wired-in">wired-in</a> to
 GHC, which means that there is a single shared <code class="docutils literal notranslate"><span class="pre">()</span></code> in GHC, so our call to
 <code class="docutils literal notranslate"><span class="pre">value</span> <span class="pre">&quot;()&quot;</span> <span class="pre">()</span></code> performs no allocation because it references the shared
 <code class="docutils literal notranslate"><span class="pre">()</span></code>. This is also true for <code class="docutils literal notranslate"><span class="pre">True</span></code>. <code class="docutils literal notranslate"><span class="pre">1</span></code> performs no allocation <em>during the
@@ -477,7 +535,7 @@ constructors (five vs nine). We find that is not the case, instead
 Furthermore, a value of <code class="docutils literal notranslate"><span class="pre">LotsOfInts2</span></code> allocates 9 words (72 bytes), which is 6
 more words than expected <em>and</em> indicates that the value was not detected as a
 CAF. What we’re observing is the benefits of pointer-tagging optimizations (see
-<span id="id3">Marlow <em>et al.</em> [<a class="reference internal" href="../../../contents.html#id11" title="Simon Marlow, Alexey Rodriguez Yakushev, and Simon Peyton Jones. Faster laziness using dynamic pointer tagging. SIGPLAN Not., 42(9):277–288, oct 2007. URL: https://doi.org/10.1145/1291220.1291194, doi:10.1145/1291220.1291194.">2</a>]</span>). When a datatype has 8 or less (4 or less on
+<span id="id2">Marlow <em>et al.</em> [<a class="reference internal" href="../../../contents.html#id11" title="Simon Marlow, Alexey Rodriguez Yakushev, and Simon Peyton Jones. Faster laziness using dynamic pointer tagging. SIGPLAN Not., 42(9):277–288, oct 2007. URL: https://doi.org/10.1145/1291220.1291194, doi:10.1145/1291220.1291194.">2</a>]</span>). When a datatype has 8 or less (4 or less on
 32-bit machines) constructors GHC uses the last 3-bits (2-bits on 32-bit) of the
 constructor’s pointer to store information about the constructor. This produces
 a significant speedup and lowers memory costs in many ways: It allows the

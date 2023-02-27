@@ -44,6 +44,22 @@
   <div class="links">
     <navlinks class="can-hide">
 
+  
+    <div class="nav-item">
+      <a href="../../../contents.html#haskell-optimization-handbook"
+         class="nav-link ">
+         Table of Contents
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../contents.html#indices-and-tables"
+         class="nav-link ">
+         indices and tables
+      </a>
+    </div>
+  
+
 
 
     </navlinks>
@@ -57,6 +73,22 @@
           
           <navlinks>
             
+
+  
+    <div class="nav-item">
+      <a href="../../../contents.html#haskell-optimization-handbook"
+         class="nav-link ">
+         Table of Contents
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../contents.html#indices-and-tables"
+         class="nav-link ">
+         indices and tables
+      </a>
+    </div>
+  
 
 
 
@@ -107,6 +139,33 @@
           </li>
 
         
+          <li class="toctree-l1 ">
+            
+              <a href="../../Case_Studies/index.html" class="reference internal ">Case Studies</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../contents.html#indices-and-tables">indices and tables</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../../glossary.html" class="reference internal ">Glossary</a>
+            
+
+            
+          </li>
+
+        
       </ul>
     </div>
   
@@ -144,16 +203,16 @@
             
   <span class="target" id="eventlog-chapter"></span><section id="eventlog">
 <h1><span class="section-number">2.2.2. </span>Eventlog<a class="headerlink" href="#eventlog" title="Permalink to this heading">¶</a></h1>
-<p><a class="reference external" href="https://downloads.haskell.org/ghc/latest/docs/users_guide/runtime_control.html#rts-eventlog">Eventlog</a>
-is a GHC runtime system feature that logs events at runtime of a compiled
-program. It provides runtime information on the heap, the garbage collector, the
-scheduler, and arbitrary events that a user inserts into their own code.
-Eventlog is a versatile profiling tool, and should be one of the first tools in
-the profiling toolbox you reach for. Use eventlog when you are just beginning to
-diagnose the problem and are gathering data. Specifically when you want to
-inspect the heap or some other subsystem, such as the garbage collector. This
-chapter walks through using eventlog to inspect a small program that suffers
-from <span class="xref std std-ref">Excessive Pointer Chasing</span>. By the end of the chapter you should
+<p><a class="reference external" href="https://downloads.haskell.org/~ghc/9.2.4/docs/html/users_guide/runtime_control.html#rts-eventlog">Eventlog</a> is a GHC runtime
+system feature that logs events at runtime of a compiled program. It provides
+runtime information on the heap, the garbage collector, the scheduler, and
+arbitrary events that a user inserts into their own code. Eventlog is a
+versatile profiling tool, and should be one of the first tools in the profiling
+toolbox you reach for. Use eventlog when you are just beginning to diagnose the
+problem and are gathering data. Specifically when you want to inspect the heap
+or some other subsystem, such as the garbage collector. This chapter walks
+through using eventlog to inspect a small program that suffers from
+<a class="reference internal" href="../../Preliminaries/what_makes_fast_hs.html#canonical-pointer-chasing"><span class="std std-ref">Excessive Pointer Chasing</span></a>. By the end of the chapter you should
 understand:</p>
 <ol class="arabic simple">
 <li><p>What information can you retrieve by using eventlog.</p></li>
@@ -186,15 +245,14 @@ define and track their own events using the base functions <a class="reference e
 </section>
 <section id="when-should-i-use-eventlog">
 <h2><span class="section-number">2.2.2.4. </span>When should I use Eventlog<a class="headerlink" href="#when-should-i-use-eventlog" title="Permalink to this heading">¶</a></h2>
-<p>Eventlog is most useful when you need to <span class="xref std std-ref">Characterize the Problem</span>. It
-yields runtime information on the specific subsystems the program relies on.
-Thus, it allows you to drill down into the behavior of the garbage collector,
-the scheduler, the heap and so. For example, using the flag <code class="docutils literal notranslate"><span class="pre">+RTS</span> <span class="pre">-lg</span></code> you can
-collect the <code class="docutils literal notranslate"><span class="pre">CONC_MARK_BEGIN</span></code> and <code class="docutils literal notranslate"><span class="pre">CONC_MARK_END</span></code> events which log the
-beginning and end of the concurrent garbage collectors marking phase. Similarly,
-you can collect <code class="docutils literal notranslate"><span class="pre">MEM_RETURN</span></code> which provides information about the current
-allocation of megablocks, attempts to return them to the operating system, and
-heap fragmentation.</p>
+<p>Eventlog is most useful when you need to <a class="reference internal" href="../the_recipe.html#characterize-the-problem"><span class="std std-ref">Characterize the Problem</span></a>. It yields runtime information on the specific
+subsystems the program relies on. Thus, it allows you to drill down into the
+behavior of the garbage collector, the scheduler, the heap and so. For example,
+using the flag <code class="docutils literal notranslate"><span class="pre">+RTS</span> <span class="pre">-lg</span></code> you can collect the <code class="docutils literal notranslate"><span class="pre">CONC_MARK_BEGIN</span></code> and
+<code class="docutils literal notranslate"><span class="pre">CONC_MARK_END</span></code> events which log the beginning and end of the concurrent
+garbage collectors marking phase. Similarly, you can collect <code class="docutils literal notranslate"><span class="pre">MEM_RETURN</span></code>
+which provides information about the current allocation of megablocks, attempts
+to return them to the operating system, and heap fragmentation.</p>
 </section>
 <section id="the-running-example">
 <h2><span class="section-number">2.2.2.5. </span>The Running Example<a class="headerlink" href="#the-running-example" title="Permalink to this heading">¶</a></h2>
@@ -327,7 +385,7 @@ following heap profile:</p>
 <p>The heap profile is not a static image! Try clicking through the
 interactive output from eventlog2html along with the text.</p>
 </div>
-<p>The heap profile is similar to profiles generated by <span class="xref std std-ref">traditional tools</span> with some notable exceptions. First, this is a more interactive
+<p>The heap profile is similar to profiles generated by <a class="reference internal" href="../../Optimizations/GHC_tech/ghc_flags.html#ghc-flags"><span class="std std-ref">traditional tools</span></a> with some notable exceptions. First, this is a more interactive
 plot; for example, you can hover your mouse over a section of the profile and a
 popup will describe the corresponding description from the legend. You can also
 select an element on the legend to filter the plot to only that element. Second,

@@ -45,6 +45,22 @@
   <div class="links">
     <navlinks class="can-hide">
 
+  
+    <div class="nav-item">
+      <a href="../../contents.html#haskell-optimization-handbook"
+         class="nav-link ">
+         Table of Contents
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../contents.html#indices-and-tables"
+         class="nav-link ">
+         indices and tables
+      </a>
+    </div>
+  
+
 
 
     </navlinks>
@@ -58,6 +74,22 @@
           
           <navlinks>
             
+
+  
+    <div class="nav-item">
+      <a href="../../contents.html#haskell-optimization-handbook"
+         class="nav-link ">
+         Table of Contents
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../contents.html#indices-and-tables"
+         class="nav-link ">
+         indices and tables
+      </a>
+    </div>
+  
 
 
 
@@ -102,6 +134,33 @@
           <li class="toctree-l1 ">
             
               <a href="../Optimizations/index.html" class="reference internal ">Optimizations</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../Case_Studies/index.html" class="reference internal ">Case Studies</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../contents.html#indices-and-tables">indices and tables</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../glossary.html" class="reference internal ">Glossary</a>
             
 
             
@@ -354,10 +413,10 @@ Excessive closure allocation is subtle for two reasons: first, because GHC is
 typically very good at optimizing it away via <a class="reference internal" href="../glossary.html#term-Let-Floating"><span class="xref std std-term">Let Floating</span></a> most
 Haskeller’s never have to confront it (which is a good indication of GHC’s
 quality); second, in order to observe it, the programmer must track the memory
-allocation of their program across many functions or even modules, which is not
-a common experience when writing Haskell. For our purposes’, we’ll inspect
-examples that GHC should have no problem finding and optimizing. See
-<span class="xref std std-ref">Case_Study_SBV</span></p>
+allocation of their program across many functions, modules and packages, which
+is not a common experience when writing Haskell. For our purposes’, we’ll
+inspect examples that GHC should have no problem finding and optimizing. See the
+<a class="reference internal" href="../Case_Studies/sbv_572.html#sbv572"><span class="std std-ref">Impact of seq Removal on SBV’s cache</span></a> case study for more.</p>
 <p>for an example of excessive memory allocation in a widely used library. While
 GHC is good at optimizing these cases, becoming familiar with these code
 transformations is beneficial; it trains you to start thinking in terms of

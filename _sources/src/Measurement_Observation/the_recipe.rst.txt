@@ -46,6 +46,7 @@ definition we present them here instead of in the :ref:`glossary`:
    program which constitutes *normal operation*. This is how you know you have a
    problem.
 
+.. _characterize-the-problem:
 
 Characterize the Problem
 ------------------------

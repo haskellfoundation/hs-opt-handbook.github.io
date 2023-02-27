@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-      <title>1. Preliminaries</title>
+      <title>4.1. Impact of Seq Removal on SBV’s Internal Cache</title>
     
           <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
           <link rel="stylesheet" href="../../_static/theme.css " type="text/css" />
@@ -28,8 +28,8 @@
     
   <link rel="index" title="Index" href="../../genindex.html" />
   <link rel="search" title="Search" href="../../search.html" />
-  <link rel="next" title="1.1. How to Use This Book" href="how_to_use.html" />
-  <link rel="prev" title="Haskell Optimization Handbook" href="../../contents.html" /> 
+  <link rel="next" title="4.2. SBV and the Bizarre GHC Regression" href="sbv_642.html" />
+  <link rel="prev" title="4. Case Studies" href="index.html" /> 
   </head>
 
   <body>
@@ -47,7 +47,7 @@
   
     <div class="nav-item">
       <a href="../../contents.html#haskell-optimization-handbook"
-         class="nav-link  router-link-active">
+         class="nav-link ">
          Table of Contents
       </a>
     </div>
@@ -77,7 +77,7 @@
   
     <div class="nav-item">
       <a href="../../contents.html#haskell-optimization-handbook"
-         class="nav-link  router-link-active">
+         class="nav-link ">
          Table of Contents
       </a>
     </div>
@@ -110,19 +110,13 @@
       <p class="caption">
         <span class="caption-text"><a href="../../contents.html#haskell-optimization-handbook">Table of Contents</a></span>
       </p>
-      <ul class="current">
+      <ul class="">
         
-          <li class="toctree-l1 current">
+          <li class="toctree-l1 ">
             
-              <a href="#" class="reference internal current">Preliminaries</a>
+              <a href="../Preliminaries/index.html" class="reference internal ">Preliminaries</a>
             
 
-            
-              <ul>
-                
-                  <li class="toctree-l2"><a href="#preliminaries" class="reference internal">Preliminaries</a></li>
-                
-              </ul>
             
           </li>
 
@@ -147,7 +141,7 @@
         
           <li class="toctree-l1 ">
             
-              <a href="../Case_Studies/index.html" class="reference internal ">Case Studies</a>
+              <a href="index.html" class="reference internal ">Case Studies</a>
             
 
             
@@ -184,18 +178,20 @@
   <ul class="breadcrumbs">
     <li><a href="../../contents.html">Docs</a> &raquo;</li>
     
-    <li><span class="section-number">1. </span>Preliminaries</li>
+      <li><a href="index.html"><span class="section-number">4. </span>Case Studies</a> &raquo;</li>
+    
+    <li><span class="section-number">4.1. </span>Impact of Seq Removal on SBV’s Internal Cache</li>
   </ul>
   
 
   <ul class="page-nav">
   <li class="prev">
-    <a href="../../contents.html"
-       title="previous chapter">← Haskell Optimization Handbook</a>
+    <a href="index.html"
+       title="previous chapter">← <span class="section-number">4. </span>Case Studies</a>
   </li>
   <li class="next">
-    <a href="how_to_use.html"
-       title="next chapter"><span class="section-number">1.1. </span>How to Use This Book →</a>
+    <a href="sbv_642.html"
+       title="next chapter"><span class="section-number">4.2. </span>SBV and the Bizarre GHC Regression →</a>
   </li>
 </ul>
   
@@ -203,15 +199,8 @@
 <hr>
           <div class="content" role="main" v-pre>
             
-  <section id="preliminaries">
-<h1><span class="section-number">1. </span>Preliminaries<a class="headerlink" href="#preliminaries" title="Permalink to this heading">¶</a></h1>
-<div class="toctree-wrapper compound" id="id1">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="how_to_use.html">1.1. How to Use This Book</a></li>
-<li class="toctree-l1"><a class="reference internal" href="what_makes_fast_hs.html">1.2. The Programs of Consistent Lethargy</a></li>
-<li class="toctree-l1"><a class="reference internal" href="repeatable_measurements.html">1.3. Setting up a Reproducible Test Environment</a></li>
-</ul>
-</div>
+  <section id="impact-of-seq-removal-on-sbv-s-internal-cache">
+<span id="sbv572"></span><h1><span class="section-number">4.1. </span>Impact of Seq Removal on SBV’s Internal Cache<a class="headerlink" href="#impact-of-seq-removal-on-sbv-s-internal-cache" title="Permalink to this heading">¶</a></h1>
 </section>
 
 
@@ -219,12 +208,12 @@
           <div class="page-nav">
             <div class="inner"><ul class="page-nav">
   <li class="prev">
-    <a href="../../contents.html"
-       title="previous chapter">← Haskell Optimization Handbook</a>
+    <a href="index.html"
+       title="previous chapter">← <span class="section-number">4. </span>Case Studies</a>
   </li>
   <li class="next">
-    <a href="how_to_use.html"
-       title="next chapter"><span class="section-number">1.1. </span>How to Use This Book →</a>
+    <a href="sbv_642.html"
+       title="next chapter"><span class="section-number">4.2. </span>SBV and the Bizarre GHC Regression →</a>
   </li>
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2022-2023, Jeffrey Young (doyougnu).
