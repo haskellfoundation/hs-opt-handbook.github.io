@@ -1,4 +1,4 @@
 .. _SBV572:
 
-Impact of Seq Removal on SBV's Internal Cache
-=============================================
+:lightgrey:`Impact of Seq Removal on SBV's Internal Cache`
+==========================================================
