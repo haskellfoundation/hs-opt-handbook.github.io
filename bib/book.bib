@@ -261,6 +261,15 @@ isbn="978-3-540-39677-2"
   copyright = {arXiv.org perpetual, non-exclusive license}
 }
 
+@misc{callArityVsDemandAnalysis,
+  title = {Call Arity vs. Demand Analysis},
+  year = {2017},
+  month = aug,
+  author = {Sebastian Graf},
+  school = {Karlsruher Institut f{\"u}r Technologie (KIT)},
+  institution = {IPD Snelting},
+}
+
 @inproceedings{fastCurry,
 author = {Marlow, Simon and Jones, Simon Peyton},
 title = {Making a Fast Curry: Push/Enter vs. Eval/Apply for Higher-Order Languages},
@@ -276,4 +285,24 @@ pages = {4–15},
 numpages = {12},
 location = {Snow Bird, UT, USA},
 series = {ICFP '04}
+}
+
+@article{hoCardinality,
+author = {Sergey, Ilya and Vytiniotis, Dimitrios and Peyton Jones, Simon},
+title = {Modular, Higher-Order Cardinality Analysis in Theory and Practice},
+year = {2014},
+issue_date = {January 2014},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {49},
+number = {1},
+issn = {0362-1340},
+url = {https://doi.org/10.1145/2578855.2535861},
+doi = {10.1145/2578855.2535861},
+abstract = {Since the mid '80s, compiler writers for functional languages (especially lazy ones) have been writing papers about identifying and exploiting thunks and lambdas that are used only once. However it has proved difficult to achieve both power and simplicity in practice. We describe a new, modular analysis for a higher-order language, which is both simple and effective, and present measurements of its use in a full-scale, state of the art optimising compiler. The analysis finds many single-entry thunks and one-shot lambdas and enables a number of program optimisations.},
+journal = {SIGPLAN Not.},
+month = {jan},
+pages = {335–347},
+numpages = {13},
+keywords = {lazy evaluation, haskell, functional programming languages, compilers, static analysis, cardinality analysis, program optimisation, operational semantics, types and effects, thunks}
 }
