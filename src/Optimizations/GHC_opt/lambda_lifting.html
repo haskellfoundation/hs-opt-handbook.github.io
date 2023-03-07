@@ -204,11 +204,12 @@
   <span class="target" id="lambda-lifting-chapter"></span><section id="lambda-lifting">
 <h1><span class="section-number">3.2.3. </span><span class="incremental">Lambda Lifting</span><a class="headerlink" href="#lambda-lifting" title="Permalink to this heading">¶</a></h1>
 <p>Lambda Lifting <span id="id1">[<a class="reference internal" href="../../../contents.html#id12" title="Thomas Johnsson. Lambda lifting: transforming programs to recursive equations. In Jean-Pierre Jouannaud, editor, Functional Programming Languages and Computer Architecture, 190–203. Berlin, Heidelberg, 1985. Springer Berlin Heidelberg.">3</a>]</span> is a classic rewriting technique that
-that avoids excess closure allocations. It avoids closure allocation by moving
-local functions to the global scope of the program, and by adding parameters to
-the function definition to capture free variables. Thus, when a lifted function
-is called no heap allocation is needed because the lifted function no longer
-contains closures, rather it only references global names.</p>
+avoids excess closure allocations and removes free variables from a function. It
+avoids closure allocation by moving local functions out of an enclosing function
+to the <a class="reference internal" href="../../glossary.html#term-Top-Level"><span class="xref std std-term">top-level</span></a>. It then removes free variables by adding parameters to
+the lifted function to capture free variables. This chapter describes the lambda
+lifting transformation, describes how GHC implements the transformation and
+provides guidance for when to implement the transformation manually.</p>
 <section id="a-working-example">
 <h2><span class="section-number">3.2.3.1. </span>A Working Example<a class="headerlink" href="#a-working-example" title="Permalink to this heading">¶</a></h2>
 <p>Consider the following program <a class="footnote-reference brackets" href="#f1" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>:</p>
