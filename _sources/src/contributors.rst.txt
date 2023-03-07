@@ -18,10 +18,9 @@ Writers:
 Editors:
 
 - |jeff|
-- |sylvain|
-- Frank Staals (`https://fstaals.net/`)
-
 
 Reviewers:
 
 - |jeff|
+- |sylvain|
+- Frank Staals (`https://fstaals.net/`)

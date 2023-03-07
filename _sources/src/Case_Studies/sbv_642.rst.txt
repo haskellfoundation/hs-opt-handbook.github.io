@@ -1,4 +1,4 @@
 .. _SBV642:
 
-:lightgrey:`SBV and the Bizarre GHC Regression`
-===============================================
+SBV and the Bizarre GHC Regression
+==================================
