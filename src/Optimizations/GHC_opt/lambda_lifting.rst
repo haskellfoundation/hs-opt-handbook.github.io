@@ -8,11 +8,12 @@
 ================
 
 Lambda Lifting :cite:p:`lambdaLifting` is a classic rewriting technique that
-that avoids excess closure allocations. It avoids closure allocation by moving
-local functions to the global scope of the program, and by adding parameters to
-the function definition to capture free variables. Thus, when a lifted function
-is called no heap allocation is needed because the lifted function no longer
-contains closures, rather it only references global names.
+avoids excess closure allocations and removes free variables from a function. It
+avoids closure allocation by moving local functions out of an enclosing function
+to the :term:`top-level`. It then removes free variables by adding parameters to
+the lifted function to capture free variables. This chapter describes the lambda
+lifting transformation, describes how GHC implements the transformation and
+provides guidance for when to implement the transformation manually.
 
 A Working Example
 -----------------
