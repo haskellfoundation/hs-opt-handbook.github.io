@@ -114,7 +114,9 @@ second form is beneficial when there many calls of ``map`` on short lists.
    function parameters at each call site. This means that whether lambda lifting
    is a performance win or not depends on the usage pattern of the function as
    we have demonstrated. See :ref:`When to Manually Apply Lambda Lifting <when>`
-   for guidance on recognizing when your program may benefit.
+   for guidance on recognizing when your program may benefit. In general,
+   closure allocation is more expensive than pushing an extra parameter onto the
+   stack.
 
 
 How Lambda Lifting Works in GHC
