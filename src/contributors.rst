@@ -18,3 +18,4 @@ Reviewers:
 - Jeffrey Young `@doyougnu <https://github.com/doyougnu>`_
 - Sylvain Henry `@hsyl20 <https://hsyl20.fr/home/>`_
 - Frank Staals  `@noinia <https://fstaals.net/>`_
+- Andrew Lelechenko `@bodigrim <https://github.com/Bodigrim>`_
