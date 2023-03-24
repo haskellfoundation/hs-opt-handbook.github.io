@@ -26,6 +26,11 @@ by `Input Output Global <https://iohk.io/>`_.
 Release History
 ---------------
 
+* March/April, 2023
+
+  * :ref:`Klister Case Study <klister case study>` first draft finished.
+  * Add :ref:`Info-Table profiling <IPE chapter>` stub.
+
 * February, 2023
 
   * Lambda lifting chapter first draft finished.

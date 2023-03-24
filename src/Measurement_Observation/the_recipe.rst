@@ -2,11 +2,17 @@
 The Recipe
 ==========
 
+.. _Understand the System:
+
+.. _Don't think, look:
+
 .. warning::
 
-   This chapter is still under heavy revision. Please feel free to still read
-   through it, just know that it needs more love and care, and I (Jeff) had to
-   walk away in order to continue to make progress on it at some later date.
+   This chapter is going to be rewritten with reference to David Agan's
+   `Debugging book <https://debuggingrules.com/>`_. Until that time I have left
+   it intact in case it may be helpful. If you came here chasing a link to
+   ``understand the system`` or ``don't think, look`` then I refer you to his
+   book for the time being.
 
 
 This chapter presents a recipe for debugging performance regressions in Haskell.
