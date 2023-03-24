@@ -1,4 +1,4 @@
-.. _OneShot Monad Trick:
+.. _OneShot Monad Chapter:
 
 :lightgrey:`The OneShot Monad Trick`
 ====================================

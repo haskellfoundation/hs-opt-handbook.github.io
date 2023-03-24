@@ -8,5 +8,6 @@ Heap Profiling and Inspection : GHC Based Methods
 
    ghc_flags
    eventlog
+   info_table
    ghc_debug
    scopes

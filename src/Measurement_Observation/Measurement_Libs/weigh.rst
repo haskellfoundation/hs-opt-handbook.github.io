@@ -5,12 +5,12 @@
 
 `Weigh <https://hackage.haskell.org/package/weigh>`_ is a tiny Haskell package
 to measure allocations of data constructors and functions. It provides a similar
-interface to :ref:`Criterion, Gauge, and Tasty-Bench <Criterion>` and is useful to confirm
-that a data structure or function has the memory performance you anticipate it
-to have at *runtime*. ``Weigh`` is easy to setup and non-invasive; requiring no
-changes to source code. Thus, it is a good *initial* tool to use before trying
-more advanced methods with higher setup costs, such as :ref:`Cachegrind
-<Cachegrind>`.
+interface to :ref:`Criterion, Gauge, and Tasty-Bench <Tasty Chapter>` and is
+useful to confirm that a data structure or function has the memory performance
+you anticipate it to have at *runtime*. ``Weigh`` is easy to setup and
+non-invasive; requiring no changes to source code. Thus, it is a good *initial*
+tool to use before trying more advanced methods with higher setup costs, such as
+:ref:`Cachegrind <Cachegrind>`.
 
 
 Requirements

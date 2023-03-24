@@ -24,7 +24,7 @@ understand:
 #. When to use eventlog.
 #. How to build your program to use eventlog.
 #. How to visualize eventlog information.
-#. How to tune eventlog to inspect specific subsystems.
+#. How to tune eventlog to inspect specific sub-system.
 #. How to tune eventlog to inspect specific pieces of code.
 
 Requirements
@@ -57,7 +57,7 @@ When should I use Eventlog
 
 Eventlog is most useful when you need to :ref:`Characterize the Problem
 <characterize-the-problem>`. It yields runtime information on the specific
-subsystems the program relies on. Thus, it allows you to drill down into the
+sub-system the program relies on. Thus, it allows you to drill down into the
 behavior of the garbage collector, the scheduler, the heap and so. For example,
 using the flag ``+RTS -lg`` you can collect the ``CONC_MARK_BEGIN`` and
 ``CONC_MARK_END`` events which log the beginning and end of the concurrent
