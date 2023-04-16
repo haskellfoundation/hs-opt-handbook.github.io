@@ -266,7 +266,7 @@ While
 GHC is good at optimizing these cases, becoming familiar with these code
 transformations is beneficial; it trains you to start thinking in terms of
 memory allocation when reading or writing Haskell code, and teaches you to
-perform these optimizations manually when GHC fails to optimization.
+perform these optimizations manually when GHC fails to optimize.
 
 
 How does Excessive Closure Allocation Slow Down Runtime Performance
