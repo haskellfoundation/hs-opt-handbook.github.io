@@ -257,12 +257,12 @@ quality); second, in order to observe it, the programmer must track the memory
 allocation of their program across many functions, modules and packages, which
 is not a common experience when writing Haskell. For our purposes', we'll
 inspect examples that GHC should have no problem finding and optimizing. See the
-:ref:`Impact of seq Removal on SBV's cache <SBV572>` case study for more.
+:ref:`Impact of seq Removal on SBV's cache <SBV572>` case study for an example of excessive memory allocation in a widely used library. 
 
 .. todo::
    Not yet written, see `#18 <https://github.com/input-output-hk/hs-opt-handbook.github.io/issues/18>`_
 
-for an example of excessive memory allocation in a widely used library. While
+While
 GHC is good at optimizing these cases, becoming familiar with these code
 transformations is beneficial; it trains you to start thinking in terms of
 memory allocation when reading or writing Haskell code, and teaches you to
