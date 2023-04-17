@@ -5,7 +5,7 @@ Haskell Optimization Handbook
 *by Jeffrey M. Young*
 
 
-This book assumes you are using ghc ``9.2.x`` or above and using the Linux
+This book assumes you are using ghc |ghcVersion| or above and using the Linux
 operating system. If you are new then the best place to start is the :doc:`How
 to use this book </src/Preliminaries/how_to_use>` chapter. If you are returning
 then feel free to jump to the :ref:`mastertoc` and best wishes. It is dangerous

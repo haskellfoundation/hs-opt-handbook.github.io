@@ -59,7 +59,7 @@ extlinks = {'userGuide': ('https://downloads.haskell.org/~ghc/9.2.4/docs/html/us
             'ghcWiki': ('https://gitlab.haskell.org/ghc/ghc/wikis/%s', '#%s'),
             }
 
-# prolog for colored text
+# prolog for colored text and global variables
 rst_prolog = """
 .. include:: <s5defs.txt>
 
