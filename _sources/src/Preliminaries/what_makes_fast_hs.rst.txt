@@ -4,12 +4,11 @@ The Programs of Consistent Lethargy
 ===================================
 
 We'll begin by showing small bite sized programs that demonstrate a particular
-way Haskell programs slow down. We call these programs *canonical* programs
+way Haskell programs can slow down. We call these programs *canonical* programs
 because each program is the smallest example of a kind of slow down. A reader
-should come away from this section with an understanding of the ways a
-Haskell program slows down. For each slow down topic we provide a sister
-
-
+should come away from this section with an understanding of the ways a Haskell
+program slows down. This chapter is just to small tour; for each slow down topic
+we provide a sister chapter that explores the topic in more detail.
 
 .. _canonical-inlining:
 
@@ -67,7 +66,6 @@ inlining, in contrast, sometimes we can realize performance benefits by
 restricting inlining. We'll return to the cost benefit analysis, and discuss the
 particulars of GHC's inliner, in the chapter dedicated to :ref:`Inlining
 <Inlining Chapter>`.
-
 
 
 .. _canonical-fusion:
@@ -239,6 +237,7 @@ This pragma instructs GHC to store the contents of ``Int`` directly in the
 ``Counter`` constructor, rather than storing a pointer to an ``Int`` on the heap
 in the constructor. We'll return to these fixes in the :ref:`Unboxing` chapter.
 
+
 .. _canonical-closure-alloc:
 
 Excessive Closure Allocation
@@ -364,19 +363,39 @@ What is Poor Domain Modeling
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Poor domain modeling is a catch all phrase for constructing a program that has a
-high impedance to the problem domain. The problem domain dictates the
-computation that the program must do; it requires specific actions that abide by
-specific invariants, if those actions are hard to express, and those invariants
-hard to abide by, then you have a high impedance between the problem domain and
-the program domain. Obviously this is problem specific and we cannot provide a
-canonical example, instead we'll provide a set of guidelines to describe when
-you know you have high impedance and how to fix it.
+high impedance to the problem domain. The problem domain is the abstract domain
+that dictates the computation that the program must do, the logical sequence of
+steps it must take and the invariants it must uphold. The program domain is the
+implementation, it is the code that is tasked with performing the computation
+and upholding the invariants in the problem domain. This is a one-to-many
+relationship; for any given problem domain there are many possible
+implementations.
+
+For example, imagine our task is to implement a program that sorts some data. We
+can list the concepts, invariants and properties this problem domain specifies:
+the domain has the concepts of a datum; which is a single unit of information, a
+partial order on that data; there are many sequences of data, but for a given
+set of data only two sequences have the property sorted, a datum must have an
+ordinal property; or else we would not be able to sort, and the sorted
+invariant; that defines what the property sorted means: for a sort from low to
+high, a given datum that is less than another datum must precede the greater
+datum in the output sequence. Note that every possible implementation must
+somehow represent and abide by these ideas for the program to be considered
+correct and for the implementation to be considered an implementation at all.
+
+Therefore poor domain modeling occurs when the implementation makes it difficult
+to express the computation, properties and invariants required by the problem
+domain. If this is the case then we say there is a high impedance between the
+problem domain and the program domain. Obviously this is problem specific and we
+cannot provide a canonical example, instead we'll provide a set of guidelines to
+describe when you know you have high impedance and how to fix it.
 
 
 How do I know if I have Poor Domain Modeling
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Unfortunately, this is more art than science. Classic indications are:
+Unfortunately, this is more art than science. Classic indications in Haskell
+are all instances of the implementation doing more work than is necessary:
 
 
 Overuse of Data.List
@@ -398,27 +417,26 @@ entire list in order to produce a result:
 #. any kind of indexing
 
 Recall that lists in Haskell are streams; not treating them as such creates
-impedance between the problem domain and your program in addition to
-degrading runtime performance (and easily creating a quadratic time program).
-However, small temporary lists holding single digits of elements are fine
-because they take less time to construct and traverse than a more complicated
-data structure.
+impedance between the problem domain and your program in addition to degrading
+runtime performance (and easily creating a quadratic time program). However,
+small temporary lists holding single digits of elements are fine because they
+take less time to construct and traverse than more complicated data structures.
 
 Functions in your Program Domain do not Easily Compose to have Meaning in your Problem Domain
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 Composition and composability is one of the most valuable properties code can
-have. It is key to modularity, key to reuse, is easier to test, is easier to
-understand and often produces more compact code. When the functions in your
-program domain do not easily compose you'll often find yourself constantly
-packing, unpacking, and repacking domain elements just to get anything done.
-You'll be forced to reach into the *implementation* of objects in your program
-domain in order to express meaning in your problem domain, rather than
-expressing that meaning through functions.
+have. It is key to modularity, key to reuse, creates code that is easier to
+test, is easier to understand and is often more compact code. When the functions
+in your program domain do not easily compose you'll often find yourself
+constantly packing, unpacking, and repacking domain elements just to get
+anything done. You'll be forced to reach into the *implementation* of objects in
+your program domain in order to express meaning in your problem domain, rather
+than expressing that meaning through functions.
 
-When the program domain lacks composability functions will become overly large
-and overly concerned with implementation details; *that* is high impedence
-expressing itself in the program domain.
+When the program domain lacks composability, functions will become overly large
+and overly concerned with implementation details; *that* is high impedance
+expressing itself in the implementation.
 
 .. todo::
    Need example as case study see `#20 <https://github.com/input-output-hk/hs-opt-handbook.github.io/issues/20>`_
