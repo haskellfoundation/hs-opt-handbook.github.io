@@ -30,7 +30,7 @@ optimization rabbit hole. If you have no code to optimize, then you may consider
 picking your favorite Haskell library and attempting to optimize that!
 
 
-The book assumes you are using ``GHC 8.10.x`` and a Linux distribution (kernel
+The book assumes you are using GHC |ghcVersion| and a Linux distribution (kernel
 version ``5.8`` and higher). Should you be using an older compiler than some
 sections, such as :doc:`Using EventLog
 </src/Measurement_Observation/Heap_Ghc/eventlog>`; which arrived in ``GHC 8.8``
