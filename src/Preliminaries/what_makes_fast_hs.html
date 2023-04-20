@@ -417,12 +417,12 @@ quality); second, in order to observe it, the programmer must track the memory
 allocation of their program across many functions, modules and packages, which
 is not a common experience when writing Haskell. For our purposes’, we’ll
 inspect examples that GHC should have no problem finding and optimizing. See the
-<a class="reference internal" href="../Case_Studies/sbv_572.html#sbv572"><span class="std std-ref">Impact of seq Removal on SBV’s cache</span></a> case study for more.</p>
-<p>for an example of excessive memory allocation in a widely used library. While
+<a class="reference internal" href="../Case_Studies/sbv_572.html#sbv572"><span class="std std-ref">Impact of seq Removal on SBV’s cache</span></a> case study for an example of excessive memory allocation in a widely used library.</p>
+<p>While
 GHC is good at optimizing these cases, becoming familiar with these code
 transformations is beneficial; it trains you to start thinking in terms of
 memory allocation when reading or writing Haskell code, and teaches you to
-perform these optimizations manually when GHC fails to optimization.</p>
+perform these optimizations manually when GHC fails to optimize.</p>
 </section>
 <section id="how-does-excessive-closure-allocation-slow-down-runtime-performance">
 <h3><span class="section-number">1.2.4.2. </span>How does Excessive Closure Allocation Slow Down Runtime Performance<a class="headerlink" href="#how-does-excessive-closure-allocation-slow-down-runtime-performance" title="Permalink to this heading">¶</a></h3>
