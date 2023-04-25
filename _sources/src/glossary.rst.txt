@@ -226,7 +226,7 @@ Glossary
          -- two traversals, one for f, one for g on the result of f
          map g . map f $ [1..100]
 
-         -- after loop fusion:
+         -- after map fusion:
          -- only one traversal
          map (g . f) [1..100]
 

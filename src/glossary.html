@@ -371,7 +371,7 @@ example of this is map fusion.</p>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- two traversals, one for f, one for g on the result of f</span><span class="w"></span>
 <span class="nf">map</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="n">map</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="o">..</span><span class="mi">100</span><span class="p">]</span><span class="w"></span>
 
-<span class="c1">-- after loop fusion:</span><span class="w"></span>
+<span class="c1">-- after map fusion:</span><span class="w"></span>
 <span class="c1">-- only one traversal</span><span class="w"></span>
 <span class="nf">map</span><span class="w"> </span><span class="p">(</span><span class="n">g</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="o">..</span><span class="mi">100</span><span class="p">]</span><span class="w"></span>
 </pre></div>
