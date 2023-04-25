@@ -1,4 +1,4 @@
-.. TickyTicky
+.. _Ticky Chapter:
 
 :lightgrey:`TickyTicky`
 =======================

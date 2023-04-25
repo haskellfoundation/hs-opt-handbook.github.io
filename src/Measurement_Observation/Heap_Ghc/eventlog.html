@@ -28,7 +28,7 @@
     
   <link rel="index" title="Index" href="../../../genindex.html" />
   <link rel="search" title="Search" href="../../../search.html" />
-  <link rel="next" title="2.2.3. GHC Debug" href="ghc_debug.html" />
+  <link rel="next" title="2.2.3. Info-Table Profiling" href="info_table.html" />
   <link rel="prev" title="2.2.1. GHC Flags" href="ghc_flags.html" /> 
   </head>
 
@@ -192,8 +192,8 @@
        title="previous chapter">← <span class="section-number">2.2.1. </span><span class="lightgrey">GHC Flags</span></a>
   </li>
   <li class="next">
-    <a href="ghc_debug.html"
-       title="next chapter"><span class="section-number">2.2.3. </span><span class="lightgrey">GHC Debug</span> →</a>
+    <a href="info_table.html"
+       title="next chapter"><span class="section-number">2.2.3. </span><span class="lightgrey">Info-Table Profiling</span> →</a>
   </li>
 </ul>
   
@@ -219,7 +219,7 @@ understand:</p>
 <li><p>When to use eventlog.</p></li>
 <li><p>How to build your program to use eventlog.</p></li>
 <li><p>How to visualize eventlog information.</p></li>
-<li><p>How to tune eventlog to inspect specific subsystems.</p></li>
+<li><p>How to tune eventlog to inspect specific sub-system.</p></li>
 <li><p>How to tune eventlog to inspect specific pieces of code.</p></li>
 </ol>
 <section id="requirements">
@@ -246,7 +246,7 @@ define and track their own events using the base functions <a class="reference e
 <section id="when-should-i-use-eventlog">
 <h2><span class="section-number">2.2.2.4. </span>When should I use Eventlog<a class="headerlink" href="#when-should-i-use-eventlog" title="Permalink to this heading">¶</a></h2>
 <p>Eventlog is most useful when you need to <a class="reference internal" href="../the_recipe.html#characterize-the-problem"><span class="std std-ref">Characterize the Problem</span></a>. It yields runtime information on the specific
-subsystems the program relies on. Thus, it allows you to drill down into the
+sub-system the program relies on. Thus, it allows you to drill down into the
 behavior of the garbage collector, the scheduler, the heap and so. For example,
 using the flag <code class="docutils literal notranslate"><span class="pre">+RTS</span> <span class="pre">-lg</span></code> you can collect the <code class="docutils literal notranslate"><span class="pre">CONC_MARK_BEGIN</span></code> and
 <code class="docutils literal notranslate"><span class="pre">CONC_MARK_END</span></code> events which log the beginning and end of the concurrent
@@ -747,8 +747,8 @@ Guide</a>.</p></li>
        title="previous chapter">← <span class="section-number">2.2.1. </span><span class="lightgrey">GHC Flags</span></a>
   </li>
   <li class="next">
-    <a href="ghc_debug.html"
-       title="next chapter"><span class="section-number">2.2.3. </span><span class="lightgrey">GHC Debug</span> →</a>
+    <a href="info_table.html"
+       title="next chapter"><span class="section-number">2.2.3. </span><span class="lightgrey">Info-Table Profiling</span> →</a>
   </li>
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2022-2023, Jeffrey Young (doyougnu).

@@ -153,6 +153,10 @@ Glossary
       :ghcWiki:`wiki <commentary/rts/storage/heap-objects#info-tables>` for more
       details.
 
+   Info Table Address : Runtime
+
+      The memory address for heap objects :term:`info table`.
+
    Join Point :  Optimization
 
       A join point is a place where different execution paths come together or
@@ -208,6 +212,38 @@ Glossary
       which represents non-terminating computation. For example, the ``Bool``
       type is a set with three values: ``True``, ``False``, and :math:`\bot`.
       Therefore ``Bool`` is a Lifted type.
+
+   Loop Fusion
+
+      Loop fusion is a classic optimization technique that reduces the number of
+      loops in a program, thereby reducing the number of memory accesses and the
+      number of looping constructs. In Haskell, loop fusion transforms many
+      traversals over the same data structure to a single traversal. A classic
+      example of this is map fusion.
+
+      .. code-block:: haskell
+
+         -- two traversals, one for f, one for g on the result of f
+         map g . map f $ [1..100]
+
+         -- after loop fusion:
+         -- only one traversal
+         map (g . f) [1..100]
+
+      This can also appear in list comprehensions, for example:
+
+      .. code-block:: haskell
+
+         ...
+         -- three traversals: two to project elements, 1 to fold
+         let foo = foldl + 0 [ i | (i,_) <- args ]
+         let res = bar foo   [ j | (_,j) <- args ]
+
+         -- after loop fusion on the list comprehensions
+         -- 2 traversals: one for the arguments, one to fold
+         let (is, js) = unzip args
+         let foo = foldl + 0 is
+         let bar = bar foo js
 
    Multi-Shot Lambda
 

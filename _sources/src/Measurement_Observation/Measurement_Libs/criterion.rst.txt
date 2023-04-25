@@ -1,4 +1,4 @@
-.. _Criterion:
+.. _Tasty Chapter:
 
 :lightgrey:`Criterion, Gauge, and Tasty-Bench`
 ==============================================
