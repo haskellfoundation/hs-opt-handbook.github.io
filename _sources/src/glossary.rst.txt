@@ -155,7 +155,7 @@ Glossary
 
    Info Table Address : Runtime
 
-      The memory address for heap objects :term:`info table`.
+      The memory address for heap object descriptors :term:`info table`.
 
    Join Point :  Optimization
 
