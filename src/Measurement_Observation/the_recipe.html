@@ -20,6 +20,7 @@
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/clipboard.min.js"></script>
         <script src="../../_static/copybutton.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
       
       <!-- bundled in js (rollup iife) -->
@@ -201,13 +202,15 @@
             
   <section id="the-recipe">
 <h1><span class="section-number">2.1. </span>The Recipe<a class="headerlink" href="#the-recipe" title="Permalink to this heading">¶</a></h1>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
+<div class="admonition warning" id="don-t-think-look">
+<span id="understand-the-system"></span><p class="admonition-title">Warning</p>
 <p>This chapter is going to be rewritten with reference to David Agan’s
 <a class="reference external" href="https://debuggingrules.com/">Debugging book</a>. Until that time I have left
-it intact in case it may be helpful.</p>
+it intact in case it may be helpful. If you came here chasing a link to
+<code class="docutils literal notranslate"><span class="pre">understand</span> <span class="pre">the</span> <span class="pre">system</span></code> or <code class="docutils literal notranslate"><span class="pre">don't</span> <span class="pre">think,</span> <span class="pre">look</span></code> then I refer you to his
+book for the time being.</p>
 </div>
-<p id="don-t-think-look">This chapter presents a recipe for debugging performance regressions in Haskell.
+<p>This chapter presents a recipe for debugging performance regressions in Haskell.
 Often times when we debug code it becomes too easy to trace execution or use a
 shotgun approach; we apply a bunch of best-guess changes and retest to see if
 our stimulus presents a response. You should do your best to avoid these urges.

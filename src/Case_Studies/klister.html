@@ -206,11 +206,17 @@
 <a class="reference external" href="https://github.com/gelisam/klister/">klister</a> programming language interpreter. This case study should be exemplary
 of any system which is shortlived, has distinct phases of input and output, and
 maintains state. To diagnose the performance issues this case study uses
-<a class="reference internal" href="../Measurement_Observation/Heap_Ghc/ghc_flags.html#heap-profiling-chapter"><span class="std std-ref">Heap Profiling</span></a> with <a class="reference internal" href="../Measurement_Observation/Heap_Ghc/eventlog.html#eventlog-chapter"><span class="std std-ref">Eventlog</span></a>, <a class="reference internal" href="../Measurement_Observation/Heap_Ghc/info_table.html#ipe-chapter"><span class="std std-ref">Info Table Profiling</span></a>, <a class="reference internal" href="../Measurement_Observation/Measurement_Ghc/ticky_ticky.html#ticky-chapter"><span class="std std-ref">TickyTicky</span></a> profiling. Similarly, the chapter motivates the use of more efficient
-data structures for the interpreter and shows the net benefits of using proper
-data structure for the computation at hand. After reading this chapter, a reader
-should be able to spot inefficient data structure use by reading code, and
-utilize profiling techniques to diagnose memory performance issues.</p>
+<a class="reference internal" href="../Measurement_Observation/Heap_Ghc/ghc_flags.html#heap-profiling-chapter"><span class="std std-ref">Heap Profiling</span></a> with <a class="reference internal" href="../Measurement_Observation/Heap_Ghc/eventlog.html#eventlog-chapter"><span class="std std-ref">Eventlog</span></a>, <a class="reference internal" href="../Measurement_Observation/Heap_Ghc/info_table.html#ipe-chapter"><span class="std std-ref">Info Table Profiling</span></a>, <a class="reference internal" href="../Measurement_Observation/Measurement_Ghc/ticky_ticky.html#ticky-chapter"><span class="std std-ref">TickyTicky</span></a> profiling. The optimizations are simply choosing better data
+structures and closing memory leaks; any intermediate level Haskeller should be
+able to follow along. After reading this chapter, a reader should be able to
+spot inefficient data structure use by reading code, and utilize profiling
+techniques to diagnose memory performance issues and identify hot code.</p>
+<p>The rest of the chapter is structured as follows. We introduce the <a class="reference external" href="https://github.com/gelisam/klister/">klister</a>
+interpreter and perform a performance minded code review. We then use the
+klister testsuite to identify a poor performing program. Using this program we
+begin performance engineering by: identifying a problem, implementing a change,
+testing that the change was effective, and then repeating the process having
+either made progress or by changing another part of the interpreter.</p>
 <section id="introduction-to-the-system">
 <h2><span class="section-number">4.3.1. </span>Introduction to the System<a class="headerlink" href="#introduction-to-the-system" title="Permalink to this heading">¶</a></h2>
 <p>The system we are analyzing is the interpreter for <a class="reference external" href="https://github.com/gelisam/klister/">klister</a>. Klister is an
@@ -219,13 +225,13 @@ particularly relevant, but one can expect it to have typical scheme features
 such as s-expression syntax, hygenic macros and lexical scoping. All we need to
 know about that the klister interpreter inputs a program, parses the program,
 maintains mutable stores of variables and outputs a result.</p>
-<p>To begin performance engineering we’ll review the sub-systems that compose the
-interpreter. In klister, there are 4 major sub-system:</p>
+<p>To begin performance engineering we’ll review the subsystems that compose the
+interpreter. In klister, there are 4 major subsystem:</p>
 <ol class="arabic simple">
 <li><p>Parser: The system that lexes and tokenizes. Klister employs <a class="reference external" href="https://hackage.haskell.org/package/megaparsec">MegaParsec</a> for
 its parser.</p></li>
 <li><p>Expander: Klister is a scheme-like language with hygenic macros. This
-sub-system performs the macro expansion and elaboration typical to these
+subsystem performs the macro expansion and elaboration typical to these
 kinds of programming languages.</p></li>
 <li><p>Type Checker: Klister is a pure functional language with Hindley-Milner type
 checking and higher-ordered types, including type safe macros. This subsystem
@@ -237,19 +243,19 @@ outputs the result.</p></li>
 </section>
 <section id="characterizing-the-problem">
 <h2><span class="section-number">4.3.2. </span>Characterizing the Problem<a class="headerlink" href="#characterizing-the-problem" title="Permalink to this heading">¶</a></h2>
-<p>The goal is to speed up the klister interpreter, but this goal is too vague to
-begin working. We first need to know specifics so we can make statements that
-are actionable and precise. That is, we need to have a reproducible test to
-observe where time is spent, and where memory is allocated and consumed. Then we
-can correlate these costs to particular sub-systems in the interpreter. For
-example, we would like to say “The parser finishes a 100 line program in 100ms
-and runs in 100Kb of constant space, but the expander allocates 2Gb and finishes
-its computation in 2 minutes!”. Once we can make precise statements, we can
-begin forming hypotheses to speed up the system.</p>
+<p>Our goal is to speed up the klister interpreter, but this goal is too vague and
+is not actionable. We first need to be able to make statements that are precise
+enough to be actionable. That is, we need to have a reproducible test to observe
+where time is spent, and, where and how much memory is allocated and consumed.
+Then we can correlate these costs to particular subsystems in the interpreter.
+For example, we wish to be able to say “The parser finishes a 100 line program
+in 100ms and runs in 100Kb of constant space, but the expander allocates 2Gb and
+finishes its computation in 2 minutes!”. Once we can make precise statements, we
+can begin forming hypotheses to speed up the system.</p>
 <p>We’ll use klister’s testsuite to find a reproducible test. The testsuite
 provides good sample of programs and will allow us to find a <em>degenerate</em>
 program. With a degenerate program, we’ll record and correlate runtime costs to
-each sub-system and find the offending piece of source code.</p>
+each subsystem and find the offending piece of source code.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>A quick note on these degenerate programs and a mental model that you might
@@ -278,9 +284,9 @@ understand the interpreter and to read through the code with a performance
 engineering mindset. Here is a list of things that are noticeable from reading
 through the source code.</p>
 <ol class="arabic simple">
-<li><p>Lazy Data.Map in the interpreter state.</p></li>
+<li><p>Lazy <code class="docutils literal notranslate"><span class="pre">Data.Map</span></code> in the interpreter state.</p></li>
+<li><p>Lazy <code class="docutils literal notranslate"><span class="pre">modifyIORef</span></code> in the interpreter state.</p></li>
 <li><p>Use of lazy tuples throughout the code base.</p></li>
-<li><p>Lazy modifyIORef in the interpreter state.</p></li>
 <li><p>Lists used as general purpose containers.</p></li>
 <li><p>Lazy State Monad especially in the Expander.</p></li>
 <li><p>Lazy WriterT monad transformer in the Expander.</p></li>
@@ -289,8 +295,9 @@ through the source code.</p>
 driven code.</p></li>
 <li><p>Some modules do not use explicit exports.</p></li>
 <li><p>No use of <code class="docutils literal notranslate"><span class="pre">-funbox-strict-fields</span></code> for bang patterns or <code class="docutils literal notranslate"><span class="pre">UNPACK</span></code> pragmas.</p></li>
-<li><p>using <code class="docutils literal notranslate"><span class="pre">foldr</span></code> on a list (see <code class="docutils literal notranslate"><span class="pre">Expander.getExports</span></code>) that doesn’t exploit laziness.</p></li>
-<li><p>using <code class="docutils literal notranslate"><span class="pre">Integer</span></code> instead of <code class="docutils literal notranslate"><span class="pre">Int</span></code>.</p></li>
+<li><p>Using <code class="docutils literal notranslate"><span class="pre">foldr</span></code> on a list (see <code class="docutils literal notranslate"><span class="pre">Expander.getExports</span></code>) even though the code
+does not exploit laziness.</p></li>
+<li><p>Using <code class="docutils literal notranslate"><span class="pre">Integer</span></code> instead of <code class="docutils literal notranslate"><span class="pre">Int</span></code>.</p></li>
 </ol>
 <p>We won’t being going through each in detail, but instead just highlight a few
 consequential items. Note that not all of these need to be fixed or are
@@ -303,8 +310,8 @@ expects to handle data past the <code class="docutils literal notranslate"><span
 <p>The <code class="docutils literal notranslate"><span class="pre">ExpanderState</span></code> is a key type in the klister interpreter. It is stored in
 an <code class="docutils literal notranslate"><span class="pre">IORef</span></code> and maintains state for the expander. From a performance
 perspective the <code class="docutils literal notranslate"><span class="pre">ExpanderState</span></code> is suspect because it employs data structures
-that are lazy and yet will eventually use everything in the state. Here is the
-definition of the <code class="docutils literal notranslate"><span class="pre">ExpanderState</span></code>:</p>
+that are lazy and yet the interpreter will eventually use everything in the
+state. Here is the definition of the <code class="docutils literal notranslate"><span class="pre">ExpanderState</span></code>:</p>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="w"> </span><span class="kr">data</span><span class="w"> </span><span class="kt">ExpanderState</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">ExpanderState</span><span class="w"></span>
 <span class="p">{</span><span class="w"> </span><span class="n">_expanderWorld</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="o">!</span><span class="p">(</span><span class="kt">World</span><span class="w"> </span><span class="kt">Value</span><span class="p">)</span><span class="w"></span>
 <span class="p">,</span><span class="w"> </span><span class="n">_expanderNextScopeNum</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="o">!</span><span class="kt">Int</span><span class="w"></span>
@@ -359,10 +366,10 @@ newtype over an <code class="docutils literal notranslate"><span class="pre">Int
 <code class="docutils literal notranslate"><span class="pre">Integer</span></code>. Clearly an <code class="docutils literal notranslate"><span class="pre">IntMap</span></code> would be a better choice of data structure.
 An <code class="docutils literal notranslate"><span class="pre">IntMap</span></code> has several advantages over <code class="docutils literal notranslate"><span class="pre">Data.Map</span></code>. <code class="docutils literal notranslate"><span class="pre">Data.Map</span></code> is an
 implementation of <em>size balanced binary trees</em> (see the <a class="reference external" href="https://hackage.haskell.org/package/containers-0.6.7/docs/Data-Map.html">hackage</a>
-docs). The trees require re-balancing in order to maintain the balanced
+docs). These trees require re-balancing in order to maintain the balanced
 invariant. This balancing slows down writes (that is, adds work to
 <code class="docutils literal notranslate"><span class="pre">Data.Map.insert</span></code>) and consequently merges, because a merge of any two trees
-may invoke a rebalancing. In contrast, <code class="docutils literal notranslate"><span class="pre">IntMap</span></code> is a big-endian PATRICIA Trie
+may invoke a re-balancing. In contrast, <code class="docutils literal notranslate"><span class="pre">IntMap</span></code> is a big-endian PATRICIA Trie
 (see <span id="id2">Okasaki [<a class="reference internal" href="../../contents.html#id17" title="Chris Okasaki. Purely Functional Data Structures. Cambridge University Press, 1998. doi:10.1017/CBO9780511530104.">5</a>]</span>) which never require balancing. Compared to <code class="docutils literal notranslate"><span class="pre">Data.Map</span></code>,
 an <code class="docutils literal notranslate"><span class="pre">IntMap</span></code> provides faster writes at the cost of slightly slower reads.
 Additionally, <code class="docutils literal notranslate"><span class="pre">IntMap</span></code> uses less total memory than <code class="docutils literal notranslate"><span class="pre">Data.Map</span></code> <a class="footnote-reference brackets" href="#id9" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
@@ -395,10 +402,9 @@ down writes and merges.</p>
 <p>A better datastructure for maps indexed over <code class="docutils literal notranslate"><span class="pre">String</span></code> like types is
 <code class="docutils literal notranslate"><span class="pre">Data.HashMap</span></code> from the <code class="docutils literal notranslate"><span class="pre">unordered-containers</span></code> library. These maps are
 <em>Hashed Array Mapped Trie’s</em>, or HAMTs for short (see <span id="id4">Bagwell [<a class="reference internal" href="../../contents.html#id18" title="Phil Bagwell. Ideal hash trees. Technical Report, Ecole polytechnique fédérale de Lausanne, 2001.">6</a>]</span>).
-HAMTs index over a unique <code class="docutils literal notranslate"><span class="pre">hash</span></code> that uniquely represents the key type. These
-data structures are efficient for any key type where equality could be
-expensive; such as <code class="docutils literal notranslate"><span class="pre">String</span></code>, <code class="docutils literal notranslate"><span class="pre">Text</span></code> or inductive data types that derive
-<code class="docutils literal notranslate"><span class="pre">Eq</span></code>.</p>
+HAMTs index over a <code class="docutils literal notranslate"><span class="pre">hash</span></code> that uniquely represents the key. These data
+structures are efficient for any key type where equality could be expensive;
+such as <code class="docutils literal notranslate"><span class="pre">String</span></code>, <code class="docutils literal notranslate"><span class="pre">Text</span></code> or inductive data types that derive <code class="docutils literal notranslate"><span class="pre">Eq</span></code>.</p>
 </section>
 <section id="lazy-tuples">
 <h3><span class="section-number">4.3.3.2. </span>Lazy Tuples<a class="headerlink" href="#lazy-tuples" title="Permalink to this heading">¶</a></h3>
@@ -437,15 +443,19 @@ project the <code class="docutils literal notranslate"><span class="pre">sc'</sp
 to project the second, third and fourth positions into a list of 3-tuples and
 pass that to <code class="docutils literal notranslate"><span class="pre">withLocalVarTypes</span></code>. This code can be improved with <a class="reference internal" href="../glossary.html#term-Loop-Fusion"><span class="xref std std-term">Loop
 Fusion</span></a> to iterate over the list once, using <code class="docutils literal notranslate"><span class="pre">foldl'</span></code> instead of <code class="docutils literal notranslate"><span class="pre">foldr</span></code>,
-and by defining a datatype which unpacks every field instead of using <code class="docutils literal notranslate"><span class="pre">(,,,)</span></code>.</p>
+and by defining a datatype which unpacks every field instead of using <code class="docutils literal notranslate"><span class="pre">(,,,)</span></code>
+to avoid the extra allocation for these tuples. Note that defining a such a
+datatype will require that <span class="math notranslate nohighlight">\(\bot\)</span> is never an element of the 4-tuple. In this
+case that will be true, but it is not true in general; again, in order to
+optimize you must <a class="reference internal" href="../Measurement_Observation/the_recipe.html#understand-the-system"><span class="std std-ref">understand the system</span></a>.</p>
 <p>Generally types such as <code class="docutils literal notranslate"><span class="pre">(,,,)</span></code> are a path of least resistance when writing
-new code in a code base. They are easy to reach for, easy to write and don’t
-require more domain modeling. However, tuples, and especially tuples with more
-than two fields, are a consistent source of memory leaks. So one is almost
-always better off defining a datatype instead of using a tuple for performance.</p>
+new code. They are easy to reach for, easy to write and don’t require more
+domain modeling. However, tuples, and especially tuples with more than two
+fields, are a consistent source of memory leaks. So one is almost always better
+off defining a datatype instead of using a tuple for performance.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Of course, one may not want to add yet another datatype to the
+<p>Of course, you may not want to add yet another datatype to the
 implementation. One may want the datatypes in the implementation to map
 cleanly to domain objects. This a classic tradeoff between performance,
 readability and maintainability.</p>
@@ -497,9 +507,10 @@ each test. So let’s run the testsuite to find a degenerate test:</p>
 <span class="go">      Test suite klister-tests: PASS</span>
 </pre></div>
 </div>
-<p>Notice that both <code class="docutils literal notranslate"><span class="pre">implicit-conversion</span></code> and <code class="docutils literal notranslate"><span class="pre">implicit-conversion-test</span></code> are
-outliers, passing in 7 and 9 <em>seconds</em>, whereas each other test passes in well
-under a second (except <code class="docutils literal notranslate"><span class="pre">higher-kinded-patterns</span></code>). We have found our degenerate
+<p>The entire testsuite finishes in 38 seconds. Notice that both
+<code class="docutils literal notranslate"><span class="pre">implicit-conversion</span></code> and <code class="docutils literal notranslate"><span class="pre">implicit-conversion-test</span></code> are extreme outliers,
+passing in 7 and 9 <em>seconds</em>, whereas each other test passes in well under a
+second (except <code class="docutils literal notranslate"><span class="pre">higher-kinded-patterns</span></code>). We have found our degenerate
 program.</p>
 </section>
 </section>
@@ -507,28 +518,31 @@ program.</p>
 <h2><span class="section-number">4.3.4. </span>Restate the Problem<a class="headerlink" href="#restate-the-problem" title="Permalink to this heading">¶</a></h2>
 <p>For the rest of the case study we’ll focus on speeding up
 <code class="docutils literal notranslate"><span class="pre">implicit-conversion-test</span></code> under the assumption that our changes will also
-speed up the other tests and consequently the entire interpreter. Note that this
-is only an assumption and only works in this case because this is the first pass
-of performance engineering for this code.</p>
-<p>We want to get specific and make sure that problems we highlighted in the code
-review are indeed problems for that test case. Or in other words, we should only
-make changes once we have evidence that this code we’re changing is problematic.
-If the maps are a problematic factor then we should expect a lot of allocations
-to come from <code class="docutils literal notranslate"><span class="pre">Data.Map.insert</span></code>, <code class="docutils literal notranslate"><span class="pre">(==)</span></code>, <code class="docutils literal notranslate"><span class="pre">Ord</span></code> instances and the functions
-<code class="docutils literal notranslate"><span class="pre">Data.Map.Internal.balanceR</span></code> and <code class="docutils literal notranslate"><span class="pre">Data.Map.Internal.balanceL</span></code>. This is a
-good opportunity to <a class="reference internal" href="../Measurement_Observation/the_recipe.html#don-t-think-look"><span class="std std-ref">not think and look</span></a> with a
-<a class="reference internal" href="../Measurement_Observation/Measurement_Ghc/ticky_ticky.html#ticky-chapter"><span class="std std-ref">ticky</span></a> report.</p>
+speed up the other tests and consequently the entire interpreter. It is
+certainly possible that optimizations in one subsystem of your code base will
+not translate to better overall performance. We make this assumption because
+this is the first pass of performance engineering for this code. So the
+probability that our changes do impact overall performance is high.</p>
+<p>We have identified a list of likely issues, but before we begin to change things
+we need to make sure that the problems we’ve identified are indeed problems. Or
+in other words, we should only make changes <em>once</em> we have evidence that the
+code we’re changing is problematic. If the maps are a problematic factor then we
+should expect a lot of allocations to come from <code class="docutils literal notranslate"><span class="pre">Data.Map.insert</span></code>, <code class="docutils literal notranslate"><span class="pre">Eq</span></code> and
+<code class="docutils literal notranslate"><span class="pre">Ord</span></code> instance methods, and the functions <code class="docutils literal notranslate"><span class="pre">Data.Map.Internal.balanceR</span></code> and
+<code class="docutils literal notranslate"><span class="pre">Data.Map.Internal.balanceL</span></code>. This is a good opportunity to <a class="reference internal" href="../Measurement_Observation/the_recipe.html#don-t-think-look"><span class="std std-ref">not think
+and look</span></a> with a <a class="reference internal" href="../Measurement_Observation/Measurement_Ghc/ticky_ticky.html#ticky-chapter"><span class="std std-ref">ticky</span></a> report.</p>
 <p>First we’ll generate a ticky report for the entire testsuite:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>cabal <span class="nb">test</span> --test-show-details<span class="o">=</span>streaming --test-options<span class="o">=</span><span class="s1">&#39;+RTS -rticky -RTS&#39;</span> --ghc-options<span class="o">=</span><span class="s1">&#39;-rtsopts -ticky -ticky-allocd -ticky-dyn-thunk&#39;</span>
 <span class="go">  Build profile: -w ghc-9.2.4 -O1</span>
 <span class="go">  ...</span>
 </pre></div>
 </div>
-<p>and check the results sorted by allocations. As a reminder, the column on the
-right hand side names the STG closure the ticky profile is describing, the first
-column is entries, the second column is the number of bytes allocated <em>by</em> the
-code for the closure, the third is the number of bytes <em>addressed</em> to each
-closure:</p>
+<p>and check the results sorted by allocations. As a reminder, there are 5 columns
+in a ticky report. The first column is entries. The second column is the number
+of bytes allocated <em>by</em> the code for the closure. The third column is the number
+of bytes <em>addressed</em> to each closure. The fourth column classifies the closure
+by type with a shorthand notation, and the last column displays the names of the
+Stg closure the ticky profile is describing:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat ticky | tail -n +20 | sort -k2 -nr | less
 
   53739709 4299176720          0   3 +.&gt;                  ScopeSet.$wallScopeSets&#39;{v rNAX} (fun)
@@ -553,18 +567,19 @@ closure:</p>
 </pre></div>
 </div>
 <p>There are several interesting aspects to this ticky profile snippet. First, the
-most allocating code is <code class="docutils literal notranslate"><span class="pre">ScopeSet.allScopeSets</span></code>, it is allocating a dictionary
-(<code class="docutils literal notranslate"><span class="pre">+</span></code>) of some type (<code class="docutils literal notranslate"><span class="pre">.</span></code>) and function (<code class="docutils literal notranslate"><span class="pre">&gt;</span></code>). Observing a function call to
-a dictionary <code class="docutils literal notranslate"><span class="pre">+</span></code> in a ticky report can often mean that a function did not
-specialize. So from this ticky we suspect that <code class="docutils literal notranslate"><span class="pre">allScopeSets</span></code> has not
-specialized. The second most allocating closure is a SAT’d function
-<code class="docutils literal notranslate"><span class="pre">sat_sOYl</span></code>; from its description: <code class="docutils literal notranslate"><span class="pre">{v}</span> <span class="pre">(ScopeSet)</span> <span class="pre">(fun)</span> <span class="pre">in</span> <span class="pre">rNAX</span></code> we can see
-that it is a non-exported name (<code class="docutils literal notranslate"><span class="pre">{v}</span></code>), in the <code class="docutils literal notranslate"><span class="pre">(ScopeSet)</span></code> module, it is a
-function <code class="docutils literal notranslate"><span class="pre">(fun)</span></code> and is a local function in the <code class="docutils literal notranslate"><span class="pre">rNAX</span></code> closure, which is the
-STG name of the closure for <code class="docutils literal notranslate"><span class="pre">allScopeSets</span></code> as shown in description for
-<code class="docutils literal notranslate"><span class="pre">allScopeSets</span></code>. So the two most allocating function calls in the interpreter,
-when running the testsuite, are due to <code class="docutils literal notranslate"><span class="pre">allScopeSets</span></code>. Clearly,
-<code class="docutils literal notranslate"><span class="pre">allScopeSets</span></code> is a good target for performance engineering.</p>
+most allocating code is <code class="docutils literal notranslate"><span class="pre">ScopeSet.allScopeSets'</span></code>, it is allocating a
+dictionary (<code class="docutils literal notranslate"><span class="pre">+</span></code>) of some type (<code class="docutils literal notranslate"><span class="pre">.</span></code>) and function (<code class="docutils literal notranslate"><span class="pre">&gt;</span></code>). Observing a
+function call to a dictionary <code class="docutils literal notranslate"><span class="pre">+</span></code> in a ticky report can often mean that a
+function did not specialize. So from this ticky we suspect that
+<code class="docutils literal notranslate"><span class="pre">allScopeSets'</span></code> has not specialized. The second most allocating closure is a
+SAT’d function <code class="docutils literal notranslate"><span class="pre">sat_sOYl</span></code> (see <a class="reference internal" href="../Optimizations/GHC_opt/sat_transformation.html#sat-chapter"><span class="std std-ref">The Static Argument Transformation</span></a>). From its description: <code class="docutils literal notranslate"><span class="pre">{v}</span> <span class="pre">(ScopeSet)</span> <span class="pre">(fun)</span> <span class="pre">in</span> <span class="pre">rNAX</span></code>, we can see
+that it is a non-exported name (<code class="docutils literal notranslate"><span class="pre">{v}</span></code>) just like <code class="docutils literal notranslate"><span class="pre">allScopeSets'</span></code>, in the
+<code class="docutils literal notranslate"><span class="pre">(ScopeSet)</span></code> module. It is a function <code class="docutils literal notranslate"><span class="pre">(fun)</span></code> and is a local function in the
+<code class="docutils literal notranslate"><span class="pre">rNAX</span></code> closure. The <code class="docutils literal notranslate"><span class="pre">rNAX</span></code> closure is the Stg name of the closure for
+<code class="docutils literal notranslate"><span class="pre">allScopeSets'</span></code> as shown in description for <code class="docutils literal notranslate"><span class="pre">allScopeSets'</span></code>. So the two most
+allocating function calls in the interpreter, when running the testsuite, are
+due to <code class="docutils literal notranslate"><span class="pre">allScopeSets</span></code>. Clearly, <code class="docutils literal notranslate"><span class="pre">allScopeSets</span></code> is a good target for
+performance engineering.</p>
 <p>We also see that the 5th and 6th most allocating functions called are
 <code class="docutils literal notranslate"><span class="pre">ScopeSet.isSubsetOf</span></code> and <code class="docutils literal notranslate"><span class="pre">Binding.$fMonoidBindingTable_$unionWith</span></code>. That
 suggests peculiar usage pattern; <code class="docutils literal notranslate"><span class="pre">isSubsetOf</span></code> should only return a <code class="docutils literal notranslate"><span class="pre">Bool</span></code>
@@ -594,26 +609,27 @@ functions in the source code:</p>
 <span class="w">               </span><span class="n">view</span><span class="w"> </span><span class="p">(</span><span class="n">phaseScopes</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="n">at</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="n">non</span><span class="w"> </span><span class="kt">Set</span><span class="o">.</span><span class="n">empty</span><span class="p">)</span><span class="w"> </span><span class="n">scs</span><span class="w"></span>
 </pre></div>
 </div>
-<p>We see that a <code class="docutils literal notranslate"><span class="pre">ScopeSet</span></code> is a record of <code class="docutils literal notranslate"><span class="pre">Data.Set</span> <span class="pre">Scope</span></code> and <code class="docutils literal notranslate"><span class="pre">Data.Map</span></code>
-indexed by <code class="docutils literal notranslate"><span class="pre">Phase</span></code> that holds <code class="docutils literal notranslate"><span class="pre">Set</span> <span class="pre">Scope</span></code>. Furthermore, both <code class="docutils literal notranslate"><span class="pre">Scope</span></code> and
-<code class="docutils literal notranslate"><span class="pre">Phase</span></code> are Integer-like. So we have an implementation that could use
-<code class="docutils literal notranslate"><span class="pre">IntMap</span></code> and <code class="docutils literal notranslate"><span class="pre">IntSet</span></code> instead of <code class="docutils literal notranslate"><span class="pre">Data.Map</span></code> and <code class="docutils literal notranslate"><span class="pre">Data.Set</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ScopeSet</span></code> is a record of <code class="docutils literal notranslate"><span class="pre">Data.Set</span> <span class="pre">Scope</span></code> and <code class="docutils literal notranslate"><span class="pre">Data.Map</span></code> indexed by
+<code class="docutils literal notranslate"><span class="pre">Phase</span></code> that holds <code class="docutils literal notranslate"><span class="pre">Set</span> <span class="pre">Scope</span></code>. Furthermore, both <code class="docutils literal notranslate"><span class="pre">Scope</span></code> and <code class="docutils literal notranslate"><span class="pre">Phase</span></code>
+are Integer-like. So we have an implementation that could use <code class="docutils literal notranslate"><span class="pre">IntMap</span></code> and
+<code class="docutils literal notranslate"><span class="pre">IntSet</span></code> instead of <code class="docutils literal notranslate"><span class="pre">Data.Map</span></code> and <code class="docutils literal notranslate"><span class="pre">Data.Set</span></code>.</p>
 <p>We know that <code class="docutils literal notranslate"><span class="pre">isSubsetOf</span></code> does a lot of allocation. Now we can see where this
 allocation is happening. <code class="docutils literal notranslate"><span class="pre">isSubsetOf</span></code> checks that <code class="docutils literal notranslate"><span class="pre">scs1</span></code> is a subset of
 <code class="docutils literal notranslate"><span class="pre">scs2</span></code> by calling <code class="docutils literal notranslate"><span class="pre">Set.isSubsetOf</span></code> on the result of the <code class="docutils literal notranslate"><span class="pre">scopes</span></code> function.
 <code class="docutils literal notranslate"><span class="pre">scopes</span></code> is allocating a new <code class="docutils literal notranslate"><span class="pre">Set</span> <span class="pre">Scope</span></code> from the <code class="docutils literal notranslate"><span class="pre">ScopeSet</span></code> via
-<code class="docutils literal notranslate"><span class="pre">Set.union</span></code> using the results of a lookup on the <code class="docutils literal notranslate"><span class="pre">phaseScopes</span></code> <code class="docutils literal notranslate"><span class="pre">Map</span></code>, then
-merging two <code class="docutils literal notranslate"><span class="pre">Set</span></code>’s just to check the subset.</p>
+<code class="docutils literal notranslate"><span class="pre">Set.union</span></code>, then using the results of a lookup on the <code class="docutils literal notranslate"><span class="pre">phaseScopes</span></code> Map,
+then merging two <code class="docutils literal notranslate"><span class="pre">Set</span></code>’s just to check the subset.</p>
 <p>There are several ways to improve the memory performance of this function.
 First, we can employ better data structures. We know that this code is
 performing a lot of merges, so we should expect an improvement in both time and
 memory performance by using an <code class="docutils literal notranslate"><span class="pre">IntMap</span></code> and <code class="docutils literal notranslate"><span class="pre">IntSet</span></code> because these data
 structures provide more efficient merges than <code class="docutils literal notranslate"><span class="pre">Data.Set</span></code> and <code class="docutils literal notranslate"><span class="pre">Data.Map</span></code>.
 Second, we can use a better algorithm. From the ticky, <code class="docutils literal notranslate"><span class="pre">isSubSetOf</span></code> was called
-61143424 times. As written this code will perform its lookups and unions each
+61143424 times. As written, this code will perform its lookups and unions <em>each</em>
 time, even if we have a duplicate call. So this seems to be a good candidate for
 memoization or caching the calls to <code class="docutils literal notranslate"><span class="pre">isSubsetOf</span></code>. We could also avoid building
-the intermediate <code class="docutils literal notranslate"><span class="pre">Set</span></code> in the <code class="docutils literal notranslate"><span class="pre">scopes</span></code> function.</p>
+the intermediate <code class="docutils literal notranslate"><span class="pre">Set</span></code> in the <code class="docutils literal notranslate"><span class="pre">scopes</span></code> function by checking for a subset
+without merging <code class="docutils literal notranslate"><span class="pre">universalScopes</span></code> and <code class="docutils literal notranslate"><span class="pre">phaseScopes</span></code>.</p>
 <p>The second interesting function was <code class="docutils literal notranslate"><span class="pre">unionWith</span></code> in the <code class="docutils literal notranslate"><span class="pre">Monoid</span> <span class="pre">Binding</span></code>
 instance. Here is the source code:</p>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">newtype</span><span class="w"> </span><span class="kt">BindingTable</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">BindingTable</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">_bindings</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Map</span><span class="w"> </span><span class="kt">Text</span><span class="w"> </span><span class="p">[(</span><span class="kt">ScopeSet</span><span class="p">,</span><span class="w"> </span><span class="kt">Binding</span><span class="p">,</span><span class="w"> </span><span class="kt">BindingInfo</span><span class="w"> </span><span class="kt">SrcLoc</span><span class="p">)]</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
@@ -626,16 +642,17 @@ instance. Here is the source code:</p>
 <span class="w">  </span><span class="n">mempty</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">BindingTable</span><span class="w"> </span><span class="kt">Map</span><span class="o">.</span><span class="n">empty</span><span class="w"></span>
 </pre></div>
 </div>
-<p>A <code class="docutils literal notranslate"><span class="pre">BindingTable</span></code> is a <code class="docutils literal notranslate"><span class="pre">Map</span></code> keyed on <code class="docutils literal notranslate"><span class="pre">Text</span></code> that holds a list of triples
-and the <code class="docutils literal notranslate"><span class="pre">Semigroup</span></code> instance is the origin of the <code class="docutils literal notranslate"><span class="pre">unionWith</span></code> in the ticky
-profile. This type is likely too lazy. <code class="docutils literal notranslate"><span class="pre">Data.Map</span></code> keyed on <code class="docutils literal notranslate"><span class="pre">Text</span></code> relies on
-the <code class="docutils literal notranslate"><span class="pre">Ord</span></code> and <code class="docutils literal notranslate"><span class="pre">Eq</span></code> instances of <code class="docutils literal notranslate"><span class="pre">Text</span></code> for most of its operations. In the
-worst case this means the runtime system has to compare the entire <code class="docutils literal notranslate"><span class="pre">Text</span></code> key,
-which could be slow when the <code class="docutils literal notranslate"><span class="pre">Text</span></code> is large. Another problem is the use of a
-list. A list is only an appropriate data structure if it is used like a stack or
-if it is used as a store that is eventually traversed and consumed. Once one
-finds themselves performing lookups or merges on a list, it is time to use a
-different data structure. The last problem is the 3-tuple which we covered
+<p>A <code class="docutils literal notranslate"><span class="pre">BindingTable</span></code> is a <code class="docutils literal notranslate"><span class="pre">Map</span></code> keyed on <code class="docutils literal notranslate"><span class="pre">Text</span></code> that holds a list of triples.
+The <code class="docutils literal notranslate"><span class="pre">Semigroup</span></code> instance is the origin of the <code class="docutils literal notranslate"><span class="pre">unionWith</span></code> in the ticky
+profile because <code class="docutils literal notranslate"><span class="pre">Monoid.mappend</span></code> defaults to the Semigroup definition. This
+type is likely too lazy. <code class="docutils literal notranslate"><span class="pre">Data.Map</span></code> keyed on <code class="docutils literal notranslate"><span class="pre">Text</span></code> relies on the <code class="docutils literal notranslate"><span class="pre">Ord</span></code>
+and <code class="docutils literal notranslate"><span class="pre">Eq</span></code> instances of <code class="docutils literal notranslate"><span class="pre">Text</span></code> for most of its operations. In the worst case
+this means the runtime system has to compare the entire <code class="docutils literal notranslate"><span class="pre">Text</span></code> key, which
+could be slow when the <code class="docutils literal notranslate"><span class="pre">Text</span></code> is large. Another problem is the use of a list.
+A list is only an appropriate data structure if it is used like a stack or if it
+is used as a store that is eventually traversed and consumed. Once one finds
+themselves performing lookups or merges on a list, it is time to use a different
+data structure. The last problem is the 3-tuple which we have already covered
 above.</p>
 <p>To improve the performance of the <code class="docutils literal notranslate"><span class="pre">BindingTable</span></code> we’ll use a <code class="docutils literal notranslate"><span class="pre">HashMap</span></code>. This
 should yield better merge performance, and faster writes and reads. However,
@@ -718,14 +735,14 @@ polymorphic type on the <code class="docutils literal notranslate"><span class="
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>I’ve purposefully taken the opportunity to create the abstraction boundary
-<code class="docutils literal notranslate"><span class="pre">Store</span> <span class="pre">p</span> <span class="pre">v</span></code>, this is unnecessary from a performance perspective. But by
+<code class="docutils literal notranslate"><span class="pre">Store</span> <span class="pre">p</span> <span class="pre">v</span></code>, which is unnecessary from a performance perspective. But by
 having an abstraction boundary the system becomes easier to change. For
 example, we can now alter the implementation of <code class="docutils literal notranslate"><span class="pre">Store</span> <span class="pre">p</span> <span class="pre">v</span></code> <em>without</em> a lot
 of code churn occurring in the interpreter. The key point is that if a
-subsystem is easy to change, then it is also easy to experiment and engineer
+subsystem is easy to change, then it is also easy to experiment and engineer,
 because the cost of experimentation is reduced. So while performance and
-modularity are often in tension, in this case, modularity enables better
-performance engineering.</p>
+modularity are often in tension, in this case, modularity enables easier and
+cheaper (in terms of engineering time) performance engineering.</p>
 </div>
 <p>now let’s check the ticky:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat ticky | tail -n +20 | sort -k2 -nr | less
@@ -757,8 +774,10 @@ performance engineering.</p>
 <span class="go">...</span>
 </pre></div>
 </div>
-<p>We’ve demonstrated progress with the ticky report. Now let’s verify that these
-changes propagate to the <code class="docutils literal notranslate"><span class="pre">implicit-conversion</span></code> test.</p>
+<p>Which is strange. We should expect it to be allocating, although allocating a
+lot less. We are likely observing some new optimization GHC is applying. In any
+case, its a good sign. We’ve demonstrated progress with the ticky report. Now
+let’s verify that these changes propagate to the <code class="docutils literal notranslate"><span class="pre">implicit-conversion</span></code> test.</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">Test suite klister-tests: RUNNING...</span>
 <span class="go">All tests</span>
 <span class="go">  Expander tests</span>
@@ -807,10 +826,10 @@ heap.</p>
 <h2><span class="section-number">4.3.6. </span>Optimization 2: A Memory Leak Casts a Long Shadow<a class="headerlink" href="#optimization-2-a-memory-leak-casts-a-long-shadow" title="Permalink to this heading">¶</a></h2>
 <p>To continue engineering the interpreter we need to be able to observe the
 effects of any change we make. Unfortunately, the memory leak we discovered in
-the last section was so large it eclipsed the any effect induced by our changes.
-Clearly we need to fix this leak in order to continue to optimize. To tackle
-this memory leak we’ll use eventlog and eventlog2html to observe the heap only
-on <code class="docutils literal notranslate"><span class="pre">implicit-conversion-test</span></code>. To begin we’ll inspect the types that were
+the last section was so large it eclipsed the effect of our changes. Clearly we
+need to fix this leak in order to continue to optimize. To tackle this memory
+leak, we’ll use eventlog and eventlog2html to observe the heap only on
+<code class="docutils literal notranslate"><span class="pre">implicit-conversion-test</span></code>. To begin we’ll inspect the types that were
 allocated on the heap by passing <code class="docutils literal notranslate"><span class="pre">-hy</span></code>:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>cabal <span class="nb">test</span> --test-show-details<span class="o">=</span>streaming  --test-options<span class="o">=</span><span class="s1">&#39;--pattern &quot;implicit-conversion-test&quot; +RTS -hy -l-agu -p -RTS&#39;</span> --ghc-options<span class="o">=</span><span class="s1">&#39;-eventlog -rtsopts -O2&#39;</span>
 </pre></div>
@@ -820,18 +839,18 @@ allocated on the heap by passing <code class="docutils literal notranslate"><spa
 Crucially the shape of this profile is not indicative of a memory leak. A
 typical memory leak should look like a pyramid because the program builds up
 thunks and then forces them all in relatively short time. What we observe in
-this profile is allocations of lists that <em>never decrease</em>. Now that we know
-what type to look for we can try to correlate this type to a sub-system in the
-interpreter. To do so we’ll do another heap profile but break down the heap by
-module (by using <code class="docutils literal notranslate"><span class="pre">-hm</span></code> instead of <code class="docutils literal notranslate"><span class="pre">-hy</span></code>):</p>
+this profile is allocations of lists that <em>never decrease</em>. Now that we know the
+type to look for, we can correlate this type to a subsystem in the interpreter.
+To do so we’ll run another heap profile, but break down the heap by module (by
+using <code class="docutils literal notranslate"><span class="pre">-hm</span></code> instead of <code class="docutils literal notranslate"><span class="pre">-hy</span></code>):</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>cabal <span class="nb">test</span> --test-show-details<span class="o">=</span>streaming  --test-options<span class="o">=</span><span class="s1">&#39;--pattern &quot;implicit-conversion-test&quot; +RTS -hm -l-agu -p -RTS&#39;</span> --ghc-options<span class="o">=</span><span class="s1">&#39;-eventlog -rtsopts -O2&#39;</span>
 </pre></div>
 </div>
 <iframe id="scaled-frame" scrolling="no" src="../../../_static/klister/klister-eventlog-implicit-conversion-hm.html"></iframe><p>We see that these lists are coming from <code class="docutils literal notranslate"><span class="pre">Expander.Monad</span></code>. This is suspicious.
 We have data being consistently allocated in essentially the state type of a
-sub-system. That certainly sounds like a memory leak, but before we can conclude
-that it is a memory leak we need to know why this data is retained at all. This
-is a good scenario to use <a class="reference external" href="https://downloads.haskell.org/~ghc/9.2.4/docs/html/users_guide/profiling.html#biographical-profiling">Biographical Profiling</a> because we want to know: (1) the state
+subsystem. That certainly sounds like a memory leak. Before we can conclude that
+the expander has a memory leak we need to know why this data is retained at all.
+This is a good scenario to use <a class="reference external" href="https://downloads.haskell.org/~ghc/9.2.4/docs/html/users_guide/profiling.html#biographical-profiling">Biographical Profiling</a> because we want to know: (1) the state
 of these objects on the heap and (2) why they are not being collected, that is,
 why is GHC’s runtime system keeping them alive. For (1) we’ll do a biographical
 profile and for (2) a retainer profile.</p>
@@ -840,10 +859,10 @@ profile and for (2) a retainer profile.</p>
 </pre></div>
 </div>
 <iframe id="scaled-frame" scrolling="no" src="../../../_static/klister/klister-eventlog-implicit-conversion-hb.html"></iframe><p>Void! The lists are in a <code class="docutils literal notranslate"><span class="pre">void</span></code> state meaning these objects are allocated <em>but
-are never used</em>. Now we can restate the problem: There is a memory leak in the
-<code class="docutils literal notranslate"><span class="pre">Expander</span></code>. When <code class="docutils literal notranslate"><span class="pre">implicit-conversion-test</span></code> is run in the interpreter, it
-allocates a total of 121.8 Gb. (eventlog shows 116171.68 <em>MebiBytes</em> in the
-detailed tab).</p>
+are never used</em> (see <a class="reference external" href="https://downloads.haskell.org/~ghc/9.2.4/docs/html/users_guide/profiling.html#biographical-profiling">the user guide</a>). Now we can restate the problem: There
+is a memory leak in the <code class="docutils literal notranslate"><span class="pre">Expander</span></code>. When <code class="docutils literal notranslate"><span class="pre">implicit-conversion-test</span></code> is run,
+the expander allocates a total of 121.8 Gb. (eventlog shows 116171.68
+<em>MebiBytes</em> in the detailed tab).</p>
 <p>Now to answer why this data is being retained. Here is the retainer profile.</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>cabal <span class="nb">test</span> --enable-profiling --test-show-details<span class="o">=</span>streaming --test-options<span class="o">=</span><span class="s1">&#39;--pattern &quot;implicit-conversion-test&quot; +RTS -hr -l-agu -p -RTS&#39;</span> --ghc-options<span class="o">=</span><span class="s1">&#39;-eventlog -rtsopts -O2&#39;</span>
 <span class="gp">$ </span>hp2ps -c klister-tests.hp <span class="o">&amp;&amp;</span> ps2pdf klister-tests.ps
@@ -869,16 +888,43 @@ function:</p>
 </pre></div>
 </div>
 <p>This code is reading from the <code class="docutils literal notranslate"><span class="pre">Expander</span></code> state twice to retrieve <code class="docutils literal notranslate"><span class="pre">globalEnv</span></code>
-and <code class="docutils literal notranslate"><span class="pre">localEnv</span></code> and then returning the union of these two environments. Because
-this code is monadic, there is a high probability that these projections are
-lazy. Furthermore, the <code class="docutils literal notranslate"><span class="pre">return</span></code> statement is clearly lazy. In general, unless
-the result of a monadic action <em>needs</em> to be consumed lazily there is little
-reason to not make it strict in the return. In this case, if the result is not
-immediately demanded, then this code will allocate a thunk for <code class="docutils literal notranslate"><span class="pre">phase</span></code>,
-<code class="docutils literal notranslate"><span class="pre">globalEnv</span></code>, <code class="docutils literal notranslate"><span class="pre">localEnv</span></code> and the merge of both <code class="docutils literal notranslate"><span class="pre">globalEnv</span></code> and
-<code class="docutils literal notranslate"><span class="pre">localEnv</span></code>.</p>
-<p>Before changing the code, let’s first inspect the types. Here is the type for
-<code class="docutils literal notranslate"><span class="pre">Expand</span></code>:</p>
+and <code class="docutils literal notranslate"><span class="pre">localEnv</span></code>, and then returning the union of these two environments. Notice
+that if the results of <code class="docutils literal notranslate"><span class="pre">currentEnv</span></code> are not immediately forced, then the
+projections and the return will be lazy. Thus, this code will allocate a thunk
+for <code class="docutils literal notranslate"><span class="pre">phase</span></code>, <code class="docutils literal notranslate"><span class="pre">globalEnv</span></code>, <code class="docutils literal notranslate"><span class="pre">localEnv</span></code> and the merge of both <code class="docutils literal notranslate"><span class="pre">globalEnv</span></code>
+and <code class="docutils literal notranslate"><span class="pre">localEnv</span></code>. In general, unless the result of a monadic action <em>needs</em> to
+be consumed lazily there is little reason to not make it strict in the return.
+In this case, there are two call sites to <code class="docutils literal notranslate"><span class="pre">currentEnv</span></code> both in the expander:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Expander.hs</span><span class="w"></span>
+<span class="nf">runTask</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">(</span><span class="kt">TaskID</span><span class="p">,</span><span class="w"> </span><span class="kt">ExpanderLocal</span><span class="p">,</span><span class="w"> </span><span class="kt">ExpanderTask</span><span class="p">)</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Expand</span><span class="w"> </span><span class="nb">()</span><span class="w"></span>
+<span class="nf">runTask</span><span class="w"> </span><span class="p">(</span><span class="n">tid</span><span class="p">,</span><span class="w"> </span><span class="n">localData</span><span class="p">,</span><span class="w"> </span><span class="n">task</span><span class="p">)</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">withLocal</span><span class="w"> </span><span class="n">localData</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="kr">do</span><span class="w"></span>
+<span class="o">...</span><span class="w"></span>
+<span class="w"> </span><span class="kt">AwaitingDefn</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="n">defn</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="n">dest</span><span class="w"> </span><span class="n">stx</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"></span>
+<span class="w">   </span><span class="kt">Env</span><span class="o">.</span><span class="n">lookupVal</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">&lt;$&gt;</span><span class="w"> </span><span class="n">currentEnv</span><span class="w"> </span><span class="o">&gt;&gt;=</span><span class="w"></span>
+<span class="w">   </span><span class="nf">\</span><span class="kr">case</span><span class="w"></span>
+
+
+<span class="nf">evalDecl</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">CompleteDecl</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">WriterT</span><span class="w"> </span><span class="p">[</span><span class="kt">EvalResult</span><span class="p">]</span><span class="w"> </span><span class="kt">Expand</span><span class="w"> </span><span class="nb">()</span><span class="w"></span>
+<span class="nf">evalDecl</span><span class="w"> </span><span class="p">(</span><span class="kt">CompleteDecl</span><span class="w"> </span><span class="n">d</span><span class="p">)</span><span class="w"> </span><span class="ow">=</span><span class="w"></span>
+<span class="w">  </span><span class="kr">case</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="kr">of</span><span class="w"></span>
+<span class="w">  </span><span class="o">...</span><span class="w"></span>
+<span class="w">  </span><span class="kt">Example</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="n">sch</span><span class="w"> </span><span class="n">expr</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kr">do</span><span class="w"></span>
+<span class="w">   </span><span class="n">env</span><span class="w"> </span><span class="ow">&lt;-</span><span class="w"> </span><span class="n">lift</span><span class="w"> </span><span class="n">currentEnv</span><span class="w"></span>
+<span class="w">   </span><span class="n">value</span><span class="w"> </span><span class="ow">&lt;-</span><span class="w"> </span><span class="n">lift</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="n">expandEval</span><span class="w"> </span><span class="p">(</span><span class="n">eval</span><span class="w"> </span><span class="n">expr</span><span class="p">)</span><span class="w"></span>
+<span class="w">   </span><span class="n">tell</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="p">[</span><span class="kt">ExampleResult</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="n">env</span><span class="w"> </span><span class="n">expr</span><span class="w"> </span><span class="n">sch</span><span class="w"> </span><span class="n">value</span><span class="p">]</span><span class="w"></span>
+</pre></div>
+</div>
+<p>The first call site in <code class="docutils literal notranslate"><span class="pre">runTask</span></code> is immediately scrutinized by the <code class="docutils literal notranslate"><span class="pre">\case</span></code>
+and <code class="docutils literal notranslate"><span class="pre">Env.lookupVal</span></code>. However, the second is not: <code class="docutils literal notranslate"><span class="pre">ExampleResult</span></code> is not
+strict in any fields:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">data</span><span class="w"> </span><span class="kt">EvalResult</span><span class="w"></span>
+<span class="w">  </span><span class="ow">=</span><span class="w"> </span><span class="kt">ExampleResult</span><span class="w"> </span><span class="kt">SrcLoc</span><span class="w"> </span><span class="kt">VEnv</span><span class="w"> </span><span class="kt">Core</span><span class="w"> </span><span class="p">(</span><span class="kt">Scheme</span><span class="w"> </span><span class="kt">Ty</span><span class="p">)</span><span class="w"> </span><span class="kt">Value</span><span class="w"></span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="kt">IOResult</span><span class="w"> </span><span class="p">(</span><span class="kt">IO</span><span class="w"> </span><span class="nb">()</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+<p>and the whole computation is performed in a lazy <code class="docutils literal notranslate"><span class="pre">WriterT</span></code> monad transformer.
+Before changing the code, let’s first inspect the type of the <code class="docutils literal notranslate"><span class="pre">Expand</span></code> monad.
+Here is the definition for <code class="docutils literal notranslate"><span class="pre">Expand</span></code>:</p>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">newtype</span><span class="w"> </span><span class="kt">Expand</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">Expand</span><span class="w"></span>
 <span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="n">runExpand</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">ReaderT</span><span class="w"> </span><span class="kt">ExpanderContext</span><span class="w"> </span><span class="p">(</span><span class="kt">ExceptT</span><span class="w"> </span><span class="kt">ExpansionErr</span><span class="w"> </span><span class="kt">IO</span><span class="p">)</span><span class="w"> </span><span class="n">a</span><span class="w"></span>
 <span class="w">  </span><span class="p">}</span><span class="w"></span>
@@ -919,8 +965,8 @@ functions operating on <code class="docutils literal notranslate"><span class="p
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">currentEnv</span></code> returns a <code class="docutils literal notranslate"><span class="pre">Expand</span> <span class="pre">VEnv</span></code>, <code class="docutils literal notranslate"><span class="pre">VEnv</span></code> is a <code class="docutils literal notranslate"><span class="pre">Env</span> <span class="pre">Var</span> <span class="pre">Value</span></code> where
-an <code class="docutils literal notranslate"><span class="pre">Env</span></code> is an <code class="docutils literal notranslate"><span class="pre">IntMap</span></code>. Thus <code class="docutils literal notranslate"><span class="pre">globalEnv</span></code> and <code class="docutils literal notranslate"><span class="pre">localEnv</span></code> are both an
-<code class="docutils literal notranslate"><span class="pre">IntMap</span></code> that stores a tuple of <code class="docutils literal notranslate"><span class="pre">(Ident,</span> <span class="pre">Value)</span></code>. Here is the type of
+an <code class="docutils literal notranslate"><span class="pre">Env</span></code> is an <code class="docutils literal notranslate"><span class="pre">IntMap</span></code>. Thus <code class="docutils literal notranslate"><span class="pre">globalEnv</span></code> and <code class="docutils literal notranslate"><span class="pre">localEnv</span></code> are both a
+strict <code class="docutils literal notranslate"><span class="pre">IntMap</span></code> that stores a tuple of <code class="docutils literal notranslate"><span class="pre">(Ident,</span> <span class="pre">Value)</span></code>. Here is the type of
 <code class="docutils literal notranslate"><span class="pre">Value</span></code>:</p>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- in Value.hs</span><span class="w"></span>
 <span class="kr">data</span><span class="w"> </span><span class="kt">Value</span><span class="w"></span>
@@ -936,8 +982,12 @@ an <code class="docutils literal notranslate"><span class="pre">Env</span></code
 </pre></div>
 </div>
 <p>Notice that <code class="docutils literal notranslate"><span class="pre">ValueCtor</span></code> holds a lazy list of <code class="docutils literal notranslate"><span class="pre">Value</span></code>. Should
-<code class="docutils literal notranslate"><span class="pre">implicit-tests</span></code> create many <code class="docutils literal notranslate"><span class="pre">ValueCtor</span></code> then the expander state will blow
-up. Let’s test this and make <code class="docutils literal notranslate"><span class="pre">Value</span></code> strict and then generate another
+<code class="docutils literal notranslate"><span class="pre">implicit-tests</span></code> create many <code class="docutils literal notranslate"><span class="pre">ValueCtor</span></code> then the expander state will leak
+memory in <code class="docutils literal notranslate"><span class="pre">Value</span></code>. This leak will occur even though the <code class="docutils literal notranslate"><span class="pre">IntMap</span></code> is strict.
+The strict <code class="docutils literal notranslate"><span class="pre">IntMap</span></code> well only evaluate elements to <a class="reference internal" href="../glossary.html#term-WHNF"><span class="xref std std-term">WHNF</span></a>, which will be
+<code class="docutils literal notranslate"><span class="pre">(,)</span></code>, thus because <code class="docutils literal notranslate"><span class="pre">Value</span></code> is stored in a lazy tuple, the fields of the
+tuple will be lazy unless they are carefully forced <em>before</em> insertion.</p>
+<p>Let’s test this and make <code class="docutils literal notranslate"><span class="pre">Value</span></code> strict and then generate another
 biographical profile to observe the change:</p>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- in Value.hs</span><span class="w"></span>
 <span class="kr">data</span><span class="w"> </span><span class="kt">Value</span><span class="w"></span>
@@ -970,7 +1020,8 @@ making the monadic action strict in its return:</p>
 </pre></div>
 </div>
 <iframe id="scaled-frame" scrolling="no" src="../../../_static/klister/klister-eventlog-implicit-conversion-currentEnv-fixed.html"></iframe><p>A significant improvement! Instead of 121.8 Gb the profile shows total
-allocation of <code class="docutils literal notranslate"><span class="pre">void</span></code> of 4.62 Gb (4404.22 MiB) which is a 30x reduction.</p>
+allocation of <code class="docutils literal notranslate"><span class="pre">void</span></code> of 4.62 Gb (4404.22 MiB in the detailed tab) which is a
+30x reduction.</p>
 </section>
 <section id="optimization-3-choosing-better-data-structures-lists">
 <h2><span class="section-number">4.3.7. </span>Optimization 3: Choosing Better Data Structures: Lists<a class="headerlink" href="#optimization-3-choosing-better-data-structures-lists" title="Permalink to this heading">¶</a></h2>
@@ -1034,14 +1085,16 @@ module being visited and then merged with the interpreter’s binding table:</p>
 </pre></div>
 </div>
 <p>So from this code, the <code class="docutils literal notranslate"><span class="pre">BindingTable</span></code> data structure undergoes merges,
-traversals such as <code class="docutils literal notranslate"><span class="pre">fmap</span></code> and <code class="docutils literal notranslate"><span class="pre">filter</span></code> and the length is calculated. From
-the <code class="docutils literal notranslate"><span class="pre">prof</span></code> report, <code class="docutils literal notranslate"><span class="pre">visibleBindings</span></code> and <code class="docutils literal notranslate"><span class="pre">resolve</span></code> are entered more than
-100,000 times, <code class="docutils literal notranslate"><span class="pre">checkUnambiguous</span></code> entered less than 20,000 times. Thus merging
-and sorting are more important than duplicate element removal and calculating
-length. Based on this usage, we’ll replace the list with a <code class="docutils literal notranslate"><span class="pre">Data.Sequence</span></code>, a
-<code class="docutils literal notranslate"><span class="pre">Data.Set</span></code> would also work and would provide uniqueness by default, but
-<code class="docutils literal notranslate"><span class="pre">Data.Set</span></code> has slower merge behavior compared to a <code class="docutils literal notranslate"><span class="pre">Data.Sequence</span></code> for many
-elements (<span class="math notranslate nohighlight">\(\mathcal{O}(\log{(\min(n_{1},n_{2}))})\)</span>, compared to
+traversals such as <code class="docutils literal notranslate"><span class="pre">fmap</span></code> and <code class="docutils literal notranslate"><span class="pre">filter</span></code> and the length is calculated. We can
+check how often these functions are used in the <code class="docutils literal notranslate"><span class="pre">prof</span></code> report we generated
+with the last heap profile (using the <code class="docutils literal notranslate"><span class="pre">-p</span></code> RTS flag). <code class="docutils literal notranslate"><span class="pre">visibleBindings</span></code> and
+<code class="docutils literal notranslate"><span class="pre">resolve</span></code> are entered more than 100,000 times, <code class="docutils literal notranslate"><span class="pre">checkUnambiguous</span></code> is entered
+less than 20,000 times. Thus merging and sorting are more important than
+duplicate element removal and calculating length. Based on this usage, we’ll
+replace the list with a <code class="docutils literal notranslate"><span class="pre">Data.Sequence</span></code>, a <code class="docutils literal notranslate"><span class="pre">Data.Set</span></code> would also work and
+would provide uniqueness by default, but <code class="docutils literal notranslate"><span class="pre">Data.Set</span></code> has slower merge behavior
+compared to a <code class="docutils literal notranslate"><span class="pre">Data.Sequence</span></code> for many elements
+(<span class="math notranslate nohighlight">\(\mathcal{O}(\log{(\min(n_{1},n_{2}))})\)</span>, compared to
 <span class="math notranslate nohighlight">\(\mathcal{O}(m \log{\frac{n + 1}{m + 1}})\)</span>, where <span class="math notranslate nohighlight">\(m \le n\)</span>).</p>
 <p><code class="docutils literal notranslate"><span class="pre">BindingTable</span></code> is not the only suspicious list. Consider this list in the
 definition of <code class="docutils literal notranslate"><span class="pre">Module</span></code>:</p>
@@ -1074,16 +1127,16 @@ in the expander monad:</p>
 </pre></div>
 </div>
 <p>Notice that the <code class="docutils literal notranslate"><span class="pre">DeclTreeBranch</span> <span class="pre">l</span> <span class="pre">r</span></code> case will be expensive because it will
-merge every <em>combination</em> of elements in the <code class="docutils literal notranslate"><span class="pre">l</span></code> and <code class="docutils literal notranslate"><span class="pre">r</span></code> groups with list
+merge <em>every combination</em> of elements in the <code class="docutils literal notranslate"><span class="pre">l</span></code> and <code class="docutils literal notranslate"><span class="pre">r</span></code> groups with list
 concatenation. Just this line is enough to change the data structure to a
 sequence, again because a sequence has fast merging and cons behavior <a class="footnote-reference brackets" href="#id10" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>.</p>
 </section>
 <section id="optimization-4-fixing-allscopesets">
 <h2><span class="section-number">4.3.8. </span>Optimization 4: Fixing allScopeSets<a class="headerlink" href="#optimization-4-fixing-allscopesets" title="Permalink to this heading">¶</a></h2>
-<p>However, there is still a lot of <code class="docutils literal notranslate"><span class="pre">void</span></code> in the heap profile. This is a good
-scenario for info-table profiling. Info-table profiling relates source code to
-closures so with it we can see where in the source code the <code class="docutils literal notranslate"><span class="pre">void</span></code> is
-originating.</p>
+<p>We,ve come quite far, but there is still a lot of <code class="docutils literal notranslate"><span class="pre">void</span></code> in the heap profile.
+This is a good scenario for info-table profiling. Info-table profiling relates
+source code to closures so we can see the exact line of source code the <code class="docutils literal notranslate"><span class="pre">void</span></code>
+is originating.</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>cabal <span class="nb">test</span> --test-show-details<span class="o">=</span>streaming --test-options<span class="o">=</span><span class="s1">&#39;--pattern &quot;implicit-conversion-test&quot; +RTS -hi -i0.05 -l -RTS&#39;</span> --ghc-options<span class="o">=</span><span class="s1">&#39;-eventlog -rtsopts -O2 -finfo-table-map -fdistinct-construct or-tables&#39;</span>
 </pre></div>
 </div>
@@ -1131,9 +1184,9 @@ info-table profiling, beginning with <code class="docutils literal notranslate">
 <span class="nf">combine</span><span class="w"> </span><span class="n">ff</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="o">!</span><span class="n">res</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="p">(</span><span class="o">&lt;*&gt;</span><span class="p">)</span><span class="w"> </span><span class="n">ff</span><span class="w"> </span><span class="p">(</span><span class="n">g</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="kr">in</span><span class="w"> </span><span class="n">res</span><span class="w"></span>
 </pre></div>
 </div>
-<p>Unfortunately, this produces the same profile. Thus let’s next force <code class="docutils literal notranslate"><span class="pre">g</span> <span class="pre">a</span></code>:</p>
+<p>Unfortunately, this produces the same profile. Let’s next force <code class="docutils literal notranslate"><span class="pre">g</span> <span class="pre">a</span></code>:</p>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">combine</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Data</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="ow">=&gt;</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">b</span><span class="w"></span>
-<span class="nf">combine</span><span class="w"> </span><span class="n">ff</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="o">!</span><span class="n">res</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="p">(</span><span class="o">&lt;*&gt;</span><span class="p">)</span><span class="w"> </span><span class="n">ff</span><span class="w"> </span><span class="p">(</span><span class="n">g</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="kr">in</span><span class="w"> </span><span class="n">res</span><span class="w"></span>
+<span class="nf">combine</span><span class="w"> </span><span class="n">ff</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="o">!</span><span class="n">ga</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="p">(</span><span class="n">g</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="kr">in</span><span class="w"> </span><span class="p">(</span><span class="o">&lt;*&gt;</span><span class="p">)</span><span class="w"> </span><span class="n">ff</span><span class="w"> </span><span class="n">ga</span><span class="w"></span>
 </pre></div>
 </div>
 <p>and rerun the test:</p>
@@ -1156,7 +1209,9 @@ does not display the information for the most allocating info table address
 <code class="docutils literal notranslate"><span class="pre">0x1b93550</span></code>. We’ll do one last test and make both the entire body and <code class="docutils literal notranslate"><span class="pre">g</span> <span class="pre">a</span></code>
 strict:</p>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">combine</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Data</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="ow">=&gt;</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">b</span><span class="w"></span>
-<span class="nf">combine</span><span class="w"> </span><span class="n">ff</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="o">!</span><span class="n">ga</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="p">(</span><span class="o">&lt;*&gt;</span><span class="p">)</span><span class="w"> </span><span class="n">ff</span><span class="w"> </span><span class="p">(</span><span class="n">g</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="kr">in</span><span class="w"> </span><span class="n">res</span><span class="w"></span>
+<span class="nf">combine</span><span class="w"> </span><span class="n">ff</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="o">!</span><span class="n">ga</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="p">(</span><span class="n">g</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"></span>
+<span class="w">                   </span><span class="o">!</span><span class="n">res</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="p">(</span><span class="o">&lt;*&gt;</span><span class="p">)</span><span class="w"> </span><span class="n">ff</span><span class="w"> </span><span class="n">ga</span><span class="w"></span>
+<span class="w">                   </span><span class="kr">in</span><span class="w"> </span><span class="n">res</span><span class="w"></span>
 </pre></div>
 </div>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">Running 1 test suites...</span>
@@ -1173,9 +1228,17 @@ strict:</p>
 profiling, but by forcing those thunks the heap grew from 100Mb to 2.6Gb. So
 even though info-table profiling pointed to <code class="docutils literal notranslate"><span class="pre">allScopeSets</span></code>, our problem lies
 elsewhere. If <code class="docutils literal notranslate"><span class="pre">allScopeSets</span></code> was the culprit then we would expect an
-improvement, which was not observed. Although, we have learned that
-<code class="docutils literal notranslate"><span class="pre">allScopeSets</span></code> is on the critical path of the memory leak. With these changes
-in place, let’s profile the heap and check what type of closures are leaking:</p>
+improvement, which was not observed. But we have learned that <code class="docutils literal notranslate"><span class="pre">allScopeSets</span></code>
+is on the critical path of the memory leak. We’ll leave these changes in place
+to determine what type of closures are newly leaking:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is a common phenomena when plugging memory leaks. By adding strictness
+to the critical path the leak is on, it is often the case that the laziness
+moves to another part of system until the root cause is discovered. So by
+leaving these changes in place we are traversing the critical path that leads
+to the leak.</p>
+</div>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>cabal <span class="nb">test</span> --enable-profiling --test-show-details<span class="o">=</span>streaming  --test-options<span class="o">=</span><span class="s1">&#39;--pattern &quot;implicit-conversion-test&quot; +RTS -hy -l-agu -p -L50 -RTS&#39;</span> --ghc-options<span class="o">=</span><span class="s1">&#39;-eventlog -rtsopts -O2&#39;</span>
 </pre></div>
 </div>
@@ -1216,7 +1279,7 @@ called in one function: <code class="docutils literal notranslate"><span class="
 </pre></div>
 </div>
 <p>We see that <code class="docutils literal notranslate"><span class="pre">allScopeSets</span></code> <em>is only</em> used to construct <code class="docutils literal notranslate"><span class="pre">m''</span></code>, by traversing
-the data in <code class="docutils literal notranslate"><span class="pre">m'</span></code>, applying the function <code class="docutils literal notranslate"><span class="pre">ScopeSet.insertUniversally</span></code>, and
+the data in <code class="docutils literal notranslate"><span class="pre">m'</span></code>, and applying the function <code class="docutils literal notranslate"><span class="pre">ScopeSet.insertUniversally</span></code>
 with the argument <code class="docutils literal notranslate"><span class="pre">sc</span></code>. Here is <code class="docutils literal notranslate"><span class="pre">insertUniversally</span></code>:</p>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">insertUniversally</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Scope</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">ScopeSet</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">ScopeSet</span><span class="w"></span>
 <span class="nf">insertUniversally</span><span class="w"> </span><span class="n">sc</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">set</span><span class="w"> </span><span class="p">(</span><span class="n">universalScopes</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="n">at</span><span class="w"> </span><span class="n">sc</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="kt">Just</span><span class="w"> </span><span class="nb">()</span><span class="p">)</span><span class="w"></span>
@@ -1245,13 +1308,14 @@ especially problematic given the high entry counts we observed for
 <code class="docutils literal notranslate"><span class="pre">isSubsetOf</span></code> and <code class="docutils literal notranslate"><span class="pre">allScopeSets</span></code>.</p>
 <p>To fix the <code class="docutils literal notranslate"><span class="pre">Scope</span></code> type we’ll make the <code class="docutils literal notranslate"><span class="pre">Int</span></code> field strict, remove the
 <code class="docutils literal notranslate"><span class="pre">Text</span></code> field entirely and inline <code class="docutils literal notranslate"><span class="pre">freshScope</span></code> . The <code class="docutils literal notranslate"><span class="pre">Int</span></code> field should be
-strict to ensure the increments do not accumulate thunks. We could choose to
-make the <code class="docutils literal notranslate"><span class="pre">Text</span></code> field strict, but this would be a mistake because the <code class="docutils literal notranslate"><span class="pre">Text</span></code>
-field <em>is only</em> used in an error state, so making it strict would mean
-allocating memory in a hot loop when it is unnecessary to do so. Removing the
-<code class="docutils literal notranslate"><span class="pre">Text</span></code> field also unlocks better data structures; with its removal we can use
-a <code class="docutils literal notranslate"><span class="pre">newtype</span></code> instead of a <code class="docutils literal notranslate"><span class="pre">data</span></code> type and use an <code class="docutils literal notranslate"><span class="pre">IntSet</span></code> instead of a
-<code class="docutils literal notranslate"><span class="pre">Set</span></code>. An <code class="docutils literal notranslate"><span class="pre">IntSet</span></code> is similar to an <code class="docutils literal notranslate"><span class="pre">IntMap</span></code> (it is also implemented as a
+strict to ensure the increments do not accumulate thunks and to make sure GHC
+will unpack the <code class="docutils literal notranslate"><span class="pre">Int</span></code>. We could choose to make the <code class="docutils literal notranslate"><span class="pre">Text</span></code> field strict, but
+this would be a mistake because the <code class="docutils literal notranslate"><span class="pre">Text</span></code> field <em>is only</em> used in an error
+state, so making it strict would mean allocating memory in a hot loop when it is
+unnecessary to do so. Furthermore, removing the <code class="docutils literal notranslate"><span class="pre">Text</span></code> field unlocks better
+data structures; with its removal we can use a <code class="docutils literal notranslate"><span class="pre">newtype</span></code> instead of a <code class="docutils literal notranslate"><span class="pre">data</span></code>
+type, thereby reducing allocations, and use an <code class="docutils literal notranslate"><span class="pre">IntSet</span></code> instead of a <code class="docutils literal notranslate"><span class="pre">Set</span></code>.
+An <code class="docutils literal notranslate"><span class="pre">IntSet</span></code> is similar to an <code class="docutils literal notranslate"><span class="pre">IntMap</span></code> (it is also implemented as a
 big-endian PATRICIA trie) but the implementation in <code class="docutils literal notranslate"><span class="pre">containers</span></code> is tuned for
 dense sets (where the elements are close in value), which is the kind of
 <code class="docutils literal notranslate"><span class="pre">IntSet</span></code> the klister interpreter generates.</p>
@@ -1269,7 +1333,8 @@ observe any changes:</p>
 <span class="o">...</span><span class="w"></span>
 </pre></div>
 </div>
-<p>Notice, the new <code class="docutils literal notranslate"><span class="pre">$!</span></code> after <code class="docutils literal notranslate"><span class="pre">freshScope</span></code>. Here is the heap profile:</p>
+<p>Notice, the strict application: <code class="docutils literal notranslate"><span class="pre">$!</span></code>, after <code class="docutils literal notranslate"><span class="pre">freshScope</span></code>. Here is the heap
+profile:</p>
 <iframe id="scaled-frame" scrolling="no" src="/_static/klister/klister-eventlog-implicit-conversion-allscope-fixed.html"></iframe><p>Much better, the interpreter is still leaking <code class="docutils literal notranslate"><span class="pre">[]</span></code> but the heap stays under
 50Mb. We have found the memory leak. Now we’ll go further and remove the
 <code class="docutils literal notranslate"><span class="pre">Text</span></code> field from <code class="docutils literal notranslate"><span class="pre">Scope</span></code> and change <code class="docutils literal notranslate"><span class="pre">ScopeSet</span></code> to use <code class="docutils literal notranslate"><span class="pre">IntSet</span></code>. To
@@ -1315,11 +1380,12 @@ definitions:</p>
 <p>Notice that the API to <code class="docutils literal notranslate"><span class="pre">freshScope</span></code> does not change. In total, there are 11
 more call sites to <code class="docutils literal notranslate"><span class="pre">freshScope</span></code> throughout the interpreter that are leaking.
 So if we had changed the API then the CPP would proliferate even more. To avoid
-the extra CPP we’ll inline <code class="docutils literal notranslate"><span class="pre">freshScope</span></code>; this will ensure that in a non-debug
+the extra CPP we inline <code class="docutils literal notranslate"><span class="pre">freshScope</span></code>; this will ensure that in a non-debug
 build GHC will determine that the <code class="docutils literal notranslate"><span class="pre">Text</span></code> argument is dead and remove it,
 thereby clearing the memory leaks at each call site.</p>
-<p>Now let’s check the runtime of <code class="docutils literal notranslate"><span class="pre">implicit-conversion-test</span></code> to observe the
-effect of our changes:</p>
+<p>Now we’ll revert the strictness changes in <code class="docutils literal notranslate"><span class="pre">allScopeSets</span></code> and check the
+runtime of <code class="docutils literal notranslate"><span class="pre">implicit-conversion-test</span></code> to observe the effect of our
+optimizations:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>cabal <span class="nb">test</span> --test-show-details<span class="o">=</span>streaming --test-options<span class="o">=</span><span class="s1">&#39;--pattern &quot;implicit-conversion-test&quot;&#39;</span> --ghc-options<span class="o">=</span><span class="s1">&#39;-O2&#39;</span>
 <span class="go">  ...</span>
 <span class="go">  Test suite klister-tests: RUNNING...</span>
@@ -1374,7 +1440,7 @@ testsuite originally took 38 seconds to finish.</p>
 </div>
 <p>The entire test suite finished in just under 10 seconds, or about as fast as
 <code class="docutils literal notranslate"><span class="pre">implicit-conversion-test</span></code> finished originally. <code class="docutils literal notranslate"><span class="pre">implicit-conversion-test</span></code>
-is also not the only test that benefited. Almost every tests is faster; for
+is also not the only test that benefited. Almost every test is faster; for
 example, <code class="docutils literal notranslate"><span class="pre">which-problem</span></code> finishes in 240 ms compared to 820 ms,
 <code class="docutils literal notranslate"><span class="pre">double-define</span></code> finishes in 180 ms compared to 340 ms. Our work here is done
 for now.</p>
@@ -1397,9 +1463,9 @@ closures on the heap came from. This technique led our analysis to the
 <p>Key to our analysis was a careful debugging process. We:</p>
 <ol class="arabic simple">
 <li><p>Found a reproducible test case.</p></li>
-<li><p>Didn’t guess, instead we looked: We used available instrumentation to develop
-hypotheses about the klister interpreter’s performance. That is, we let the
-instrumentation guide the search instead of guessing.</p></li>
+<li><p>Didn’t guess, instead we looked: We used GHC’s instrumentation to develop
+hypotheses about the klister interpreter’s performance instead of guessing
+and performing <a class="reference external" href="https://en.wikipedia.org/wiki/Shotgun_debugging">shotgun debugging</a>.</p></li>
 <li><p>Only changed one thing at a time: We tried to only change a single function,
 or a single type at a time. Then, if we did not observe any difference with
 the instrumentation we reverted the change.</p></li>
@@ -1409,7 +1475,7 @@ even though the heap stays under 50Mb. In the end, the optimizations were
 trivial; we only chose better data structures and closed memory leaks. We could
 still optimize or memoize <code class="docutils literal notranslate"><span class="pre">isSubsetOf</span></code>, unroll the <code class="docutils literal notranslate"><span class="pre">Expander</span></code> monad
 transformer, fix the expander’s use of the <code class="docutils literal notranslate"><span class="pre">WriterT</span></code> monad transformer; which
-is well known to leak memory <a class="footnote-reference brackets" href="#id12" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>, manually loop fuse and swap, or <a class="reference internal" href="../Optimizations/Code_Changes/oneshot.html#oneshot-monad-chapter"><span class="std std-ref">oneShot</span></a> the expander monad. But for a first pass our results
+is well known to leak memory <a class="footnote-reference brackets" href="#id12" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>, do some manual loop fusion, or <a class="reference internal" href="../Optimizations/Code_Changes/oneshot.html#oneshot-monad-chapter"><span class="std std-ref">oneShot</span></a> the expander monad. But for a first pass our results
 are good enough.</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="id8" role="note">

@@ -14,11 +14,18 @@ of any system which is shortlived, has distinct phases of input and output, and
 maintains state. To diagnose the performance issues this case study uses
 :ref:`Heap Profiling <Heap Profiling Chapter>` with :ref:`Eventlog <EventLog
 Chapter>`, :ref:`Info Table Profiling <IPE Chapter>`, :ref:`TickyTicky <Ticky
-Chapter>` profiling. Similarly, the chapter motivates the use of more efficient
-data structures for the interpreter and shows the net benefits of using proper
-data structure for the computation at hand. After reading this chapter, a reader
-should be able to spot inefficient data structure use by reading code, and
-utilize profiling techniques to diagnose memory performance issues.
+Chapter>` profiling. The optimizations are simply choosing better data
+structures and closing memory leaks; any intermediate level Haskeller should be
+able to follow along. After reading this chapter, a reader should be able to
+spot inefficient data structure use by reading code, and utilize profiling
+techniques to diagnose memory performance issues and identify hot code.
+
+The rest of the chapter is structured as follows. We introduce the |klister|
+interpreter and perform a performance minded code review. We then use the
+klister testsuite to identify a poor performing program. Using this program we
+begin performance engineering by: identifying a problem, implementing a change,
+testing that the change was effective, and then repeating the process having
+either made progress or by changing another part of the interpreter.
 
 Introduction to the System
 --------------------------
@@ -30,13 +37,13 @@ such as s-expression syntax, hygenic macros and lexical scoping. All we need to
 know about that the klister interpreter inputs a program, parses the program,
 maintains mutable stores of variables and outputs a result.
 
-To begin performance engineering we'll review the sub-systems that compose the
-interpreter. In klister, there are 4 major sub-system:
+To begin performance engineering we'll review the subsystems that compose the
+interpreter. In klister, there are 4 major subsystem:
 
 #. Parser: The system that lexes and tokenizes. Klister employs |MegaParsec| for
    its parser.
 #. Expander: Klister is a scheme-like language with hygenic macros. This
-   sub-system performs the macro expansion and elaboration typical to these
+   subsystem performs the macro expansion and elaboration typical to these
    kinds of programming languages.
 #. Type Checker: Klister is a pure functional language with Hindley-Milner type
    checking and higher-ordered types, including type safe macros. This subsystem
@@ -49,20 +56,20 @@ interpreter. In klister, there are 4 major sub-system:
 Characterizing the Problem
 --------------------------
 
-The goal is to speed up the klister interpreter, but this goal is too vague to
-begin working. We first need to know specifics so we can make statements that
-are actionable and precise. That is, we need to have a reproducible test to
-observe where time is spent, and where memory is allocated and consumed. Then we
-can correlate these costs to particular sub-systems in the interpreter. For
-example, we would like to say "The parser finishes a 100 line program in 100ms
-and runs in 100Kb of constant space, but the expander allocates 2Gb and finishes
-its computation in 2 minutes!". Once we can make precise statements, we can
-begin forming hypotheses to speed up the system.
+Our goal is to speed up the klister interpreter, but this goal is too vague and
+is not actionable. We first need to be able to make statements that are precise
+enough to be actionable. That is, we need to have a reproducible test to observe
+where time is spent, and, where and how much memory is allocated and consumed.
+Then we can correlate these costs to particular subsystems in the interpreter.
+For example, we wish to be able to say "The parser finishes a 100 line program
+in 100ms and runs in 100Kb of constant space, but the expander allocates 2Gb and
+finishes its computation in 2 minutes!". Once we can make precise statements, we
+can begin forming hypotheses to speed up the system.
 
 We'll use klister's testsuite to find a reproducible test. The testsuite
 provides good sample of programs and will allow us to find a *degenerate*
 program. With a degenerate program, we'll record and correlate runtime costs to
-each sub-system and find the offending piece of source code.
+each subsystem and find the offending piece of source code.
 
 .. note::
 
@@ -93,9 +100,9 @@ understand the interpreter and to read through the code with a performance
 engineering mindset. Here is a list of things that are noticeable from reading
 through the source code.
 
-#. Lazy Data.Map in the interpreter state.
+#. Lazy ``Data.Map`` in the interpreter state.
+#. Lazy ``modifyIORef`` in the interpreter state.
 #. Use of lazy tuples throughout the code base.
-#. Lazy modifyIORef in the interpreter state.
 #. Lists used as general purpose containers.
 #. Lazy State Monad especially in the Expander.
 #. Lazy WriterT monad transformer in the Expander.
@@ -104,8 +111,9 @@ through the source code.
    driven code.
 #. Some modules do not use explicit exports.
 #. No use of ``-funbox-strict-fields`` for bang patterns or ``UNPACK`` pragmas.
-#. using ``foldr`` on a list (see ``Expander.getExports``) that doesn't exploit laziness.
-#. using ``Integer`` instead of ``Int``.
+#. Using ``foldr`` on a list (see ``Expander.getExports``) even though the code
+   does not exploit laziness.
+#. Using ``Integer`` instead of ``Int``.
 
 We won't being going through each in detail, but instead just highlight a few
 consequential items. Note that not all of these need to be fixed or are
@@ -120,8 +128,8 @@ Data.Map With Expensive Keys
 The ``ExpanderState`` is a key type in the klister interpreter. It is stored in
 an ``IORef`` and maintains state for the expander. From a performance
 perspective the ``ExpanderState`` is suspect because it employs data structures
-that are lazy and yet will eventually use everything in the state. Here is the
-definition of the ``ExpanderState``:
+that are lazy and yet the interpreter will eventually use everything in the
+state. Here is the definition of the ``ExpanderState``:
 
 .. code-block:: haskell
 
@@ -182,10 +190,10 @@ This means that ``klister`` has a lot of ``Maps`` effectively indexed on
 An ``IntMap`` has several advantages over ``Data.Map``. ``Data.Map`` is an
 implementation of *size balanced binary trees* (see the `hackage
 <https://hackage.haskell.org/package/containers-0.6.7/docs/Data-Map.html>`_
-docs). The trees require re-balancing in order to maintain the balanced
+docs). These trees require re-balancing in order to maintain the balanced
 invariant. This balancing slows down writes (that is, adds work to
 ``Data.Map.insert``) and consequently merges, because a merge of any two trees
-may invoke a rebalancing. In contrast, ``IntMap`` is a big-endian PATRICIA Trie
+may invoke a re-balancing. In contrast, ``IntMap`` is a big-endian PATRICIA Trie
 (see :cite:t:`okasaki`) which never require balancing. Compared to ``Data.Map``,
 an ``IntMap`` provides faster writes at the cost of slightly slower reads.
 Additionally, ``IntMap`` uses less total memory than ``Data.Map`` [#]_.
@@ -225,10 +233,9 @@ down writes and merges.
 A better datastructure for maps indexed over ``String`` like types is
 ``Data.HashMap`` from the ``unordered-containers`` library. These maps are
 *Hashed Array Mapped Trie's*, or HAMTs for short (see :cite:t:`BagwellHAMT`).
-HAMTs index over a unique ``hash`` that uniquely represents the key type. These
-data structures are efficient for any key type where equality could be
-expensive; such as ``String``, ``Text`` or inductive data types that derive
-``Eq``.
+HAMTs index over a ``hash`` that uniquely represents the key. These data
+structures are efficient for any key type where equality could be expensive;
+such as ``String``, ``Text`` or inductive data types that derive ``Eq``.
 
 Lazy Tuples
 ^^^^^^^^^^^
@@ -272,17 +279,21 @@ project the ``sc'`` from the first position and pass it to ``addScope``. Second,
 to project the second, third and fourth positions into a list of 3-tuples and
 pass that to ``withLocalVarTypes``. This code can be improved with :term:`Loop
 Fusion` to iterate over the list once, using ``foldl'`` instead of ``foldr``,
-and by defining a datatype which unpacks every field instead of using ``(,,,)``.
+and by defining a datatype which unpacks every field instead of using ``(,,,)``
+to avoid the extra allocation for these tuples. Note that defining a such a
+datatype will require that |bottom| is never an element of the 4-tuple. In this
+case that will be true, but it is not true in general; again, in order to
+optimize you must :ref:`understand the system <Understand the System>`.
 
 Generally types such as ``(,,,)`` are a path of least resistance when writing
-new code in a code base. They are easy to reach for, easy to write and don't
-require more domain modeling. However, tuples, and especially tuples with more
-than two fields, are a consistent source of memory leaks. So one is almost
-always better off defining a datatype instead of using a tuple for performance.
+new code. They are easy to reach for, easy to write and don't require more
+domain modeling. However, tuples, and especially tuples with more than two
+fields, are a consistent source of memory leaks. So one is almost always better
+off defining a datatype instead of using a tuple for performance.
 
 .. note::
 
-   Of course, one may not want to add yet another datatype to the
+   Of course, you may not want to add yet another datatype to the
    implementation. One may want the datatypes in the implementation to map
    cleanly to domain objects. This a classic tradeoff between performance,
    readability and maintainability.
@@ -337,9 +348,10 @@ each test. So let's run the testsuite to find a degenerate test:
          All 124 tests passed (38.15s)
          Test suite klister-tests: PASS
 
-Notice that both ``implicit-conversion`` and ``implicit-conversion-test`` are
-outliers, passing in 7 and 9 *seconds*, whereas each other test passes in well
-under a second (except ``higher-kinded-patterns``). We have found our degenerate
+The entire testsuite finishes in 38 seconds. Notice that both
+``implicit-conversion`` and ``implicit-conversion-test`` are extreme outliers,
+passing in 7 and 9 *seconds*, whereas each other test passes in well under a
+second (except ``higher-kinded-patterns``). We have found our degenerate
 program.
 
 
@@ -348,18 +360,20 @@ Restate the Problem
 
 For the rest of the case study we'll focus on speeding up
 ``implicit-conversion-test`` under the assumption that our changes will also
-speed up the other tests and consequently the entire interpreter. Note that this
-is only an assumption and only works in this case because this is the first pass
-of performance engineering for this code.
+speed up the other tests and consequently the entire interpreter. It is
+certainly possible that optimizations in one subsystem of your code base will
+not translate to better overall performance. We make this assumption because
+this is the first pass of performance engineering for this code. So the
+probability that our changes do impact overall performance is high.
 
-We want to get specific and make sure that problems we highlighted in the code
-review are indeed problems for that test case. Or in other words, we should only
-make changes once we have evidence that this code we're changing is problematic.
-If the maps are a problematic factor then we should expect a lot of allocations
-to come from ``Data.Map.insert``, ``(==)``, ``Ord`` instances and the functions
-``Data.Map.Internal.balanceR`` and ``Data.Map.Internal.balanceL``. This is a
-good opportunity to :ref:`not think and look <Don't think, look>` with a
-:ref:`ticky <Ticky Chapter>` report.
+We have identified a list of likely issues, but before we begin to change things
+we need to make sure that the problems we've identified are indeed problems. Or
+in other words, we should only make changes *once* we have evidence that the
+code we're changing is problematic. If the maps are a problematic factor then we
+should expect a lot of allocations to come from ``Data.Map.insert``, ``Eq`` and
+``Ord`` instance methods, and the functions ``Data.Map.Internal.balanceR`` and
+``Data.Map.Internal.balanceL``. This is a good opportunity to :ref:`not think
+and look <Don't think, look>` with a :ref:`ticky <Ticky Chapter>` report.
 
 First we'll generate a ticky report for the entire testsuite:
 
@@ -369,11 +383,12 @@ First we'll generate a ticky report for the entire testsuite:
      Build profile: -w ghc-9.2.4 -O1
      ...
 
-and check the results sorted by allocations. As a reminder, the column on the
-right hand side names the STG closure the ticky profile is describing, the first
-column is entries, the second column is the number of bytes allocated *by* the
-code for the closure, the third is the number of bytes *addressed* to each
-closure:
+and check the results sorted by allocations. As a reminder, there are 5 columns
+in a ticky report. The first column is entries. The second column is the number
+of bytes allocated *by* the code for the closure. The third column is the number
+of bytes *addressed* to each closure. The fourth column classifies the closure
+by type with a shorthand notation, and the last column displays the names of the
+|stg| closure the ticky profile is describing:
 
 .. code-block::
 
@@ -400,18 +415,20 @@ closure:
      ...
 
 There are several interesting aspects to this ticky profile snippet. First, the
-most allocating code is ``ScopeSet.allScopeSets``, it is allocating a dictionary
-(``+``) of some type (``.``) and function (``>``). Observing a function call to
-a dictionary ``+`` in a ticky report can often mean that a function did not
-specialize. So from this ticky we suspect that ``allScopeSets`` has not
-specialized. The second most allocating closure is a SAT'd function
-``sat_sOYl``; from its description: ``{v} (ScopeSet) (fun) in rNAX`` we can see
-that it is a non-exported name (``{v}``), in the ``(ScopeSet)`` module, it is a
-function ``(fun)`` and is a local function in the ``rNAX`` closure, which is the
-STG name of the closure for ``allScopeSets`` as shown in description for
-``allScopeSets``. So the two most allocating function calls in the interpreter,
-when running the testsuite, are due to ``allScopeSets``. Clearly,
-``allScopeSets`` is a good target for performance engineering.
+most allocating code is ``ScopeSet.allScopeSets'``, it is allocating a
+dictionary (``+``) of some type (``.``) and function (``>``). Observing a
+function call to a dictionary ``+`` in a ticky report can often mean that a
+function did not specialize. So from this ticky we suspect that
+``allScopeSets'`` has not specialized. The second most allocating closure is a
+SAT'd function ``sat_sOYl`` (see :ref:`The Static Argument Transformation <SAT
+Chapter>`). From its description: ``{v} (ScopeSet) (fun) in rNAX``, we can see
+that it is a non-exported name (``{v}``) just like ``allScopeSets'``, in the
+``(ScopeSet)`` module. It is a function ``(fun)`` and is a local function in the
+``rNAX`` closure. The ``rNAX`` closure is the |stg| name of the closure for
+``allScopeSets'`` as shown in description for ``allScopeSets'``. So the two most
+allocating function calls in the interpreter, when running the testsuite, are
+due to ``allScopeSets``. Clearly, ``allScopeSets`` is a good target for
+performance engineering.
 
 We also see that the 5th and 6th most allocating functions called are
 ``ScopeSet.isSubsetOf`` and ``Binding.$fMonoidBindingTable_$unionWith``. That
@@ -445,17 +462,17 @@ functions in the source code:
                   view (phaseScopes . at p . non Set.empty) scs
 
 
-We see that a ``ScopeSet`` is a record of ``Data.Set Scope`` and ``Data.Map``
-indexed by ``Phase`` that holds ``Set Scope``. Furthermore, both ``Scope`` and
-``Phase`` are Integer-like. So we have an implementation that could use
-``IntMap`` and ``IntSet`` instead of ``Data.Map`` and ``Data.Set``.
+``ScopeSet`` is a record of ``Data.Set Scope`` and ``Data.Map`` indexed by
+``Phase`` that holds ``Set Scope``. Furthermore, both ``Scope`` and ``Phase``
+are Integer-like. So we have an implementation that could use ``IntMap`` and
+``IntSet`` instead of ``Data.Map`` and ``Data.Set``.
 
 We know that ``isSubsetOf`` does a lot of allocation. Now we can see where this
 allocation is happening. ``isSubsetOf`` checks that ``scs1`` is a subset of
 ``scs2`` by calling ``Set.isSubsetOf`` on the result of the ``scopes`` function.
 ``scopes`` is allocating a new ``Set Scope`` from the ``ScopeSet`` via
-``Set.union`` using the results of a lookup on the ``phaseScopes`` ``Map``, then
-merging two ``Set``'s just to check the subset.
+``Set.union``, then using the results of a lookup on the ``phaseScopes`` Map,
+then merging two ``Set``'s just to check the subset.
 
 There are several ways to improve the memory performance of this function.
 First, we can employ better data structures. We know that this code is
@@ -463,10 +480,11 @@ performing a lot of merges, so we should expect an improvement in both time and
 memory performance by using an ``IntMap`` and ``IntSet`` because these data
 structures provide more efficient merges than ``Data.Set`` and ``Data.Map``.
 Second, we can use a better algorithm. From the ticky, ``isSubSetOf`` was called
-61143424 times. As written this code will perform its lookups and unions each
+61143424 times. As written, this code will perform its lookups and unions *each*
 time, even if we have a duplicate call. So this seems to be a good candidate for
 memoization or caching the calls to ``isSubsetOf``. We could also avoid building
-the intermediate ``Set`` in the ``scopes`` function.
+the intermediate ``Set`` in the ``scopes`` function by checking for a subset
+without merging ``universalScopes`` and ``phaseScopes``.
 
 The second interesting function was ``unionWith`` in the ``Monoid Binding``
 instance. Here is the source code:
@@ -482,16 +500,17 @@ instance. Here is the source code:
    instance Monoid BindingTable where
      mempty = BindingTable Map.empty
 
-A ``BindingTable`` is a ``Map`` keyed on ``Text`` that holds a list of triples
-and the ``Semigroup`` instance is the origin of the ``unionWith`` in the ticky
-profile. This type is likely too lazy. ``Data.Map`` keyed on ``Text`` relies on
-the ``Ord`` and ``Eq`` instances of ``Text`` for most of its operations. In the
-worst case this means the runtime system has to compare the entire ``Text`` key,
-which could be slow when the ``Text`` is large. Another problem is the use of a
-list. A list is only an appropriate data structure if it is used like a stack or
-if it is used as a store that is eventually traversed and consumed. Once one
-finds themselves performing lookups or merges on a list, it is time to use a
-different data structure. The last problem is the 3-tuple which we covered
+A ``BindingTable`` is a ``Map`` keyed on ``Text`` that holds a list of triples.
+The ``Semigroup`` instance is the origin of the ``unionWith`` in the ticky
+profile because ``Monoid.mappend`` defaults to the Semigroup definition. This
+type is likely too lazy. ``Data.Map`` keyed on ``Text`` relies on the ``Ord``
+and ``Eq`` instances of ``Text`` for most of its operations. In the worst case
+this means the runtime system has to compare the entire ``Text`` key, which
+could be slow when the ``Text`` is large. Another problem is the use of a list.
+A list is only an appropriate data structure if it is used like a stack or if it
+is used as a store that is eventually traversed and consumed. Once one finds
+themselves performing lookups or merges on a list, it is time to use a different
+data structure. The last problem is the 3-tuple which we have already covered
 above.
 
 To improve the performance of the ``BindingTable`` we'll use a ``HashMap``. This
@@ -582,14 +601,14 @@ polymorphic type on the ``Key``, as opposed to the monomorphic type in
 .. note::
 
    I've purposefully taken the opportunity to create the abstraction boundary
-   ``Store p v``, this is unnecessary from a performance perspective. But by
+   ``Store p v``, which is unnecessary from a performance perspective. But by
    having an abstraction boundary the system becomes easier to change. For
    example, we can now alter the implementation of ``Store p v`` *without* a lot
    of code churn occurring in the interpreter. The key point is that if a
-   subsystem is easy to change, then it is also easy to experiment and engineer
+   subsystem is easy to change, then it is also easy to experiment and engineer,
    because the cost of experimentation is reduced. So while performance and
-   modularity are often in tension, in this case, modularity enables better
-   performance engineering.
+   modularity are often in tension, in this case, modularity enables easier and
+   cheaper (in terms of engineering time) performance engineering.
 
 now let's check the ticky:
 
@@ -625,8 +644,10 @@ Notice that the entries to ``unionWith`` and ``isSubsetOf`` have disappeared.
    38279681          0          0   2 MM                   ScopeSet.$sisSubsetOf_$sisSubsetOfX{v rP2u} (fun)
    ...
 
-We've demonstrated progress with the ticky report. Now let's verify that these
-changes propagate to the ``implicit-conversion`` test.
+Which is strange. We should expect it to be allocating, although allocating a
+lot less. We are likely observing some new optimization GHC is applying. In any
+case, its a good sign. We've demonstrated progress with the ticky report. Now
+let's verify that these changes propagate to the ``implicit-conversion`` test.
 
 .. code-block:: console
 
@@ -678,10 +699,10 @@ Optimization 2: A Memory Leak Casts a Long Shadow
 
 To continue engineering the interpreter we need to be able to observe the
 effects of any change we make. Unfortunately, the memory leak we discovered in
-the last section was so large it eclipsed the any effect induced by our changes.
-Clearly we need to fix this leak in order to continue to optimize. To tackle
-this memory leak we'll use eventlog and eventlog2html to observe the heap only
-on ``implicit-conversion-test``. To begin we'll inspect the types that were
+the last section was so large it eclipsed the effect of our changes. Clearly we
+need to fix this leak in order to continue to optimize. To tackle this memory
+leak, we'll use eventlog and eventlog2html to observe the heap only on
+``implicit-conversion-test``. To begin we'll inspect the types that were
 allocated on the heap by passing ``-hy``:
 
 .. code-block:: console
@@ -698,10 +719,10 @@ We see that the heap is growing to over 2.8Gb of lists for just one test!
 Crucially the shape of this profile is not indicative of a memory leak. A
 typical memory leak should look like a pyramid because the program builds up
 thunks and then forces them all in relatively short time. What we observe in
-this profile is allocations of lists that *never decrease*. Now that we know
-what type to look for we can try to correlate this type to a sub-system in the
-interpreter. To do so we'll do another heap profile but break down the heap by
-module (by using ``-hm`` instead of ``-hy``):
+this profile is allocations of lists that *never decrease*. Now that we know the
+type to look for, we can correlate this type to a subsystem in the interpreter.
+To do so we'll run another heap profile, but break down the heap by module (by
+using ``-hm`` instead of ``-hy``):
 
 .. code-block:: console
 
@@ -713,9 +734,9 @@ module (by using ``-hm`` instead of ``-hy``):
 
 We see that these lists are coming from ``Expander.Monad``. This is suspicious.
 We have data being consistently allocated in essentially the state type of a
-sub-system. That certainly sounds like a memory leak, but before we can conclude
-that it is a memory leak we need to know why this data is retained at all. This
-is a good scenario to use :userGuide:`Biographical Profiling
+subsystem. That certainly sounds like a memory leak. Before we can conclude that
+the expander has a memory leak we need to know why this data is retained at all.
+This is a good scenario to use :userGuide:`Biographical Profiling
 <profiling.html#biographical-profiling>` because we want to know: (1) the state
 of these objects on the heap and (2) why they are not being collected, that is,
 why is GHC's runtime system keeping them alive. For (1) we'll do a biographical
@@ -732,10 +753,11 @@ Here's the biographical profile:
          <iframe id="scaled-frame" scrolling="no" src="../../../_static/klister/klister-eventlog-implicit-conversion-hb.html"></iframe>
 
 Void! The lists are in a ``void`` state meaning these objects are allocated *but
-are never used*. Now we can restate the problem: There is a memory leak in the
-``Expander``. When ``implicit-conversion-test`` is run in the interpreter, it
-allocates a total of 121.8 Gb. (eventlog shows 116171.68 *MebiBytes* in the
-detailed tab).
+are never used* (see :userGuide:`the user guide
+<profiling.html#biographical-profiling>`). Now we can restate the problem: There
+is a memory leak in the ``Expander``. When ``implicit-conversion-test`` is run,
+the expander allocates a total of 121.8 Gb. (eventlog shows 116171.68
+*MebiBytes* in the detailed tab).
 
 Now to answer why this data is being retained. Here is the retainer profile.
 
@@ -768,17 +790,47 @@ function:
      return $ globalEnv <> localEnv
 
 This code is reading from the ``Expander`` state twice to retrieve ``globalEnv``
-and ``localEnv`` and then returning the union of these two environments. Because
-this code is monadic, there is a high probability that these projections are
-lazy. Furthermore, the ``return`` statement is clearly lazy. In general, unless
-the result of a monadic action *needs* to be consumed lazily there is little
-reason to not make it strict in the return. In this case, if the result is not
-immediately demanded, then this code will allocate a thunk for ``phase``,
-``globalEnv``, ``localEnv`` and the merge of both ``globalEnv`` and
-``localEnv``.
+and ``localEnv``, and then returning the union of these two environments. Notice
+that if the results of ``currentEnv`` are not immediately forced, then the
+projections and the return will be lazy. Thus, this code will allocate a thunk
+for ``phase``, ``globalEnv``, ``localEnv`` and the merge of both ``globalEnv``
+and ``localEnv``. In general, unless the result of a monadic action *needs* to
+be consumed lazily there is little reason to not make it strict in the return.
+In this case, there are two call sites to ``currentEnv`` both in the expander:
 
-Before changing the code, let's first inspect the types. Here is the type for
-``Expand``:
+.. code-block:: haskell
+
+   -- Expander.hs
+   runTask :: (TaskID, ExpanderLocal, ExpanderTask) -> Expand ()
+   runTask (tid, localData, task) = withLocal localData $ do
+   ...
+    AwaitingDefn x n b defn t dest stx ->
+      Env.lookupVal x <$> currentEnv >>=
+      \case
+
+
+   evalDecl :: CompleteDecl -> WriterT [EvalResult] Expand ()
+   evalDecl (CompleteDecl d) =
+     case d of
+     ...
+     Example loc sch expr -> do
+      env <- lift currentEnv
+      value <- lift $ expandEval (eval expr)
+      tell $ [ExampleResult loc env expr sch value]
+
+The first call site in ``runTask`` is immediately scrutinized by the ``\case``
+and ``Env.lookupVal``. However, the second is not: ``ExampleResult`` is not
+strict in any fields:
+
+.. code-block:: haskell
+
+   data EvalResult
+     = ExampleResult SrcLoc VEnv Core (Scheme Ty) Value
+     | IOResult (IO ())
+
+and the whole computation is performed in a lazy ``WriterT`` monad transformer.
+Before changing the code, let's first inspect the type of the ``Expand`` monad.
+Here is the definition for ``Expand``:
 
 .. code-block:: haskell
 
@@ -824,8 +876,8 @@ functions operating on ``ExpanderContext``. Next let's check the types of
      }
 
 ``currentEnv`` returns a ``Expand VEnv``, ``VEnv`` is a ``Env Var Value`` where
-an ``Env`` is an ``IntMap``. Thus ``globalEnv`` and ``localEnv`` are both an
-``IntMap`` that stores a tuple of ``(Ident, Value)``. Here is the type of
+an ``Env`` is an ``IntMap``. Thus ``globalEnv`` and ``localEnv`` are both a
+strict ``IntMap`` that stores a tuple of ``(Ident, Value)``. Here is the type of
 ``Value``:
 
 .. code-block:: haskell
@@ -843,8 +895,13 @@ an ``Env`` is an ``IntMap``. Thus ``globalEnv`` and ``localEnv`` are both an
      | ValueString Text
 
 Notice that ``ValueCtor`` holds a lazy list of ``Value``. Should
-``implicit-tests`` create many ``ValueCtor`` then the expander state will blow
-up. Let's test this and make ``Value`` strict and then generate another
+``implicit-tests`` create many ``ValueCtor`` then the expander state will leak
+memory in ``Value``. This leak will occur even though the ``IntMap`` is strict.
+The strict ``IntMap`` well only evaluate elements to :term:`WHNF`, which will be
+``(,)``, thus because ``Value`` is stored in a lazy tuple, the fields of the
+tuple will be lazy unless they are carefully forced *before* insertion.
+
+Let's test this and make ``Value`` strict and then generate another
 biographical profile to observe the change:
 
 .. code-block:: haskell
@@ -892,7 +949,8 @@ Notice the strict application: ``$!``. This change results in this profile:
          <iframe id="scaled-frame" scrolling="no" src="../../../_static/klister/klister-eventlog-implicit-conversion-currentEnv-fixed.html"></iframe>
 
 A significant improvement! Instead of 121.8 Gb the profile shows total
-allocation of ``void`` of 4.62 Gb (4404.22 MiB) which is a 30x reduction.
+allocation of ``void`` of 4.62 Gb (4404.22 MiB in the detailed tab) which is a
+30x reduction.
 
 
 Optimization 3: Choosing Better Data Structures: Lists
@@ -969,14 +1027,16 @@ module being visited and then merged with the interpreter's binding table:
            getModuleBindings (KernelModule _) = mempty
 
 So from this code, the ``BindingTable`` data structure undergoes merges,
-traversals such as ``fmap`` and ``filter`` and the length is calculated. From
-the ``prof`` report, ``visibleBindings`` and ``resolve`` are entered more than
-100,000 times, ``checkUnambiguous`` entered less than 20,000 times. Thus merging
-and sorting are more important than duplicate element removal and calculating
-length. Based on this usage, we'll replace the list with a ``Data.Sequence``, a
-``Data.Set`` would also work and would provide uniqueness by default, but
-``Data.Set`` has slower merge behavior compared to a ``Data.Sequence`` for many
-elements (:math:`\mathcal{O}(\log{(\min(n_{1},n_{2}))})`, compared to
+traversals such as ``fmap`` and ``filter`` and the length is calculated. We can
+check how often these functions are used in the ``prof`` report we generated
+with the last heap profile (using the ``-p`` RTS flag). ``visibleBindings`` and
+``resolve`` are entered more than 100,000 times, ``checkUnambiguous`` is entered
+less than 20,000 times. Thus merging and sorting are more important than
+duplicate element removal and calculating length. Based on this usage, we'll
+replace the list with a ``Data.Sequence``, a ``Data.Set`` would also work and
+would provide uniqueness by default, but ``Data.Set`` has slower merge behavior
+compared to a ``Data.Sequence`` for many elements
+(:math:`\mathcal{O}(\log{(\min(n_{1},n_{2}))})`, compared to
 :math:`\mathcal{O}(m \log{\frac{n + 1}{m + 1}})`, where :math:`m \le n`).
 
 ``BindingTable`` is not the only suspicious list. Consider this list in the
@@ -1014,17 +1074,17 @@ in the expander monad:
          (++) <$> getDeclGroup l <*> getDeclGroup r
 
 Notice that the ``DeclTreeBranch l r`` case will be expensive because it will
-merge every *combination* of elements in the ``l`` and ``r`` groups with list
+merge *every combination* of elements in the ``l`` and ``r`` groups with list
 concatenation. Just this line is enough to change the data structure to a
 sequence, again because a sequence has fast merging and cons behavior [#]_.
 
 Optimization 4: Fixing allScopeSets
 -----------------------------------
 
-However, there is still a lot of ``void`` in the heap profile. This is a good
-scenario for info-table profiling. Info-table profiling relates source code to
-closures so with it we can see where in the source code the ``void`` is
-originating.
+We,ve come quite far, but there is still a lot of ``void`` in the heap profile.
+This is a good scenario for info-table profiling. Info-table profiling relates
+source code to closures so we can see the exact line of source code the ``void``
+is originating.
 
 .. code-block:: console
 
@@ -1083,12 +1143,12 @@ info-table profiling, beginning with ``<*> ff (g a)``:
   combine :: Data a => f (a -> b) -> a -> f b
   combine ff a = let !res = (<*>) ff (g a) in res
 
-Unfortunately, this produces the same profile. Thus let's next force ``g a``:
+Unfortunately, this produces the same profile. Let's next force ``g a``:
 
 .. code-block:: haskell
 
   combine :: Data a => f (a -> b) -> a -> f b
-  combine ff a = let !res = (<*>) ff (g a) in res
+  combine ff a = let !ga = (g a) in (<*>) ff ga
 
 and rerun the test:
 
@@ -1120,7 +1180,9 @@ strict:
 .. code-block:: haskell
 
   combine :: Data a => f (a -> b) -> a -> f b
-  combine ff a = let !ga = (<*>) ff (g a) in res
+  combine ff a = let !ga = (g a)
+                     !res = (<*>) ff ga
+                     in res
 
 .. code-block:: console
 
@@ -1137,9 +1199,17 @@ Not much better. We saw that ``combine`` was building up thunks with info-table
 profiling, but by forcing those thunks the heap grew from 100Mb to 2.6Gb. So
 even though info-table profiling pointed to ``allScopeSets``, our problem lies
 elsewhere. If ``allScopeSets`` was the culprit then we would expect an
-improvement, which was not observed. Although, we have learned that
-``allScopeSets`` is on the critical path of the memory leak. With these changes
-in place, let's profile the heap and check what type of closures are leaking:
+improvement, which was not observed. But we have learned that ``allScopeSets``
+is on the critical path of the memory leak. We'll leave these changes in place
+to determine what type of closures are newly leaking:
+
+.. note::
+
+   This is a common phenomena when plugging memory leaks. By adding strictness
+   to the critical path the leak is on, it is often the case that the laziness
+   moves to another part of system until the root cause is discovered. So by
+   leaving these changes in place we are traversing the critical path that leads
+   to the leak.
 
 .. code-block:: console
 
@@ -1189,7 +1259,7 @@ called in one function: ``visit``:
            getModuleBindings (KernelModule _) = mempty
 
 We see that ``allScopeSets`` *is only* used to construct ``m''``, by traversing
-the data in ``m'``, applying the function ``ScopeSet.insertUniversally``, and
+the data in ``m'``, and applying the function ``ScopeSet.insertUniversally``
 with the argument ``sc``. Here is ``insertUniversally``:
 
 .. code-block:: haskell
@@ -1225,13 +1295,14 @@ especially problematic given the high entry counts we observed for
 
 To fix the ``Scope`` type we'll make the ``Int`` field strict, remove the
 ``Text`` field entirely and inline ``freshScope`` . The ``Int`` field should be
-strict to ensure the increments do not accumulate thunks. We could choose to
-make the ``Text`` field strict, but this would be a mistake because the ``Text``
-field *is only* used in an error state, so making it strict would mean
-allocating memory in a hot loop when it is unnecessary to do so. Removing the
-``Text`` field also unlocks better data structures; with its removal we can use
-a ``newtype`` instead of a ``data`` type and use an ``IntSet`` instead of a
-``Set``. An ``IntSet`` is similar to an ``IntMap`` (it is also implemented as a
+strict to ensure the increments do not accumulate thunks and to make sure GHC
+will unpack the ``Int``. We could choose to make the ``Text`` field strict, but
+this would be a mistake because the ``Text`` field *is only* used in an error
+state, so making it strict would mean allocating memory in a hot loop when it is
+unnecessary to do so. Furthermore, removing the ``Text`` field unlocks better
+data structures; with its removal we can use a ``newtype`` instead of a ``data``
+type, thereby reducing allocations, and use an ``IntSet`` instead of a ``Set``.
+An ``IntSet`` is similar to an ``IntMap`` (it is also implemented as a
 big-endian PATRICIA trie) but the implementation in ``containers`` is tuned for
 dense sets (where the elements are close in value), which is the kind of
 ``IntSet`` the klister interpreter generates.
@@ -1254,7 +1325,8 @@ observe any changes:
        sc <- freshScope $! T.pack $ "For module-phase " ++ shortShow modName ++ "-" ++ shortShow p
    ...
 
-Notice, the new ``$!`` after ``freshScope``. Here is the heap profile:
+Notice, the strict application: ``$!``, after ``freshScope``. Here is the heap
+profile:
 
 .. raw:: html
 
@@ -1307,12 +1379,13 @@ definitions:
 Notice that the API to ``freshScope`` does not change. In total, there are 11
 more call sites to ``freshScope`` throughout the interpreter that are leaking.
 So if we had changed the API then the CPP would proliferate even more. To avoid
-the extra CPP we'll inline ``freshScope``; this will ensure that in a non-debug
+the extra CPP we inline ``freshScope``; this will ensure that in a non-debug
 build GHC will determine that the ``Text`` argument is dead and remove it,
 thereby clearing the memory leaks at each call site.
 
-Now let's check the runtime of ``implicit-conversion-test`` to observe the
-effect of our changes:
+Now we'll revert the strictness changes in ``allScopeSets`` and check the
+runtime of ``implicit-conversion-test`` to observe the effect of our
+optimizations:
 
 .. code-block:: console
 
@@ -1371,7 +1444,7 @@ testsuite originally took 38 seconds to finish.
 
 The entire test suite finished in just under 10 seconds, or about as fast as
 ``implicit-conversion-test`` finished originally. ``implicit-conversion-test``
-is also not the only test that benefited. Almost every tests is faster; for
+is also not the only test that benefited. Almost every test is faster; for
 example, ``which-problem`` finishes in 240 ms compared to 820 ms,
 ``double-define`` finishes in 180 ms compared to 340 ms. Our work here is done
 for now.
@@ -1396,9 +1469,10 @@ Then we employed a number of methods to find performance problems. We used:
 Key to our analysis was a careful debugging process. We:
 
 1. Found a reproducible test case.
-2. Didn't guess, instead we looked: We used available instrumentation to develop
-   hypotheses about the klister interpreter's performance. That is, we let the
-   instrumentation guide the search instead of guessing.
+2. Didn't guess, instead we looked: We used GHC's instrumentation to develop
+   hypotheses about the klister interpreter's performance instead of guessing
+   and performing `shotgun debugging
+   <https://en.wikipedia.org/wiki/Shotgun_debugging>`_.
 3. Only changed one thing at a time: We tried to only change a single function,
    or a single type at a time. Then, if we did not observe any difference with
    the instrumentation we reverted the change.
@@ -1408,7 +1482,7 @@ even though the heap stays under 50Mb. In the end, the optimizations were
 trivial; we only chose better data structures and closed memory leaks. We could
 still optimize or memoize ``isSubsetOf``, unroll the ``Expander`` monad
 transformer, fix the expander's use of the ``WriterT`` monad transformer; which
-is well known to leak memory [#]_, manually loop fuse and swap, or :ref:`oneShot
+is well known to leak memory [#]_, do some manual loop fusion, or :ref:`oneShot
 <OneShot Monad Chapter>` the expander monad. But for a first pass our results
 are good enough.
 
