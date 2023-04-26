@@ -835,7 +835,7 @@ allocated on the heap by passing <code class="docutils literal notranslate"><spa
 </pre></div>
 </div>
 <p>which produces:</p>
-<iframe id="scaled-frame" scrolling="no" src="/_static/klister/klister-eventlog-implicit-conversion-hy.html"></iframe><p>We see that the heap is growing to over 2.8Gb of lists for just one test!
+<iframe id="scaled-frame" scrolling="no" src="../../_static/klister/klister-eventlog-implicit-conversion-hy.html"></iframe><p>We see that the heap is growing to over 2.8Gb of lists for just one test!
 Crucially the shape of this profile is not indicative of a memory leak. A
 typical memory leak should look like a pyramid because the program builds up
 thunks and then forces them all in relatively short time. What we observe in
@@ -846,7 +846,7 @@ using <code class="docutils literal notranslate"><span class="pre">-hm</span></c
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>cabal <span class="nb">test</span> --test-show-details<span class="o">=</span>streaming  --test-options<span class="o">=</span><span class="s1">&#39;--pattern &quot;implicit-conversion-test&quot; +RTS -hm -l-agu -p -RTS&#39;</span> --ghc-options<span class="o">=</span><span class="s1">&#39;-eventlog -rtsopts -O2&#39;</span>
 </pre></div>
 </div>
-<iframe id="scaled-frame" scrolling="no" src="/_static/klister/klister-eventlog-implicit-conversion-hm.html"></iframe><p>We see that these lists are coming from <code class="docutils literal notranslate"><span class="pre">Expander.Monad</span></code>. This is suspicious.
+<iframe id="scaled-frame" scrolling="no" src="../../_static/klister/klister-eventlog-implicit-conversion-hm.html"></iframe><p>We see that these lists are coming from <code class="docutils literal notranslate"><span class="pre">Expander.Monad</span></code>. This is suspicious.
 We have data being consistently allocated in essentially the state type of a
 subsystem. That certainly sounds like a memory leak. Before we can conclude that
 the expander has a memory leak we need to know why this data is retained at all.
@@ -858,7 +858,7 @@ profile and for (2) a retainer profile.</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>cabal <span class="nb">test</span> --test-show-details<span class="o">=</span>streaming  --test-options<span class="o">=</span><span class="s1">&#39;--pattern &quot;implicit-conversion-test&quot; +RTS -hb -l-agu -p -RTS&#39;</span> --ghc-options<span class="o">=</span><span class="s1">&#39;-eventlog -rtsopts -O2&#39;</span>
 </pre></div>
 </div>
-<iframe id="scaled-frame" scrolling="no" src="/_static/klister/klister-eventlog-implicit-conversion-hb.html"></iframe><p>Void! The lists are in a <code class="docutils literal notranslate"><span class="pre">void</span></code> state meaning these objects are allocated <em>but
+<iframe id="scaled-frame" scrolling="no" src="../../_static/klister/klister-eventlog-implicit-conversion-hb.html"></iframe><p>Void! The lists are in a <code class="docutils literal notranslate"><span class="pre">void</span></code> state meaning these objects are allocated <em>but
 are never used</em> (see <a class="reference external" href="https://downloads.haskell.org/~ghc/9.2.4/docs/html/users_guide/profiling.html#biographical-profiling">the user guide</a>). Now we can restate the problem: There
 is a memory leak in the <code class="docutils literal notranslate"><span class="pre">Expander</span></code>. When <code class="docutils literal notranslate"><span class="pre">implicit-conversion-test</span></code> is run,
 the expander allocates a total of 121.8 Gb. (eventlog shows 116171.68
@@ -1003,7 +1003,7 @@ biographical profile to observe the change:</p>
 </pre></div>
 </div>
 <iframe id="scaled-frame" scrolling="no"
-src="/_static/klister/klister-eventlog-implicit-conversion-strict-value.html"></iframe><p>Unfortunately, the change made no difference. We’ll revert the change and try
+src="../../_static/klister/klister-eventlog-implicit-conversion-strict-value.html"></iframe><p>Unfortunately, the change made no difference. We’ll revert the change and try
 making the monadic action strict in its return:</p>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- in Expander.Monad</span><span class="w"></span>
 
@@ -1019,7 +1019,7 @@ making the monadic action strict in its return:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>cabal <span class="nb">test</span> --test-show-details<span class="o">=</span>streaming  --test-options<span class="o">=</span><span class="s1">&#39;--pattern &quot;implicit-conversion-test&quot; +RTS -hb -l-agu -p -RTS&#39;</span> --ghc-options<span class="o">=</span><span class="s1">&#39;-eventlog -rtsopts -O2&#39;</span>
 </pre></div>
 </div>
-<iframe id="scaled-frame" scrolling="no" src="/_static/klister/klister-eventlog-implicit-conversion-currentEnv-fixed.html"></iframe><p>A significant improvement! Instead of 121.8 Gb the profile shows total
+<iframe id="scaled-frame" scrolling="no" src="../../_static/klister/klister-eventlog-implicit-conversion-currentEnv-fixed.html"></iframe><p>A significant improvement! Instead of 121.8 Gb the profile shows total
 allocation of <code class="docutils literal notranslate"><span class="pre">void</span></code> of 4.62 Gb (4404.22 MiB in the detailed tab) which is a
 30x reduction.</p>
 </section>
@@ -1141,7 +1141,7 @@ is originating.</p>
 </pre></div>
 </div>
 <p>and the profile is rendered in eventlog:</p>
-<iframe id="scaled-frame" scrolling="no" src="/_static/klister/klister-eventlog-implicit-conversion-ipe-allscopeset.html"></iframe><p>Notice that the legend displays the <a class="reference internal" href="../glossary.html#term-Info-Table-Address"><span class="xref std std-term">Info Table Address</span></a> instead of the
+<iframe id="scaled-frame" scrolling="no" src="../../_static/klister/klister-eventlog-implicit-conversion-ipe-allscopeset.html"></iframe><p>Notice that the legend displays the <a class="reference internal" href="../glossary.html#term-Info-Table-Address"><span class="xref std std-term">Info Table Address</span></a> instead of the
 closure type, module, or biography. From the profile we find that <code class="docutils literal notranslate"><span class="pre">0x7c41d0</span></code>
 and <code class="docutils literal notranslate"><span class="pre">0xc0c330</span></code> are responsible for the <code class="docutils literal notranslate"><span class="pre">void</span></code> allocation. The detailed tab
 maps these addresses directly to source code. In the detailed tab, we see that
@@ -1204,7 +1204,7 @@ info-table profiling, beginning with <code class="docutils literal notranslate">
 </div>
 <p>The test finished in 1919.27 seconds; clearly forcing this thunk produced a
 regression. The heap profile similarly shows much more memory allocation:</p>
-<iframe id="scaled-frame" scrolling="no" src="/_static/klister/klister-eventlog-implicit-conversion-ipe-allscopeset_force_ga.html"></iframe><p>Now this test allocates around 2.6Gb, unfortunately the info-table profiling
+<iframe id="scaled-frame" scrolling="no" src="../../_static/klister/klister-eventlog-implicit-conversion-ipe-allscopeset_force_ga.html"></iframe><p>Now this test allocates around 2.6Gb, unfortunately the info-table profiling
 does not display the information for the most allocating info table address
 <code class="docutils literal notranslate"><span class="pre">0x1b93550</span></code>. We’ll do one last test and make both the entire body and <code class="docutils literal notranslate"><span class="pre">g</span> <span class="pre">a</span></code>
 strict:</p>
@@ -1243,7 +1243,7 @@ to the leak.</p>
 </pre></div>
 </div>
 <p>which yields:</p>
-<iframe id="scaled-frame" scrolling="no" src="/_static/klister/klister-eventlog-implicit-conversion-ipe-allscopeset_forced_hy.html"></iframe><p>Almost all the memory allocated on the heap is a list <code class="docutils literal notranslate"><span class="pre">[]</span></code> of some type. Let’s
+<iframe id="scaled-frame" scrolling="no" src="../../_static/klister/klister-eventlog-implicit-conversion-ipe-allscopeset_forced_hy.html"></iframe><p>Almost all the memory allocated on the heap is a list <code class="docutils literal notranslate"><span class="pre">[]</span></code> of some type. Let’s
 inspect the code path for <code class="docutils literal notranslate"><span class="pre">allScopeSets</span></code>, normally one would do a retainer
 analysis to find the right code path, but in this case <code class="docutils literal notranslate"><span class="pre">allScopeSets</span></code> is only
 called in one function: <code class="docutils literal notranslate"><span class="pre">visit</span></code>:</p>
@@ -1335,7 +1335,7 @@ observe any changes:</p>
 </div>
 <p>Notice, the strict application: <code class="docutils literal notranslate"><span class="pre">$!</span></code>, after <code class="docutils literal notranslate"><span class="pre">freshScope</span></code>. Here is the heap
 profile:</p>
-<iframe id="scaled-frame" scrolling="no" src="/_static/klister/klister-eventlog-implicit-conversion-allscope-fixed.html"></iframe><p>Much better, the interpreter is still leaking <code class="docutils literal notranslate"><span class="pre">[]</span></code> but the heap stays under
+<iframe id="scaled-frame" scrolling="no" src="../../_static/klister/klister-eventlog-implicit-conversion-allscope-fixed.html"></iframe><p>Much better, the interpreter is still leaking <code class="docutils literal notranslate"><span class="pre">[]</span></code> but the heap stays under
 50Mb. We have found the memory leak. Now we’ll go further and remove the
 <code class="docutils literal notranslate"><span class="pre">Text</span></code> field from <code class="docutils literal notranslate"><span class="pre">Scope</span></code> and change <code class="docutils literal notranslate"><span class="pre">ScopeSet</span></code> to use <code class="docutils literal notranslate"><span class="pre">IntSet</span></code>. To
 preserve the ability to debug we’ll use a CPP pragma that includes the <code class="docutils literal notranslate"><span class="pre">Text</span></code>

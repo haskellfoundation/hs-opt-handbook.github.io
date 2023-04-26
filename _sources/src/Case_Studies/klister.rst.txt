@@ -713,7 +713,7 @@ which produces:
 
 .. raw:: html
 
-         <iframe id="scaled-frame" scrolling="no" src="/_static/klister/klister-eventlog-implicit-conversion-hy.html"></iframe>
+         <iframe id="scaled-frame" scrolling="no" src="../../_static/klister/klister-eventlog-implicit-conversion-hy.html"></iframe>
 
 We see that the heap is growing to over 2.8Gb of lists for just one test!
 Crucially the shape of this profile is not indicative of a memory leak. A
@@ -730,7 +730,7 @@ using ``-hm`` instead of ``-hy``):
 
 .. raw:: html
 
-         <iframe id="scaled-frame" scrolling="no" src="/_static/klister/klister-eventlog-implicit-conversion-hm.html"></iframe>
+         <iframe id="scaled-frame" scrolling="no" src="../../_static/klister/klister-eventlog-implicit-conversion-hm.html"></iframe>
 
 We see that these lists are coming from ``Expander.Monad``. This is suspicious.
 We have data being consistently allocated in essentially the state type of a
@@ -750,7 +750,7 @@ Here's the biographical profile:
 
 .. raw:: html
 
-         <iframe id="scaled-frame" scrolling="no" src="/_static/klister/klister-eventlog-implicit-conversion-hb.html"></iframe>
+         <iframe id="scaled-frame" scrolling="no" src="../../_static/klister/klister-eventlog-implicit-conversion-hb.html"></iframe>
 
 Void! The lists are in a ``void`` state meaning these objects are allocated *but
 are never used* (see :userGuide:`the user guide
@@ -921,7 +921,7 @@ biographical profile to observe the change:
 .. raw:: html
 
          <iframe id="scaled-frame" scrolling="no"
-         src="/_static/klister/klister-eventlog-implicit-conversion-strict-value.html"></iframe>
+         src="../../_static/klister/klister-eventlog-implicit-conversion-strict-value.html"></iframe>
 
 Unfortunately, the change made no difference. We'll revert the change and try
 making the monadic action strict in its return:
@@ -946,7 +946,7 @@ Notice the strict application: ``$!``. This change results in this profile:
 
 .. raw:: html
 
-         <iframe id="scaled-frame" scrolling="no" src="/_static/klister/klister-eventlog-implicit-conversion-currentEnv-fixed.html"></iframe>
+         <iframe id="scaled-frame" scrolling="no" src="../../_static/klister/klister-eventlog-implicit-conversion-currentEnv-fixed.html"></iframe>
 
 A significant improvement! Instead of 121.8 Gb the profile shows total
 allocation of ``void`` of 4.62 Gb (4404.22 MiB in the detailed tab) which is a
@@ -1094,7 +1094,7 @@ and the profile is rendered in eventlog:
 
 .. raw:: html
 
-         <iframe id="scaled-frame" scrolling="no" src="/_static/klister/klister-eventlog-implicit-conversion-ipe-allscopeset.html"></iframe>
+         <iframe id="scaled-frame" scrolling="no" src="../../_static/klister/klister-eventlog-implicit-conversion-ipe-allscopeset.html"></iframe>
 
 Notice that the legend displays the :term:`Info Table Address` instead of the
 closure type, module, or biography. From the profile we find that ``0x7c41d0``
@@ -1170,7 +1170,7 @@ regression. The heap profile similarly shows much more memory allocation:
 
 .. raw:: html
 
-         <iframe id="scaled-frame" scrolling="no" src="/_static/klister/klister-eventlog-implicit-conversion-ipe-allscopeset_force_ga.html"></iframe>
+         <iframe id="scaled-frame" scrolling="no" src="../../_static/klister/klister-eventlog-implicit-conversion-ipe-allscopeset_force_ga.html"></iframe>
 
 Now this test allocates around 2.6Gb, unfortunately the info-table profiling
 does not display the information for the most allocating info table address
@@ -1219,7 +1219,7 @@ which yields:
 
 .. raw:: html
 
-         <iframe id="scaled-frame" scrolling="no" src="/_static/klister/klister-eventlog-implicit-conversion-ipe-allscopeset_forced_hy.html"></iframe>
+         <iframe id="scaled-frame" scrolling="no" src="../../_static/klister/klister-eventlog-implicit-conversion-ipe-allscopeset_forced_hy.html"></iframe>
 
 Almost all the memory allocated on the heap is a list ``[]`` of some type. Let's
 inspect the code path for ``allScopeSets``, normally one would do a retainer
@@ -1330,7 +1330,7 @@ profile:
 
 .. raw:: html
 
-         <iframe id="scaled-frame" scrolling="no" src="/_static/klister/klister-eventlog-implicit-conversion-allscope-fixed.html"></iframe>
+         <iframe id="scaled-frame" scrolling="no" src="../../_static/klister/klister-eventlog-implicit-conversion-allscope-fixed.html"></iframe>
 
 Much better, the interpreter is still leaking ``[]`` but the heap stays under
 50Mb. We have found the memory leak. Now we'll go further and remove the
