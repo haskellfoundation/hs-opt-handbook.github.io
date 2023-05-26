@@ -3,7 +3,7 @@ Haskell Optimization Handbook
 *****************************
 
 Welcome! This repository contains the source of `Haskell Optimization Handbook
-<https://input-output-hk.github.io/hs-opt-handbook.github.io/>`_
+<https://haskell.foundation/hs-opt-handbook.github.io/>`_
 
 What is the Point?
 ==================
@@ -43,7 +43,7 @@ Contributing
 Yes! We need your help! It does not matter if you're a new Haskeller, a grey
 beard, or an arcane functional wizard, there is a way for you to contribute!
 Please see the `Contributing guide
-<https://github.com/input-output-hk/hs-opt-handbook.github.io/blob/main/Contributing.rst>`_.
+<https://github.com/haskellfoundation/hs-opt-handbook.github.io/blob/main/Contributing.rst>`_.
 
 What's in it for me?
 --------------------
