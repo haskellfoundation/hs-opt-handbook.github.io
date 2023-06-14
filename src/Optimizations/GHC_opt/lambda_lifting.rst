@@ -37,14 +37,14 @@ Thus |glift| turns into:
 .. code-block:: haskell
 
    g_lifted a 0 = a
-   g_lifted a n = 1 + g_lifted (n - 1)
+   g_lifted a n = 1 + g_lifted a (n - 1)
 
 Now ``a`` is an input, which means that |glift| can be floated out of ``f``
 to the top level producing the final program:
 
 .. code-block:: haskell
 
-   g :: Int -> Int -> Int
+   g_lifted :: Int -> Int -> Int
    g_lifted a 0 = a
    g_lifted a n = 1 + g_lifted (n - 1)
 
