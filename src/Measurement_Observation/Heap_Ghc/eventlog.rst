@@ -117,7 +117,7 @@ most Haskellers' as a traditional example of a memory leak:
      wait
      print $! strict_mean test_values
 
-We define three functions, each of which calculate a geometric mean from a list
+We define three functions, each of which calculate the arithmetic mean of a list
 of Doubles. ``lazy_mean`` uses a lazy left fold, ``stricter_mean`` uses a strict
 left fold but will still leak memory because ``foldl'`` evaluates the result of
 ``step`` to :term:`WHNF`. ``step`` returns a tuple whose WHNF is a tuple
@@ -408,7 +408,7 @@ consumed all the thunks; Second, the actual wall time for a strict ``lazy_mean``
 point at which ``lazy_mean`` has consumed all the thunks and when ``lazy_mean``
 ends. Third, notice that a known-leaky function did not appear to be leaky
 because of another memory leak effectively hid it. This tells us that the memory
-leak in ``lazy_mean`` is not comparable to the leak in the benchmark sweet. For
+leak in ``lazy_mean`` is not comparable to the leak in the benchmark suite. For
 if it were comparable then we would have observed a rising edge after the
 ``lazy_mean begin`` marker.
 
