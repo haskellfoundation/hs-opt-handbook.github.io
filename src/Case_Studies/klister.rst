@@ -1088,7 +1088,7 @@ is originating.
 
 .. code-block:: console
 
-   $ cabal test --test-show-details=streaming --test-options='--pattern "implicit-conversion-test" +RTS -hi -i0.05 -l -RTS' --ghc-options='-eventlog -rtsopts -O2 -finfo-table-map -fdistinct-construct or-tables'
+   $ cabal test --test-show-details=streaming --test-options='--pattern "implicit-conversion-test" +RTS -hi -i0.05 -l -RTS' --ghc-options='-eventlog -rtsopts -O2 -finfo-table-map -fdistinct-constructor-tables'
 
 and the profile is rendered in eventlog:
 
@@ -1154,7 +1154,7 @@ and rerun the test:
 
 .. code-block:: console
 
-   $ cabal test --test-show-details=streaming --enable-profiling --test-options='--pattern "impl icit-conversion-test" +RTS -hi -i0.05 -l -rticky -RTS' --ghc-options='-eventlog -rtsopts -ticky -O2 -finfo-table-map -fdistinct-constructor-tables'
+   $ cabal test --test-show-details=streaming --enable-profiling --test-options='--pattern "implicit-conversion-test" +RTS -hi -i0.05 -l -rticky -RTS' --ghc-options='-eventlog -rtsopts -ticky -O2 -finfo-table-map -fdistinct-constructor-tables'
      ...
      Running 1 test suites...
      Test suite klister-tests: RUNNING...
