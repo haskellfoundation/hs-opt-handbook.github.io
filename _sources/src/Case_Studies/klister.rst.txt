@@ -1088,7 +1088,7 @@ is originating.
 
 .. code-block:: console
 
-   $ cabal test --test-show-details=streaming --test-options='--pattern "implicit-conversion-test" +RTS -hi -i0.05 -l -RTS' --ghc-options='-eventlog -rtsopts -O2 -finfo-table-map -fdistinct-construct or-tables'
+   $ cabal test --test-show-details=streaming --test-options='--pattern "implicit-conversion-test" +RTS -hi -i0.05 -l -RTS' --ghc-options='-eventlog -rtsopts -O2 -finfo-table-map -fdistinct-constructor-tables'
 
 and the profile is rendered in eventlog:
 

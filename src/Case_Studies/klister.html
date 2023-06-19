@@ -1137,7 +1137,7 @@ sequence, again because a sequence has fast merging and cons behavior <a class="
 This is a good scenario for info-table profiling. Info-table profiling relates
 source code to closures so we can see the exact line of source code the <code class="docutils literal notranslate"><span class="pre">void</span></code>
 is originating.</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>cabal <span class="nb">test</span> --test-show-details<span class="o">=</span>streaming --test-options<span class="o">=</span><span class="s1">&#39;--pattern &quot;implicit-conversion-test&quot; +RTS -hi -i0.05 -l -RTS&#39;</span> --ghc-options<span class="o">=</span><span class="s1">&#39;-eventlog -rtsopts -O2 -finfo-table-map -fdistinct-construct or-tables&#39;</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>cabal <span class="nb">test</span> --test-show-details<span class="o">=</span>streaming --test-options<span class="o">=</span><span class="s1">&#39;--pattern &quot;implicit-conversion-test&quot; +RTS -hi -i0.05 -l -RTS&#39;</span> --ghc-options<span class="o">=</span><span class="s1">&#39;-eventlog -rtsopts -O2 -finfo-table-map -fdistinct-constructor-tables&#39;</span>
 </pre></div>
 </div>
 <p>and the profile is rendered in eventlog:</p>
