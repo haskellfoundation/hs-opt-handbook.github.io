@@ -1190,7 +1190,7 @@ info-table profiling, beginning with <code class="docutils literal notranslate">
 </pre></div>
 </div>
 <p>and rerun the test:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>cabal <span class="nb">test</span> --test-show-details<span class="o">=</span>streaming --enable-profiling --test-options<span class="o">=</span><span class="s1">&#39;--pattern &quot;impl icit-conversion-test&quot; +RTS -hi -i0.05 -l -rticky -RTS&#39;</span> --ghc-options<span class="o">=</span><span class="s1">&#39;-eventlog -rtsopts -ticky -O2 -finfo-table-map -fdistinct-constructor-tables&#39;</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>cabal <span class="nb">test</span> --test-show-details<span class="o">=</span>streaming --enable-profiling --test-options<span class="o">=</span><span class="s1">&#39;--pattern &quot;implicit-conversion-test&quot; +RTS -hi -i0.05 -l -rticky -RTS&#39;</span> --ghc-options<span class="o">=</span><span class="s1">&#39;-eventlog -rtsopts -ticky -O2 -finfo-table-map -fdistinct-constructor-tables&#39;</span>
 <span class="go">  ...</span>
 <span class="go">  Running 1 test suites...</span>
 <span class="go">  Test suite klister-tests: RUNNING...</span>
