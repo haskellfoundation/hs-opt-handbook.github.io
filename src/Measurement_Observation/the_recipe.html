@@ -205,34 +205,34 @@
 <div class="admonition warning" id="don-t-think-look">
 <span id="understand-the-system"></span><p class="admonition-title">Warning</p>
 <p>This chapter is going to be rewritten with reference to David Agan’s
-<a class="reference external" href="https://debuggingrules.com/">Debugging book</a>. Until that time I have left
+<a class="reference external" href="https://debuggingrules.com/">Debugging book</a>. Until that time, I have left
 it intact in case it may be helpful. If you came here chasing a link to
-<code class="docutils literal notranslate"><span class="pre">understand</span> <span class="pre">the</span> <span class="pre">system</span></code> or <code class="docutils literal notranslate"><span class="pre">don't</span> <span class="pre">think,</span> <span class="pre">look</span></code> then I refer you to his
+<code class="docutils literal notranslate"><span class="pre">understand</span> <span class="pre">the</span> <span class="pre">system</span></code> or <code class="docutils literal notranslate"><span class="pre">don't</span> <span class="pre">think,</span> <span class="pre">look</span></code>, then I refer you to his
 book for the time being.</p>
 </div>
 <p>This chapter presents a recipe for debugging performance regressions in Haskell.
-Often times when we debug code it becomes too easy to trace execution or use a
+Often, when we debug code, it becomes too easy to trace execution or use a
 shotgun approach; we apply a bunch of best-guess changes and retest to see if
 our stimulus presents a response. You should do your best to avoid these urges.
 Instead, use a scientific approach and develop a hypothesis and conceptual model
 of the failure mode or bug. Every bug or performance regression is a learning
 opportunity and should be considered as such. By treating regressions as
-learning opportunities you gain knowledge of your system and the systems it
-interacts with, and in turn become a better software engineer. This chapter
+learning opportunities, you gain knowledge of your system and the systems it
+interacts with, and in turn, become a better software engineer. This chapter
 provides a sequence of questions and reminders to help you take a scientific
 approach to performance regression debugging. We hope it aids you well.</p>
 <section id="vocabulary">
 <h2><span class="section-number">2.1.1. </span>Vocabulary<a class="headerlink" href="#vocabulary" title="Permalink to this heading">¶</a></h2>
 <p>Unless otherwise noted, we use the following vocabulary to describe various
 aspects of our optimization journey. Because these do not have a formal
-definition we present them here instead of in the <a class="reference internal" href="../glossary.html#glossary"><span class="std std-ref">Glossary</span></a>:</p>
+definition, we present them here instead of in the <a class="reference internal" href="../glossary.html#glossary"><span class="std std-ref">Glossary</span></a>:</p>
 <ol class="arabic simple">
 <li><p><em>The system</em>: The system is the local infrastructure and computational
 edifice your program operates in. This includes your operating system, your
 CPU, your memory controller.</p></li>
 <li><p><em>The program</em>: The program is the program we are trying to optimize that runs
 on the system.</p></li>
-<li><p><em>The problem</em>: The problem is an observable phenomena of the program. It is
+<li><p><em>The problem</em>: The problem is an observable phenomenon of the program. It is
 the performance regression we are trying to characterize, understand, fix and
 prevent.</p></li>
 <li><p><em>The failure mode</em>: The failure mode is the sequence of interactions between
@@ -246,7 +246,7 @@ problem.</p></li>
 <span id="id1"></span><h2><span class="section-number">2.1.2. </span>Characterize the Problem<a class="headerlink" href="#characterize-the-problem" title="Permalink to this heading">¶</a></h2>
 <p>The first step to solving any kind of problem is characterization. The goal of
 this step is to observe how the problem <em>presents</em> itself in the system in terms
-of the sub-systems the system uses. No phenomena exists without leaving a trail
+of the sub-systems the system uses. No phenomenon exists without leaving a trail
 of evidence, and our purpose in this step is to find this trail and re-state the
 problem description <em>in terms</em> of the system. You should begin by asking
 yourself the following questions:</p>
@@ -254,9 +254,9 @@ yourself the following questions:</p>
 <li><p>Have I observed this problem before? Is it a known failure mode? If so, then
 why does it continue to happen? What are the chain of events that have caused
 it to occur again?</p></li>
-<li><p>Is the problem deterministic? Or is it stochastic? If it is stochastic what
-is the rate at which we observe the problem phenomena?</p></li>
-<li><p>Is there anything <em>unique</em> about the environment the problem manifest in?
+<li><p>Is the problem deterministic? Or is it stochastic? If it is stochastic, what
+is the rate at which we observe the problem phenomenon?</p></li>
+<li><p>Is there anything <em>unique</em> about the environment the problem manifests in?
 Specifically:
 -. Does it manifest only on unique hardware?
 -. Does it manifest at a particular time of day or only on one person’s machine?
@@ -311,10 +311,10 @@ computing and we observe the problem.</p>
 may be very long. If this is the case then begin writing the failure mode in
 broad strokes, e.g.:</p>
 <blockquote>
-<div><p>Input <code class="docutils literal notranslate"><span class="pre">Foo</span></code> is input to the system, it then propogates to sub-system
-<code class="docutils literal notranslate"><span class="pre">Bar</span></code>, is changed to <code class="docutils literal notranslate"><span class="pre">FooFoo</span></code> and then propogates to sub-system <code class="docutils literal notranslate"><span class="pre">Baz</span></code>.</p>
+<div><p>Input <code class="docutils literal notranslate"><span class="pre">Foo</span></code> is input to the system, it then propagates to sub-system
+<code class="docutils literal notranslate"><span class="pre">Bar</span></code>, is changed to <code class="docutils literal notranslate"><span class="pre">FooFoo</span></code> and then propagates to sub-system <code class="docutils literal notranslate"><span class="pre">Baz</span></code>.</p>
 </div></blockquote>
-<p>In this style you are not overly concerned with the exact functions which do the
+<p>In this style, you are not overly concerned with the exact functions that do the
 work. Rather, you are simply laying out the path the problem input takes through
 the system. You can fill in the details as you gain insight into the failure
 mode through testing.</p>
@@ -322,19 +322,19 @@ mode through testing.</p>
 hypothetical failure modes.</p>
 </section>
 <section id="create-the-smallest-reproducible-test-of-the-problem">
-<h2><span class="section-number">2.1.4. </span>Create The Smallest Reproducible Test of the Problem<a class="headerlink" href="#create-the-smallest-reproducible-test-of-the-problem" title="Permalink to this heading">¶</a></h2>
-<p>Once you have characterized the problem and have possible failure modes you
+<h2><span class="section-number">2.1.4. </span>Create the Smallest Reproducible Test of the Problem<a class="headerlink" href="#create-the-smallest-reproducible-test-of-the-problem" title="Permalink to this heading">¶</a></h2>
+<p>Once you have characterized the problem and identified possible failure modes, you
 should try to create an isolated, minimal test to reproduce the problem. The
-idea is to try to capture the problem so you can begin analyzing it. A test is a
-light switch; the idea outcome of this step is that you have a light switch
+idea is to capture the problem so you can begin analyzing it. A test is a
+light switch; the ideal outcome of this step is that you have a light switch
 where you can “turn on” and “turn off” the problem at will. Try to construct the
 test such that it interacts with as few sub-systems and external systems as
 possible to limit the scope of the investigation. At the end of the
-investigation, you can add this test to your testsuite to ensure the problem
-does not manifest again. If you have many possible failure modes, then try to
+investigation, you can add this test to your test suite to ensure the problem
+does not manifest again. If you have many possible failure modes, try to
 have one test per failure mode.</p>
 <p>Creating a reproducible test is never the easy part, but it is not impossible.
-To construct the test case try the following steps:</p>
+To construct the test case, try the following steps:</p>
 <ol class="arabic simple">
 <li><p>Try to isolate the sub-systems and external systems that you suspect are
 likely to be in the failure mode or failure modes.</p></li>
@@ -343,24 +343,24 @@ reproduce these dependencies in a deterministic way and treat them as inputs
 to your test case.</p></li>
 <li><p>Try to isolate the code you believe to be in the failure mode. This should
 follow almost directly from characterizing the problem and defining the
-failure mode or modes. Tools such as valgrind, which provide line by line
+failure mode or modes. Tools such as Valgrind, which provide line by line
 information of source code, are helpful here if CPU cycle counts are a
 meaningful metric for your system.</p></li>
 <li><p>Remove all domain-specific information. Think of the possible failure mode
 from the perspective of the system. Do not think in terms of your business
 logic; using concepts such as <code class="docutils literal notranslate"><span class="pre">Customer</span></code>, <code class="docutils literal notranslate"><span class="pre">Bank</span> <span class="pre">Account</span></code>, or <code class="docutils literal notranslate"><span class="pre">Payment</span>
 <span class="pre">Information</span></code>. Instead, think in terms of the realization of these concepts
-in your system. <code class="docutils literal notranslate"><span class="pre">Customer</span></code> is a <code class="docutils literal notranslate"><span class="pre">String</span></code>, <code class="docutils literal notranslate"><span class="pre">Bank</span> <span class="pre">Account</span></code> is a
+in your system. <code class="docutils literal notranslate"><span class="pre">Customer</span></code> is a <code class="docutils literal notranslate"><span class="pre">String</span></code>, <code class="docutils literal notranslate"><span class="pre">Bank</span> <span class="pre">Account</span></code> is an
 <code class="docutils literal notranslate"><span class="pre">Integer</span></code>, <code class="docutils literal notranslate"><span class="pre">Payment</span> <span class="pre">information</span></code> is a <code class="docutils literal notranslate"><span class="pre">Text</span></code>. Now re-describe the
 failure mode in terms of the implementation: “When I send sub-system <code class="docutils literal notranslate"><span class="pre">Foo</span></code>
-a <code class="docutils literal notranslate"><span class="pre">String</span></code> that contains the character <code class="docutils literal notranslate"><span class="pre">U+03BB</span></code> I observe the problem”.</p></li>
-<li><p>Create slightly different tests to test different code paths on the failure
+a <code class="docutils literal notranslate"><span class="pre">String</span></code> that contains the character <code class="docutils literal notranslate"><span class="pre">U+03BB</span></code>, I observe the problem”.</p></li>
+<li><p>Create slightly different tests to test different code paths of the failure
 mode. Run tests to see if you can deterministically observe the problem. You
-should be able to state “When I input <code class="docutils literal notranslate"><span class="pre">Foo</span></code> with properties <code class="docutils literal notranslate"><span class="pre">Bar</span></code> I
-observe the problem”, and “When I input <code class="docutils literal notranslate"><span class="pre">Baz</span></code> with properties <code class="docutils literal notranslate"><span class="pre">Qux</span></code> I
+should be able to state “When I input <code class="docutils literal notranslate"><span class="pre">Foo</span></code> with properties <code class="docutils literal notranslate"><span class="pre">Bar</span></code>, I
+observe the problem”, and “When I input <code class="docutils literal notranslate"><span class="pre">Baz</span></code> with properties <code class="docutils literal notranslate"><span class="pre">Qux</span></code>, I
 observe the baseline”. You know you have found the right code path in the
-failure mode when you can reproducibly force the problem to occur <em>and</em> to
-not occur.</p></li>
+failure mode when you can reproducibly force the problem to occur <em>and</em> not to
+occur.</p></li>
 </ol>
 </section>
 <section id="define-a-hypothesis">
@@ -369,10 +369,10 @@ not occur.</p></li>
 <h3><span class="section-number">2.1.5.1. </span>The Objects of the Hypothesis<a class="headerlink" href="#the-objects-of-the-hypothesis" title="Permalink to this heading">¶</a></h3>
 <p>Think of each sub-system, external system, and component of your system as
 characters in a story. Any system that takes an action to produce a result that
-your code interacts with or causes, is a character. Each data structure your
-code directly or indirectly uses, is a character. Each function you have
-written, is a character; and so on. These are the objects of your hypothesis;
-they are what the hypothesis makes a statement about, and define the sequence of
+your code interacts with or causes is a character. Each data structure your
+code directly or indirectly uses is a character. Each function you have
+written is a character; and so on. These are the objects of your hypothesis;
+they are what the hypothesis makes a statement about and define the sequence of
 interactions that constitutes the failure mode.</p>
 </section>
 <section id="defining-a-good-hypothesis">
@@ -380,11 +380,11 @@ interactions that constitutes the failure mode.</p>
 <p>Of course, not all hypotheses are equal. Good hypotheses have the following
 properties:</p>
 <ol class="arabic simple">
-<li><p>They make progress, i.e, they are <em>falsifiable</em>; a good hypothesis yields
+<li><p>They make progress, i.e., they are <em>falsifiable</em>; a good hypothesis yields
 information when confirmed <em>and</em> when invalidated. A bad hypothesis <em>keeps
 constant</em> the level of information you have about the phenomena. In other
 words, a bad hypothesis is one where you only gain information if the
-hypothesis is validated, not when the hypothesis validated <em>or</em> invalidated.</p></li>
+hypothesis is validated, not when the hypothesis is either validated <em>or</em> invalidated.</p></li>
 <li><p>They are <em>specific and testable</em>: Good hypotheses are specific enough <em>to be</em>
 invalidated. For example, the hypothesis “The total runtime of the system is
 dominated by garbage collection induced by storing thunks in the cache” is
@@ -394,17 +394,17 @@ we know which sub-systems to inspect: the garbage collector, the cache, and
 the heap. But in addition to that, this hypothesis also adds information
 <em>even if</em> it is shown to be wrong. It could be the case that the runtime <em>is
 not</em> dominated by garbage collection, or it could be the case that the cache
-<em>is not</em> storing thunks. Either way, by testing an invalidating the
+<em>is not</em> storing thunks. Either way, by testing and invalidating the
 hypothesis we learn where runtime is spent, and what is stored in the cache.</p></li>
 </ol>
 </section>
 </section>
 <section id="predict-the-response-and-test">
 <h2><span class="section-number">2.1.6. </span>Predict the Response and Test<a class="headerlink" href="#predict-the-response-and-test" title="Permalink to this heading">¶</a></h2>
-<p>Now that you have a hypothesis, a hypothetical failure mode and a minimal test
-case you can begin testing. Each change made to your code should be in pursuit
-of validating or invalidating the hypothesis. Do your best to resist the urge to
-begin shotgun debugging! <a class="footnote-reference brackets" href="#id5" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> The work flow should be:</p>
+<p>Now that you have a hypothesis, a hypothetical failure mode, and a minimal test
+case, you can begin testing. Each change made to your code should be
+in pursuit of validating or invalidating the hypothesis. Do your best to resist
+the urge to begin shotgun debugging! <a class="footnote-reference brackets" href="#id5" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> The workflow should be:</p>
 <ol class="arabic simple">
 <li><p>Review the hypothesis and predict the response. State “if the hypothesis is
 true, then <code class="docutils literal notranslate"><span class="pre">Foo</span></code> should happen, or I should observe <code class="docutils literal notranslate"><span class="pre">Bar</span></code>”.</p></li>
@@ -423,7 +423,7 @@ hypothesis.</p></li>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="id4" role="note">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">1</a><span class="fn-bracket">]</span></span>
-<p>Be sure to have a reproducible testing environment setup before you begin
+<p>Be sure to have a reproducible testing environment set up before you begin
 gathering data. <a class="reference internal" href="../Preliminaries/repeatable_measurements.html#repeatable-measurements"><span class="std std-ref">Setting up a Reproducible Test Environment</span></a></p>
 </aside>
 <aside class="footnote brackets" id="id5" role="note">
@@ -436,7 +436,7 @@ a response. If you get a response (the problem phenomena has changed)
 then you know you have stumbled upon the failure mode of the problem. If
 you do not get a response, then you know that the sub-systems you’ve
 altered are not in the failure mode of the problem. This search for the
-failure mode is characterization of the problem and thus so is shotgun
+failure mode is characterization of the problem and thus, so is shotgun
 debugging.</p>
 </aside>
 </aside>

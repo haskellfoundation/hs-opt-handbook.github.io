@@ -1,4 +1,3 @@
-
 The Recipe
 ==========
 
@@ -9,21 +8,20 @@ The Recipe
 .. warning::
 
    This chapter is going to be rewritten with reference to David Agan's
-   `Debugging book <https://debuggingrules.com/>`_. Until that time I have left
+   `Debugging book <https://debuggingrules.com/>`_. Until that time, I have left
    it intact in case it may be helpful. If you came here chasing a link to
-   ``understand the system`` or ``don't think, look`` then I refer you to his
+   ``understand the system`` or ``don't think, look``, then I refer you to his
    book for the time being.
 
-
 This chapter presents a recipe for debugging performance regressions in Haskell.
-Often times when we debug code it becomes too easy to trace execution or use a
+Often, when we debug code, it becomes too easy to trace execution or use a
 shotgun approach; we apply a bunch of best-guess changes and retest to see if
 our stimulus presents a response. You should do your best to avoid these urges.
 Instead, use a scientific approach and develop a hypothesis and conceptual model
 of the failure mode or bug. Every bug or performance regression is a learning
 opportunity and should be considered as such. By treating regressions as
-learning opportunities you gain knowledge of your system and the systems it
-interacts with, and in turn become a better software engineer. This chapter
+learning opportunities, you gain knowledge of your system and the systems it
+interacts with, and in turn, become a better software engineer. This chapter
 provides a sequence of questions and reminders to help you take a scientific
 approach to performance regression debugging. We hope it aids you well.
 
@@ -32,7 +30,7 @@ Vocabulary
 
 Unless otherwise noted, we use the following vocabulary to describe various
 aspects of our optimization journey. Because these do not have a formal
-definition we present them here instead of in the :ref:`glossary`:
+definition, we present them here instead of in the :ref:`glossary`:
 
 1. *The system*: The system is the local infrastructure and computational
    edifice your program operates in. This includes your operating system, your
@@ -41,7 +39,7 @@ definition we present them here instead of in the :ref:`glossary`:
 2. *The program*: The program is the program we are trying to optimize that runs
    on the system.
 
-3. *The problem*: The problem is an observable phenomena of the program. It is
+3. *The problem*: The problem is an observable phenomenon of the program. It is
    the performance regression we are trying to characterize, understand, fix and
    prevent.
 
@@ -59,7 +57,7 @@ Characterize the Problem
 
 The first step to solving any kind of problem is characterization. The goal of
 this step is to observe how the problem *presents* itself in the system in terms
-of the sub-systems the system uses. No phenomena exists without leaving a trail
+of the sub-systems the system uses. No phenomenon exists without leaving a trail
 of evidence, and our purpose in this step is to find this trail and re-state the
 problem description *in terms* of the system. You should begin by asking
 yourself the following questions:
@@ -68,10 +66,10 @@ yourself the following questions:
    why does it continue to happen? What are the chain of events that have caused
    it to occur again?
 
-#. Is the problem deterministic? Or is it stochastic? If it is stochastic what
-   is the rate at which we observe the problem phenomena?
+#. Is the problem deterministic? Or is it stochastic? If it is stochastic, what
+   is the rate at which we observe the problem phenomenon?
 
-#. Is there anything *unique* about the environment the problem manifest in?
+#. Is there anything *unique* about the environment the problem manifests in?
    Specifically:
    -. Does it manifest only on unique hardware?
    -. Does it manifest at a particular time of day or only on one person's machine?
@@ -130,10 +128,10 @@ Of course, this is a toy example and the failure mode in a large complex system
 may be very long. If this is the case then begin writing the failure mode in
 broad strokes, e.g.:
 
-  Input ``Foo`` is input to the system, it then propogates to sub-system
-  ``Bar``, is changed to ``FooFoo`` and then propogates to sub-system ``Baz``.
+  Input ``Foo`` is input to the system, it then propagates to sub-system
+  ``Bar``, is changed to ``FooFoo`` and then propagates to sub-system ``Baz``.
 
-In this style you are not overly concerned with the exact functions which do the
+In this style, you are not overly concerned with the exact functions that do the
 work. Rather, you are simply laying out the path the problem input takes through
 the system. You can fill in the details as you gain insight into the failure
 mode through testing.
@@ -141,22 +139,22 @@ mode through testing.
 This step is concluded when you have identified and written down one or more
 hypothetical failure modes.
 
-Create The Smallest Reproducible Test of the Problem
+Create the Smallest Reproducible Test of the Problem
 ----------------------------------------------------
 
-Once you have characterized the problem and have possible failure modes you
+Once you have characterized the problem and identified possible failure modes, you
 should try to create an isolated, minimal test to reproduce the problem. The
-idea is to try to capture the problem so you can begin analyzing it. A test is a
-light switch; the idea outcome of this step is that you have a light switch
+idea is to capture the problem so you can begin analyzing it. A test is a
+light switch; the ideal outcome of this step is that you have a light switch
 where you can "turn on" and "turn off" the problem at will. Try to construct the
 test such that it interacts with as few sub-systems and external systems as
 possible to limit the scope of the investigation. At the end of the
-investigation, you can add this test to your testsuite to ensure the problem
-does not manifest again. If you have many possible failure modes, then try to
+investigation, you can add this test to your test suite to ensure the problem
+does not manifest again. If you have many possible failure modes, try to
 have one test per failure mode.
 
 Creating a reproducible test is never the easy part, but it is not impossible.
-To construct the test case try the following steps:
+To construct the test case, try the following steps:
 
 #. Try to isolate the sub-systems and external systems that you suspect are
    likely to be in the failure mode or failure modes.
@@ -167,7 +165,7 @@ To construct the test case try the following steps:
 
 #. Try to isolate the code you believe to be in the failure mode. This should
    follow almost directly from characterizing the problem and defining the
-   failure mode or modes. Tools such as valgrind, which provide line by line
+   failure mode or modes. Tools such as Valgrind, which provide line by line
    information of source code, are helpful here if CPU cycle counts are a
    meaningful metric for your system.
 
@@ -175,19 +173,18 @@ To construct the test case try the following steps:
    from the perspective of the system. Do not think in terms of your business
    logic; using concepts such as ``Customer``, ``Bank Account``, or ``Payment
    Information``. Instead, think in terms of the realization of these concepts
-   in your system. ``Customer`` is a ``String``, ``Bank Account`` is a
+   in your system. ``Customer`` is a ``String``, ``Bank Account`` is an
    ``Integer``, ``Payment information`` is a ``Text``. Now re-describe the
    failure mode in terms of the implementation: "When I send sub-system ``Foo``
-   a ``String`` that contains the character ``U+03BB`` I observe the problem".
+   a ``String`` that contains the character ``U+03BB``, I observe the problem".
 
-#. Create slightly different tests to test different code paths on the failure
+#. Create slightly different tests to test different code paths of the failure
    mode. Run tests to see if you can deterministically observe the problem. You
-   should be able to state "When I input ``Foo`` with properties ``Bar`` I
-   observe the problem", and "When I input ``Baz`` with properties ``Qux`` I
+   should be able to state "When I input ``Foo`` with properties ``Bar``, I
+   observe the problem", and "When I input ``Baz`` with properties ``Qux``, I
    observe the baseline". You know you have found the right code path in the
-   failure mode when you can reproducibly force the problem to occur *and* to
-   not occur.
-
+   failure mode when you can reproducibly force the problem to occur *and* not to
+   occur.
 
 Define a Hypothesis
 -------------------
@@ -197,10 +194,10 @@ The Objects of the Hypothesis
 
 Think of each sub-system, external system, and component of your system as
 characters in a story. Any system that takes an action to produce a result that
-your code interacts with or causes, is a character. Each data structure your
-code directly or indirectly uses, is a character. Each function you have
-written, is a character; and so on. These are the objects of your hypothesis;
-they are what the hypothesis makes a statement about, and define the sequence of
+your code interacts with or causes is a character. Each data structure your
+code directly or indirectly uses is a character. Each function you have
+written is a character; and so on. These are the objects of your hypothesis;
+they are what the hypothesis makes a statement about and define the sequence of
 interactions that constitutes the failure mode.
 
 Defining a Good Hypothesis
@@ -209,11 +206,11 @@ Defining a Good Hypothesis
 Of course, not all hypotheses are equal. Good hypotheses have the following
 properties:
 
-#. They make progress, i.e, they are *falsifiable*; a good hypothesis yields
+#. They make progress, i.e., they are *falsifiable*; a good hypothesis yields
    information when confirmed *and* when invalidated. A bad hypothesis *keeps
    constant* the level of information you have about the phenomena. In other
    words, a bad hypothesis is one where you only gain information if the
-   hypothesis is validated, not when the hypothesis validated *or* invalidated.
+   hypothesis is validated, not when the hypothesis is either validated *or* invalidated.
 
 #. They are *specific and testable*: Good hypotheses are specific enough *to be*
    invalidated. For example, the hypothesis "The total runtime of the system is
@@ -225,16 +222,16 @@ properties:
    the heap. But in addition to that, this hypothesis also adds information
    *even if* it is shown to be wrong. It could be the case that the runtime *is
    not* dominated by garbage collection, or it could be the case that the cache
-   *is not* storing thunks. Either way, by testing an invalidating the
+   *is not* storing thunks. Either way, by testing and invalidating the
    hypothesis we learn where runtime is spent, and what is stored in the cache.
 
 Predict the Response and Test
 -----------------------------
 
-Now that you have a hypothesis, a hypothetical failure mode and a minimal test
-case you can begin testing. Each change made to your code should be in pursuit
-of validating or invalidating the hypothesis. Do your best to resist the urge to
-begin shotgun debugging! [#]_ The work flow should be:
+Now that you have a hypothesis, a hypothetical failure mode, and a minimal test
+case, you can begin testing. Each change made to your code should be
+in pursuit of validating or invalidating the hypothesis. Do your best to resist
+the urge to begin shotgun debugging! [#]_ The workflow should be:
 
 1. Review the hypothesis and predict the response. State "if the hypothesis is
    true, then ``Foo`` should happen, or I should observe ``Bar``".
@@ -252,7 +249,7 @@ begin shotgun debugging! [#]_ The work flow should be:
    hypothesis.
 
 ..
-   Let's consider the previous example again, our hypothesis was that that the
+   Let's consider the previous example again, our hypothesis was that the
    cache was accumulating thunks, and that these thunks were dominating runtime.
 
 
@@ -270,7 +267,7 @@ Summary
 -------
 
 
-.. [#] Be sure to have a reproducible testing environment setup before you begin
+.. [#] Be sure to have a reproducible testing environment set up before you begin
        gathering data. :ref:`Repeatable Measurements`
 
 .. [#] Shotgun debugging is usually an indication that you have not properly
@@ -281,5 +278,5 @@ Summary
        then you know you have stumbled upon the failure mode of the problem. If
        you do not get a response, then you know that the sub-systems you've
        altered are not in the failure mode of the problem. This search for the
-       failure mode is characterization of the problem and thus so is shotgun
+       failure mode is characterization of the problem and thus, so is shotgun
        debugging.
