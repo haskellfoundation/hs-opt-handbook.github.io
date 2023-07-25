@@ -144,6 +144,13 @@ Glossary
 
       See :ref:`What is Fusion <canonical-fusion>`.
 
+   HNF : Normal Forms
+
+      An expression that is in *head normal form* is a value which contains at
+      least one :term:`thunk`. If the value does not contain any thunks, then it
+      is said to be in normal form (:term:`NF`). See
+      :cite:t:`jones1992implementing` Section 3.1 for more.
+
    Info Table : Runtime
 
       Every heap allocated object in the runtime system keeps an information
@@ -253,6 +260,14 @@ Glossary
       Inlining. GHC determines whether a lambda is one-shot or multi-shot during
       :term:`Cardinality Analysis`. See :cite:t:`hoCardinality` and
       :cite:t:`callArityVsDemandAnalysis` for more.
+
+   NF : Normal Forms
+
+      An expression that is in *normal form* is a fully evaluated expression and
+      is a value which contains no thunks. This is in contrast to weak head
+      normal form (:term:`WHNF`) and head normal form (:term:`HNF`), both of
+      which may contain thunks. See :cite:t:`jones1992implementing` Section 3.1
+      for more.
 
    One-Shot Lambda
 
