@@ -312,10 +312,15 @@ abstractions to avoid unnecessary allocation and computation. See
 </dd>
 <dt id="term-Fusion">Fusion<a class="headerlink" href="#term-Fusion" title="Permalink to this term">¶</a></dt><dd><p>See <a class="reference internal" href="Preliminaries/what_makes_fast_hs.html#canonical-fusion"><span class="std std-ref">What is Fusion</span></a>.</p>
 </dd>
+<dt id="term-HNF">HNF<a class="headerlink" href="#term-HNF" title="Permalink to this term">¶</a></dt><dd><p>An expression that is in <em>head normal form</em> is a value which contains at
+least one <a class="reference internal" href="#term-Thunk"><span class="xref std std-term">thunk</span></a>. If the value does not contain any thunks, then it
+is said to be in normal form (<a class="reference internal" href="#term-NF"><span class="xref std std-term">NF</span></a>). See
+<span id="id8">Jones <em>et al.</em> [<a class="reference internal" href="../contents.html#id3" title="Peyton Jones, Simon L, and Simon Peyton Jones. Implementing lazy functional languages on stock hardware: the spineless tagless g-machine. Journal of Functional Programming, 2:127-202, July 1992. URL: https://www.microsoft.com/en-us/research/publication/implementing-lazy-functional-languages-on-stock-hardware-the-spineless-tagless-g-machine/.">9</a>]</span> Section 3.1 for more.</p>
+</dd>
 <dt id="term-Info-Table">Info Table<a class="headerlink" href="#term-Info-Table" title="Permalink to this term">¶</a></dt><dd><p>Every heap allocated object in the runtime system keeps an information
 table that stores data such as: the object type (function, data
 constructor, thunk etc.) before the payload of the object. This is called
-the info table. See <span id="id8">Marlow <em>et al.</em> [<a class="reference internal" href="../contents.html#id11" title="Simon Marlow, Alexey Rodriguez Yakushev, and Simon Peyton Jones. Faster laziness using dynamic pointer tagging. SIGPLAN Not., 42(9):277–288, oct 2007. URL: https://doi.org/10.1145/1291220.1291194, doi:10.1145/1291220.1291194.">2</a>]</span> and the
+the info table. See <span id="id9">Marlow <em>et al.</em> [<a class="reference internal" href="../contents.html#id11" title="Simon Marlow, Alexey Rodriguez Yakushev, and Simon Peyton Jones. Faster laziness using dynamic pointer tagging. SIGPLAN Not., 42(9):277–288, oct 2007. URL: https://doi.org/10.1145/1291220.1291194, doi:10.1145/1291220.1291194.">2</a>]</span> and the
 <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/wikis/commentary/rts/storage/heap-objects#info-tables">wiki</a> for more
 details.</p>
 </dd>
@@ -323,7 +328,7 @@ details.</p>
 </dd>
 <dt id="term-Join-Point">Join Point<a class="headerlink" href="#term-Join-Point" title="Permalink to this term">¶</a></dt><dd><p>A join point is a place where different execution paths come together or
 <em>join</em>. Consider this example slightly modified from
-<span id="id9">Maurer <em>et al.</em> [<a class="reference internal" href="../contents.html#id2" title="Luke Maurer, Paul Downen, Zena M. Ariola, and Simon Peyton Jones. Compiling without continuations. In Proceedings of the 38th ACM SIGPLAN Conference on Programming Language Design and Implementation, PLDI 2017, 482–494. New York, NY, USA, 2017. Association for Computing Machinery. URL: https://doi.org/10.1145/3062341.3062380, doi:10.1145/3062341.3062380.">10</a>]</span>:</p>
+<span id="id10">Maurer <em>et al.</em> [<a class="reference internal" href="../contents.html#id2" title="Luke Maurer, Paul Downen, Zena M. Ariola, and Simon Peyton Jones. Compiling without continuations. In Proceedings of the 38th ACM SIGPLAN Conference on Programming Language Design and Implementation, PLDI 2017, 482–494. New York, NY, USA, 2017. Association for Computing Machinery. URL: https://doi.org/10.1145/3062341.3062380, doi:10.1145/3062341.3062380.">10</a>]</span>:</p>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">let</span><span class="w"> </span><span class="n">join1</span><span class="w"> </span><span class="kr">_</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">some_large_expression</span><span class="w"></span>
 <span class="w">    </span><span class="n">join2</span><span class="w"> </span><span class="kr">_</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">some_other_large_expr</span><span class="w"></span>
 <span class="kr">in</span><span class="w"> </span><span class="kr">if</span><span class="w"> </span><span class="n">e1</span><span class="w"> </span><span class="kr">then</span><span class="w"> </span><span class="p">(</span><span class="kr">if</span><span class="w"> </span><span class="n">e2</span><span class="w"> </span><span class="kr">then</span><span class="w"> </span><span class="n">join1</span><span class="w"> </span><span class="nb">()</span><span class="w"> </span><span class="kr">else</span><span class="w"> </span><span class="n">join2</span><span class="w"> </span><span class="nb">()</span><span class="p">)</span><span class="w"></span>
@@ -351,12 +356,12 @@ scrutinized. See also <a class="reference internal" href="#term-Unknown-function
 </dd>
 <dt id="term-Levity-Polymorphism">Levity Polymorphism<a class="headerlink" href="#term-Levity-Polymorphism" title="Permalink to this term">¶</a></dt><dd><p>A kind of polymorphism that abstracts over calling conventions which
 allows levity polymorphic functions to be abstracted over memory layout.
-See <span id="id10">Eisenberg and Peyton Jones [<a class="reference internal" href="../contents.html#id9" title="Richard A. Eisenberg and Simon Peyton Jones. Levity polymorphism. SIGPLAN Not., 52(6):525–539, jun 2017. URL: https://doi.org/10.1145/3140587.3062357, doi:10.1145/3140587.3062357.">11</a>]</span> for a more precise technical definition
+See <span id="id11">Eisenberg and Peyton Jones [<a class="reference internal" href="../contents.html#id9" title="Richard A. Eisenberg and Simon Peyton Jones. Levity polymorphism. SIGPLAN Not., 52(6):525–539, jun 2017. URL: https://doi.org/10.1145/3140587.3062357, doi:10.1145/3140587.3062357.">11</a>]</span> for a more precise technical definition
 and discussion.</p>
 </dd>
 <dt id="term-Let-Floating">Let Floating<a class="headerlink" href="#term-Let-Floating" title="Permalink to this term">¶</a></dt><dd><p>A group of optimizing transformation’s that move <code class="docutils literal notranslate"><span class="pre">let</span></code> bindings to
-reduce heap allocations. See <span id="id11">Partain <em>et al.</em> [<a class="reference internal" href="../contents.html#id8" title="WD Partain, A Santos, and Simon Peyton Jones. Let-floating: moving bindings to give faster programs. May 1996. ACM SIGPLAN International Conference on Functional Programming (ICFP'96). URL: https://www.microsoft.com/en-us/research/publication/let-floating-moving-bindings-to-give-faster-programs/.">12</a>]</span> and
-<span id="id12">Peyton Jones and Santos [<a class="reference internal" href="../contents.html#id5" title="Simon Peyton Jones and Andre Santos. A transformation-based optimiser for haskell. Science of Computer Programming, October 1997. URL: https://www.microsoft.com/en-us/research/publication/a-transformation-based-optimiser-for-haskell/.">1</a>]</span> Section 7 for more details.</p>
+reduce heap allocations. See <span id="id12">Partain <em>et al.</em> [<a class="reference internal" href="../contents.html#id8" title="WD Partain, A Santos, and Simon Peyton Jones. Let-floating: moving bindings to give faster programs. May 1996. ACM SIGPLAN International Conference on Functional Programming (ICFP'96). URL: https://www.microsoft.com/en-us/research/publication/let-floating-moving-bindings-to-give-faster-programs/.">12</a>]</span> and
+<span id="id13">Peyton Jones and Santos [<a class="reference internal" href="../contents.html#id5" title="Simon Peyton Jones and Andre Santos. A transformation-based optimiser for haskell. Science of Computer Programming, October 1997. URL: https://www.microsoft.com/en-us/research/publication/a-transformation-based-optimiser-for-haskell/.">1</a>]</span> Section 7 for more details.</p>
 </dd>
 <dt id="term-Lifted">Lifted<a class="headerlink" href="#term-Lifted" title="Permalink to this term">¶</a></dt><dd><p>A Lifted type is a type that contains the value <span class="math notranslate nohighlight">\(\bot\)</span>;
 which represents non-terminating computation. For example, the <code class="docutils literal notranslate"><span class="pre">Bool</span></code>
@@ -394,16 +399,22 @@ example of this is map fusion.</p>
 contrast to a <a class="reference internal" href="#term-One-Shot-Lambda"><span class="xref std std-term">one-shot lambda</span></a>, a multi-shot lambda has a high risk
 of destroying <a class="reference internal" href="#term-Sharing"><span class="xref std std-term">sharing</span></a> if subject to certain optimizations, such as
 Inlining. GHC determines whether a lambda is one-shot or multi-shot during
-<a class="reference internal" href="#term-Cardinality-Analysis"><span class="xref std std-term">Cardinality Analysis</span></a>. See <span id="id13">Sergey <em>et al.</em> [<a class="reference internal" href="../contents.html#id16" title="Ilya Sergey, Dimitrios Vytiniotis, and Simon Peyton Jones. Modular, higher-order cardinality analysis in theory and practice. SIGPLAN Not., 49(1):335–347, jan 2014. URL: https://doi.org/10.1145/2578855.2535861, doi:10.1145/2578855.2535861.">8</a>]</span> and
-<span id="id14">Graf [<a class="reference internal" href="../contents.html#id14" title="Sebastian Graf. Call arity vs. demand analysis. August 2017.">7</a>]</span> for more.</p>
+<a class="reference internal" href="#term-Cardinality-Analysis"><span class="xref std std-term">Cardinality Analysis</span></a>. See <span id="id14">Sergey <em>et al.</em> [<a class="reference internal" href="../contents.html#id16" title="Ilya Sergey, Dimitrios Vytiniotis, and Simon Peyton Jones. Modular, higher-order cardinality analysis in theory and practice. SIGPLAN Not., 49(1):335–347, jan 2014. URL: https://doi.org/10.1145/2578855.2535861, doi:10.1145/2578855.2535861.">8</a>]</span> and
+<span id="id15">Graf [<a class="reference internal" href="../contents.html#id14" title="Sebastian Graf. Call arity vs. demand analysis. August 2017.">7</a>]</span> for more.</p>
+</dd>
+<dt id="term-NF">NF<a class="headerlink" href="#term-NF" title="Permalink to this term">¶</a></dt><dd><p>An expression that is in <em>normal form</em> is a fully evaluated expression and
+is a value which contains no thunks. This is in contrast to weak head
+normal form (<a class="reference internal" href="#term-WHNF"><span class="xref std std-term">WHNF</span></a>) and head normal form (<a class="reference internal" href="#term-HNF"><span class="xref std std-term">HNF</span></a>), both of
+which may contain thunks. See <span id="id16">Jones <em>et al.</em> [<a class="reference internal" href="../contents.html#id3" title="Peyton Jones, Simon L, and Simon Peyton Jones. Implementing lazy functional languages on stock hardware: the spineless tagless g-machine. Journal of Functional Programming, 2:127-202, July 1992. URL: https://www.microsoft.com/en-us/research/publication/implementing-lazy-functional-languages-on-stock-hardware-the-spineless-tagless-g-machine/.">9</a>]</span> Section 3.1
+for more.</p>
 </dd>
 <dt id="term-One-Shot-Lambda">One-Shot Lambda<a class="headerlink" href="#term-One-Shot-Lambda" title="Permalink to this term">¶</a></dt><dd><p>A one-shot lambda is a lambda that is called <em>exactly</em> once. These
 lambda’s are common in functional programming and can be subject to more
 aggressive optimizations due to their one-shot nature. For example, there
 is no risk of losing <a class="reference internal" href="#term-Sharing"><span class="xref std std-term">sharing</span></a> in a one-shot lambda as a result of
 inlining free variables or floating let expressions <em>into</em> the lambda;
-something that GHC usually avoids. See <span id="id15">Sergey <em>et al.</em> [<a class="reference internal" href="../contents.html#id16" title="Ilya Sergey, Dimitrios Vytiniotis, and Simon Peyton Jones. Modular, higher-order cardinality analysis in theory and practice. SIGPLAN Not., 49(1):335–347, jan 2014. URL: https://doi.org/10.1145/2578855.2535861, doi:10.1145/2578855.2535861.">8</a>]</span> and
-<span id="id16">Graf [<a class="reference internal" href="../contents.html#id14" title="Sebastian Graf. Call arity vs. demand analysis. August 2017.">7</a>]</span> for more background. See the magic
+something that GHC usually avoids. See <span id="id17">Sergey <em>et al.</em> [<a class="reference internal" href="../contents.html#id16" title="Ilya Sergey, Dimitrios Vytiniotis, and Simon Peyton Jones. Modular, higher-order cardinality analysis in theory and practice. SIGPLAN Not., 49(1):335–347, jan 2014. URL: https://doi.org/10.1145/2578855.2535861, doi:10.1145/2578855.2535861.">8</a>]</span> and
+<span id="id18">Graf [<a class="reference internal" href="../contents.html#id14" title="Sebastian Graf. Call arity vs. demand analysis. August 2017.">7</a>]</span> for more background. See the magic
 <a class="reference external" href="https://hackage.haskell.org/package/base-4.17.0.0/docs/GHC-Exts.html#v:oneShot">oneShot</a>
 function in <a class="reference external" href="https://hackage.haskell.org/package/base-4.17.0.0/docs/GHC-Exts.html">GHC.Exts</a>
 for an unsafe way to instruct GHC that you have a one-shot lambda.</p>
@@ -437,7 +448,7 @@ work.</p>
 </dd>
 <dt id="term-Thunk">Thunk<a class="headerlink" href="#term-Thunk" title="Permalink to this term">¶</a></dt><dd><p>A thunk is a special kind of <a class="reference internal" href="#term-Closure"><span class="xref std std-term">Closure</span></a> that represents a suspended
 computation. Thunks reside on the heap and are the key feature that
-provides Haskell’s laziness. See <span id="id17">Peyton Jones and Salkild [<a class="reference internal" href="../contents.html#id7" title="Simon L. Peyton Jones and Jon Salkild. The spineless tagless g-machine. In Proceedings of the Fourth International Conference on Functional Programming Languages and Computer Architecture, FPCA '89, 184–201. New York, NY, USA, 1989. Association for Computing Machinery. URL: https://doi.org/10.1145/99370.99385, doi:10.1145/99370.99385.">13</a>]</span>
+provides Haskell’s laziness. See <span id="id19">Peyton Jones and Salkild [<a class="reference internal" href="../contents.html#id7" title="Simon L. Peyton Jones and Jon Salkild. The spineless tagless g-machine. In Proceedings of the Fourth International Conference on Functional Programming Languages and Computer Architecture, FPCA '89, 184–201. New York, NY, USA, 1989. Association for Computing Machinery. URL: https://doi.org/10.1145/99370.99385, doi:10.1145/99370.99385.">13</a>]</span>
 Section 3.1.2 for more details.</p>
 </dd>
 <dt id="term-Top-Level">Top-Level<a class="headerlink" href="#term-Top-Level" title="Permalink to this term">¶</a></dt><dd><p>The most outer-most or global scope of the program.</p>
@@ -454,7 +465,7 @@ functions require GHC to generate code that first scrutinizes the function
 pointer to determine its arity and then dispatch to the normal function
 call handling procedures. This in known has a generic apply in the STG
 machine and is slower (due to needing to scrutinize the function) than a
-<a class="reference internal" href="#term-Known-Function"><span class="xref std std-term">Known function</span></a>. See <span id="id18">Marlow and Jones [<a class="reference internal" href="../contents.html#id15" title="Simon Marlow and Simon Peyton Jones. Making a fast curry: push/enter vs. eval/apply for higher-order languages. In Proceedings of the Ninth ACM SIGPLAN International Conference on Functional Programming, ICFP '04, 4–15. New York, NY, USA, 2004. Association for Computing Machinery. URL: https://doi.org/10.1145/1016850.1016856, doi:10.1145/1016850.1016856.">14</a>]</span> for more details on STG
+<a class="reference internal" href="#term-Known-Function"><span class="xref std std-term">Known function</span></a>. See <span id="id20">Marlow and Jones [<a class="reference internal" href="../contents.html#id15" title="Simon Marlow and Simon Peyton Jones. Making a fast curry: push/enter vs. eval/apply for higher-order languages. In Proceedings of the Ninth ACM SIGPLAN International Conference on Functional Programming, ICFP '04, 4–15. New York, NY, USA, 2004. Association for Computing Machinery. URL: https://doi.org/10.1145/1016850.1016856, doi:10.1145/1016850.1016856.">14</a>]</span> for more details on STG
 calling conventions.</p>
 </dd>
 <dt id="term-WHNF">WHNF<a class="headerlink" href="#term-WHNF" title="Permalink to this term">¶</a></dt><dd><p>An expression is in <em>weak head normal form</em> if it has been evaluated to
