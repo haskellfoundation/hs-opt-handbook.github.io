@@ -2,3 +2,13 @@
 
 SBV and the Bizarre GHC Regression
 ==================================
+
+.. admonition:: Concept
+   :class: concept
+
+   I'm a concept
+
+.. admonition:: Key Idea
+   :class: key-idea
+
+   I'm a key idea

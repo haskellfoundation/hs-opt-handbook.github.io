@@ -22,7 +22,7 @@ sys.path.insert(0, os.path.abspath('extensions'))
 
 project = 'Haskell Optimization Handbook'
 html_title = 'Haskell Optimization Handbook'
-# FIXME: https://github.com/input-output-hk/hs-opt-handbook.github.io/issues/58
+# FIXME: https://github.com/haskellFoundation/hs-opt-handbook.github.io/issues/58
 copyright = u'2022-%s, Jeffrey Young (doyougnu)' % time.strftime('%Y')
 author = 'Jeffrey Young (doyugnu)'
 
@@ -47,6 +47,7 @@ extensions = [ 'sphinx.ext.mathjax'
              , 'sphinx_copybutton'
              # , 'sphinxcontrib.execHS.ext'
              , 'sphinx_exec_directive'
+             , 'conceptual_admonitions'
              ]
 
 # flags
@@ -95,7 +96,7 @@ exclude_patterns = [ '_build'
 html_theme      = "press"
 html_theme_options = { "body_max_width": 1600 }
 html_static_path = ['_static', 'code']
-html_css_files = [ 'css/s4defs-roles.css', 'css/iframe.css' ]
+html_css_files = [ 'css/s4defs-roles.css', 'css/iframe.css', 'css/admonitions.css' ]
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -106,3 +107,7 @@ mathjax_path = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
 # bibtex file
 bibtex_bibfiles = ['bib/book.bib']
 bibtex_default_style = 'unsrt'
+
+def setup(app):
+    for sheet in html_css_files:
+        app.add_css_file(sheet)
