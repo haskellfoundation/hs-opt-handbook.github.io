@@ -22,6 +22,7 @@ let
                                   sphinx-exec-haskell
                                   ghc
                                   cabal-install
+                                  git
                                 ];
 in
 pkgs.stdenv.mkDerivation {
@@ -30,9 +31,9 @@ pkgs.stdenv.mkDerivation {
    src     = ./.;
    propagatedBuildInputs = pythonInputs ++ nonPythonInputs;
 
-   preBuild = ''
-   unset SOURCE_DATE_EPOCH
-   SOURCE_DATE_EPOCH=$(date +%s)
+   # set SOURCE_DATE_EPOCH using git, fixes #58
+   shellHook = ''
+   SOURCE_DATE_EPOCH=$(git log -1 --pretty=%ct)
    '';
 
    buildPhase = ''
