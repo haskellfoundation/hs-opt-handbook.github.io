@@ -190,7 +190,7 @@ allocation because GHC will detect it as a CAF just like ``True``, ``()`` and
 ``1``. This is also why ``Foo2`` allocates; under the hood the ``Foo2`` value is
 a ``CAF``, and its fields ``one`` and ``two`` are shared, but ``one`` and
 ``two`` are allocated at runtime via the ``unpackCString#`` primitive. Here is
-the relevant :ref:`Core <Core>`:
+the relevant :ref:`Core <Reading Core>`:
 
 .. code-block:: haskell
 
