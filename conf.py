@@ -13,6 +13,8 @@
 import os
 import sys
 import time
+from datetime import datetime
+from sphinx.util.i18n import format_date
 
 ## FIXME for the time being I've cloned relevant extensions into a submodule,
 ## and then hard linked the __init__.py file until my changes can be upstreamed
@@ -23,7 +25,8 @@ sys.path.insert(0, os.path.abspath('extensions'))
 project = 'Haskell Optimization Handbook'
 html_title = 'Haskell Optimization Handbook'
 # FIXME: https://github.com/haskellFoundation/hs-opt-handbook.github.io/issues/58
-copyright = u'2022-%s, Jeffrey Young (doyougnu)' % time.strftime('%Y')
+now = datetime.now()
+copyright = u'2022-%s, Jeffrey Young (doyougnu)' % now.year
 author = 'Jeffrey Young (doyugnu)'
 
 # The full version, including alpha/beta/rc tags
