@@ -31,11 +31,6 @@ pkgs.stdenv.mkDerivation {
    src     = ./.;
    propagatedBuildInputs = pythonInputs ++ nonPythonInputs;
 
-   # set SOURCE_DATE_EPOCH using git, fixes #58
-   shellHook = ''
-   SOURCE_DATE_EPOCH=$(git log -1 --pretty=%ct)
-   '';
-
    buildPhase = ''
    runHook preBuild
    make ${target} SPHINXOPTS="-W"
