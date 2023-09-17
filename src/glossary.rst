@@ -10,19 +10,65 @@ Glossary
       The arity of a function is the number of arguments the function must take
       to conclude to a result.
 
+   Algebraic Data Type
+
+      First implemented in the Hope programming language
+      :cite:t:`historyOfHaskell`, Algebraic Data Types are *composite*, meaning
+      that they are data types made from other data types. For example,
+
+      .. code-block:: haskell
+
+         data Foo = One Int Int
+                  | Two Bool Int
+                  | Three Float Bool Char
+
+      Here ``Foo`` is an algebraic data type made from the types ``Int``,
+      ``Bool``, ``Float``, and ``Char``. In general, these data types are
+      composed from *product types* and *sum types*.
+
+      Product types are the types on finds in most other imperative and object
+      oriented programming languages, such as ``struct`` in C or tuples in
+      Haskell. Product types are called so because they form the cartesian
+      product on the set of elements represented by the type, for example the
+      type ``(Int, Bool)`` would be written :math:`Int \times Bool`, and would
+      represent the set of all pairs of elements of the sets represented by the
+      types ``Int`` and ``Bool``.
+
+      Sum types are often not found in imperative and object oriented languages,
+      but are a *tagged union* or *disjoint union* of other types. Again,
+      thinking in terms of sets, a sum type represents a disjoint union of two
+      or more types. For example ``Foo`` is the union of three product types
+      that are each *tagged* with a constructor: ``One``, ``Two`` and ``Three``.
+      Thus in terms of sets on might write the type ``Foo`` as :math:`f \in Foo
+      = (Int \times Int) + (Bool \times Int) + (Float \times Bool \times Char)`.
+      Notice also that the type ``Foo`` with elements ``f`` are *structural* (by
+      its definition we know a ``Foo`` can only be a ``One``, ``Two``, or
+      ``Three`` and how many fields each of these constructors have) as opposed
+      to *nominal*. Nominal types are the kind of types created by a
+      ``newtype``. They can have the same *representation* but are treated as a
+      wholly unique type.
+
+      .. admonition:: Help Wanted
+         :class: help-wanted
+
+         I've tried to give a thorough description of algebraic data types
+         without diving into too much type theory, but I find the explanation a
+         bit unsatisfying. For example, it is not clear *why* these are called
+         ``Inductive`` or ``Algebraic`` because I deemed this was too much depth
+         for a glossary entry. If you have a good resource or would like to take
+         a stab at this entry then please make an issue and have at it!
+
+
    Boxed : Levity
 
       A Boxed value is a value that is represented by a pointer to the heap.
 
    Cardinality Analysis
 
-      A static analysis that GHC performs to determine:
-      #. How many times a lambda-expression is called.
-      #. Which components of a data structure are never evaluated.
-      #. How many times a particular thunk is evaluated.
-
-      See :cite:t:`callArityVsDemandAnalysis` and :cite:t:`hoCardinality` for
-      more.
+      A static analysis that GHC performs to determine: (1) How many times a
+      lambda-expression is called, (2) Which components of a data structure are
+      never evaluated, (3) How many times a particular thunk is evaluated. See
+      :cite:t:`callArityVsDemandAnalysis` and :cite:t:`hoCardinality` for more.
 
    Closure
 
@@ -89,9 +135,11 @@ Glossary
      .. code-block:: haskell
 
         -- these are CAFs
+        -- A static literal is a CAF
         foo :: Int
         foo = 12
 
+        -- A reducible expression that requires no input is a CAF
         bar :: (Int, [Int])
         bar = ((*) 10 10, [1..])
 
@@ -352,6 +400,16 @@ Glossary
       machine and is slower (due to needing to scrutinize the function) than a
       :term:`Known function`. See :cite:t:`fastCurry` for more details on STG
       calling conventions.
+
+   Unfolding
+
+      An Unfolding of an identifier, as defined in ``GHC.Core.Unfold``, is the
+      *approximate* form the identifier would have if the identifier's
+      definition was substituted for the identifier. That is, Unfoldings are
+      generally the right hand sides or bodies of function definitions untouched
+      by optimizations. Unfoldings appear in Core and Interface files to enable
+      cross-module inlining and optimizations. See the :ref:`Reading Core
+      <Reading Core>` chapter for more.
 
 
    WHNF : Normal Forms
