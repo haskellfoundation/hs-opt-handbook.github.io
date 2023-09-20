@@ -42,10 +42,10 @@ interpreter. In klister, there are 4 major subsystem:
 
 #. Parser: The system that lexes and tokenizes. Klister employs |MegaParsec| for
    its parser.
-#. Expander: Klister is a scheme-like language with hygenic macros. This
+#. Expander: klister is a scheme-like language with hygenic macros. This
    subsystem performs the macro expansion and elaboration typical to these
    kinds of programming languages.
-#. Type Checker: Klister is a pure functional language with Hindley-Milner type
+#. Type Checker: klister is a pure functional language with Hindley-Milner type
    checking and higher-ordered types, including type safe macros. This subsystem
    type checks klister code.
 #. Evaluator: The evaluator inputs an abstract syntax tree which represents a

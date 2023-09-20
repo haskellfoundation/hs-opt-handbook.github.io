@@ -1,4 +1,4 @@
-.. Stg
+.. _Reading Stg:
 
 :lightgrey:`Reading Stg`
 ========================

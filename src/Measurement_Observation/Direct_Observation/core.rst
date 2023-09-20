@@ -1,4 +1,4 @@
-.. _Core:
+.. _Reading Core:
 
 :lightgrey:`Reading Core`
 =========================
