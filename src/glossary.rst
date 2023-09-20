@@ -234,7 +234,8 @@ Glossary
       in a ``let``, then these expressions would be duplicated *and* would be
       captured in an additionally allocated closure unnecessarily. Join points
       avoid these problems and are particularly relevant for Stream
-      :term:`Fusion` performance.
+      :term:`Fusion` performance. For more see the join points paper:
+      :cite:t:`compilingWithoutCont`.
 
    Known Function
 
