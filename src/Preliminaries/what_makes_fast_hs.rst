@@ -231,7 +231,7 @@ pragma and a bang pattern:
 
 .. code-block:: haskell
 
-   data Counter = Counter {-# UNPACK -#} !Int
+   data Counter = Counter {-# UNPACK #-} !Int
 
 This pragma instructs GHC to store the contents of ``Int`` directly in the
 ``Counter`` constructor, rather than storing a pointer to an ``Int`` on the heap
