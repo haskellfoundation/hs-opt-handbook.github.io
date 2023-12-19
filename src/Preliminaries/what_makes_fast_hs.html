@@ -399,7 +399,7 @@ that each <code class="docutils literal notranslate"><span class="pre">Counter</
 to an <code class="docutils literal notranslate"><span class="pre">Int</span></code> directly. We can instruct GHC remove the heap indirection with the
 <a class="reference external" href="https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/exts/pragmas.html?highlight=unpack#unpack-pragma">unpack</a>
 pragma and a bang pattern:</p>
-<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">data</span><span class="w"> </span><span class="kt">Counter</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">Counter</span><span class="w"> </span><span class="cm">{-# UNPACK -#} !Int</span>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">data</span><span class="w"> </span><span class="kt">Counter</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">Counter</span><span class="w"> </span><span class="cm">{-# UNPACK #-}</span><span class="w"> </span><span class="o">!</span><span class="kt">Int</span><span class="w"></span>
 </pre></div>
 </div>
 <p>This pragma instructs GHC to store the contents of <code class="docutils literal notranslate"><span class="pre">Int</span></code> directly in the
