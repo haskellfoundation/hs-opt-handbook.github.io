@@ -6,6 +6,7 @@ Measurement, Profiling, and Observation
    :name: Heap_Ghc
 
    the_recipe
+   haskell_model
    Heap_Ghc/index
    Heap_Third/index
    Measurement_Ghc/index
