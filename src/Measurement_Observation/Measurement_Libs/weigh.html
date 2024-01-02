@@ -376,7 +376,7 @@ allocation because GHC will detect it as a CAF just like <code class="docutils l
 <code class="docutils literal notranslate"><span class="pre">1</span></code>. This is also why <code class="docutils literal notranslate"><span class="pre">Foo2</span></code> allocates; under the hood the <code class="docutils literal notranslate"><span class="pre">Foo2</span></code> value is
 a <code class="docutils literal notranslate"><span class="pre">CAF</span></code>, and its fields <code class="docutils literal notranslate"><span class="pre">one</span></code> and <code class="docutils literal notranslate"><span class="pre">two</span></code> are shared, but <code class="docutils literal notranslate"><span class="pre">one</span></code> and
 <code class="docutils literal notranslate"><span class="pre">two</span></code> are allocated at runtime via the <code class="docutils literal notranslate"><span class="pre">unpackCString#</span></code> primitive. Here is
-the relevant <a class="reference internal" href="../Direct_Observation/core.html#core"><span class="std std-ref">Core</span></a>:</p>
+the relevant <a class="reference internal" href="../Direct_Observation/core.html#reading-core"><span class="std std-ref">Core</span></a>:</p>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- RHS size: {terms: 3, types: 0, coercions: 0, joins: 0/0}</span><span class="w"></span>
 <span class="kt">Main</span><span class="o">.</span><span class="n">main_v2</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Foo2</span><span class="w"></span>
 <span class="p">[</span><span class="kt">GblId</span><span class="p">,</span><span class="w"></span>
@@ -624,7 +624,7 @@ behavior of a program under a particular load.</p>
        title="next chapter"><span class="section-number">2.5.3. </span><span class="lightgrey">Inspection-Testing</span> →</a>
   </li>
 </ul><div class="footer" role="contentinfo">
-      &#169; Copyright 2022-2023, Jeffrey Young (doyougnu).
+      &#169; Copyright 2022-1980, Jeffrey Young (doyougnu).
     <br>
     Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.1.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
 </div>
