@@ -9,3 +9,4 @@ Direct Observation
    size
    core
    stg
+   cmm
