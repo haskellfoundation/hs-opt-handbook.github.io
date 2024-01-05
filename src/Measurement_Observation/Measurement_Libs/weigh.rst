@@ -10,7 +10,7 @@ useful to confirm that a data structure or function has the memory performance
 you anticipate it to have at *runtime*. ``Weigh`` is easy to setup and
 non-invasive; requiring no changes to source code. Thus, it is a good *initial*
 tool to use before trying more advanced methods with higher setup costs, such as
-:ref:`Cachegrind <Cachegrind>`.
+:ref:`Cachegrind <Cachegrind Chapter>`.
 
 
 Requirements
