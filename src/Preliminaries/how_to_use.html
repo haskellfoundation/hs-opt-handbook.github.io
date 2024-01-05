@@ -209,7 +209,7 @@
 <section id="purpose">
 <h2><span class="section-number">1.1.1. </span>Purpose<a class="headerlink" href="#purpose" title="Permalink to this heading">¶</a></h2>
 <p>This book is written as a handbook for the intrepid Haskell developer. It
-attempts to make clear aspects of the GHC-based Haskell so that performance
+attempts to make clear aspects of GHC-based Haskell so that performance
 optimizations and recommendations are actionable, rather than mysterious
 invocations whispered around the internet.</p>
 </section>
@@ -218,7 +218,7 @@ invocations whispered around the internet.</p>
 <p>The Haskell Optimization Handbook is intended for developers using Haskell in
 their day to day life for money or pleasure. It assumes the audience is
 proficient with pure functional programming concepts, such as recursion, purity,
-higher-ordered functions functors, applicative functors, monads et cetera., and
+higher-ordered functions, functors, applicative functors, monads et cetera., and
 the basics of the Haskell ecosystem, such as using cabal or stack to compile and
 run a project.</p>
 </section>
@@ -257,17 +257,17 @@ constant <span class="math notranslate nohighlight">\(c\)</span>.</p></li>
 handbook. Thus, the book is not meant to be read in a linear order. Instead, one
 should pick and choose which chapter to read next based on their needs because
 <em>the book assumes you have a problem that needs solving</em>.</p>
-<p>There are two general sections; both are ordered from the least time consuming
-to most time consuming topics. The first section, Part 1, aids the developer in
-identifying performance issues in their own code. Part 1 is primarily concerned
-with measurement, observation, repeatability and testing, but also includes
-methods of <em>direct observation</em> such as inspecting and understanding the
-<code class="docutils literal notranslate"><span class="pre">Core</span></code> and <code class="docutils literal notranslate"><span class="pre">Stg</span></code> languages.</p>
-<p>The second section, Part 2, aids the developer in optimizing their code. It is
+<p>There are two parts: Part 1, focuses on measurement, profiling and observation
+of Haskell programs. This part is ordered from the bottom-up; it begins with
+tools and probes that are language agnostic and close to the machine, such as
+<a class="reference internal" href="../Measurement_Observation/Measurement_Third/linux_perf.html#perf-chapter"><span class="std std-ref">Perf</span></a> and <a class="reference internal" href="../Measurement_Observation/Heap_Third/cachegrind.html#cachegrind-chapter"><span class="std std-ref">Cachegrind</span></a>, then
+proceeds through each <a class="reference external" href="https://en.wikipedia.org/wiki/Intermediate_representation#:~:text=An%20intermediate%20representation%20(IR)%20is,such%20as%20optimization%20and%20translation.">intermediate representation</a>
+(IR) describing the tools, probes, and information available at each IR.</p>
+<p>Part 2, provides an ordered sequence of techniques to optimize code. It is
 ordered from the easiest methods, such as choosing the right libraries; to the
-hardest methods, such as exploiting <code class="docutils literal notranslate"><span class="pre">backpack</span></code> for fine-grained
-<a class="reference internal" href="../glossary.html#term-Unboxed"><span class="xref std std-term">Unboxed</span></a> data types or exploiting <a class="reference internal" href="../glossary.html#term-Levity-Polymorphism"><span class="xref std std-term">Levity Polymorphism</span></a> to control
-the runtime representation of a data type.</p>
+hardest and more invasive methods, such as exploiting <a class="reference internal" href="../Optimizations/Code_Changes/backpack.html#backpack-chapter"><span class="std std-ref">Backpack</span></a> for fine-grained <a class="reference internal" href="../glossary.html#term-Unboxed"><span class="xref std std-term">Unboxed</span></a> data types or exploiting
+<a class="reference internal" href="../glossary.html#term-Levity-Polymorphism"><span class="xref std std-term">Levity Polymorphism</span></a> to control the runtime representation of a data
+type.</p>
 </section>
 <section id="goals">
 <h2><span class="section-number">1.1.6. </span>Goals<a class="headerlink" href="#goals" title="Permalink to this heading">¶</a></h2>
@@ -300,10 +300,18 @@ deployment of any kind, instructions on installing any third party tools for
 a given platform.</p></li>
 <li><p>Descriptions, analyses and explanations of functional algorithms or data
 structures. Content will instead be “Try unordered-containers if you have
-foo, bar, baz”, rather than “This is what a bankers queue or HAMT is …”.</p></li>
+this or that set of constraints”, rather than “This is what a banker’s queue
+<a class="footnote-reference brackets" href="#id2" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> or <a class="reference external" href="https://en.wikipedia.org/wiki/Hash_array_mapped_trie">HAMT</a> is
+…”.</p></li>
 <li><p>A monad or monad transformer tutorial. This is assumed knowledge in the
 audience.</p></li>
 </ol>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id2" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>See <span id="id3">Okasaki [<a class="reference internal" href="../../contents.html#id17" title="Chris Okasaki. Purely Functional Data Structures. Cambridge University Press, 1998. doi:10.1017/CBO9780511530104.">1</a>]</span>, page 23.</p>
+</aside>
+</aside>
 </section>
 </section>
 
@@ -320,7 +328,7 @@ audience.</p></li>
        title="next chapter"><span class="section-number">1.2. </span>The Programs of Consistent Lethargy →</a>
   </li>
 </ul><div class="footer" role="contentinfo">
-      &#169; Copyright 2022-1980, Jeffrey Young (doyougnu).
+      &#169; Copyright 2022-2024, Jeffrey Young (doyougnu).
     <br>
     Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.1.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
 </div>

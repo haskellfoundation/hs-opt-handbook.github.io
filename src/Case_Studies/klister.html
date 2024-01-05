@@ -374,7 +374,7 @@ docs). These trees require re-balancing in order to maintain the balanced
 invariant. This balancing slows down writes (that is, adds work to
 <code class="docutils literal notranslate"><span class="pre">Data.Map.insert</span></code>) and consequently merges, because a merge of any two trees
 may invoke a re-balancing. In contrast, <code class="docutils literal notranslate"><span class="pre">IntMap</span></code> is a big-endian PATRICIA Trie
-(see <span id="id2">Okasaki [<a class="reference internal" href="../../contents.html#id17" title="Chris Okasaki. Purely Functional Data Structures. Cambridge University Press, 1998. doi:10.1017/CBO9780511530104.">5</a>]</span>) which never require balancing. Compared to <code class="docutils literal notranslate"><span class="pre">Data.Map</span></code>,
+(see <span id="id2">Okasaki [<a class="reference internal" href="../../contents.html#id17" title="Chris Okasaki. Purely Functional Data Structures. Cambridge University Press, 1998. doi:10.1017/CBO9780511530104.">1</a>]</span>) which never require balancing. Compared to <code class="docutils literal notranslate"><span class="pre">Data.Map</span></code>,
 an <code class="docutils literal notranslate"><span class="pre">IntMap</span></code> provides faster writes at the cost of slightly slower reads.
 Additionally, <code class="docutils literal notranslate"><span class="pre">IntMap</span></code> uses less total memory than <code class="docutils literal notranslate"><span class="pre">Data.Map</span></code> <a class="footnote-reference brackets" href="#id9" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
 <p>The klister interpreter also uses <code class="docutils literal notranslate"><span class="pre">Map</span></code>’s indexed over <code class="docutils literal notranslate"><span class="pre">String</span></code> like types.
@@ -1531,7 +1531,7 @@ also has a good review.</p>
        title="next chapter">Glossary →</a>
   </li>
 </ul><div class="footer" role="contentinfo">
-      &#169; Copyright 2022-1980, Jeffrey Young (doyougnu).
+      &#169; Copyright 2022-2024, Jeffrey Young (doyougnu).
     <br>
     Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.1.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
 </div>

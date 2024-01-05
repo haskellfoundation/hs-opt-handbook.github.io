@@ -215,7 +215,7 @@ useful to confirm that a data structure or function has the memory performance
 you anticipate it to have at <em>runtime</em>. <code class="docutils literal notranslate"><span class="pre">Weigh</span></code> is easy to setup and
 non-invasive; requiring no changes to source code. Thus, it is a good <em>initial</em>
 tool to use before trying more advanced methods with higher setup costs, such as
-<a class="reference internal" href="../Heap_Third/cachegrind.html#cachegrind"><span class="std std-ref">Cachegrind</span></a>.</p>
+<a class="reference internal" href="../Heap_Third/cachegrind.html#cachegrind-chapter"><span class="std std-ref">Cachegrind</span></a>.</p>
 <section id="requirements">
 <h2><span class="section-number">2.5.2.1. </span>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading">¶</a></h2>
 <ol class="arabic simple">
@@ -541,7 +541,7 @@ constructors (five vs nine). We find that is not the case, instead
 Furthermore, a value of <code class="docutils literal notranslate"><span class="pre">LotsOfInts2</span></code> allocates 9 words (72 bytes), which is 6
 more words than expected <em>and</em> indicates that the value was not detected as a
 CAF. What we’re observing is the benefits of pointer-tagging optimizations (see
-<span id="id2">Marlow <em>et al.</em> [<a class="reference internal" href="../../../contents.html#id11" title="Simon Marlow, Alexey Rodriguez Yakushev, and Simon Peyton Jones. Faster laziness using dynamic pointer tagging. SIGPLAN Not., 42(9):277–288, oct 2007. URL: https://doi.org/10.1145/1291220.1291194, doi:10.1145/1291220.1291194.">2</a>]</span>). When a datatype has 8 or less (4 or less on
+<span id="id2">Marlow <em>et al.</em> [<a class="reference internal" href="../../../contents.html#id11" title="Simon Marlow, Alexey Rodriguez Yakushev, and Simon Peyton Jones. Faster laziness using dynamic pointer tagging. SIGPLAN Not., 42(9):277–288, oct 2007. URL: https://doi.org/10.1145/1291220.1291194, doi:10.1145/1291220.1291194.">3</a>]</span>). When a datatype has 8 or less (4 or less on
 32-bit machines) constructors GHC uses the last 3-bits (2-bits on 32-bit) of the
 constructor’s pointer to store information about the constructor. This produces
 a significant speedup and lowers memory costs in many ways: It allows the
@@ -624,7 +624,7 @@ behavior of a program under a particular load.</p>
        title="next chapter"><span class="section-number">2.5.3. </span><span class="lightgrey">Inspection-Testing</span> →</a>
   </li>
 </ul><div class="footer" role="contentinfo">
-      &#169; Copyright 2022-1980, Jeffrey Young (doyougnu).
+      &#169; Copyright 2022-2024, Jeffrey Young (doyougnu).
     <br>
     Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.1.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
 </div>

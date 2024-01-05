@@ -1,4 +1,4 @@
-.. Perf
+.. _Perf Chapter:
 
 :lightgrey:`The perf utility`
 =============================
