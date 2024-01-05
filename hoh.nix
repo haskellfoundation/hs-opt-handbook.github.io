@@ -31,6 +31,10 @@ pkgs.stdenv.mkDerivation {
    src     = ./.;
    propagatedBuildInputs = pythonInputs ++ nonPythonInputs;
 
+   preBuild = ''
+  SOURCE_DATE_EPOCH="$(${pkgs.coreutils}/bin/date '+%s')"
+  '';
+
    buildPhase = ''
    runHook preBuild
    make ${target} SPHINXOPTS="-W"
