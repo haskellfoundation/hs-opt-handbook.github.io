@@ -20,9 +20,9 @@ able to follow along. After reading this chapter, a reader should be able to
 spot inefficient data structure use by reading code, and GHC's profiling tools
 to diagnose memory performance issues and identify hot code. To read through the
 code, this `commit
-<https://github.com/gelisam/klister/commit/33501b2233ce865407a8a3ca7c090457f3375442>`__
+<https://github.com/gelisam/klister/commit/33501b2233ce865407a8a3ca7c090457f3375442>`
 is the result of the case study, and `here
-<https://github.com/gelisam/klister/tree/5aea4d2b9df8f6e9db276078570c1e1bd1306cd3>`__
+<https://github.com/gelisam/klister/tree/5aea4d2b9df8f6e9db276078570c1e1bd1306cd3>`
 is the state of the klister code base that the tutorial starts with.
 
 The rest of the chapter is structured as follows. We introduce the |klister|
