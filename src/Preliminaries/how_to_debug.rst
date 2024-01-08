@@ -1,9 +1,23 @@
-The Recipe
-==========
+How To Debug
+============
 
 .. _Understand the System:
 
+.. _Make it fail:
+
 .. _Don't think, look:
+
+.. _Divide and conquer:
+
+.. _Change one thing at a time:
+
+.. _Keep an Audit Trail:
+
+.. _Check the plug:
+
+.. _Get a fresh view:
+
+.. _If you didn't fix it, it ain't fixed:
 
 .. warning::
 

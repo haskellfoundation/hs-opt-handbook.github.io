@@ -3,12 +3,12 @@ Measurement, Profiling, and Observation
 
 .. toctree::
    :maxdepth: 3
-   :name: Heap_Ghc
+   :name: MPO
 
-   the_recipe
-   Heap_Ghc/index
-   Heap_Third/index
-   Measurement_Ghc/index
-   Measurement_Libs/index
-   Measurement_Third/index
-   Direct_Observation/index
+
+   Binary_Profiling/index
+   Thread_Profiling/index
+   Cmm_Profiling/index
+   Stg_RTS_Profiling/index
+   Core_Profiling/index
+   Haskell_Profiling/index
