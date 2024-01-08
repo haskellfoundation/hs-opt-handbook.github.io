@@ -7,10 +7,9 @@
       url = "github:edolstra/flake-compat";
       flake = false;
     };
-    sphinx-exec-haskell.url = "github:doyougnu/sphinx-exec-haskell";
   };
 
-  outputs = { self, nixpkgs, flake-utils, flake-compat, sphinx-exec-haskell }:
+  outputs = { self, nixpkgs, flake-utils, flake-compat }:
     let press-theme-overlay = final: prev: {
           sphinx-press-theme = prev.python311Packages.buildPythonPackage rec {
             pname = "sphinx_press_theme";
@@ -49,12 +48,8 @@
               inherit version;
               sha256 = "sha256-lMo4QILqt6pEiIatN/LNxhiUGX3ziSWV+bfRahzmZWU=";
             };
-            propagatedBuildInputs = [ prev.sphinx prev.python310Packages.matplotlib ];
+            propagatedBuildInputs = [ prev.sphinx prev.python311Packages.matplotlib ];
           };
-        };
-
-        sphinx-exec-haskell-overlay = system: final: prev: {
-          sphinx-exec-haskell = sphinx-exec-haskell.packages.${system}.default;
         };
 
     in
@@ -65,7 +60,6 @@
                 overlays = [ press-theme-overlay
                              copy-button-overlay
                              sphinx-exec-directive-overlay
-                             (sphinx-exec-haskell-overlay system)
                            ];
               } ;
 
