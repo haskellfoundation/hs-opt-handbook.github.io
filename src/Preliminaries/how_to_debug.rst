@@ -230,8 +230,8 @@ properties:
    invalidated. For example, the hypothesis "The total runtime of the system is
    dominated by garbage collection induced by storing thunks in the cache" is
    testable; we can directly measure how much garbage collection the runtime
-   system does and the kinds of objects it is storing (see :doc:`GHC Flags
-   <./Heap_Ghc/ghc_flags>`). This hypothesis is also specific; from reading it
+   system does and the kinds of objects it is storing (see :ref:`GHC Flags
+   <Haskell GHC Flags>`). This hypothesis is also specific; from reading it
    we know which sub-systems to inspect: the garbage collector, the cache, and
    the heap. But in addition to that, this hypothesis also adds information
    *even if* it is shown to be wrong. It could be the case that the runtime *is

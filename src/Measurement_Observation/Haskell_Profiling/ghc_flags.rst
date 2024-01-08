@@ -1,4 +1,4 @@
-.. _Heap Profiling Chapter:
+.. _Haskell GHC Flags:
 
 :lightgrey:`GHC Flags`
 ======================
