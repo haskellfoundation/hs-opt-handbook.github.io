@@ -32,13 +32,13 @@ picking your favorite Haskell library and attempting to optimize that!
 
 The book assumes you are using GHC |ghcVersion| and a Linux distribution (kernel
 version ``5.8`` and higher). Should you be using an older compiler than some
-sections, such as :doc:`Using EventLog
-</src/Measurement_Observation/Heap_Ghc/eventlog>`; which arrived in ``GHC 8.8``
-may still be useful, while others such as :doc:`Using Cachegrind
-</src/Measurement_Observation/Heap_Third/cachegrind>`; which relies on
+sections, such as :ref:`Using EventLog
+<EventLog Chapter>`; which arrived in ``GHC 8.8``
+may still be useful, while others such as :ref:`Using Cachegrind
+<Cachegrind Chapter>`; which relies on
 :term:`DWARF` symbols (added in ``GHC 8.10.x``) may not be applicable.
-Similarly, some chapters, such as :doc:`Using perf
-</src/Measurement_Observation/Measurement_Third/linux_perf>` will only be
+Similarly, some chapters, such as :ref:`Using perf
+<Perf Chapter>` will only be
 applicable for Linux and Linux based operating systems.
 
 Notation
