@@ -223,8 +223,8 @@ of a ``Counter`` data type that tracks some domain specific integer:
    Normally, when compiling with ``-O2`` GHC will recognize and optimize this definition.
 
 ``Int`` is a :term:`Boxed` and :term:`Lifted` type in ``Counter``, this means
-that each ``Counter`` holds a pointer to an ``Int`` on the heap *not* a pointer
-to an ``Int`` directly. We can instruct GHC remove the heap indirection with the
+that each ``Counter`` holds a pointer to an ``Int`` on the heap, *not* a pointer
+to an ``Int`` directly. We can instruct GHC to remove the heap indirection with the
 `unpack
 <https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/exts/pragmas.html?highlight=unpack#unpack-pragma>`_
 pragma and a bang pattern:
@@ -254,7 +254,7 @@ typically very good at optimizing it away via :term:`Let Floating` most
 Haskeller's never have to confront it (which is a good indication of GHC's
 quality); second, in order to observe it, the programmer must track the memory
 allocation of their program across many functions, modules and packages, which
-is not a common experience when writing Haskell. For our purposes', we'll
+is not a common experience when writing Haskell. For our purposes, we'll
 inspect examples that GHC should have no problem finding and optimizing. See the
 :ref:`Impact of seq Removal on SBV's cache <SBV572>` case study for an example of excessive memory allocation in a widely used library. 
 
@@ -281,8 +281,8 @@ Consider these simple examples [#]_ :
            _  -> 1
 
 This is an example of ``Let Floating inwards``. Notice that ``x`` is only used
-in *one branch* of the ``case expression``, because the other branch does not
-require it GHC can *Float x inward* to the first branch:
+in *one branch* of the ``case expression``. Since the other branch does not
+require it, GHC can *Float x inward* to the first branch:
 
 .. code-block:: haskell
 
@@ -321,7 +321,7 @@ originally free in ``y`` then the size of the thunk for ``y`` will be unchanged.
 However, if ``v`` and ``w`` are *newly* free in ``y`` then the size of the thunk
 will increase to reference the new free variables.
 
-Let bindings are also be floated outwards. There are several versions of outward
+Let bindings can also be floated outwards. There are several versions of outward
 let floating which perform small optimizations by moving ``let`` bindings around
 ``case`` expressions, for now we'll focus on a very effective outward floating
 transformation called the :term:`Full Laziness transformation`. The Full
@@ -336,7 +336,7 @@ Laziness transformation floats bindings out of lambda abstractions, consider:
 
 So we have an outer function, ``f``, that defines a tight inner loop ``g``.
 Notice that *every* recursive call to ``g`` will allocate space for, and
-calclulate ``length xs`` because ``let n = ...`` is inside the body of ``g``,
+calculate ``length xs`` because ``let n = ...`` is inside the body of ``g``,
 and ``n`` is also used in ``g``. But this is clearly wasteful, ``xs`` isn't
 changing in the body of ``g`` and so we should only need to calculate ``n``
 once. Fortunately, ``g`` never uses ``xs`` other than to calculate ``n``, so
@@ -352,7 +352,7 @@ This version is the full laziness version because we have moved ``let n = ..``
 out of the lambda in the body of ``g``. This version is much more efficient by
 utilizing laziness and avoiding repeated, wasteful computations of ``n``. ``n``
 will be a thunk for the first iteration of ``g``, but for every other iteration
-of ``g``, ``n`` will be evaluated to value thus saving time and space.
+of ``g``, ``n`` is evaluated to value, thus saving time and space.
 
 .. _canonical-domain-modeling:
 
