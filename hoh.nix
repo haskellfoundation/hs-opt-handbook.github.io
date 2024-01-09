@@ -32,12 +32,13 @@ pkgs.stdenv.mkDerivation {
    buildInputs = pythonInputs ++ nonPythonInputs;
 
    preBuild = ''
-   export SOURCE_DATE_EPOCH="$(${pkgs.coreutils}/bin/date '+%s')"
-   pip list
+   unset SOURCE_DATE_EPOCH
   '';
 
    buildPhase = ''
    runHook preBuild
+   SOURCE_DATE_EPOCH="$(${pkgs.coreutils}/bin/date '+%s')"
+   make clean
    make ${target} SPHINXOPTS="-W"
    touch "_build/.nojekyll"
    touch "_build/html/.nojekyll"
