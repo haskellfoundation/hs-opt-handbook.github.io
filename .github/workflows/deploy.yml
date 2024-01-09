@@ -13,7 +13,12 @@ jobs:
     - uses: cachix/install-nix-action@v22
 
     - name: build
-    - run: nix build
+      run: nix build
+
+    - name: Adjust permissions
+      run: |
+        chown -R `id -u`:`id -g` ./result
+        chmod -R a+rwx ./result
 
     - name: upload
       uses: actions/upload-pages-artifact@v1
