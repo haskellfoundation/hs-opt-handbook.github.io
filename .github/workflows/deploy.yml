@@ -13,11 +13,12 @@ jobs:
     - uses: cachix/install-nix-action@v22
 
     - name: build
-    - run:  |
-        nix build
-        ls
-        ls _build
+    - run: nix build
 
+    - name: upload
+      uses: actions/upload-pages-artifact@v1
+      with:
+        path: ./result
 
     - name: Deploy 🚀
       uses: JamesIves/github-pages-deploy-action@v4.2.2
