@@ -11,7 +11,14 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - uses: cachix/install-nix-action@v22
-    - run:  nix build
+
+    - name: build
+    - run:  |
+        nix build
+        ls
+        ls _build
+
+
     - name: Deploy 🚀
       uses: JamesIves/github-pages-deploy-action@v4.2.2
       with:
