@@ -12,13 +12,18 @@ This chapter is a case study on a first pass of performance engineering for the
 |klister| programming language interpreter. This case study should be exemplary
 of any system which is shortlived, has distinct phases of input and output, and
 maintains state. To diagnose the performance issues this case study uses
-:ref:`Heap Profiling <Heap Profiling Chapter>` with :ref:`Eventlog <EventLog
+:ref:`Heap Profiling <Haskell GHC Flags>` with :ref:`Eventlog <EventLog
 Chapter>`, :ref:`Info Table Profiling <IPE Chapter>`, :ref:`TickyTicky <Ticky
-Chapter>` profiling. The optimizations are simply choosing better data
+Chapter>` profiling. The optimizations are trivial: choosing better data
 structures and closing memory leaks; any intermediate level Haskeller should be
 able to follow along. After reading this chapter, a reader should be able to
-spot inefficient data structure use by reading code, and utilize profiling
-techniques to diagnose memory performance issues and identify hot code.
+spot inefficient data structure use by reading code, and GHC's profiling tools
+to diagnose memory performance issues and identify hot code. To read through the
+code, `this commit
+<https://github.com/gelisam/klister/commit/33501b2233ce865407a8a3ca7c090457f3375442>`__
+is the result of the case study, and `this commit
+<https://github.com/gelisam/klister/tree/5aea4d2b9df8f6e9db276078570c1e1bd1306cd3>`__
+was the state of the klister code base that the tutorial starts with.
 
 The rest of the chapter is structured as follows. We introduce the |klister|
 interpreter and perform a performance minded code review. We then use the
@@ -1459,7 +1464,7 @@ Then we employed a number of methods to find performance problems. We used:
 
 * :ref:`Ticky Profiling <Ticky Chapter>`: To determine hot loops and highly
   allocating functions
-* :ref:`Biographical/Retainer Profiling <Heap Profiling Chapter>`: To determine
+* :ref:`Biographical/Retainer Profiling <Haskell GHC Flags>`: To determine
   the source of memory leaks in the expander state. This technique led our
   analysis to the lazy return in ``currentEnv``.
 * :ref:`Info-Table Profiling <IPE Chapter>`: To determine the line of code

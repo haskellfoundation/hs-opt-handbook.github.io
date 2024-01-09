@@ -2,7 +2,7 @@
 <html  lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="viewport" content="width=device-width, initial-scale=1" />
 
       <title>1.1. How to Use This Book</title>
     
@@ -17,13 +17,11 @@
           <link rel="stylesheet" href="../../_static/css/admonitions.css" type="text/css" />
       
       <!-- sphinx script_files -->
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/clipboard.min.js"></script>
-        <script src="../../_static/copybutton.js"></script>
+        <script src="../../_static/documentation_options.js?v=d45e8c67"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../_static/copybutton.js?v=f281be69"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
       
@@ -205,16 +203,16 @@
           <div class="content" role="main" v-pre>
             
   <section id="how-to-use-this-book">
-<span id="how-to-use"></span><h1><span class="section-number">1.1. </span>How to Use This Book<a class="headerlink" href="#how-to-use-this-book" title="Permalink to this heading">¶</a></h1>
+<span id="how-to-use"></span><h1><span class="section-number">1.1. </span>How to Use This Book<a class="headerlink" href="#how-to-use-this-book" title="Link to this heading">¶</a></h1>
 <section id="purpose">
-<h2><span class="section-number">1.1.1. </span>Purpose<a class="headerlink" href="#purpose" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">1.1.1. </span>Purpose<a class="headerlink" href="#purpose" title="Link to this heading">¶</a></h2>
 <p>This book is written as a handbook for the intrepid Haskell developer. It
 attempts to make clear aspects of GHC-based Haskell so that performance
 optimizations and recommendations are actionable, rather than mysterious
 invocations whispered around the internet.</p>
 </section>
 <section id="intended-audience">
-<h2><span class="section-number">1.1.2. </span>Intended Audience<a class="headerlink" href="#intended-audience" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">1.1.2. </span>Intended Audience<a class="headerlink" href="#intended-audience" title="Link to this heading">¶</a></h2>
 <p>The Haskell Optimization Handbook is intended for developers using Haskell in
 their day to day life for money or pleasure. It assumes the audience is
 proficient with pure functional programming concepts, such as recursion, purity,
@@ -223,20 +221,20 @@ the basics of the Haskell ecosystem, such as using cabal or stack to compile and
 run a project.</p>
 </section>
 <section id="what-will-i-need">
-<h2><span class="section-number">1.1.3. </span>What will I need?<a class="headerlink" href="#what-will-i-need" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">1.1.3. </span>What will I need?<a class="headerlink" href="#what-will-i-need" title="Link to this heading">¶</a></h2>
 <p>You need only code you are interested in optimizing and the will to go down the
 optimization rabbit hole. If you have no code to optimize, then you may consider
 picking your favorite Haskell library and attempting to optimize that!</p>
 <p>The book assumes you are using GHC 9.2.x and a Linux distribution (kernel
 version <code class="docutils literal notranslate"><span class="pre">5.8</span></code> and higher). Should you be using an older compiler than some
-sections, such as <a class="reference internal" href="../Measurement_Observation/Heap_Ghc/eventlog.html"><span class="doc">Using EventLog</span></a>; which arrived in <code class="docutils literal notranslate"><span class="pre">GHC</span> <span class="pre">8.8</span></code>
-may still be useful, while others such as <a class="reference internal" href="../Measurement_Observation/Heap_Third/cachegrind.html"><span class="doc">Using Cachegrind</span></a>; which relies on
+sections, such as <a class="reference internal" href="../Measurement_Observation/Haskell_Profiling/eventlog.html#eventlog-chapter"><span class="std std-ref">Using EventLog</span></a>; which arrived in <code class="docutils literal notranslate"><span class="pre">GHC</span> <span class="pre">8.8</span></code>
+may still be useful, while others such as <a class="reference internal" href="../Measurement_Observation/Binary_Profiling/cachegrind.html#cachegrind-chapter"><span class="std std-ref">Using Cachegrind</span></a>; which relies on
 <a class="reference internal" href="../glossary.html#term-DWARF"><span class="xref std std-term">DWARF</span></a> symbols (added in <code class="docutils literal notranslate"><span class="pre">GHC</span> <span class="pre">8.10.x</span></code>) may not be applicable.
-Similarly, some chapters, such as <a class="reference internal" href="../Measurement_Observation/Measurement_Third/linux_perf.html"><span class="doc">Using perf</span></a> will only be
+Similarly, some chapters, such as <a class="reference internal" href="../Measurement_Observation/Binary_Profiling/linux_perf.html#perf-chapter"><span class="std std-ref">Using perf</span></a> will only be
 applicable for Linux and Linux based operating systems.</p>
 </section>
 <section id="notation">
-<h2><span class="section-number">1.1.4. </span>Notation<a class="headerlink" href="#notation" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">1.1.4. </span>Notation<a class="headerlink" href="#notation" title="Link to this heading">¶</a></h2>
 <p>Code examples are written in Haskell unless otherwise noted. Other notation
 follows standards in programming language theory and computer science academic
 discourse:</p>
@@ -252,7 +250,7 @@ constant <span class="math notranslate nohighlight">\(c\)</span>.</p></li>
 </ol>
 </section>
 <section id="where-to-begin">
-<h2><span class="section-number">1.1.5. </span>Where to Begin<a class="headerlink" href="#where-to-begin" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">1.1.5. </span>Where to Begin<a class="headerlink" href="#where-to-begin" title="Link to this heading">¶</a></h2>
 <p>The book is structured into discrete independent parts to better serve as a
 handbook. Thus, the book is not meant to be read in a linear order. Instead, one
 should pick and choose which chapter to read next based on their needs because
@@ -260,7 +258,7 @@ should pick and choose which chapter to read next based on their needs because
 <p>There are two parts: Part 1, focuses on measurement, profiling and observation
 of Haskell programs. This part is ordered from the bottom-up; it begins with
 tools and probes that are language agnostic and close to the machine, such as
-<a class="reference internal" href="../Measurement_Observation/Measurement_Third/linux_perf.html#perf-chapter"><span class="std std-ref">Perf</span></a> and <a class="reference internal" href="../Measurement_Observation/Heap_Third/cachegrind.html#cachegrind-chapter"><span class="std std-ref">Cachegrind</span></a>, then
+<a class="reference internal" href="../Measurement_Observation/Binary_Profiling/linux_perf.html#perf-chapter"><span class="std std-ref">Perf</span></a> and <a class="reference internal" href="../Measurement_Observation/Binary_Profiling/cachegrind.html#cachegrind-chapter"><span class="std std-ref">Cachegrind</span></a>, then
 proceeds through each <a class="reference external" href="https://en.wikipedia.org/wiki/Intermediate_representation#:~:text=An%20intermediate%20representation%20(IR)%20is,such%20as%20optimization%20and%20translation.">intermediate representation</a>
 (IR) describing the tools, probes, and information available at each IR.</p>
 <p>Part 2, provides an ordered sequence of techniques to optimize code. It is
@@ -270,7 +268,7 @@ hardest and more invasive methods, such as exploiting <a class="reference intern
 type.</p>
 </section>
 <section id="goals">
-<h2><span class="section-number">1.1.6. </span>Goals<a class="headerlink" href="#goals" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">1.1.6. </span>Goals<a class="headerlink" href="#goals" title="Link to this heading">¶</a></h2>
 <p>HOH is:</p>
 <ol class="arabic simple">
 <li><p>A freely available online book.</p></li>
@@ -291,7 +289,7 @@ are poor performing.</p></li>
 </ol>
 </section>
 <section id="non-goals">
-<h2><span class="section-number">1.1.7. </span>Non-Goals<a class="headerlink" href="#non-goals" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">1.1.7. </span>Non-Goals<a class="headerlink" href="#non-goals" title="Link to this heading">¶</a></h2>
 <p>HOH does not have:</p>
 <ol class="arabic simple">
 <li><p>Content suitable for beginner functional programmers.</p></li>
@@ -307,7 +305,7 @@ this or that set of constraints”, rather than “This is what a banker’s que
 audience.</p></li>
 </ol>
 <aside class="footnote-list brackets">
-<aside class="footnote brackets" id="id2" role="note">
+<aside class="footnote brackets" id="id2" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
 <p>See <span id="id3">Okasaki [<a class="reference internal" href="../../contents.html#id17" title="Chris Okasaki. Purely Functional Data Structures. Cambridge University Press, 1998. doi:10.1017/CBO9780511530104.">1</a>]</span>, page 23.</p>
 </aside>
@@ -330,7 +328,7 @@ audience.</p></li>
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2022-2024, Jeffrey Young (doyougnu).
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.1.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.2.6 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
 </div>
             </div>
           </div>

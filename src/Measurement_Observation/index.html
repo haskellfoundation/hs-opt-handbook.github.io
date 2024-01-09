@@ -2,7 +2,7 @@
 <html  lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="viewport" content="width=device-width, initial-scale=1" />
 
       <title>2. Measurement, Profiling, and Observation</title>
     
@@ -17,13 +17,11 @@
           <link rel="stylesheet" href="../../_static/css/admonitions.css" type="text/css" />
       
       <!-- sphinx script_files -->
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/clipboard.min.js"></script>
-        <script src="../../_static/copybutton.js"></script>
+        <script src="../../_static/documentation_options.js?v=d45e8c67"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../_static/copybutton.js?v=f281be69"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
       
@@ -33,8 +31,8 @@
     
   <link rel="index" title="Index" href="../../genindex.html" />
   <link rel="search" title="Search" href="../../search.html" />
-  <link rel="next" title="2.1. The Recipe" href="the_recipe.html" />
-  <link rel="prev" title="1.3. Setting up a Reproducible Test Environment" href="../Preliminaries/repeatable_measurements.html" /> 
+  <link rel="next" title="2.1. Binary Profiling and Probing" href="Binary_Profiling/index.html" />
+  <link rel="prev" title="1.4. How To Debug" href="../Preliminaries/how_to_debug.html" /> 
   </head>
 
   <body>
@@ -195,12 +193,12 @@
 
   <ul class="page-nav">
   <li class="prev">
-    <a href="../Preliminaries/repeatable_measurements.html"
-       title="previous chapter">← <span class="section-number">1.3. </span>Setting up a Reproducible Test Environment</a>
+    <a href="../Preliminaries/how_to_debug.html"
+       title="previous chapter">← <span class="section-number">1.4. </span>How To Debug</a>
   </li>
   <li class="next">
-    <a href="the_recipe.html"
-       title="next chapter"><span class="section-number">2.1. </span>The Recipe →</a>
+    <a href="Binary_Profiling/index.html"
+       title="next chapter"><span class="section-number">2.1. </span>Binary Profiling and Probing →</a>
   </li>
 </ul>
   
@@ -209,88 +207,71 @@
           <div class="content" role="main" v-pre>
             
   <section id="measurement-profiling-and-observation">
-<h1><span class="section-number">2. </span>Measurement, Profiling, and Observation<a class="headerlink" href="#measurement-profiling-and-observation" title="Permalink to this heading">¶</a></h1>
-<div class="toctree-wrapper compound" id="heap-ghc">
+<h1><span class="section-number">2. </span>Measurement, Profiling, and Observation<a class="headerlink" href="#measurement-profiling-and-observation" title="Link to this heading">¶</a></h1>
+<div class="toctree-wrapper compound" id="mpo">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="the_recipe.html">2.1. The Recipe</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="the_recipe.html#vocabulary">2.1.1. Vocabulary</a></li>
-<li class="toctree-l2"><a class="reference internal" href="the_recipe.html#characterize-the-problem">2.1.2. Characterize the Problem</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="the_recipe.html#precisely-restate-the-problem">2.1.2.1. Precisely Restate the Problem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Binary_Profiling/index.html">2.1. Binary Profiling and Probing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Binary_Profiling/linux_time.html">2.1.1. <span class="lightgrey">The Linux time command</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Binary_Profiling/linux_perf.html">2.1.2. <span class="lightgrey">The Linux perf utility</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Binary_Profiling/dtrace.html">2.1.3. <span class="lightgrey">Dtrace</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Binary_Profiling/valgrind.html">2.1.4. <span class="lightgrey">Valgrind</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Binary_Profiling/cachegrind.html">2.1.5. <span class="lightgrey">Using Cachegrind</span></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="the_recipe.html#construct-a-hypothetical-failure-mode">2.1.3. Construct a Hypothetical Failure Mode</a></li>
-<li class="toctree-l2"><a class="reference internal" href="the_recipe.html#create-the-smallest-reproducible-test-of-the-problem">2.1.4. Create the Smallest Reproducible Test of the Problem</a></li>
-<li class="toctree-l2"><a class="reference internal" href="the_recipe.html#define-a-hypothesis">2.1.5. Define a Hypothesis</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="the_recipe.html#the-objects-of-the-hypothesis">2.1.5.1. The Objects of the Hypothesis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="the_recipe.html#defining-a-good-hypothesis">2.1.5.2. Defining a Good Hypothesis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Thread_Profiling/index.html">2.2. Thread Level Profiling</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Thread_Profiling/scopes.html">2.2.1. <span class="lightgrey">ThreadScope</span></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="the_recipe.html#predict-the-response-and-test">2.1.6. Predict the Response and Test</a></li>
-<li class="toctree-l2"><a class="reference internal" href="the_recipe.html#summary">2.1.7. Summary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Cmm_Profiling/index.html">2.3. Cmm Probes and Profiling</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Cmm_Profiling/cmm.html">2.3.1. <span class="lightgrey">Reading Cmm</span></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="Heap_Ghc/index.html">2.2. Heap Profiling and Inspection : GHC Based Methods</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Heap_Ghc/ghc_flags.html">2.2.1. <span class="lightgrey">GHC Flags</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Heap_Ghc/eventlog.html">2.2.2. Eventlog</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="Heap_Ghc/eventlog.html#requirements">2.2.2.1. Requirements</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Heap_Ghc/eventlog.html#restrictions">2.2.2.2. Restrictions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Heap_Ghc/eventlog.html#what-information-do-i-receive-from-eventlog">2.2.2.3. What Information Do I Receive From Eventlog?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Heap_Ghc/eventlog.html#when-should-i-use-eventlog">2.2.2.4. When should I use Eventlog</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Heap_Ghc/eventlog.html#the-running-example">2.2.2.5. The Running Example</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Heap_Ghc/eventlog.html#the-setup">2.2.2.6. The Setup</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Heap_Ghc/eventlog.html#visualizing-the-heap-eventlog-by-type">2.2.2.7. Visualizing the Heap: Eventlog by Type</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Heap_Ghc/eventlog.html#adding-our-own-events">2.2.2.8. Adding Our Own Events</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Heap_Ghc/eventlog.html#summary">2.2.2.9. Summary</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Heap_Ghc/eventlog.html#references-and-further-reading">2.2.2.10. References and Further Reading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Stg_RTS_Profiling/index.html">2.4. Stg and RTS Probes and Profiling</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Stg_RTS_Profiling/stg.html">2.4.1. <span class="lightgrey">Reading Stg</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Stg_RTS_Profiling/ghc_flags.html">2.4.2. <span class="lightgrey">GHC Flags</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Stg_RTS_Profiling/ghc_debug.html">2.4.3. <span class="lightgrey">GHC Debug</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Stg_RTS_Profiling/dtimings.html">2.4.4. <span class="lightgrey">-ddump-timings</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Stg_RTS_Profiling/ticky_ticky.html">2.4.5. <span class="lightgrey">TickyTicky</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Stg_RTS_Profiling/reduced_stack.html">2.4.6. <span class="lightgrey">The Reduced Stack Method</span></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="Heap_Ghc/info_table.html">2.2.3. <span class="lightgrey">Info-Table Profiling</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Heap_Ghc/ghc_debug.html">2.2.4. <span class="lightgrey">GHC Debug</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Heap_Ghc/scopes.html">2.2.5. <span class="lightgrey">ThreadScope</span></a></li>
+<li class="toctree-l1"><a class="reference internal" href="Core_Profiling/index.html">2.5. Core Probes and Profiling</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Core_Profiling/core.html">2.5.1. <span class="lightgrey">Reading Core</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Core_Profiling/size.html">2.5.2. <span class="lightgrey">Memory Footprints of Data Types</span></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="Heap_Third/index.html">2.3. Heap Profiling and Inspection : Third Party Methods</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Heap_Third/cachegrind.html">2.3.1. <span class="lightgrey">Using Cachegrind</span></a></li>
+<li class="toctree-l1"><a class="reference internal" href="Haskell_Profiling/index.html">2.6. Haskell Level Probing and Profiling</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Haskell_Profiling/ghc_flags.html">2.6.1. <span class="lightgrey">GHC Flags</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Haskell_Profiling/info_table.html">2.6.2. <span class="lightgrey">Info-Table Profiling</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Haskell_Profiling/eventlog.html">2.6.3. Eventlog</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Haskell_Profiling/eventlog.html#requirements">2.6.3.1. Requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Haskell_Profiling/eventlog.html#restrictions">2.6.3.2. Restrictions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Haskell_Profiling/eventlog.html#what-information-do-i-receive-from-eventlog">2.6.3.3. What Information Do I Receive From Eventlog?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Haskell_Profiling/eventlog.html#when-should-i-use-eventlog">2.6.3.4. When should I use Eventlog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Haskell_Profiling/eventlog.html#the-running-example">2.6.3.5. The Running Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Haskell_Profiling/eventlog.html#the-setup">2.6.3.6. The Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Haskell_Profiling/eventlog.html#visualizing-the-heap-eventlog-by-type">2.6.3.7. Visualizing the Heap: Eventlog by Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Haskell_Profiling/eventlog.html#adding-our-own-events">2.6.3.8. Adding Our Own Events</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Haskell_Profiling/eventlog.html#summary">2.6.3.9. Summary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Haskell_Profiling/eventlog.html#references-and-further-reading">2.6.3.10. References and Further Reading</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="Measurement_Ghc/index.html">2.4. CPU Measurement : GHC Based Methods</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Measurement_Ghc/ghc_flags.html">2.4.1. <span class="lightgrey">GHC Flags</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Measurement_Ghc/dtimings.html">2.4.2. <span class="lightgrey">-ddump-timings</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Measurement_Ghc/ticky_ticky.html">2.4.3. <span class="lightgrey">TickyTicky</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Measurement_Ghc/reduced_stack.html">2.4.4. <span class="lightgrey">The Reduced Stack Method</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Haskell_Profiling/criterion.html">2.6.4. <span class="lightgrey">Criterion, Gauge, and Tasty-Bench</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Haskell_Profiling/flamegraph.html">2.6.5. <span class="lightgrey">Flamegraphs</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Haskell_Profiling/weigh.html">2.6.6. <span class="incremental">Weigh</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Haskell_Profiling/weigh.html#requirements">2.6.6.1. Requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Haskell_Profiling/weigh.html#restrictions">2.6.6.2. Restrictions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Haskell_Profiling/weigh.html#what-information-do-i-receive-from-weigh">2.6.6.3. What Information Do I Receive From Weigh?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Haskell_Profiling/weigh.html#when-should-i-use-weigh">2.6.6.4. When should I use Weigh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Haskell_Profiling/weigh.html#how-should-i-use-weigh">2.6.6.5. How should I use Weigh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Haskell_Profiling/weigh.html#examples">2.6.6.6. Examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Haskell_Profiling/weigh.html#summary">2.6.6.7. Summary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Haskell_Profiling/weigh.html#references-and-further-reading">2.6.6.8. References and Further Reading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Haskell_Profiling/weigh.html#related-work">2.6.6.9. Related Work</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="Measurement_Libs/index.html">2.5. CPU Measurement : Haskell Libraries</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Measurement_Libs/criterion.html">2.5.1. <span class="lightgrey">Criterion, Gauge, and Tasty-Bench</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Measurement_Libs/weigh.html">2.5.2. <span class="incremental">Weigh</span></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="Measurement_Libs/weigh.html#requirements">2.5.2.1. Requirements</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Measurement_Libs/weigh.html#restrictions">2.5.2.2. Restrictions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Measurement_Libs/weigh.html#what-information-do-i-receive-from-weigh">2.5.2.3. What Information Do I Receive From Weigh?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Measurement_Libs/weigh.html#when-should-i-use-weigh">2.5.2.4. When should I use Weigh</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Measurement_Libs/weigh.html#how-should-i-use-weigh">2.5.2.5. How should I use Weigh</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Measurement_Libs/weigh.html#examples">2.5.2.6. Examples</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Measurement_Libs/weigh.html#summary">2.5.2.7. Summary</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Measurement_Libs/weigh.html#references-and-further-reading">2.5.2.8. References and Further Reading</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Measurement_Libs/weigh.html#related-work">2.5.2.9. Related Work</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="Measurement_Libs/inspection-testing.html">2.5.3. <span class="lightgrey">Inspection-Testing</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Measurement_Libs/nothunks.html">2.5.4. <span class="lightgrey">Nothunks</span></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="Measurement_Third/index.html">2.6. CPU Measurement : Third Party Methods</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Measurement_Third/linux_time.html">2.6.1. <span class="lightgrey">The time Utility</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Measurement_Third/linux_perf.html">2.6.2. <span class="lightgrey">The perf utility</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Measurement_Third/valgrind.html">2.6.3. <span class="lightgrey">Valgrind</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Measurement_Third/dtrace.html">2.6.4. <span class="lightgrey">Dtrace</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Measurement_Third/flamegraph.html">2.6.5. <span class="lightgrey">Flamegraphs</span></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="Direct_Observation/index.html">2.7. Direct Observation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Direct_Observation/size.html">2.7.1. <span class="lightgrey">Memory Footprints of Data Types</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Direct_Observation/core.html">2.7.2. <span class="lightgrey">Reading Core</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Direct_Observation/stg.html">2.7.3. <span class="lightgrey">Reading Stg</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="Direct_Observation/cmm.html">2.7.4. <span class="lightgrey">Reading Cmm</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Haskell_Profiling/inspection_testing.html">2.6.7. <span class="lightgrey">Inspection Testing</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Haskell_Profiling/nothunks.html">2.6.8. <span class="lightgrey">Nothunks</span></a></li>
 </ul>
 </li>
 </ul>
@@ -302,17 +283,17 @@
           <div class="page-nav">
             <div class="inner"><ul class="page-nav">
   <li class="prev">
-    <a href="../Preliminaries/repeatable_measurements.html"
-       title="previous chapter">← <span class="section-number">1.3. </span>Setting up a Reproducible Test Environment</a>
+    <a href="../Preliminaries/how_to_debug.html"
+       title="previous chapter">← <span class="section-number">1.4. </span>How To Debug</a>
   </li>
   <li class="next">
-    <a href="the_recipe.html"
-       title="next chapter"><span class="section-number">2.1. </span>The Recipe →</a>
+    <a href="Binary_Profiling/index.html"
+       title="next chapter"><span class="section-number">2.1. </span>Binary Profiling and Probing →</a>
   </li>
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2022-2024, Jeffrey Young (doyougnu).
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.1.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.2.6 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
 </div>
             </div>
           </div>

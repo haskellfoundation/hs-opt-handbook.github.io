@@ -2,7 +2,7 @@
 <html  lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="viewport" content="width=device-width, initial-scale=1" />
 
       <title>3.2.3. Lambda Lifting</title>
     
@@ -17,13 +17,11 @@
           <link rel="stylesheet" href="../../../_static/css/admonitions.css" type="text/css" />
       
       <!-- sphinx script_files -->
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/clipboard.min.js"></script>
-        <script src="../../../_static/copybutton.js"></script>
+        <script src="../../../_static/documentation_options.js?v=d45e8c67"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../_static/copybutton.js?v=f281be69"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
       
@@ -207,7 +205,7 @@
           <div class="content" role="main" v-pre>
             
   <span class="target" id="lambda-lifting-chapter"></span><section id="lambda-lifting">
-<h1><span class="section-number">3.2.3. </span><span class="incremental">Lambda Lifting</span><a class="headerlink" href="#lambda-lifting" title="Permalink to this heading">¶</a></h1>
+<h1><span class="section-number">3.2.3. </span><span class="incremental">Lambda Lifting</span><a class="headerlink" href="#lambda-lifting" title="Link to this heading">¶</a></h1>
 <p>Lambda Lifting <span id="id1">[<a class="reference internal" href="../../../contents.html#id12" title="Thomas Johnsson. Lambda lifting: transforming programs to recursive equations. In Jean-Pierre Jouannaud, editor, Functional Programming Languages and Computer Architecture, 190–203. Berlin, Heidelberg, 1985. Springer Berlin Heidelberg.">4</a>]</span> is a classic rewriting technique that
 avoids excess closure allocations and removes free variables from a function. It
 avoids closure allocation by moving local functions out of an enclosing function
@@ -216,33 +214,33 @@ the lifted function that captures the free variables. This chapter describes the
 lambda lifting transformation, how GHC implements the transformation, and
 provides guidance for when to implement the transformation manually.</p>
 <section id="a-working-example">
-<h2><span class="section-number">3.2.3.1. </span>A Working Example<a class="headerlink" href="#a-working-example" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">3.2.3.1. </span>A Working Example<a class="headerlink" href="#a-working-example" title="Link to this heading">¶</a></h2>
 <p>Consider the following program <a class="footnote-reference brackets" href="#f1" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>:</p>
-<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">f</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
-<span class="nf">f</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">a</span><span class="w"></span>
-<span class="nf">f</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="n">g</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="p">`</span><span class="n">mod</span><span class="p">`</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"></span>
-<span class="w">  </span><span class="kr">where</span><span class="w"></span>
-<span class="w">    </span><span class="n">g</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">a</span><span class="w"></span>
-<span class="w">    </span><span class="n">g</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"></span>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">f</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span>
+<span class="nf">f</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">a</span>
+<span class="nf">f</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="n">g</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="p">`</span><span class="n">mod</span><span class="p">`</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">where</span>
+<span class="w">    </span><span class="n">g</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">a</span>
+<span class="w">    </span><span class="n">g</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The function <code class="docutils literal notranslate"><span class="pre">f</span></code> defines one local function, <code class="docutils literal notranslate"><span class="pre">g</span></code>, which appears as a free
 variable in <code class="docutils literal notranslate"><span class="pre">f</span></code>. Similarly, the variable <code class="docutils literal notranslate"><span class="pre">a</span></code> is a free variable in <code class="docutils literal notranslate"><span class="pre">g</span></code>. A
 lambda lifted <code class="docutils literal notranslate"><span class="pre">g</span></code>, will convert all free variables in <code class="docutils literal notranslate"><span class="pre">g</span></code> to parameters.
 Thus <code class="docutils literal notranslate"><span class="pre">g_lifted</span></code> turns into:</p>
-<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">g_lifted</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">a</span><span class="w"></span>
-<span class="nf">g_lifted</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">g_lifted</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"></span>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">g_lifted</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">a</span>
+<span class="nf">g_lifted</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">g_lifted</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Now <code class="docutils literal notranslate"><span class="pre">a</span></code> is an input, which means that <code class="docutils literal notranslate"><span class="pre">g_lifted</span></code> can be floated out of <code class="docutils literal notranslate"><span class="pre">f</span></code>
 to the top level producing the final program:</p>
-<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">g_lifted</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
-<span class="nf">g_lifted</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">a</span><span class="w"></span>
-<span class="nf">g_lifted</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">g_lifted</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"></span>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">g_lifted</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span>
+<span class="nf">g_lifted</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">a</span>
+<span class="nf">g_lifted</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">g_lifted</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
 
-<span class="nf">f</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span><span class="w"></span>
-<span class="nf">f</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">a</span><span class="w"></span>
-<span class="nf">f</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="n">g_lifted</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="p">`</span><span class="n">mod</span><span class="p">`</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"></span>
+<span class="nf">f</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span>
+<span class="nf">f</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">a</span>
+<span class="nf">f</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="n">g_lifted</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="p">`</span><span class="n">mod</span><span class="p">`</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Before the lambda lifting transformation <code class="docutils literal notranslate"><span class="pre">f</span></code> had to allocate a closure for
@@ -275,17 +273,17 @@ allocation in the now frequently called outer loop.</p>
 <p>Now <code class="docutils literal notranslate"><span class="pre">f</span></code> is an obviously contrived example, so one may ask how frequently the
 many-calls with low <code class="docutils literal notranslate"><span class="pre">n</span></code> scenario will occur in practice. The simplest example
 is very familiar:</p>
-<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- | map with no lambda lifting</span><span class="w"></span>
-<span class="nf">map</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">go</span><span class="w"></span>
-<span class="w">  </span><span class="kr">where</span><span class="w"></span>
-<span class="w">    </span><span class="n">go</span><span class="w"> </span><span class="kt">[]</span><span class="w">     </span><span class="ow">=</span><span class="w"> </span><span class="kt">[]</span><span class="w"></span>
-<span class="w">    </span><span class="n">go</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="kt">:</span><span class="w"> </span><span class="n">go</span><span class="w"> </span><span class="n">xs</span><span class="w"></span>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- | map with no lambda lifting</span>
+<span class="nf">map</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">go</span>
+<span class="w">  </span><span class="kr">where</span>
+<span class="w">    </span><span class="n">go</span><span class="w"> </span><span class="kt">[]</span><span class="w">     </span><span class="ow">=</span><span class="w"> </span><span class="kt">[]</span>
+<span class="w">    </span><span class="n">go</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="kt">:</span><span class="w"> </span><span class="n">go</span><span class="w"> </span><span class="n">xs</span>
 </pre></div>
 </div>
 <p>vs. the lifted version:</p>
-<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- | map lambda lifted</span><span class="w"></span>
-<span class="nf">map</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="kt">[]</span><span class="w">     </span><span class="ow">=</span><span class="w"> </span><span class="kt">[]</span><span class="w"></span>
-<span class="nf">map</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="kt">:</span><span class="w"> </span><span class="n">map</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">xs</span><span class="w"></span>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- | map lambda lifted</span>
+<span class="nf">map</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="kt">[]</span><span class="w">     </span><span class="ow">=</span><span class="w"> </span><span class="kt">[]</span>
+<span class="nf">map</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="kt">:</span><span class="w"> </span><span class="n">map</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">xs</span>
 </pre></div>
 </div>
 <p>The first form is beneficial when there are a few calls on long lists via the
@@ -304,7 +302,7 @@ stack.</p>
 </div>
 </section>
 <section id="how-lambda-lifting-works-in-ghc">
-<h2><span class="section-number">3.2.3.2. </span>How Lambda Lifting Works in GHC<a class="headerlink" href="#how-lambda-lifting-works-in-ghc" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">3.2.3.2. </span>How Lambda Lifting Works in GHC<a class="headerlink" href="#how-lambda-lifting-works-in-ghc" title="Link to this heading">¶</a></h2>
 <p>GHC does have a lambda lifting pass in STG, however lambda lifting is not the
 default method GHC uses for handling local functions and free variables.
 Instead, GHC uses an alternative strategy called <a class="reference internal" href="../../glossary.html#term-Closure-Conversion"><span class="xref std std-term">Closure Conversion</span></a>,
@@ -341,7 +339,7 @@ will allocate many times.</p></li>
 </ol>
 </section>
 <section id="observing-the-effect-of-lambda-lifting">
-<h2><span class="section-number">3.2.3.3. </span>Observing the Effect of Lambda Lifting<a class="headerlink" href="#observing-the-effect-of-lambda-lifting" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">3.2.3.3. </span>Observing the Effect of Lambda Lifting<a class="headerlink" href="#observing-the-effect-of-lambda-lifting" title="Link to this heading">¶</a></h2>
 <p>You may directly observe the effect of late lambda lifting by comparing Core to
 STG when late lambda lifting is enabled. You can also disable or enable late
 lambda lifting with the flags <code class="docutils literal notranslate"><span class="pre">-f-stg-lift-lams</span></code> and <code class="docutils literal notranslate"><span class="pre">-fno-stg-lift-lams</span></code>.
@@ -357,7 +355,7 @@ occurrences of parameters.</p></li>
 </ol>
 </section>
 <section id="when-to-manually-lambda-lift">
-<span id="when"></span><h2><span class="section-number">3.2.3.4. </span>When to Manually Lambda Lift<a class="headerlink" href="#when-to-manually-lambda-lift" title="Permalink to this heading">¶</a></h2>
+<span id="when"></span><h2><span class="section-number">3.2.3.4. </span>When to Manually Lambda Lift<a class="headerlink" href="#when-to-manually-lambda-lift" title="Link to this heading">¶</a></h2>
 <p>GHC does a good job finding beneficial instances of lambda lifting. However, you
 might want to manually lambda lift to save compile time, or to increase the
 performance of your program without relying on GHC’s optimizer.</p>
@@ -377,30 +375,30 @@ result of the lambda lift. Both kinds of extra allocation slow the program down
 and increases pressure on the garbage collector. So it is important to learn to
 read the program from the perspective of memory. Consider this example from
 <span id="id4">Graf and Jones [<a class="reference internal" href="../../../contents.html#id13" title="Sebastian Graf and Simon Peyton Jones. Selective lambda lifting. 2019. URL: https://arxiv.org/abs/1910.11717, doi:10.48550/ARXIV.1910.11717.">5</a>]</span>:</p>
-<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- unlifted.</span><span class="w"></span>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- unlifted.</span>
 
-<span class="c1">-- f&#39;s increases heap because it must have a closure that includes the &#39;x&#39;</span><span class="w"></span>
-<span class="c1">-- and &#39;y&#39; free variables</span><span class="w"></span>
+<span class="c1">-- f&#39;s increases heap because it must have a closure that includes the &#39;x&#39;</span>
+<span class="c1">-- and &#39;y&#39; free variables</span>
 
-<span class="c1">-- &#39;g&#39; increases heap because of the let and must have &#39;f&#39; and &#39;x&#39; in its</span><span class="w"></span>
-<span class="c1">-- closure (not assuming other optimizations such as constant propagation)</span><span class="w"></span>
+<span class="c1">-- &#39;g&#39; increases heap because of the let and must have &#39;f&#39; and &#39;x&#39; in its</span>
+<span class="c1">-- closure (not assuming other optimizations such as constant propagation)</span>
 
-<span class="c1">-- &#39;h&#39; increases heap because &#39;f&#39; is free in &#39;h&#39;</span><span class="w"></span>
+<span class="c1">-- &#39;h&#39; increases heap because &#39;f&#39; is free in &#39;h&#39;</span>
 
-<span class="kr">let</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">y</span><span class="w"></span>
-<span class="w">    </span><span class="n">g</span><span class="w"> </span><span class="n">d</span><span class="w">   </span><span class="ow">=</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="n">e</span><span class="w"></span>
-<span class="w">            </span><span class="kr">in</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="n">x</span><span class="w"></span>
-<span class="kr">in</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="mi">3</span><span class="w"></span>
+<span class="kr">let</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">y</span>
+<span class="w">    </span><span class="n">g</span><span class="w"> </span><span class="n">d</span><span class="w">   </span><span class="ow">=</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="n">e</span>
+<span class="w">            </span><span class="kr">in</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="n">x</span>
+<span class="kr">in</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="mi">3</span>
 </pre></div>
 </div>
 <p>Let’s say we lift <code class="docutils literal notranslate"><span class="pre">f</span></code>, now we have:</p>
-<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- lifted f</span><span class="w"></span>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- lifted f</span>
 
-<span class="nf">f_lifted</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">y</span><span class="w"></span>
+<span class="nf">f_lifted</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">y</span>
 
-<span class="kr">let</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="n">d</span><span class="w">   </span><span class="ow">=</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">f_lifted</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="n">e</span><span class="w"></span>
-<span class="w">            </span><span class="kr">in</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="n">x</span><span class="w"></span>
-<span class="kr">in</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="mi">3</span><span class="w"></span>
+<span class="kr">let</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="n">d</span><span class="w">   </span><span class="ow">=</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">f_lifted</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="n">e</span>
+<span class="w">            </span><span class="kr">in</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="n">x</span>
+<span class="kr">in</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="mi">3</span>
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">f_lifted</span></code> is now a top level function, thus any closure that contained <code class="docutils literal notranslate"><span class="pre">f</span></code>
@@ -439,7 +437,7 @@ calls to the outer loop and few calls made in the inner loop, then lambda
 lifting will be beneficial.</p>
 </section>
 <section id="summary">
-<h2><span class="section-number">3.2.3.5. </span>Summary<a class="headerlink" href="#summary" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">3.2.3.5. </span>Summary<a class="headerlink" href="#summary" title="Link to this heading">¶</a></h2>
 <ol class="arabic simple">
 <li><p>Lambda lifting is a classic optimization technique for compiling local
 functions and removing free variables.</p></li>
@@ -456,7 +454,7 @@ code generation. GHC’s lambda lifting transformation can be toggled via the
 the STG. Or, you may compare STG with and without lifting explicitly enabled.</p></li>
 </ol>
 <aside class="footnote-list brackets">
-<aside class="footnote brackets" id="f1" role="note">
+<aside class="footnote brackets" id="f1" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">1</a><span class="fn-bracket">]</span></span>
 <p>This program and example comes from <span id="id5">Graf and Jones [<a class="reference internal" href="../../../contents.html#id13" title="Sebastian Graf and Simon Peyton Jones. Selective lambda lifting. 2019. URL: https://arxiv.org/abs/1910.11717, doi:10.48550/ARXIV.1910.11717.">5</a>]</span>;
 thank you for your labor!:</p>
@@ -480,7 +478,7 @@ thank you for your labor!:</p>
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2022-2024, Jeffrey Young (doyougnu).
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.1.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.2.6 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
 </div>
             </div>
           </div>

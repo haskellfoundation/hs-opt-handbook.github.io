@@ -2,7 +2,7 @@
 <html  lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="viewport" content="width=device-width, initial-scale=1" />
 
       <title>Haskell Optimization Handbook</title>
     
@@ -17,13 +17,11 @@
           <link rel="stylesheet" href="_static/css/admonitions.css" type="text/css" />
       
       <!-- sphinx script_files -->
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/clipboard.min.js"></script>
-        <script src="_static/copybutton.js"></script>
+        <script src="_static/documentation_options.js?v=d45e8c67"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="_static/copybutton.js?v=f281be69"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
       
@@ -198,7 +196,7 @@
           <div class="content" role="main" v-pre>
             
   <section id="haskell-optimization-handbook">
-<h1>Haskell Optimization Handbook<a class="headerlink" href="#haskell-optimization-handbook" title="Permalink to this heading">¶</a></h1>
+<h1>Haskell Optimization Handbook<a class="headerlink" href="#haskell-optimization-handbook" title="Link to this heading">¶</a></h1>
 <div class="toctree-wrapper compound" id="mastertoc">
 <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
 <ul>
@@ -206,49 +204,49 @@
 <li class="toctree-l2"><a class="reference internal" href="src/Preliminaries/how_to_use.html">1.1. How to Use This Book</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src/Preliminaries/what_makes_fast_hs.html">1.2. The Programs of Consistent Lethargy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src/Preliminaries/repeatable_measurements.html">1.3. Setting up a Reproducible Test Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/Preliminaries/how_to_debug.html">1.4. How To Debug</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="src/Measurement_Observation/index.html">2. Measurement, Profiling, and Observation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="src/Measurement_Observation/the_recipe.html">2.1. The Recipe</a></li>
-<li class="toctree-l2"><a class="reference internal" href="src/Measurement_Observation/Heap_Ghc/index.html">2.2. Heap Profiling and Inspection : GHC Based Methods</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Heap_Ghc/ghc_flags.html">2.2.1. <span class="lightgrey">GHC Flags</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Heap_Ghc/eventlog.html">2.2.2. Eventlog</a></li>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Heap_Ghc/info_table.html">2.2.3. <span class="lightgrey">Info-Table Profiling</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Heap_Ghc/ghc_debug.html">2.2.4. <span class="lightgrey">GHC Debug</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Heap_Ghc/scopes.html">2.2.5. <span class="lightgrey">ThreadScope</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/Measurement_Observation/Binary_Profiling/index.html">2.1. Binary Profiling and Probing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Binary_Profiling/linux_time.html">2.1.1. <span class="lightgrey">The Linux time command</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Binary_Profiling/linux_perf.html">2.1.2. <span class="lightgrey">The Linux perf utility</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Binary_Profiling/dtrace.html">2.1.3. <span class="lightgrey">Dtrace</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Binary_Profiling/valgrind.html">2.1.4. <span class="lightgrey">Valgrind</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Binary_Profiling/cachegrind.html">2.1.5. <span class="lightgrey">Using Cachegrind</span></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="src/Measurement_Observation/Heap_Third/index.html">2.3. Heap Profiling and Inspection : Third Party Methods</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Heap_Third/cachegrind.html">2.3.1. <span class="lightgrey">Using Cachegrind</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/Measurement_Observation/Thread_Profiling/index.html">2.2. Thread Level Profiling</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Thread_Profiling/scopes.html">2.2.1. <span class="lightgrey">ThreadScope</span></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="src/Measurement_Observation/Measurement_Ghc/index.html">2.4. CPU Measurement : GHC Based Methods</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Measurement_Ghc/ghc_flags.html">2.4.1. <span class="lightgrey">GHC Flags</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Measurement_Ghc/dtimings.html">2.4.2. <span class="lightgrey">-ddump-timings</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Measurement_Ghc/ticky_ticky.html">2.4.3. <span class="lightgrey">TickyTicky</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Measurement_Ghc/reduced_stack.html">2.4.4. <span class="lightgrey">The Reduced Stack Method</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/Measurement_Observation/Cmm_Profiling/index.html">2.3. Cmm Probes and Profiling</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Cmm_Profiling/cmm.html">2.3.1. <span class="lightgrey">Reading Cmm</span></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="src/Measurement_Observation/Measurement_Libs/index.html">2.5. CPU Measurement : Haskell Libraries</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Measurement_Libs/criterion.html">2.5.1. <span class="lightgrey">Criterion, Gauge, and Tasty-Bench</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Measurement_Libs/weigh.html">2.5.2. <span class="incremental">Weigh</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Measurement_Libs/inspection-testing.html">2.5.3. <span class="lightgrey">Inspection-Testing</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Measurement_Libs/nothunks.html">2.5.4. <span class="lightgrey">Nothunks</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/Measurement_Observation/Stg_RTS_Profiling/index.html">2.4. Stg and RTS Probes and Profiling</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Stg_RTS_Profiling/stg.html">2.4.1. <span class="lightgrey">Reading Stg</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Stg_RTS_Profiling/ghc_flags.html">2.4.2. <span class="lightgrey">GHC Flags</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Stg_RTS_Profiling/ghc_debug.html">2.4.3. <span class="lightgrey">GHC Debug</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Stg_RTS_Profiling/dtimings.html">2.4.4. <span class="lightgrey">-ddump-timings</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Stg_RTS_Profiling/ticky_ticky.html">2.4.5. <span class="lightgrey">TickyTicky</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Stg_RTS_Profiling/reduced_stack.html">2.4.6. <span class="lightgrey">The Reduced Stack Method</span></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="src/Measurement_Observation/Measurement_Third/index.html">2.6. CPU Measurement : Third Party Methods</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Measurement_Third/linux_time.html">2.6.1. <span class="lightgrey">The time Utility</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Measurement_Third/linux_perf.html">2.6.2. <span class="lightgrey">The perf utility</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Measurement_Third/valgrind.html">2.6.3. <span class="lightgrey">Valgrind</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Measurement_Third/dtrace.html">2.6.4. <span class="lightgrey">Dtrace</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Measurement_Third/flamegraph.html">2.6.5. <span class="lightgrey">Flamegraphs</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/Measurement_Observation/Core_Profiling/index.html">2.5. Core Probes and Profiling</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Core_Profiling/core.html">2.5.1. <span class="lightgrey">Reading Core</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Core_Profiling/size.html">2.5.2. <span class="lightgrey">Memory Footprints of Data Types</span></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="src/Measurement_Observation/Direct_Observation/index.html">2.7. Direct Observation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Direct_Observation/size.html">2.7.1. <span class="lightgrey">Memory Footprints of Data Types</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Direct_Observation/core.html">2.7.2. <span class="lightgrey">Reading Core</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Direct_Observation/stg.html">2.7.3. <span class="lightgrey">Reading Stg</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Direct_Observation/cmm.html">2.7.4. <span class="lightgrey">Reading Cmm</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/Measurement_Observation/Haskell_Profiling/index.html">2.6. Haskell Level Probing and Profiling</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Haskell_Profiling/ghc_flags.html">2.6.1. <span class="lightgrey">GHC Flags</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Haskell_Profiling/info_table.html">2.6.2. <span class="lightgrey">Info-Table Profiling</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Haskell_Profiling/eventlog.html">2.6.3. Eventlog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Haskell_Profiling/criterion.html">2.6.4. <span class="lightgrey">Criterion, Gauge, and Tasty-Bench</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Haskell_Profiling/flamegraph.html">2.6.5. <span class="lightgrey">Flamegraphs</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Haskell_Profiling/weigh.html">2.6.6. <span class="incremental">Weigh</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Haskell_Profiling/inspection_testing.html">2.6.7. <span class="lightgrey">Inspection Testing</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Haskell_Profiling/nothunks.html">2.6.8. <span class="lightgrey">Nothunks</span></a></li>
 </ul>
 </li>
 </ul>
@@ -301,7 +299,7 @@
 </div>
 </section>
 <section id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading">¶</a></h1>
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
 <ul class="simple">
@@ -311,8 +309,9 @@
 </ul>
 </section>
 <section id="bibliography">
-<h1>Bibliography<a class="headerlink" href="#bibliography" title="Permalink to this heading">¶</a></h1>
+<h1>Bibliography<a class="headerlink" href="#bibliography" title="Link to this heading">¶</a></h1>
 <div class="docutils container" id="id1">
+<div role="list" class="citation-list">
 <div class="citation" id="id17" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
 <p>Chris Okasaki. <em>Purely Functional Data Structures</em>. Cambridge University Press, 1998. <a class="reference external" href="https://doi.org/10.1017/CBO9780511530104">doi:10.1017/CBO9780511530104</a>.</p>
@@ -388,7 +387,7 @@
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2022-2024, Jeffrey Young (doyougnu).
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.1.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.2.6 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
 </div>
             </div>
           </div>
