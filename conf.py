@@ -61,6 +61,7 @@ autosectionlabel_prefix_document = True
 extlinks = {'userGuide': ('https://downloads.haskell.org/~ghc/9.2.4/docs/html/users_guide/%s', '%s'),
             'ghcWiki': ('https://gitlab.haskell.org/ghc/ghc/wikis/%s', '#%s'),
             'haskellPerf': ('https://github.com/haskell-perf/%s', '%s'),
+            'ghcSource': ('https://gitlab.haskell.org/ghc/ghc/-/blob/master/%s', '#%s')
             }
 
 # prolog for colored text and global variables

@@ -377,6 +377,15 @@ Glossary
       provides Haskell's laziness. See :cite:t:`SpinelessTaglessGMachine`
       Section 3.1.2 for more details.
 
+   Thread State Object (TSO)
+
+      A thread state object is a heap object that represents a Haskell thread in
+      GHC's runtime system. For the precise contents please see its definition
+      in :ghcSource:`GHC's source code
+      <rts/include/rts/storage/TSO.h?ref_type=heads>` and `this description
+      <https://youtu.be/5vKBFnTsCcE?si=4THBS_KMYRI6U1Sm&t=4620>`__ by Ben
+      Gamari.
+
    Top-Level
 
       The most outer-most or global scope of the program.
