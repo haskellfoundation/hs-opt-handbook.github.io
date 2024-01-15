@@ -495,6 +495,11 @@ computation. Thunks reside on the heap and are the key feature that
 provides Haskell’s laziness. See <span id="id21">Peyton Jones and Salkild [<a class="reference internal" href="../contents.html#id7" title="Simon L. Peyton Jones and Jon Salkild. The spineless tagless g-machine. In Proceedings of the Fourth International Conference on Functional Programming Languages and Computer Architecture, FPCA '89, 184–201. New York, NY, USA, 1989. Association for Computing Machinery. URL: https://doi.org/10.1145/99370.99385, doi:10.1145/99370.99385.">14</a>]</span>
 Section 3.1.2 for more details.</p>
 </dd>
+<dt id="term-Thread-State-Object-TSO">Thread State Object (TSO)<a class="headerlink" href="#term-Thread-State-Object-TSO" title="Link to this term">¶</a></dt><dd><p>A thread state object is a heap object that represents a Haskell thread in
+GHC’s runtime system. For the precise contents please see its definition
+in <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/blob/master/rts/include/rts/storage/TSO.h?ref_type=heads">GHC’s source code</a> and <a class="reference external" href="https://youtu.be/5vKBFnTsCcE?si=4THBS_KMYRI6U1Sm&amp;t=4620">this description</a> by Ben
+Gamari.</p>
+</dd>
 <dt id="term-Top-Level">Top-Level<a class="headerlink" href="#term-Top-Level" title="Link to this term">¶</a></dt><dd><p>The most outer-most or global scope of the program.</p>
 </dd>
 <dt id="term-Unboxed">Unboxed<a class="headerlink" href="#term-Unboxed" title="Link to this term">¶</a></dt><dd><p>An UnBoxed value is a value that is represented by the value itself.
