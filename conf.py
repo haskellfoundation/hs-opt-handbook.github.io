@@ -48,6 +48,7 @@ extensions = [ 'sphinx.ext.mathjax'
                                          ## underscore
              , 'sphinxcontrib.bibtex'
              , 'sphinx_copybutton'
+             , 'sphinxcontrib.tikz'
              , 'sphinx_exec_directive'
              , 'conceptual_admonitions'
              ]
@@ -56,6 +57,10 @@ extensions = [ 'sphinx.ext.mathjax'
 todo_include_todos = False
 todo_link_only     = False
 autosectionlabel_prefix_document = True
+
+# tikz support
+tikz_proc_suite = "pdf2svg"
+tikz_tikzlibraries = "arrows, arrows.meta"
 
 ## global links in the book that share a prefix that we've named.
 extlinks = {'userGuide': ('https://downloads.haskell.org/~ghc/9.2.4/docs/html/users_guide/%s', '%s'),

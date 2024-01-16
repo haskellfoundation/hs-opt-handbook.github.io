@@ -52,6 +52,15 @@
           };
         };
 
+        tex-overlay = final: prev: {
+            tex-env = prev.texlive.combine {
+              inherit (prev.texlive)
+                scheme-basic collection-xetex fncychap titlesec tabulary varwidth
+                framed capt-of wrapfig needspace dejavu-otf helvetic upquote
+                memorygraphs;
+            };
+        };
+
     in
     flake-utils.lib.eachDefaultSystem
       (system:
@@ -60,15 +69,9 @@
                 overlays = [ press-theme-overlay
                              copy-button-overlay
                              sphinx-exec-directive-overlay
+                             tex-overlay
                            ];
               } ;
-
-            ourTexLive = pkgs.texlive.combine {
-              inherit (pkgs.texlive)
-                scheme-medium collection-xetex fncychap titlesec tabulary varwidth
-                framed capt-of wrapfig needspace dejavu-otf helvetic upquote;
-            };
-
             ## TODO use this
             fonts = pkgs.makeFontsConf { fontDirectories = [ pkgs.dejavu_fonts ]; };
 

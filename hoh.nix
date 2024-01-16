@@ -12,7 +12,6 @@ let
      # marked as broken in nixpkgs unfortunately
      # sphinx-book-theme
      ## until we have a reason for tex leave this commented out for CI
-     # ourTexLive
    ];
    nonPythonInputs = with pkgs; [ sphinx-press-theme # this comes from the overlay
                                   sphinx-copybutton  # this comes from the overlay
@@ -23,12 +22,14 @@ let
                                   ghc
                                   cabal-install
                                   git
+                                  tex-env
                                 ];
 in
 pkgs.stdenv.mkDerivation {
    pname   = "hoh";
    version = "0.0.1";
    src     = ./.;
+   phases = [ "unpackPhase" "preBuild" "buildPhase" "installPhase"];
    buildInputs = pythonInputs ++ nonPythonInputs;
 
    preBuild = ''
@@ -37,6 +38,7 @@ pkgs.stdenv.mkDerivation {
 
    buildPhase = ''
    runHook preBuild
+   export PATH="${pkgs.lib.makeBinPath (pythonInputs ++ nonPythonInputs)}:$PATH";
    SOURCE_DATE_EPOCH="$(${pkgs.coreutils}/bin/date '+%s')"
    make clean
    make ${target} SPHINXOPTS="-W"
