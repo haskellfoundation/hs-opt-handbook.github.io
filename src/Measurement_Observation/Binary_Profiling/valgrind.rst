@@ -1,4 +1,4 @@
-.. Valgrind
+.. _Valgrind Chapter:
 
 :lightgrey:`Valgrind`
 =====================
