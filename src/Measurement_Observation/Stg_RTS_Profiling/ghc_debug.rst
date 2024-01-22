@@ -1,4 +1,5 @@
-.. GHC Debug
+.. _GHC Debug Chapter:
+
 
 :lightgrey:`GHC Debug`
 ======================

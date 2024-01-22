@@ -229,7 +229,7 @@ Glossary
 
       The memory address for heap object descriptors :term:`info table`.
 
-   Join Point :  Optimization
+   Join Point : Optimization
 
       A join point is a place where different execution paths come together or
       *join*. Consider this example slightly modified from
@@ -263,6 +263,29 @@ Glossary
      ``let``. With this information the STG machine can use a faster function
      application procedure because the function pointer does not need to be
      scrutinized. See also :term:`Unknown Function`.
+
+   Occurrence Name : GHC
+
+     An Occurrence name is a name GHC assigns to an entity to disambiguate
+     multiple occurrences of that name. For example, disambiguation allows GHC
+     to distinguish *by name* a type constructor from a data constructor, which
+     often occurs due to punning, or from local variables in separate functions
+     with the same name, such as ``x`` or ``xs``. Occurrence names are a pair of
+     the original name (as a ``FastString``, a GHC internal type) and a
+     ``NameSpace``; they are ubiquitous in GHC and in the intermediate
+     representations. For example, the occurrence name for the function ``f x y
+     = ...`` will be similar to ``f_r17p``. Note that the exact occurrence name
+     will change but the leading character in the suffix is static meaningful.
+     When occurrence names are generated, the leading character is a hint for
+     what kind of name is being generated. You can find an incomplete list of
+     tags and their meanings in :ghcSource:`Note [Uniques for wired-in prelude
+     things and known tags]
+     <compiler/GHC/Builtin/Uniques.hs?ref_type=heads#L305>`. For more on names
+     see :ghcSource:`Note [Choosing external Ids]
+     <compiler/GHC/Iface/Tidy.hs?ref_type=heads#L271>` and `this
+     <https://gitlab.haskell.org/ghc/ghc/-/wikis/commentary/compiler/rdr-name-type#the-occname-type>`__
+     wiki page on GHC's Reader names.
+
 
 
    Levity Polymorphism
@@ -370,6 +393,11 @@ Glossary
      <https://gitlab.haskell.org/ghc/ghc/-/wikis/commentary/rts/storage/gc/pinned>`_
      for more.
 
+   Reproducer : Debugging
+
+     A reproducer is the smallest known program that induces incorrect behavior
+     in the system. See :ref:`Make it fail` for more.
+
    Sharing
 
       Consider the following program:
@@ -387,6 +415,11 @@ Glossary
       Haskell because it reduces allocations, leverages call-by-need, and saves
       work.
 
+   Shotgun Debugging : Debugging
+
+      Debugging with hope instead of process and measurement. See its Wikepedia
+      `entry <https://en.wikipedia.org/wiki/Shotgun_debugging>`__.
+
    Thunk
 
       A thunk is a special kind of :term:`Closure` that represents a suspended
@@ -403,7 +436,7 @@ Glossary
       <https://youtu.be/5vKBFnTsCcE?si=4THBS_KMYRI6U1Sm&t=4620>`__ by Ben
       Gamari.
 
-   Top-Level
+   Top-Level : Scope
 
       The most outer-most or global scope of the program.
 
