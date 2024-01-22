@@ -61,7 +61,23 @@ Glossary
 
    Boxed : Levity
 
-      A Boxed value is a value that is represented by a pointer to the heap.
+      A Boxed value is a value that is represented by a pointer to the heap. For
+      example, a value such as ``1729 :: Int`` is represented as:
+
+      .. tikz:: An Example TikZ Directive with Caption
+         :align: left
+
+         \begin{tikzpicture}[memory graph]
+         \node[arity=2] (hd) {Cons};
+         \node
+         [arity=2,below=of hd.arg 2 center,anchor=head north]
+         (tl) {Cons};
+         \draw[ref] (hd.arg 2 center)
+         -- (tl.head north);
+         \draw[ref] (tl.arg 2 center)
+         |- ($(hd.head north)+(0,.4)$)
+         -- (hd.head north);
+         \end{tikzpicture}
 
    Cardinality Analysis
 
