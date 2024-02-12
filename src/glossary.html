@@ -399,6 +399,23 @@ function is <a class="reference internal" href="#term-Top-Level"><span class="xr
 application procedure because the function pointer does not need to be
 scrutinized. See also <a class="reference internal" href="#term-Unknown-function"><span class="xref std std-term">Unknown Function</span></a>.</p>
 </dd>
+<dt id="term-Occurrence-Name">Occurrence Name<a class="headerlink" href="#term-Occurrence-Name" title="Link to this term">¶</a></dt><dd><p>An Occurrence name is a name GHC assigns to an entity to disambiguate
+multiple occurrences of that name. For example, disambiguation allows GHC
+to distinguish <em>by name</em> a type constructor from a data constructor, which
+often occurs due to punning, or from local variables in separate functions
+with the same name, such as <code class="docutils literal notranslate"><span class="pre">x</span></code> or <code class="docutils literal notranslate"><span class="pre">xs</span></code>. Occurrence names are a pair of
+the original name (as a <code class="docutils literal notranslate"><span class="pre">FastString</span></code>, a GHC internal type) and a
+<code class="docutils literal notranslate"><span class="pre">NameSpace</span></code>; they are ubiquitous in GHC and in the intermediate
+representations. For example, the occurrence name for the function <code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">x</span> <span class="pre">y</span>
+<span class="pre">=</span> <span class="pre">...</span></code> will be similar to <code class="docutils literal notranslate"><span class="pre">f_r17p</span></code>. Note that the exact occurrence name
+will change but the leading character in the suffix is static meaningful.
+When occurrence names are generated, the leading character is a hint for
+what kind of name is being generated. You can find an incomplete list of
+tags and their meanings in <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/blob/master/compiler/GHC/Builtin/Uniques.hs?ref_type=heads#L305">Note [Uniques for wired-in prelude
+things and known tags]</a>. For more on names
+see <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/blob/master/compiler/GHC/Iface/Tidy.hs?ref_type=heads#L271">Note [Choosing external Ids]</a> and <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/wikis/commentary/compiler/rdr-name-type#the-occname-type">this</a>
+wiki page on GHC’s Reader names.</p>
+</dd>
 <dt id="term-Levity-Polymorphism">Levity Polymorphism<a class="headerlink" href="#term-Levity-Polymorphism" title="Link to this term">¶</a></dt><dd><p>A kind of polymorphism that abstracts over calling conventions which
 allows levity polymorphic functions to be abstracted over memory layout.
 See <span id="id13">Eisenberg and Peyton Jones [<a class="reference internal" href="../contents.html#id9" title="Richard A. Eisenberg and Simon Peyton Jones. Levity polymorphism. SIGPLAN Not., 52(6):525–539, jun 2017. URL: https://doi.org/10.1145/3140587.3062357, doi:10.1145/3140587.3062357.">12</a>]</span> for a more precise technical definition
@@ -478,6 +495,9 @@ because it never moves. See <a class="reference external" href="https://well-typ
 <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/wikis/commentary/rts/storage/gc/pinned">wiki</a>
 for more.</p>
 </dd>
+<dt id="term-Reproducer">Reproducer<a class="headerlink" href="#term-Reproducer" title="Link to this term">¶</a></dt><dd><p>A reproducer is the smallest known program that induces incorrect behavior
+in the system. See <a class="reference internal" href="Preliminaries/how_to_debug.html#make-it-fail"><span class="std std-ref">Make it Fail</span></a> for more.</p>
+</dd>
 <dt id="term-Sharing">Sharing<a class="headerlink" href="#term-Sharing" title="Link to this term">¶</a></dt><dd><p>Consider the following program:</p>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">foo</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span>
 <span class="nf">foo</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="o">..</span><span class="n">n</span><span class="p">]</span>
@@ -490,6 +510,9 @@ not shared that the list <code class="docutils literal notranslate"><span class=
 reference of <code class="docutils literal notranslate"><span class="pre">x</span></code>. Thus, sharing is fundamental to performance oriented
 Haskell because it reduces allocations, leverages call-by-need, and saves
 work.</p>
+</dd>
+<dt id="term-Shotgun-Debugging">Shotgun Debugging<a class="headerlink" href="#term-Shotgun-Debugging" title="Link to this term">¶</a></dt><dd><p>Debugging with hope instead of process and measurement. See its Wikepedia
+<a class="reference external" href="https://en.wikipedia.org/wiki/Shotgun_debugging">entry</a>.</p>
 </dd>
 <dt id="term-Thunk">Thunk<a class="headerlink" href="#term-Thunk" title="Link to this term">¶</a></dt><dd><p>A thunk is a special kind of <a class="reference internal" href="#term-Closure"><span class="xref std std-term">Closure</span></a> that represents a suspended
 computation. Thunks reside on the heap and are the key feature that

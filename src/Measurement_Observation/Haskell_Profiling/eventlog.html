@@ -248,14 +248,15 @@ define and track their own events using the base functions <a class="reference e
 </section>
 <section id="when-should-i-use-eventlog">
 <h2><span class="section-number">2.6.3.4. </span>When should I use Eventlog<a class="headerlink" href="#when-should-i-use-eventlog" title="Link to this heading">¶</a></h2>
-<p>Eventlog is most useful when you need to <a class="reference internal" href="../../Preliminaries/how_to_debug.html#characterize-the-problem"><span class="std std-ref">Characterize the Problem</span></a>. It yields runtime information on the specific
-sub-system the program relies on. Thus, it allows you to drill down into the
-behavior of the garbage collector, the scheduler, the heap and so. For example,
-using the flag <code class="docutils literal notranslate"><span class="pre">+RTS</span> <span class="pre">-lg</span></code> you can collect the <code class="docutils literal notranslate"><span class="pre">CONC_MARK_BEGIN</span></code> and
-<code class="docutils literal notranslate"><span class="pre">CONC_MARK_END</span></code> events which log the beginning and end of the concurrent
-garbage collectors marking phase. Similarly, you can collect <code class="docutils literal notranslate"><span class="pre">MEM_RETURN</span></code>
-which provides information about the current allocation of megablocks, attempts
-to return them to the operating system, and heap fragmentation.</p>
+<p>Eventlog is most useful when you need to characterize the problem. It yields
+runtime information on the specific sub-system the program relies on. Thus, it
+allows you to drill down into the behavior of the garbage collector, the
+scheduler, the heap and so. For example, using the flag <code class="docutils literal notranslate"><span class="pre">+RTS</span> <span class="pre">-lg</span></code> you can
+collect the <code class="docutils literal notranslate"><span class="pre">CONC_MARK_BEGIN</span></code> and <code class="docutils literal notranslate"><span class="pre">CONC_MARK_END</span></code> events which log the
+beginning and end of the concurrent garbage collectors marking phase. Similarly,
+you can collect <code class="docutils literal notranslate"><span class="pre">MEM_RETURN</span></code> which provides information about the current
+allocation of megablocks, attempts to return them to the operating system, and
+heap fragmentation.</p>
 </section>
 <section id="the-running-example">
 <h2><span class="section-number">2.6.3.5. </span>The Running Example<a class="headerlink" href="#the-running-example" title="Link to this heading">¶</a></h2>

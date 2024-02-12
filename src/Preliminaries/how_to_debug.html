@@ -203,243 +203,557 @@
           <div class="content" role="main" v-pre>
             
   <section id="how-to-debug">
-<h1><span class="section-number">1.4. </span>How To Debug<a class="headerlink" href="#how-to-debug" title="Link to this heading">¶</a></h1>
-<div class="admonition warning" id="if-you-didn-t-fix-it-it-ain-t-fixed">
-<span id="get-a-fresh-view"></span><span id="check-the-plug"></span><span id="keep-an-audit-trail"></span><span id="change-one-thing-at-a-time"></span><span id="divide-and-conquer"></span><span id="don-t-think-look"></span><span id="make-it-fail"></span><span id="understand-the-system"></span><p class="admonition-title">Warning</p>
-<p>This chapter is going to be rewritten with reference to David Agan’s
-<a class="reference external" href="https://debuggingrules.com/">Debugging book</a>. Until that time, I have left
-it intact in case it may be helpful. If you came here chasing a link to
-<code class="docutils literal notranslate"><span class="pre">understand</span> <span class="pre">the</span> <span class="pre">system</span></code> or <code class="docutils literal notranslate"><span class="pre">don't</span> <span class="pre">think,</span> <span class="pre">look</span></code>, then I refer you to his
-book for the time being.</p>
-</div>
+<span id="how-to-debug-chapter"></span><h1><span class="section-number">1.4. </span>How To Debug<a class="headerlink" href="#how-to-debug" title="Link to this heading">¶</a></h1>
 <p>This chapter presents a recipe for debugging performance regressions in Haskell.
-Often, when we debug code, it becomes too easy to trace execution or use a
-shotgun approach; we apply a bunch of best-guess changes and retest to see if
-our stimulus presents a response. You should do your best to avoid these urges.
-Instead, use a scientific approach and develop a hypothesis and conceptual model
-of the failure mode or bug. Every bug or performance regression is a learning
-opportunity and should be considered as such. By treating regressions as
-learning opportunities, you gain knowledge of your system and the systems it
-interacts with, and in turn, become a better software engineer. This chapter
-provides a sequence of questions and reminders to help you take a scientific
-approach to performance regression debugging. We hope it aids you well.</p>
+Often, when we debug code, it becomes too easy to begin shotgun debugging; we
+apply a bunch of best-guess changes and retest to see if our stimulus induced a
+response. You should do your best to avoid these urges. Instead, a more
+effective method is to use a scientific approach, and develop a hypothesis and
+conceptual model of how the bug manifested. Every bug or performance regression
+is a learning opportunity and should be considered as such. By treating
+regressions as learning opportunities, you gain knowledge of your system, the
+quality of its design, and how the system interacts with its environment. But
+more importantly you become a better software engineer. This chapter provides a
+guide to aid you in debugging performance regression. We base it off of David
+Agan’s <a class="reference external" href="https://debuggingrules.com/">9 Rules for Debugging</a> book <a class="footnote-reference brackets" href="#id14" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> and
+apply his insights to Haskell programs.</p>
 <section id="vocabulary">
 <h2><span class="section-number">1.4.1. </span>Vocabulary<a class="headerlink" href="#vocabulary" title="Link to this heading">¶</a></h2>
-<p>Unless otherwise noted, we use the following vocabulary to describe various
-aspects of our optimization journey. Because these do not have a formal
-definition, we present them here instead of in the <a class="reference internal" href="../glossary.html#glossary"><span class="std std-ref">Glossary</span></a>:</p>
+<p>Unless otherwise noted, we use the following vocabulary to describe aspects of
+our optimization journey. Because these do not have a formal definition, we
+present them here instead of in the <a class="reference internal" href="../glossary.html#glossary"><span class="std std-ref">Glossary</span></a>:</p>
 <ol class="arabic simple">
-<li><p><em>The system</em>: The system is the local infrastructure and computational
-edifice your program operates in. This includes your operating system, your
-CPU, your memory controller.</p></li>
+<li><p><em>The system</em>: The system is the entire computational edifice that you’re
+constructing. This includes your operating system, your CPU, your memory
+controller and the program that you have written.</p></li>
 <li><p><em>The program</em>: The program is the program we are trying to optimize that runs
 on the system.</p></li>
-<li><p><em>The problem</em>: The problem is an observable phenomenon of the program. It is
-the performance regression we are trying to characterize, understand, fix and
-prevent.</p></li>
+<li><p><em>The problem</em> or <em>the bug</em>: The problem is an observable phenomenon of the
+program. It is the performance regression we are trying to characterize,
+understand, fix and prevent.</p></li>
 <li><p><em>The failure mode</em>: The failure mode is the sequence of interactions between
 sub-systems or external systems and your system that manifest the problem.</p></li>
 <li><p><em>The baseline</em>: The baseline is the observable, measurable behavior of the
-program which constitutes <em>normal operation</em>. This is how you know you have a
-problem.</p></li>
+program which constitutes <em>normal and acceptable operation</em>. This what you
+compare with to know you have a problem.</p></li>
 </ol>
 </section>
-<section id="characterize-the-problem">
-<span id="id1"></span><h2><span class="section-number">1.4.2. </span>Characterize the Problem<a class="headerlink" href="#characterize-the-problem" title="Link to this heading">¶</a></h2>
-<p>The first step to solving any kind of problem is characterization. The goal of
-this step is to observe how the problem <em>presents</em> itself in the system in terms
-of the sub-systems the system uses. No phenomenon exists without leaving a trail
-of evidence, and our purpose in this step is to find this trail and re-state the
-problem description <em>in terms</em> of the system. You should begin by asking
-yourself the following questions:</p>
-<ol class="arabic simple">
-<li><p>Have I observed this problem before? Is it a known failure mode? If so, then
-why does it continue to happen? What are the chain of events that have caused
-it to occur again?</p></li>
-<li><p>Is the problem deterministic? Or is it stochastic? If it is stochastic, what
-is the rate at which we observe the problem phenomenon?</p></li>
-<li><p>Is there anything <em>unique</em> about the environment the problem manifests in?
-Specifically:
--. Does it manifest only on unique hardware?
--. Does it manifest at a particular time of day or only on one person’s machine?
--. Does it manifest only when other processes are running?</p></li>
-<li><p>Is the problem temporal? Has anything <em>recently</em> changed in the system or the
-environment the system operates in that could induce the problem? Bring out
-the git logs and begin bisecting!</p></li>
-</ol>
-<section id="precisely-restate-the-problem">
-<h3><span class="section-number">1.4.2.1. </span>Precisely Restate the Problem<a class="headerlink" href="#precisely-restate-the-problem" title="Link to this heading">¶</a></h3>
-<p>With these questions in mind, the next step is to gather data <a class="footnote-reference brackets" href="#id4" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> . You want to
-gather enough data to be able to precisely describe the problem in terms of
-metrics your system cares about. For example, in a high performance application
-our system likely cares about any decrease in instructions per cycle (IPC) of
-our CPU. So IPC is a useful metric to measure, in order to characterize the
-problem by comparing the IPC on the problem input to the IPC of normal
-operation. Other examples might be an increase in total CPU cycles, runtime
-memory cost, missed branches, cache writes/reads misses, network requests,
-dropped packets etc. Whatever the metric, the key point is that the problem <em>can
-be observed</em> through a change in the metric compared to baseline.</p>
-<p>Next we require a good description of the problem. “The system slows to a crawl”
-is not a good description of the problem because it is too vague. How does the
-system slow? At what point does it slow? On what input does it slow? Does this
-always happen or is it a random occurrence? “The system consumes 36Gb out of
-32Gb of memory on input <code class="docutils literal notranslate"><span class="pre">foo</span></code>, after 4 seconds.” is a good description of the
-problem. It is a precise description; we know that whatever the root cause is,
-it affects the runtime memory of our program and that the problem manifests at a
-certain point during runtime. Additionally, this is a good description because
-gives an estimate of the magnitude of the problem <em>in terms</em> of a metric our
-system cares about, e.g., runtime memory, and because it identifies a sub-system
-(the heap) in the failure mode.</p>
-<p>This step is concluded when you are able to precisely restate the problem in
-terms of metrics that are meaningful to your system.</p>
+<section id="the-goal">
+<h2><span class="section-number">1.4.2. </span>The Goal<a class="headerlink" href="#the-goal" title="Link to this heading">¶</a></h2>
+<p>We have two goals when debugging. First, we wish to repair <a class="footnote-reference brackets" href="#id15" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> our system as
+fast as possible. Second, and more importantly, we wish to gain a deeper
+understanding of our system. The value communicated by the second goal far
+outweighs the first. By taking the opportunity to gain a deeper understanding,
+we are empowering ourselves <em>and</em> everyone who reads our documentation to write
+<em>more effective</em> code in the future. Ideally this translates to preventing
+regressions before they can manifest, which will always cost less engineering
+time and resources than reacting to regressions after they occur.</p>
+<p>The best way to achieve these goals is, paradoxically, to work slowly,
+contemplatively and deliberately. By working deliberately, you can ensure that
+your debugging is making progress and can rigorously test your mental model of
+the system. Changes to your code should verify that your mental model is either
+correct or incorrect.</p>
 </section>
+<section id="agan-s-rules-of-debugging">
+<h2><span class="section-number">1.4.3. </span>Agan’s Rules of Debugging<a class="headerlink" href="#agan-s-rules-of-debugging" title="Link to this heading">¶</a></h2>
+<p>There are nine rules, ordered from most important to least. We’ll take them one
+by one and relate each to Haskell. Note that we do not repeat <em>all</em> of Agan’s
+advice, only the central ideas and how they relate to Haskell. This way all
+readers will still benefit from Agan’s work, which we strongly encourage.</p>
+<section id="understand-the-system">
+<span id="id3"></span><h3><span class="section-number">1.4.3.1. </span>Understand the System<a class="headerlink" href="#understand-the-system" title="Link to this heading">¶</a></h3>
+<p>To debug, optimize, iterate and improve, you must understand the current system,
+otherwise how will you know if the system is operating correctly and therefore
+if your performance is real <a class="footnote-reference brackets" href="#id16" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a> . Furthermore,
+not knowing the system will limit the optimizations that you will be able to
+conceive and implement.</p>
+<p>Understanding the system is challenging for a high-level language such as
+Haskell and is often a barrier to optimizing and debugging performance of
+Haskell code. For example, GHC might surprise you by not inlining a particular
+function and therefore a cascade of optimizations have not taken place.</p>
+<p>Fear not, this is why this book exists. For our purposes, learning the system
+means understanding your program, how GHC compiles your program, and likely some
+aspects of GHC itself. Note that this is not unique to Haskell. If one were
+trying to optimize a C program they would need to understand the program, its
+interaction with whichever C compiler, and perhaps the interaction with the
+operating system or even the CPU caches depending on the optimizations they
+desire to implement and their performance goals.</p>
+<p>This book cannot help you learn your own program, but it can help you learn GHC.
+To understand the system, begin with learning to read the intermediate
+representations of your program such as <a class="reference internal" href="../Measurement_Observation/Core_Profiling/core.html#reading-core"><span class="std std-ref">Core</span></a>, or <a class="reference internal" href="../Measurement_Observation/Stg_RTS_Profiling/stg.html#reading-stg"><span class="std std-ref">Stg</span></a>. Reading the intermediate representations are prerequisites for
+understanding the <a class="reference internal" href="../Optimizations/GHC_opt/index.html#ghc-optimizations"><span class="std std-ref">GHC Optimizations</span></a> that GHC performs
+which make Haskell so fast; and so slow when they do not fire.</p>
 </section>
-<section id="construct-a-hypothetical-failure-mode">
-<h2><span class="section-number">1.4.3. </span>Construct a Hypothetical Failure Mode<a class="headerlink" href="#construct-a-hypothetical-failure-mode" title="Link to this heading">¶</a></h2>
-<p>The next step is to construct a hypothetical failure mode that could produce the
-observed problem. The failure mode should be a statement of sub-system
-interactions.  Imagine walking through the system with
-the data. At each step write down a description of events that happen to the
-data and where the events occurred. For example, here is a possible failure mode
-for high amounts of heap use:</p>
-<blockquote>
-<div><p>The system receives input <code class="docutils literal notranslate"><span class="pre">Foo</span></code> from the command line. <code class="docutils literal notranslate"><span class="pre">Foo</span></code> is validated
-as legal by <code class="docutils literal notranslate"><span class="pre">parseUserInput</span></code> and marked as such in the type system with the
-<code class="docutils literal notranslate"><span class="pre">Legal</span></code> newtype. The worker function <code class="docutils literal notranslate"><span class="pre">fib</span></code> is applied to <code class="docutils literal notranslate"><span class="pre">Legal</span> <span class="pre">Foo</span></code>.
-<code class="docutils literal notranslate"><span class="pre">fib</span></code> unpacks <code class="docutils literal notranslate"><span class="pre">Legal</span> <span class="pre">Foo</span></code> to receive a raw input of 1729. <code class="docutils literal notranslate"><span class="pre">fib</span></code> begins
-computing and we observe the problem.</p>
-</div></blockquote>
-<p>Of course, this is a toy example and the failure mode in a large complex system
-may be very long. If this is the case then begin writing the failure mode in
-broad strokes, e.g.:</p>
-<blockquote>
-<div><p>Input <code class="docutils literal notranslate"><span class="pre">Foo</span></code> is input to the system, it then propagates to sub-system
-<code class="docutils literal notranslate"><span class="pre">Bar</span></code>, is changed to <code class="docutils literal notranslate"><span class="pre">FooFoo</span></code> and then propagates to sub-system <code class="docutils literal notranslate"><span class="pre">Baz</span></code>.</p>
-</div></blockquote>
-<p>In this style, you are not overly concerned with the exact functions that do the
-work. Rather, you are simply laying out the path the problem input takes through
-the system. You can fill in the details as you gain insight into the failure
-mode through testing.</p>
-<p>This step is concluded when you have identified and written down one or more
-hypothetical failure modes.</p>
+<section id="make-it-fail">
+<span id="id5"></span><h3><span class="section-number">1.4.3.2. </span>Make it Fail<a class="headerlink" href="#make-it-fail" title="Link to this heading">¶</a></h3>
+<p>To make it fail, means to identify and have control over a stimulus that
+<em>induces</em> incorrect system behavior. This is the phase where one is searching
+for a small program, called a <a class="reference internal" href="../glossary.html#term-Reproducer"><span class="xref std std-term">reproducer</span></a>, that induces the malformed
+behavior. A reproducer is imperative because it gives control and a litmus test.
+With a reproducer one can observe the problem <em>at will</em> and repeatedly test the
+bug to determine when it is fixed in preparation for a repair.</p>
+<p>In Haskell, the search for a reproducer is no different than in any other
+language. Try to start from a known state <a class="footnote-reference brackets" href="#id17" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>; use the exact hardware and software
+if possible. The closer the hardware and software matches, the less variables
+you have to consider. Then, try to automate as much as possible with a script. A
+script pays dividends in the long run. It details the exact sequence of events
+that produces the bug and leaves out any guess work. You should expect to run
+the reproducer numerous times over weeks and months in the worst case and a
+script will help you keep things tidy and controlled.</p>
 </section>
-<section id="create-the-smallest-reproducible-test-of-the-problem">
-<h2><span class="section-number">1.4.4. </span>Create the Smallest Reproducible Test of the Problem<a class="headerlink" href="#create-the-smallest-reproducible-test-of-the-problem" title="Link to this heading">¶</a></h2>
-<p>Once you have characterized the problem and identified possible failure modes, you
-should try to create an isolated, minimal test to reproduce the problem. The
-idea is to capture the problem so you can begin analyzing it. A test is a
-light switch; the ideal outcome of this step is that you have a light switch
-where you can “turn on” and “turn off” the problem at will. Try to construct the
-test such that it interacts with as few sub-systems and external systems as
-possible to limit the scope of the investigation. At the end of the
-investigation, you can add this test to your test suite to ensure the problem
-does not manifest again. If you have many possible failure modes, try to
-have one test per failure mode.</p>
-<p>Creating a reproducible test is never the easy part, but it is not impossible.
-To construct the test case, try the following steps:</p>
-<ol class="arabic simple">
-<li><p>Try to isolate the sub-systems and external systems that you suspect are
-likely to be in the failure mode or failure modes.</p></li>
-<li><p>Each external system provides information or a service to your system. Try to
-reproduce these dependencies in a deterministic way and treat them as inputs
-to your test case.</p></li>
-<li><p>Try to isolate the code you believe to be in the failure mode. This should
-follow almost directly from characterizing the problem and defining the
-failure mode or modes. Tools such as Valgrind, which provide line by line
-information of source code, are helpful here if CPU cycle counts are a
-meaningful metric for your system.</p></li>
-<li><p>Remove all domain-specific information. Think of the possible failure mode
-from the perspective of the system. Do not think in terms of your business
-logic; using concepts such as <code class="docutils literal notranslate"><span class="pre">Customer</span></code>, <code class="docutils literal notranslate"><span class="pre">Bank</span> <span class="pre">Account</span></code>, or <code class="docutils literal notranslate"><span class="pre">Payment</span>
-<span class="pre">Information</span></code>. Instead, think in terms of the realization of these concepts
-in your system. <code class="docutils literal notranslate"><span class="pre">Customer</span></code> is a <code class="docutils literal notranslate"><span class="pre">String</span></code>, <code class="docutils literal notranslate"><span class="pre">Bank</span> <span class="pre">Account</span></code> is an
-<code class="docutils literal notranslate"><span class="pre">Integer</span></code>, <code class="docutils literal notranslate"><span class="pre">Payment</span> <span class="pre">information</span></code> is a <code class="docutils literal notranslate"><span class="pre">Text</span></code>. Now re-describe the
-failure mode in terms of the implementation: “When I send sub-system <code class="docutils literal notranslate"><span class="pre">Foo</span></code>
-a <code class="docutils literal notranslate"><span class="pre">String</span></code> that contains the character <code class="docutils literal notranslate"><span class="pre">U+03BB</span></code>, I observe the problem”.</p></li>
-<li><p>Create slightly different tests to test different code paths of the failure
-mode. Run tests to see if you can deterministically observe the problem. You
-should be able to state “When I input <code class="docutils literal notranslate"><span class="pre">Foo</span></code> with properties <code class="docutils literal notranslate"><span class="pre">Bar</span></code>, I
-observe the problem”, and “When I input <code class="docutils literal notranslate"><span class="pre">Baz</span></code> with properties <code class="docutils literal notranslate"><span class="pre">Qux</span></code>, I
-observe the baseline”. You know you have found the right code path in the
-failure mode when you can reproducibly force the problem to occur <em>and</em> not to
-occur.</p></li>
-</ol>
+<section id="don-t-think-look">
+<span id="id7"></span><h3><span class="section-number">1.4.3.3. </span>Don’t Think, Look<a class="headerlink" href="#don-t-think-look" title="Link to this heading">¶</a></h3>
+<p>Of all of Agan’s rules, this is the rule that Haskellers struggle to do the most
+often. We enjoy thinking with types and abstractions rather than instrumentation
+and measurement. To don’t think, look means to check the instrumentation or add
+instrumentation to check, and then use the instrumentation to confirm or reject
+your hypothesis. Measurement, and observation will be faster on average than
+<a class="reference internal" href="../glossary.html#term-Shotgun-Debugging"><span class="xref std std-term">shotgun debugging</span></a> unless you are very lucky (which of course is not
+reliable).</p>
+<p>So what is our instrumentation? We can directly observe by reading the
+intermediate representations such as <a class="reference internal" href="../Measurement_Observation/Core_Profiling/core.html#reading-core"><span class="std std-ref">Core</span></a>, <a class="reference internal" href="../Measurement_Observation/Stg_RTS_Profiling/stg.html#reading-stg"><span class="std std-ref">Stg</span></a>, or <a class="reference internal" href="../Measurement_Observation/Cmm_Profiling/cmm.html#reading-cmm"><span class="std std-ref">Cmm</span></a>. Reading the intermediate
+representations works well if you suspect an optimization is not firing; which
+can often happen during upgrades of GHC or dependencies. Or we can use a probe
+to inspect the system. The available probes range across the entire Haskell
+software stack, from binary probes, such as <a class="reference internal" href="../Measurement_Observation/Binary_Profiling/linux_perf.html#perf-chapter"><span class="std std-ref">perf</span></a> and
+<a class="reference internal" href="../Measurement_Observation/Binary_Profiling/valgrind.html#valgrind-chapter"><span class="std std-ref">valgrind</span></a>, to GHC provided probes such as
+<a class="reference internal" href="../Measurement_Observation/Haskell_Profiling/eventlog.html#eventlog-chapter"><span class="std std-ref">eventlog</span></a> and <a class="reference internal" href="../Measurement_Observation/Stg_RTS_Profiling/ghc_debug.html#ghc-debug-chapter"><span class="std std-ref">GHC-debug</span></a>.
+Note that there is no best probe, rather the right probe will depend on the bug
+and your exact situation. For example, using eventlog to inspect your program’s
+heap is typically the first check of instrumentation if you suspect a memory
+leak.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>See the <a class="reference internal" href="../Measurement_Observation/index.html#mpo"><span class="std std-ref">Measurement, Profiling, and Observation</span></a> for a complete
+list of instrumentation.</p>
+</div>
+<p>Once you know which instrumentation to use and how to interpret its output,
+search its output until you identify a handful of causes and have at least one
+failure mode hypothesis to test. Remember that you are not observing <em>the bug</em>
+with the instrumentation, rather you are observing <em>the effect</em> of the bug in
+order to formulate a hypothesis. For example, with a memory leak, the bug’s
+effect could be a high amount of memory usage reported by GHC, or your operating
+system, or a pyramid shaped heap profile. For a missed optimization, the effect
+could be redundant boxing or a missed rule that produces poor performing Core,
+and consequently a higher Mutator time reported by the RTS.</p>
 </section>
-<section id="define-a-hypothesis">
-<h2><span class="section-number">1.4.5. </span>Define a Hypothesis<a class="headerlink" href="#define-a-hypothesis" title="Link to this heading">¶</a></h2>
-<section id="the-objects-of-the-hypothesis">
-<h3><span class="section-number">1.4.5.1. </span>The Objects of the Hypothesis<a class="headerlink" href="#the-objects-of-the-hypothesis" title="Link to this heading">¶</a></h3>
-<p>Think of each sub-system, external system, and component of your system as
-characters in a story. Any system that takes an action to produce a result that
-your code interacts with or causes is a character. Each data structure your
-code directly or indirectly uses is a character. Each function you have
-written is a character; and so on. These are the objects of your hypothesis;
-they are what the hypothesis makes a statement about and define the sequence of
-interactions that constitutes the failure mode.</p>
+<section id="divide-and-conquer">
+<span id="id8"></span><h3><span class="section-number">1.4.3.4. </span>Divide and Conquer<a class="headerlink" href="#divide-and-conquer" title="Link to this heading">¶</a></h3>
+<p>Imagine the system execution as an ordered linear sequence of causal events
+<span class="math notranslate nohighlight">\(e_{0} \rightarrow \ldots{} \rightarrow e_{halt}\)</span>, where <span class="math notranslate nohighlight">\(e_{0}\)</span> is
+the first event to take place and <span class="math notranslate nohighlight">\(e_{halt}\)</span> the last. When the system has
+a bug, the sequence of events, also called a causal chain, diverges from its
+expected behavior at some event, <span class="math notranslate nohighlight">\(e_{bug}\)</span>. In this view, debugging is
+searching the causal chain for <span class="math notranslate nohighlight">\(e_{bug}\)</span>. Thus, to divide and conquer
+means to search the causal chain with the <a class="reference external" href="https://en.wikipedia.org/wiki/Divide-and-conquer_algorithm">divide and conquer strategy</a>.</p>
+<p>To divide and conquer the causal chain, start with the anomalous end. Think of
+<span class="math notranslate nohighlight">\(e_{bug}\)</span> as a pivot point, after the bug the chain is: <span class="math notranslate nohighlight">\(e_{bug}
+\rightarrow \ldots{} \rightarrow e_{halt}\)</span> and the system is in an anomalous
+operating state, before the bug: <span class="math notranslate nohighlight">\(e_{0} \rightarrow \ldots{} \rightarrow
+e_{bug-1}\)</span> the system is in an acceptable operating state. So if we start from
+<span class="math notranslate nohighlight">\(e_{0}\)</span> then we must verify the system state at every event <span class="math notranslate nohighlight">\(e_{0}
+\ldots e_{bug-1}\)</span> <em>on all possible</em> control flow branches. That is a lot of work
+(and is better left to <a class="reference external" href="https://en.wikipedia.org/wiki/Assertion_(software_development)">assertions</a> ). However,
+by beginning the search on the anomalous side we only have to find <em>one</em>
+anomalous state on <em>one</em> branch to begin to work backwards to <span class="math notranslate nohighlight">\(e_{bug}\)</span>.
+Thus, searching from the anomalous end is faster because there are less possible
+system states to check.</p>
+<p>A good tactic to make the search for <span class="math notranslate nohighlight">\(e_{bug}\)</span> easier is to exacerbate the
+effect of the bug, or in the word’s of David Agan: “Make it obvious.”. Our
+Haskell programs, like all programs, obey this causal chain. But Haskell is a
+pure lazy language, so the causal chain forms via data dependency rather than
+forming via the observable ordering of side-effects <a class="footnote-reference brackets" href="#id18" id="id9" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>. This simplifies
+debugging because we control the data and therefore the causal chain. So by
+changing the input to the system, we can make the rough location of
+<span class="math notranslate nohighlight">\(e_{bug}\)</span> more obvious. Making the bug’s effect obvious can be as simple
+as making the load on the system larger. For example, imagine trying to optimize
+the Fibonacci function, instead of testing with <code class="docutils literal notranslate"><span class="pre">fib</span> <span class="pre">10</span></code> one can use <code class="docutils literal notranslate"><span class="pre">fib</span>
+<span class="pre">200</span></code> to exacerbate memory or runtime issues. This will create a larger response
+signal in the instrumentation which is easier to find, diagnose and analyze.</p>
+<p>A similar method is to input data that has an easily recognizable pattern. This
+technique is useful when reading Core, Stg, or Cmm. GHC generates names based on
+user provided names and keeps the original names in the intermediate
+representations. For example, consider this code</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="cm">{-# OPTIONS_GHC -dsuppress-all -ddump-simpl  #-}</span><span class="w"> </span><span class="c1">-- dump the Core</span>
+
+<span class="kr">module</span><span class="w"> </span><span class="nn">Main</span><span class="w"> </span><span class="kr">where</span>
+
+<span class="nf">main</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">IO</span><span class="w"> </span><span class="nb">()</span>
+<span class="nf">main</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">print</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="kt">True</span>
+<span class="w">  </span><span class="kr">where</span>
+<span class="w">    </span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span>
+<span class="w">                </span><span class="n">j</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">                </span><span class="n">j</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="w">            </span><span class="kr">in</span><span class="w"> </span><span class="kr">case</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="kr">of</span>
+<span class="w">              </span><span class="kt">True</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="mi">22</span>
+<span class="w">              </span><span class="kt">False</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="mi">33</span>
+</pre></div>
+</div>
+<p>and its Core output (the 0 at the end is the program’s result):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>
+==================== Tidy Core ====================
+Result size of Tidy Core
+  = {terms: 56, types: 31, coercions: 0, joins: 0/1}
+
+$trModule1_r17l = &quot;main&quot;#
+
+$trModule2_r17m = TrNameS $trModule1_r17l
+
+$trModule3_r17n = &quot;Main&quot;#
+
+$trModule4_r17o = TrNameS $trModule3_r17n
+
+$trModule = Module $trModule2_r17m $trModule4_r17o
+
+f_r17p
+  = \ @p_aLV _ y_azl -&gt;
+      letrec {
+        j_azm
+          = \ ds_d17b -&gt;
+              case ds_d17b of wild_X1E { I# ds1_d17c -&gt;
+              case ds1_d17c of {
+                __DEFAULT -&gt; j_azm (- $fNumInt wild_X1E (I# 1#));
+                0# -&gt; I# 0#
+              }
+              }; } in
+      case y_azl of {
+        False -&gt; j_azm (I# 33#);
+        True -&gt; j_azm (I# 22#)
+      }
+
+main = $ (print $fShowInt) (f_r17p (IS 0#) True)
+
+main = runMainIO main
+
+
+
+0
+</pre></div>
+</div>
+<p>Notice that the user names <code class="docutils literal notranslate"><span class="pre">f</span></code> and <code class="docutils literal notranslate"><span class="pre">j</span></code> are still in the Core output as
+<code class="docutils literal notranslate"><span class="pre">f_r17p</span></code> and <code class="docutils literal notranslate"><span class="pre">j_azm</span></code>, but both have been transformed into an
+<a class="reference internal" href="../glossary.html#term-Occurrence-Name"><span class="xref std std-term">Occurrence Name</span></a>. So we can use more obvious names to make searching the
+intermediate representations faster. For example, instead of <code class="docutils literal notranslate"><span class="pre">f</span></code> and <code class="docutils literal notranslate"><span class="pre">j</span></code> we
+can use the obnoxious <code class="docutils literal notranslate"><span class="pre">fFINDME</span></code> or <code class="docutils literal notranslate"><span class="pre">jLOOKDONTTHINK</span></code>:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="cm">{-# OPTIONS_GHC -dsuppress-all -ddump-simpl  #-}</span><span class="w"> </span><span class="c1">-- dump the Core</span>
+
+<span class="kr">module</span><span class="w"> </span><span class="nn">Main</span><span class="w"> </span><span class="kr">where</span>
+
+<span class="nf">main</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">IO</span><span class="w"> </span><span class="nb">()</span>
+<span class="nf">main</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">print</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="n">fFINDME</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="kt">True</span>
+<span class="w">  </span><span class="kr">where</span>
+<span class="w">    </span><span class="n">fFINDME</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">jLOOKDONTTHINK</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span>
+<span class="w">                      </span><span class="n">jLOOKDONTTHINK</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">                      </span><span class="n">jLOOKDONTTHINK</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">jLOOKDONTTHINK</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="w">                  </span><span class="kr">in</span><span class="w"> </span><span class="kr">case</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="kr">of</span>
+<span class="w">                    </span><span class="kt">True</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="n">jLOOKDONTTHINK</span><span class="w"> </span><span class="mi">22</span>
+<span class="w">                    </span><span class="kt">False</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="n">jLOOKDONTTHINK</span><span class="w"> </span><span class="mi">33</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>
+==================== Tidy Core ====================
+Result size of Tidy Core
+  = {terms: 56, types: 31, coercions: 0, joins: 0/1}
+
+$trModule1_r17l = &quot;main&quot;#
+
+$trModule2_r17m = TrNameS $trModule1_r17l
+
+$trModule3_r17n = &quot;Main&quot;#
+
+$trModule4_r17o = TrNameS $trModule3_r17n
+
+$trModule = Module $trModule2_r17m $trModule4_r17o
+
+fFINDME_r17p
+  = \ @p_aLV _ y_azl -&gt;
+      letrec {
+        jLOOKDONTTHINK_azm
+          = \ ds_d17b -&gt;
+              case ds_d17b of wild_X1E { I# ds1_d17c -&gt;
+              case ds1_d17c of {
+                __DEFAULT -&gt; jLOOKDONTTHINK_azm (- $fNumInt wild_X1E (I# 1#));
+                0# -&gt; I# 0#
+              }
+              }; } in
+      case y_azl of {
+        False -&gt; jLOOKDONTTHINK_azm (I# 33#);
+        True -&gt; jLOOKDONTTHINK_azm (I# 22#)
+      }
+
+main = $ (print $fShowInt) (fFINDME_r17p (IS 0#) True)
+
+main = runMainIO main
+
+
+
+0
+</pre></div>
+</div>
+<p>And now it is much easier to recognize or search for these names.</p>
 </section>
-<section id="defining-a-good-hypothesis">
-<h3><span class="section-number">1.4.5.2. </span>Defining a Good Hypothesis<a class="headerlink" href="#defining-a-good-hypothesis" title="Link to this heading">¶</a></h3>
-<p>Of course, not all hypotheses are equal. Good hypotheses have the following
-properties:</p>
-<ol class="arabic simple">
-<li><p>They make progress, i.e., they are <em>falsifiable</em>; a good hypothesis yields
-information when confirmed <em>and</em> when invalidated. A bad hypothesis <em>keeps
-constant</em> the level of information you have about the phenomena. In other
-words, a bad hypothesis is one where you only gain information if the
-hypothesis is validated, not when the hypothesis is either validated <em>or</em> invalidated.</p></li>
-<li><p>They are <em>specific and testable</em>: Good hypotheses are specific enough <em>to be</em>
-invalidated. For example, the hypothesis “The total runtime of the system is
-dominated by garbage collection induced by storing thunks in the cache” is
-testable; we can directly measure how much garbage collection the runtime
-system does and the kinds of objects it is storing (see <a class="reference internal" href="../Measurement_Observation/Haskell_Profiling/ghc_flags.html#haskell-ghc-flags"><span class="std std-ref">GHC Flags</span></a>). This hypothesis is also specific; from reading it
-we know which sub-systems to inspect: the garbage collector, the cache, and
-the heap. But in addition to that, this hypothesis also adds information
-<em>even if</em> it is shown to be wrong. It could be the case that the runtime <em>is
-not</em> dominated by garbage collection, or it could be the case that the cache
-<em>is not</em> storing thunks. Either way, by testing and invalidating the
-hypothesis we learn where runtime is spent, and what is stored in the cache.</p></li>
-</ol>
+<section id="change-one-thing-at-a-time">
+<span id="id10"></span><h3><span class="section-number">1.4.3.5. </span>Change One Thing at a Time<a class="headerlink" href="#change-one-thing-at-a-time" title="Link to this heading">¶</a></h3>
+<p>To some extent, everyone understands that changing only one thing at a time is
+good practice. It simplifies keeping a log of changes, correlating cause and
+effect, and more importantly, it reduces the probability of creating an abnormal
+system. Every change to the system has a chance to move that system’s operation
+from inside the system’s <a class="reference external" href="https://en.wikipedia.org/wiki/Engineering_tolerance">engineering tolerance</a> (the expected range of
+operation) to outside; into new and unexplored operating conditions. By changing
+only one thing at a time we mitigate this risk while debugging.</p>
+<p>Doing this on a Haskell code base will be identical to any other programming
+environment; Haskell is not unique here. But we have two recommendations: first,
+make sure you have a baseline, a working master copy, so that you can always
+compare your working copy to it. Second, if you begin changing lots of parts of
+the system semi-randomly (such as adding a bunch of strictness) to check if
+these changes affect the bug’s effect, then you are guessing, and instead should
+<a class="reference internal" href="#don-t-think-look"><span class="std std-ref">Don’t Think, Look</span></a>.</p>
 </section>
+<section id="keep-an-audit-trail">
+<span id="id11"></span><h3><span class="section-number">1.4.3.6. </span>Keep an Audit Trail<a class="headerlink" href="#keep-an-audit-trail" title="Link to this heading">¶</a></h3>
+<p>To keep an audit trail means to maintain a log of your debugging work. Think
+like a scientist who wants others to be able to replicate their work. Be
+meticulous, you should write down the exact sequence of what you did, and then
+what and how much happened. You should write your log as if you would return to
+it years or months later. You should record your theories. Theories are the
+background context that informed your change; <em>the reason</em>, <em>the why</em> that you
+made the change you did. In addition, record the commands you ran, how you first
+observed the bug’s effect, the instrumentation you used to monitor the bug’s
+effect and what you expected to observe from a change. A good log should tell a
+story; it should read like the laboratory journal of a scientist or engineer.
+Lastly, if the effect of the bug is some special piece of output, then be sure
+to include it so that you create a searchable document, you’re future self will
+be thankful.</p>
+<p>An example log might look something like this:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In the example, I use <code class="docutils literal notranslate"><span class="pre">foo</span></code> and <code class="docutils literal notranslate"><span class="pre">bar</span></code>  as meta-variables that stand for a
+subsystem or test. Similarly, I use angle-bracket notation <code class="docutils literal notranslate"><span class="pre">&lt;...&gt;</span></code> to
+represent pieces of important data that the log should record.</p>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>* Mutator regression in commit &lt;some-hash&gt; | System version &lt;i&gt; | Feb. 02, 2024
+
+  ** Bug&#39;s Effect:
+
+     - We&#39;ve observed in increase of &lt;n&gt; seconds (&lt;m&gt; %) in Mutator time as
+     reported by the RTS&#39;s -S flag when running test foo on debian 10 at
+     commit &lt;hash&gt; in CI.
+
+  ** Background:
+
+     Test foo is memory intensive, testing a pathological case where user
+     input results is subsystem bar performing a lot of IO operations
+     concurrently.
+
+  ** Sanity Checks:
+
+     - Do we observe this regression on other platforms, e.g., Windows,
+       Fedora or Mac?
+
+     - Has the CI runner changed?
+
+  ** Theory: Regression caused by missed optimizations resulting in a GHC
+  version bump that occurred at commit &lt;hash&gt;.
+
+  *** Possible Instrumentation
+
+     - Compare Mutator time with the baseline using -O0. I expect to see the
+       baseline and regressed versions perform similarly at -O0. If that is
+       the case then we should disable the optimizations implied by -O1 one
+       by one. Why -O1? Because that is -O2 with two less passes of GHC&#39;s
+       optimizer. If that is not the case, then we should check versioning
+       differences and bisect the commits to find the commit where the
+       mutator regresses. In this scenario it is likely that we&#39;ve slowed the
+       system rather than some interaction with GHC. We could also check for
+       a stack leak in this case.
+
+     - Revert to known working GHC version, then run test foo on debian 10 at
+       commit we observed the bug. If we observe the bug&#39;s effect then we
+       know its a regression that in our code base. If not then its a
+       regression in a dependency and we can systematically test each one.
+
+     - Inspect the tickyticky output to compare the baseline and regressed
+       branch. Check for a change in the number of unboxed tuples and data
+       constructors. Unsure how stable these numbers are between runs of the
+       same test.
+
+     - Compare the output of the baseline branch and the regressed branch
+       when compiling with `-Wall-missed-specializations`. Changes in this
+       output could point to missed specializations which would also be
+       observable in Core. However, this output also changes along dependency
+       versioning. I expect to see minor differences in the output. If these
+       differences occur in the code the foo exercises then they are likely
+       candidates for the regression. Will have to verify by reading Core.
+
+  *** Tests
+
+     - Compare Mutator time with baseline version using -O0:
+         Note taken on [2021-12-03 Fri 15:55]
+
+         With `ghc --version`: 9.8.1
+
+         Ran `cabal
+         test --show-details=streaming --pattern=&#39;foo&#39; --ghc-options=&#39;+RTS -S
+         -RTS&#39;` on both baseline (commit &lt;hash&gt;) and regressed (commit
+         &lt;hash&gt;). Results differed by less than 1%.
+
+
+  ** Theory: Regression caused by regression in a dependency
+  ...
+</pre></div>
+</div>
 </section>
-<section id="predict-the-response-and-test">
-<h2><span class="section-number">1.4.6. </span>Predict the Response and Test<a class="headerlink" href="#predict-the-response-and-test" title="Link to this heading">¶</a></h2>
-<p>Now that you have a hypothesis, a hypothetical failure mode, and a minimal test
-case, you can begin testing. Each change made to your code should be
-in pursuit of validating or invalidating the hypothesis. Do your best to resist
-the urge to begin shotgun debugging! <a class="footnote-reference brackets" href="#id5" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> The workflow should be:</p>
-<ol class="arabic simple">
-<li><p>Review the hypothesis and predict the response. State “if the hypothesis is
-true, then <code class="docutils literal notranslate"><span class="pre">Foo</span></code> should happen, or I should observe <code class="docutils literal notranslate"><span class="pre">Bar</span></code>”.</p></li>
-<li><p>Review the test to make sure the test will test the hypothesis and the
-failure mode.</p></li>
-<li><p>Perform your changes in the system. These should be <em>minimal</em>, ideally only a
-single change.</p></li>
-<li><p>Observe the response and then try to make sense of the response in comparison
-to the hypothesis.</p></li>
-<li><p>Repeat. Iterate until you have focused down the failure mode and the
-hypothesis.</p></li>
-</ol>
+<section id="check-the-plug">
+<span id="id12"></span><h3><span class="section-number">1.4.3.7. </span>Check the Plug<a class="headerlink" href="#check-the-plug" title="Link to this heading">¶</a></h3>
+<p>To check the plug means to verify your assumptions by performing sanity checks.
+Assumptions could be library and GHC versions, your operating systems’ available
+resources and settings; such as the CPU governor (be sure to make sure your
+laptop is plugged in). But assumptions can also be environmental, for example,
+the input data is what you expect, or that you are working from the commit you
+expect to be working from.</p>
+<p>Checking the plug enables one to divide and conquer. Without checking the plug,
+the anomalous region of the system’s causal chain is the whole chain! So make
+sure you take the time to check the plug. To check the plug, start at the
+beginning of the causal chain; check the tools, the dependencies, the inputs and
+default settings; as David Agan states: “Many anomalous systems are created by
+default settings.”</p>
+<p>Ideally you would check the plug at the beginning of your investigation so that
+your investigation does not proceed with bad assumptions. Another time to check
+the plug is when your investigation has led you into contradiction. This happens
+when you follow two hypotheses that are both confirmed with testing, but which
+contradict each other. This is typically an indication that something is
+egregiously wrong, and that the system you are inspecting is far outside its
+engineering tolerances. Such deviations are more times than not (but not
+always!) caused by unplugged things in the system.</p>
+</section>
+<section id="get-a-fresh-view">
+<span id="id13"></span><h3><span class="section-number">1.4.3.8. </span>Get a Fresh View<a class="headerlink" href="#get-a-fresh-view" title="Link to this heading">¶</a></h3>
+<p>Sometimes, despite your best efforts you’ll exhaust all leads and become stuck.
+To get a fresh view, means to recognize when you’re stuck and ask for help,
+especially from experts.</p>
+<p>The value in asking for help is a new perspective on the problem. The new
+perspective may highlight features of the problem that you missed or overlooked,
+and often times describing and explaining the issue to another person can lead
+you to new insights.</p>
+<p>When asking for help, do not communicate your theories, instead communicate the
+symptoms you’ve observed. If you communicate your theories then you’ll
+inevitably lead your interlocutor down the path your investigation took; you’ll
+accidentally coerce them to your perspective. So resist the temptation, allow
+them to come to their own conclusions and formulate their own theories.</p>
+<p>Fortunately, the Haskell ecosystem is full of enthusiastic, helpful people from
+all over the world. Don’t be afraid to participate! The worst case outcome is no
+one responds, the best case is that you connect with others who share your
+passion and help you fix the problem. Here are the best forums to reach out:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://discourse.haskell.org/">The Haskell discourse</a></p></li>
+<li><p><a class="reference external" href="https://wiki.haskell.org/Mailing_lists">The mailing lists</a> (see <a class="reference external" href="https://mail.haskell.org/mailman/listinfo">here</a>
+for a comprehensive list.)</p></li>
+<li><p>If you believe its GHC related then the GHC Developers’ <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/wikis/mailing-lists-and-irc">mailing list</a> is the place to ask.</p></li>
+<li><p><a class="reference external" href="https://www.reddit.com/r/haskell/">The Haskell subreddit</a>.</p></li>
+</ul>
+</section>
+<section id="if-you-didn-t-fix-it-then-it-ain-t-fixed">
+<span id="if-you-didn-t-fix-it-it-ain-t-fixed"></span><h3><span class="section-number">1.4.3.9. </span>If You Didn’t Fix It, Then It Ain’t Fixed<a class="headerlink" href="#if-you-didn-t-fix-it-then-it-ain-t-fixed" title="Link to this heading">¶</a></h3>
+<p>Repeat it with me: “The problem will not fix itself nor will the system correct
+itself.” We wish it were otherwise, but the cost of inaction almost always
+outweighs the cost of action because inaction prevents quality control.</p>
+<p>So once you have a fix in mind how do you know it will correct the system? You
+check. You must <a class="reference internal" href="#don-t-think-look"><span class="std std-ref">Don’t Think, Look</span></a>! To verify that the fix corrects the
+system, toggle the fix on and off, and observe if the toggle also toggles the
+bug’s effect. If the bug’s effect also toggles then you should have high
+confidence that you’ve found a fix because you can now affect the bug at will,
+and therefore you have regained control of the system.</p>
+<p>Control of the system is crucial; if you do not regain control, then you cannot
+be sure the bug will not manifest again and have lost some understanding of what
+the system is. In other words, it is only with control of the system that you
+are able to make correctness and performance guarantees to your end-users.
+Furthermore, it is only with control that you can begin to craft a repair,
+complete with instrumentation to capture more system details for next time.</p>
+</section>
 </section>
 <section id="summary">
-<h2><span class="section-number">1.4.7. </span>Summary<a class="headerlink" href="#summary" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">1.4.4. </span>Summary<a class="headerlink" href="#summary" title="Link to this heading">¶</a></h2>
+<p>We’ve come a long way, let’s review, the nine rules of debugging are:</p>
+<ol class="arabic simple">
+<li><p><a class="reference internal" href="#understand-the-system"><span class="std std-ref">Understand the System</span></a>: If you do not understand the system then you
+cannot debug it.</p></li>
+<li><p><a class="reference internal" href="#make-it-fail"><span class="std std-ref">Make it Fail</span></a>: Find a reproducer. This is the beginning of regaining
+control of the system.</p></li>
+<li><p><a class="reference internal" href="#don-t-think-look"><span class="std std-ref">Don’t Think, Look</span></a>: Check your instrumentation, if you do not have
+instrumentation then add it. Observation is reliably faster than guess work.</p></li>
+<li><p><a class="reference internal" href="#divide-and-conquer"><span class="std std-ref">Divide and Conquer</span></a>: Search for the bug by dividing and conquering.
+start from the anomalous end of the system, verify its anomalous, then go to
+sound end of the system, verify its sound, now repeat until you close in on
+the bug.</p></li>
+<li><p><a class="reference internal" href="#change-one-thing-at-a-time"><span class="std std-ref">Change One Thing at a Time</span></a>: Don’t shotgun debug, change only one thing
+at a time to mitigate the risk of moving the system so far outside its
+engineering tolerances that the bug’s effect is obscured by newly induced
+bugs.</p></li>
+<li><p><a class="reference internal" href="#keep-an-audit-trail"><span class="std std-ref">Keep an Audit Trail</span></a>: You are a scientist. Keep a laboratory journal of
+your work so that you can reproduce it months or years later. Make it
+searchable, make it precise, give it background context and record your
+theories.</p></li>
+<li><p><a class="reference internal" href="#check-the-plug"><span class="std std-ref">Check the Plug</span></a>: Verify your assumptions before diving into a rabbit
+hole and when you conclude in a contradiction. And always check the default
+settings!</p></li>
+<li><p><a class="reference internal" href="#get-a-fresh-view"><span class="std std-ref">Get a Fresh View</span></a>: Ask for help, especially from an expert. Only report
+your observations and data, don’t report your theories.</p></li>
+<li><p><a class="reference internal" href="#if-you-didn-t-fix-it-it-ain-t-fixed"><span class="std std-ref">If You Didn’t Fix It, Then It Ain’t Fixed</span></a>: The system will not repair
+itself, and even if it did you would not regain control of the product that
+you ship. Take the time and put in the work to find a repair, this will
+always be faster in the long run than ignoring the bug and relying on hope.</p></li>
+</ol>
+<p>Why do we follow these rules? Because doing so is more efficient than shotgun
+debugging, guessing, or living with a buggy system. Recall our goals: in the
+short term, to repair the system; and in the long term, to gain a deeper
+understanding of the system. We are thinking on a time scale of years. On that
+time scale bugs are inevitable. By gaining a deeper understanding of the system
+we slowly master the system. Mastering the system, in turn, enables more
+efficient, better engineered systems, more communicative documentation, and the
+ability to avoid future bugs <em>before</em> they manifest. So work slowly,
+deliberately and carefully. The investment pays off in the long run.</p>
 <aside class="footnote-list brackets">
-<aside class="footnote brackets" id="id4" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">1</a><span class="fn-bracket">]</span></span>
-<p>Be sure to have a reproducible testing environment set up before you begin
-gathering data. <a class="reference internal" href="repeatable_measurements.html#repeatable-measurements"><span class="std std-ref">Setting up a Reproducible Test Environment</span></a></p>
+<aside class="footnote brackets" id="id14" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>We cannot recommend this book highly enough, it should be mandatory
+reading for all software engineers.</p>
 </aside>
-<aside class="footnote brackets" id="id5" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">2</a><span class="fn-bracket">]</span></span>
-<p>Shotgun debugging is usually an indication that you have not properly
-characterized the problem. The need to shotgun debug comes from not
-having identified the failure mode of the problem yet. In essence, when
-you shotgun debug, you add a bunch of stimulus into the system hoping for
-a response. If you get a response (the problem phenomena has changed)
-then you know you have stumbled upon the failure mode of the problem. If
-you do not get a response, then you know that the sub-systems you’ve
-altered are not in the failure mode of the problem. This search for the
-failure mode is characterization of the problem and thus, so is shotgun
-debugging.</p>
+<aside class="footnote brackets" id="id15" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p>A <em>fix</em> is the act of bringing a system back into an acceptable operating
+state. A <em>repair</em> is a fix with an understanding of the mechanism and
+chain of events, that is the failure mode, that the system to operate in
+an unacceptable state. We seek to repair, not simply to fix.</p>
+</aside>
+<aside class="footnote brackets" id="id16" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">3</a><span class="fn-bracket">]</span></span>
+<p>In <a class="reference external" href="https://www.typetheoryforall.com/2022/08/04/21-Conal-Eliott-2.html">episode 21</a>
+(at 45 minutes) of the <a class="reference external" href="https://typetheoryforall.com/">Type Theory For All</a> podcast, <a class="reference external" href="http://conal.net/">Conal Elliot</a> persuasively argues that proof of correctness is
+necessary for efficiency and system performance. The idea is that proof
+of correctness protects us from being fooled that our optimized
+implementation is correct rather than <em>appearing</em> to be correct, and
+therefore that we are optimizing the system that we originally intended
+to build and not a slightly adjacent, incorrect, but fast one. Or in
+other words, performance without correctness is easy, but easily useless.</p>
+</aside>
+<aside class="footnote brackets" id="id17" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">4</a><span class="fn-bracket">]</span></span>
+<p>Be sure to have a reproducible testing environment set up before you begin
+gathering data. See <a class="reference internal" href="repeatable_measurements.html#repeatable-measurements"><span class="std std-ref">Setting up a Reproducible Test Environment</span></a>.</p>
+</aside>
+<aside class="footnote brackets" id="id18" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id9">5</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://lexi-lambda.github.io/">Alexis King</a> has a great <a class="reference external" href="https://youtu.be/fSqE-HSh_NU?si=GE1RMlY_6OIumuri">video</a> on the impact of
+strictness on a programming language’s semantics from the perspective of
+a compiler. The essential idea is that a program is a specification of
+behavior, which from the purview of a compiler is a set of constraints
+that dictate the observable behavior of the program. From this
+perspective, a strict evaluation strategy introduces synthetic
+dependencies between every statement in a program which then dictates the
+evaluation order. In contrast, a lazy evaluation strategy imposes no such
+synthetic dependencies, thereby allowing data dependencies in the program
+to dictate the evaluation order and allowing the compiler to perform more
+optimizations.</p>
 </aside>
 </aside>
 </section>

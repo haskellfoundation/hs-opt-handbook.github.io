@@ -55,15 +55,15 @@ define and track their own events using the base functions `traceEvent
 When should I use Eventlog
 --------------------------
 
-Eventlog is most useful when you need to :ref:`Characterize the Problem
-<characterize-the-problem>`. It yields runtime information on the specific
-sub-system the program relies on. Thus, it allows you to drill down into the
-behavior of the garbage collector, the scheduler, the heap and so. For example,
-using the flag ``+RTS -lg`` you can collect the ``CONC_MARK_BEGIN`` and
-``CONC_MARK_END`` events which log the beginning and end of the concurrent
-garbage collectors marking phase. Similarly, you can collect ``MEM_RETURN``
-which provides information about the current allocation of megablocks, attempts
-to return them to the operating system, and heap fragmentation.
+Eventlog is most useful when you need to characterize the problem. It yields
+runtime information on the specific sub-system the program relies on. Thus, it
+allows you to drill down into the behavior of the garbage collector, the
+scheduler, the heap and so. For example, using the flag ``+RTS -lg`` you can
+collect the ``CONC_MARK_BEGIN`` and ``CONC_MARK_END`` events which log the
+beginning and end of the concurrent garbage collectors marking phase. Similarly,
+you can collect ``MEM_RETURN`` which provides information about the current
+allocation of megablocks, attempts to return them to the operating system, and
+heap fragmentation.
 
 
 The Running Example

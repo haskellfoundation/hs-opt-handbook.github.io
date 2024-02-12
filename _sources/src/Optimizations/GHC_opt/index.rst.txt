@@ -1,10 +1,12 @@
-Manual GHC Optimizations
-------------------------
+
+.. _GHC Optimizations:
+
+GHC Optimizations
+-----------------
 
 .. toctree::
    :maxdepth: 2
    :glob:
-   :name: Man_GHC_Opts
 
    defunctionalization
    sat_transformation
