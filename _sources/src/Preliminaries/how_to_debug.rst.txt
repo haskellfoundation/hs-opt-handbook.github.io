@@ -524,8 +524,9 @@ deliberately and carefully. The investment pays off in the long run.
 
 .. [#] A *fix* is the act of bringing a system back into an acceptable operating
        state. A *repair* is a fix with an understanding of the mechanism and
-       chain of events, that is the failure mode, that the system to operate in
-       an unacceptable state. We seek to repair, not simply to fix.
+       chain of events (failure mode), that moved the system outside of its
+       engineering tolerances and into an unacceptable operating state. We seek
+       to repair, not simply to fix.
 
 .. [#] In `episode 21
        <https://www.typetheoryforall.com/2022/08/04/21-Conal-Eliott-2.html>`__
