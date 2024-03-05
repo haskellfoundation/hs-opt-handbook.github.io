@@ -25,6 +25,14 @@ executable lethargy
     hs-source-dirs:   app
     default-language: Haskell2010
 
+executable lethargy-asm
+    import:           warnings
+    main-is:          Main.hs
+    build-depends:    base >=4.15.1.0
+    hs-source-dirs:   app
+    default-language: Haskell2010
+    ghc-options:      -ddump-asm
+
 
 benchmark inlining
   type            : exitcode-stdio-1.0
