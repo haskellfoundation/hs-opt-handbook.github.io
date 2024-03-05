@@ -47,7 +47,7 @@ def execute_code(runner, globals_dict=None):
             out = f(out)
 
         # Log any stderr.
-        if err is not None and err.strip() != "":
+        if err is not None and len(err.strip()) > 0:
             print(err)
 
         return out
@@ -71,6 +71,8 @@ def execute_code(runner, globals_dict=None):
             runner['with'] = 'runghc' # default is runghc, no hooks
 
         if runner['with'] == 'ghci':
+            # TODO: properly add in an args argument to execute_code_with_pipe
+            runner['with'] = 'ghci -ignore-dot-ghci'.split()
             # if running with ghci then we post process the output to remove
             # ghci specific text
             post_process += [lambda s: s.replace("ghci>",""),
@@ -87,18 +89,26 @@ def execute_code(runner, globals_dict=None):
                     out       = comp_proc.stdout
                     err       = comp_proc.stderr
                     code_out = out
-                    found    = False
 
+                    ## control the output
                     out_stream = code_out.splitlines()
+                    linking_index = 0
                     for index, line in enumerate(out_stream):
                         if "Linking" in line:
-                            i = index + 1
-                            code_out = '\n'.join(out_stream[i:])
-                            break # only want first hit, and we are guarenteed
-                                  # that linking is in the list because you
-                                  # cannot run a binary without linking! Log
+                            linking_index = index
+                            break
+                    if runner['output'] == 'all':
+                        ## then we want the whole of stdout including the program
+                        code_out = '\n'.join(out_stream)
+                    elif runner['output'] == 'comp':
+                        ## then we only want ghc's output and not the program
+                        code_out = '\n'.join(out_stream[:linking_index])
+                    else:
+                        ## the default case, we only want the program output
+                        code_out = '\n'.join(out_stream[linking_index:])
 
-                if err is not None and err.strip() != "":
+                # Log
+                if err is not None and len(err.strip()) > 0:
                     print(err) # should use sphinx logger
 
             else:
@@ -120,7 +130,7 @@ def execute_code(runner, globals_dict=None):
                 out = comp_proc.stdout.decode('utf-8')
                 err = comp_proc.stderr
         # Log any stderr.
-        if err is not None and err.strip() != "":
+        if err is not None and len(err.strip()) > 0:
             print(err)
         code_out = out
 
@@ -164,6 +174,7 @@ class Exec(Directive):
         'context':   _option_boolean,
         'cache':     _option_boolean,
         'process':   _option_process,
+        'output':    _option_str,
         'intertext': _option_str,
         'project_dir': _option_str,
         'with':      _option_str,
@@ -192,6 +203,7 @@ class Exec(Directive):
         project_dir = self.options.get('project_dir', '')
         opt_with = self.options.get('with', '')
         args     = self.options.get ('args','').split()
+        output   = self.options.get ('output','')
 
         # A runner is "that which runs the code", i.e., a dictionary that
         # defines the entire external process
@@ -204,7 +216,8 @@ class Exec(Directive):
                                                 # the contents of source_file,
                                                 # if not then its the contents
                                                 # of a literal code block
-                  'args':    args}     # args to run with, with
+                  'args':    args,   # args to run with, with
+                  'output': output}  # how much output to display
 
         # Determine whether input is to be read from a file, or directly from
         # the exec block's contents.

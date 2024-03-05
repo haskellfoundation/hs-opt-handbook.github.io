@@ -54,13 +54,25 @@ extensions = [ 'sphinx.ext.mathjax'
              ]
 
 # flags
-todo_include_todos = False
+todo_include_todos = True
 todo_link_only     = False
 autosectionlabel_prefix_document = True
 
 # tikz support
 tikz_proc_suite = "pdf2svg"
-tikz_tikzlibraries = "arrows, arrows.meta"
+tikz_tikzlibraries = "arrows, arrows.meta, decorations.pathreplacing"
+tikz_latex_preamble = r"""
+\newcommand{\MemoryLayout}[1]{
+     \draw[thick](0,0)--++(0,3)node[above]{$0$};
+     \foreach \pt/\col/\lab [remember=\pt as \lastpt (initially 0)] in {#1} {
+       \draw[fill=\col]({\lastpt},0) rectangle ++(\pt,2);
+       \if\lab\relax\relax\else
+         \draw[thick,decorate, decoration={brace,amplitude=4mm}]
+            (\pt,-0.4)--node[below=4mm]{\lab} (\lastpt,-0.4);
+       \fi
+     }
+}
+"""
 
 ## global links in the book that share a prefix that we've named.
 extlinks = {'userGuide': ('https://downloads.haskell.org/~ghc/9.2.4/docs/html/users_guide/%s', '%s'),

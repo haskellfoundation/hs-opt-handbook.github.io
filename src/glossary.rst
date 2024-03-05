@@ -64,21 +64,6 @@ Glossary
       A Boxed value is a value that is represented by a pointer to the heap. For
       example, a value such as ``1729 :: Int`` is represented as:
 
-      ..
-         .. tikz:: An Example TikZ Directive with Caption
-            :align: left
-
-            \begin{tikzpicture}[memory graph]
-            \node[arity=2] (hd) {Cons};
-            \node
-            [arity=2,below=of hd.arg 2 center,anchor=head north]
-            (tl) {Cons};
-            \draw[ref] (hd.arg 2 center)
-            -- (tl.head north);
-            \draw[ref] (tl.arg 2 center)
-            |- ($(hd.head north)+(0,.4)$)
-            -- (hd.head north);
-            \end{tikzpicture}
 
    Cardinality Analysis
 
@@ -221,9 +206,9 @@ Glossary
       Every heap allocated object in the runtime system keeps an information
       table that stores data such as: the object type (function, data
       constructor, thunk etc.) before the payload of the object. This is called
-      the info table. See :cite:t:`pointerTaggingLaziness` and the
-      :ghcWiki:`wiki <commentary/rts/storage/heap-objects#info-tables>` for more
-      details.
+      the Info Table. See :cite:t:`pointerTaggingLaziness`, :ghcWiki:`wiki
+      <commentary/rts/storage/heap-objects#info-tables>`, and
+      :cite:t:`SpinelessTaglessGMachine` Section 7.1 for more details.
 
    Info Table Address : Runtime
 
@@ -264,30 +249,6 @@ Glossary
      application procedure because the function pointer does not need to be
      scrutinized. See also :term:`Unknown Function`.
 
-   Occurrence Name : GHC
-
-     An Occurrence name is a name GHC assigns to an entity to disambiguate
-     multiple occurrences of that name. For example, disambiguation allows GHC
-     to distinguish *by name* a type constructor from a data constructor, which
-     often occurs due to punning, or from local variables in separate functions
-     with the same name, such as ``x`` or ``xs``. Occurrence names are a pair of
-     the original name (as a ``FastString``, a GHC internal type) and a
-     ``NameSpace``; they are ubiquitous in GHC and in the intermediate
-     representations. For example, the occurrence name for the function ``f x y
-     = ...`` will be similar to ``f_r17p``. Note that the exact occurrence name
-     will change but the leading character in the suffix is static meaningful.
-     When occurrence names are generated, the leading character is a hint for
-     what kind of name is being generated. You can find an incomplete list of
-     tags and their meanings in :ghcSource:`Note [Uniques for wired-in prelude
-     things and known tags]
-     <compiler/GHC/Builtin/Uniques.hs?ref_type=heads#L305>`. For more on names
-     see :ghcSource:`Note [Choosing external Ids]
-     <compiler/GHC/Iface/Tidy.hs?ref_type=heads#L271>` and `this
-     <https://gitlab.haskell.org/ghc/ghc/-/wikis/commentary/compiler/rdr-name-type#the-occname-type>`__
-     wiki page on GHC's Reader names.
-
-
-
    Levity Polymorphism
 
       A kind of polymorphism that abstracts over calling conventions which
@@ -304,10 +265,10 @@ Glossary
 
    Lifted : Levity
 
-      A Lifted type is a type that contains the value :math:`\bot`;
-      which represents non-terminating computation. For example, the ``Bool``
-      type is a set with three values: ``True``, ``False``, and :math:`\bot`.
-      Therefore ``Bool`` is a Lifted type.
+      A Lifted type is a type that contains the value :math:`\bot`; which means
+      the type is lazy and capable of representing non-terminating computation.
+      For example, the ``Bool`` type is a set with three values: ``True``,
+      ``False``, and :math:`\bot`. Therefore ``Bool`` is a Lifted type.
 
    Loop Fusion
 
@@ -357,6 +318,34 @@ Glossary
       normal form (:term:`WHNF`) and head normal form (:term:`HNF`), both of
       which may contain thunks. See :cite:t:`jones1992implementing` Section 3.1
       for more.
+
+   Occurrence Name : GHC
+
+     An Occurrence name is a name GHC assigns to an entity to disambiguate
+     multiple occurrences of that name. Disambiguation allows GHC to distinguish
+     *by name* a type constructor from a data constructor, which often occurs
+     due to punning, or from local variables in separate functions with the same
+     name, such as ``x`` or ``xs``. Occurrence names are a pair of the original
+     name (as a ``FastString``, a GHC internal type) and a ``NameSpace``; they
+     are ubiquitous in GHC and in the intermediate representations. For example,
+     the occurrence name for the function ``f x y = ...`` will be similar to
+     ``f_r17p``. The exact occurrence name will change, but parts are static.
+     For example, the ``f`` before the underscore always comes from the name of
+     the function. Had ``f`` been name ``fancyFunction`` then the ocurrence name
+     would have been ``fancyFunction_r17p``. Similarly, leading character in the
+     suffix; the ``r`` in ``r17p`` is static and meaningful. In this case, the
+     ``r`` indicates that the name ``f`` is an element in the ``NameCache``,
+     meaning that all references to ``f`` share a single ``Unique`` ID in every
+     GHC invocation (See the :ghcSource:`Note [The Name Cache]
+     <compiler/GHC/Types/Name/Cache.hs?ref_type=heads#L36>` for more). When
+     occurrence names are generated, the leading character is a hint for what
+     kind of name is being generated. You can find an incomplete list of tags
+     and their meanings in :ghcSource:`Note [Uniques for wired-in prelude things
+     and known tags] <compiler/GHC/Builtin/Uniques.hs?ref_type=heads#L305>`. For
+     more on names see :ghcSource:`Note [Choosing external Ids]
+     <compiler/GHC/Iface/Tidy.hs?ref_type=heads#L271>` and `this
+     <https://gitlab.haskell.org/ghc/ghc/-/wikis/commentary/compiler/rdr-name-type#the-occname-type>`__
+     wiki page on GHC's Reader names.
 
    One-Shot Lambda
 
@@ -419,6 +408,15 @@ Glossary
 
       Debugging with hope instead of process and measurement. See its Wikepedia
       `entry <https://en.wikipedia.org/wiki/Shotgun_debugging>`__.
+
+   SRT : Runtime
+
+      Static reference tables are how GHC's garbage collector determines the
+      live :term:`CAF`'s of a program. SRTs are stored in a heap object's
+      :term:`Info Table` and are simply an object in the compiled programs data
+      segment. See `The SRT Note
+      <https://gitlab.haskell.org/ghc/ghc/-/blob/master/compiler/GHC/Cmm/Info/Build.hs#L51>`__
+      in ``GHC.Cmm.Info.Build`` for more details.
 
    Thunk
 

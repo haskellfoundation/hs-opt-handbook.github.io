@@ -34,7 +34,9 @@ pkgs.stdenv.mkDerivation {
 
    preBuild = ''
    unset SOURCE_DATE_EPOCH
-  '';
+   export CABAL_DIR=$(mktemp -d)
+   cabal user-config update
+   '';
 
    buildPhase = ''
    runHook preBuild
