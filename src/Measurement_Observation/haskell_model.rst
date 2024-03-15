@@ -12,25 +12,24 @@ some assumptions.
 For example:
 
 1. we don't have clear procedure boundaries with call/return instruction pairs
-   (we use tail calls, i.e. jump instructions)
+   (we use tail calls, i.e. jump instructions).
 
 2. we don't use the so-called C stack in the usual way. I.e. we don't use usual
    stack registers (e.g. rsp/rbp on x86-64) as stack registers.
 
-3. GHC uses its own calling convention
+3. GHC uses its own calling convention.
 
 In addition, lazy evaluation makes control-flow and memory usage difficult to
 understand.
 
-In this chapter we describe the compilation pipeline and the execution model.
+In this chapter we describe the compilation pipeline and the execution model of GHC Haskell.
 For each stage of the pipeline we list what can be measured at runtime.
 
 
 Compilation pipeline overview
 -----------------------------
 
-GHC compiles Haskell codes in several stages, each with their own intermediate
-representation:
+GHC's compilation pipeline is roughly composed of four stages and intermediate representations. They are:
 
 Haskell: the functional language we love with its bazillion of extensions.
 
@@ -41,7 +40,7 @@ convert a type into another) are first class values, etc.
 
 STG: a functional language closer to the execution model. It's still typed but
 with primitive types. E.g. it tracks if a value is a heap object or an
-unboxed word (unboxed = doesn't have its own heap object) but not the Haskell
+:term:`unboxed` word but not the Haskell
 type of the heap object. Complex forms are lowered to simpler ones (e.g. unboxed
 sums are lowered into unboxed tuples); this is called unarisation.
 
@@ -54,7 +53,7 @@ During code generation from STG we know that all functions are applied to
 Following the approach pioneered with "super-combinators", every top-level STG
 binding is then compiled into imperative code. The idea is that executing this
 imperative code has the same result as interpreting the functional code. For
-example, ``let b = MkBar x y in foo b`` is basically compiled to:
+example, ``let b = MkBar x y in foo b`` compiles to:
 
 .. code-block:: C
 
@@ -62,9 +61,9 @@ example, ``let b = MkBar x y in foo b`` is basically compiled to:
   evaluate foo
   apply `foo` to `b`
 
-Different GHC backends use different imperative representations. The interpreter
-uses ByteCode, the JavaScript backend uses some JavaScript-like form, all other
-backends use Cmm.
+STG is the last stage in the pipeline that is shared between all of GHC's backends; different backends use different imperative representations for their exact needs. For example, the interpreter
+uses ByteCode, the JavaScript backend uses a subset of JavaScript, all other
+backends use Cmm (pronounced *C minus minus*).
 
 Cmm: an imperative language that looks like LLVM IR. It supports expressions,
 statements, and it abstracts over machine primops, machine registers, stack
@@ -81,13 +80,12 @@ to manage:
 - IOs: primitives to interact with the operating system
 - dynamic code loading: loading and unloading code objects at runtime.
 
-The RTS itself comes in different flavors: e.g. using multiple OS threads to execute
-Haskell code or not.
+Note that the RTS itself comes in different flavors. For example, a threaded RTS which uses multiple OS threads to execute Haskell code or not.
 
 All these compilation stages and the RTS provide knobs to tweak the generated
 code and the behavior of the runtime system. In particular, some probes can be
 optionally inserted in the generated code at various stages to produce different
-profiling information at runtime.
+profiling information at runtime. We refer interested those interested in these tweaks to the :userGuide:`User Guide <flags.html>`.
 
 
 Execution model overview
@@ -103,17 +101,17 @@ be used as arguments for function applications.
 
 The garbage collector is responsible for freeing space in the heap. It runs when
 there is not enough space left or depending on other heuristics. GHC provides
-several knobs to configure the garbage collector strategies to use and to tweak
+several :userGuide:`knobs <runtime_control.html#rts-options-to-control-the-garbage-collector>` to configure the garbage collector strategies to use and to tweak
 their properties.
 
 The garbage collector used has an impact on profiling. For an extreme example,
 if the heap size is configured to be large enough than your program never has to
 perfom garbage collection, you'll find that you spend 0% time doing garbage
-collection and 100% executing your program ("mutator" time): all the garbage
+collection and 100% executing your program ("mutator" time): all garbage
 collection occurs at once implicitly when your program exits. On the other hand,
 if you configure the heap to be very small, most of the time can be spent doing
 garbage collection even if you haven't changed anything in your program.
-It means that **you must be very aware of the RTS options you use when profiling**.
+Thus, **you must be very aware of the RTS options you use when profiling**.
 
 Similarly, some profiling options have an impact on the size of the heap
 objects: e.g. the heap object that represents `10 :: Int64` uses 24 bytes
