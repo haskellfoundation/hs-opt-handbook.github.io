@@ -6,6 +6,7 @@ Binary Profiling and Probing
    :glob:
    :name: binary_prof
 
+   asm
    linux_time
    linux_perf
    dtrace

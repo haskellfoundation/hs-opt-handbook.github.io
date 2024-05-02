@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-      <title>2.1.2. The Linux perf utility</title>
+      <title>2.1.3. The Linux perf utility</title>
     
           <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
           <link rel="stylesheet" href="../../../_static/theme.css " type="text/css" />
@@ -31,8 +31,8 @@
     
   <link rel="index" title="Index" href="../../../genindex.html" />
   <link rel="search" title="Search" href="../../../search.html" />
-  <link rel="next" title="2.1.3. Dtrace" href="dtrace.html" />
-  <link rel="prev" title="2.1.1. The Linux time command" href="linux_time.html" /> 
+  <link rel="next" title="2.1.4. Dtrace" href="dtrace.html" />
+  <link rel="prev" title="2.1.2. The Linux time command" href="linux_time.html" /> 
   </head>
 
   <body>
@@ -185,18 +185,18 @@
     
       <li><a href="index.html"><span class="section-number">2.1. </span>Binary Profiling and Probing</a> &raquo;</li>
     
-    <li><span class="section-number">2.1.2. </span><span class="lightgrey">The Linux perf utility</span></li>
+    <li><span class="section-number">2.1.3. </span>The Linux perf utility</li>
   </ul>
   
 
   <ul class="page-nav">
   <li class="prev">
     <a href="linux_time.html"
-       title="previous chapter">← <span class="section-number">2.1.1. </span><span class="lightgrey">The Linux time command</span></a>
+       title="previous chapter">← <span class="section-number">2.1.2. </span><span class="lightgrey">The Linux time command</span></a>
   </li>
   <li class="next">
     <a href="dtrace.html"
-       title="next chapter"><span class="section-number">2.1.3. </span><span class="lightgrey">Dtrace</span> →</a>
+       title="next chapter"><span class="section-number">2.1.4. </span><span class="lightgrey">Dtrace</span> →</a>
   </li>
 </ul>
   
@@ -205,8 +205,817 @@
           <div class="content" role="main" v-pre>
             
   <section id="the-linux-perf-utility">
-<span id="perf-chapter"></span><h1><span class="section-number">2.1.2. </span><span class="lightgrey">The Linux perf utility</span><a class="headerlink" href="#the-linux-perf-utility" title="Link to this heading">¶</a></h1>
-<p><a class="reference external" href="https://github.com/input-output-hk/hs-opt-handbook.github.io/issues/30">TODO</a></p>
+<span id="perf-chapter"></span><h1><span class="section-number">2.1.3. </span>The Linux perf utility<a class="headerlink" href="#the-linux-perf-utility" title="Link to this heading">¶</a></h1>
+<p>This chapter demonstrates the use of the linux perf utility to understand the
+low-level details of a simple Haskell program and how a memory layout
+optimization that GHC performs, called tables-next-to-code, affects the performance of that
+program. This chapter is not an exhaustive exploration of <code class="docutils literal notranslate"><span class="pre">perf</span></code>. However,
+after reading this chapter one will be able to understand <code class="docutils literal notranslate"><span class="pre">perf</span></code>’s output, act
+upon its output and employ <code class="docutils literal notranslate"><span class="pre">perf</span></code> on their own Haskell programs.</p>
+<section id="what-is-tables-next-to-code">
+<h2><span class="section-number">2.1.3.1. </span>What is Tables-Next-to-Code<a class="headerlink" href="#what-is-tables-next-to-code" title="Link to this heading">¶</a></h2>
+<p>Tables-next-to-code (TNTC) is a memory layout optimization in GHC that has been
+used for a very long time <a class="footnote-reference brackets" href="#id9" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. Every heap object has an object header followed
+by a payload. The contents of the header depends on the kind of build <em>and</em> the
+type of object. For example, a profiling build will include <code class="docutils literal notranslate"><span class="pre">StgProfHeader</span></code>,
+while a parallel build adds an additional word to the header only for thunks
+(not shown). The most important field is the <code class="docutils literal notranslate"><span class="pre">info</span> <span class="pre">table</span> <span class="pre">pointer</span></code> which points
+the heap object’s <a class="reference internal" href="../../glossary.html#term-Info-Table"><span class="xref std std-term">info table</span></a>. The info table is what the “tables” in
+tables-next-to-code refers to.</p>
+<p>Info tables store meta-information about the heap object and are central to the
+execution model of the STG machine and consequently the runtime system. Just as
+the contents of the header change by the type of object so does the contents of
+the info table. For example, a <a class="reference internal" href="../../glossary.html#term-PAP"><span class="xref std std-term">PAP</span></a> add fields to track the number of
+arguments left to apply, the number of arguments that have been applied, and a
+pointer that logs the location of the caller. However, four fields in the entry
+table are common to all info tables. These are the <code class="docutils literal notranslate"><span class="pre">layout</span></code> of the object,
+which describes the layout for the garbage collector; the <code class="docutils literal notranslate"><span class="pre">Closure</span> <span class="pre">Type</span></code>,
+which is a constant that describes the kind of closure, for example, a
+<a class="reference internal" href="../../glossary.html#term-Thunk"><span class="xref std std-term">Thunk</span></a>, Data Constructor, <a class="reference internal" href="../../glossary.html#term-PAP"><span class="xref std std-term">PAP</span></a> etc.; the <a class="reference internal" href="../../glossary.html#term-SRT"><span class="xref std std-term">SRT</span></a> <code class="docutils literal notranslate"><span class="pre">bitmap</span></code>,
+which the garbage collector requires to collect <a class="reference internal" href="../../glossary.html#term-CAF"><span class="xref std std-term">CAF</span></a>’s. Lastly, the info
+table will hold the <a class="reference internal" href="../../glossary.html#term-Entry-Code"><span class="xref std std-term">entry code</span></a> pointer for the heap object if one exists
+<a class="footnote-reference brackets" href="#id11" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> . For more see <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/blob/master/rts/include/rts/storage/InfoTables.h">InfoTables.h</a> for exact details and other variants.</p>
+<p>Here is a depiction of the heap object layout without tables-next-to-code enabled. Code is
+represented in orange and data in blue. Boxes which have a dashed outline change
+depending on the type of heap object and build:</p>
+<div class="figure" style="text-align: left"><p><img  src="../../../_images/tikz-2ce56ab7d0223ce8614bc79f82a16c805c8cc6c3.svg" alt="Figure made with TikZ" /></p>
+</div><p>Tables-next-to-code does two things: first it removes the entry code pointer
+from the info table and second, it moves the entry code itself to the address
+immediately after the info table and sets the info table pointer itself to the
+address of the entry code. This setup allows the runtime system to save a
+pointer indirection because the info table pointer now points to the entry code.
+Thus, when jumping to the entry code, which is a common operation, the runtime
+system saves a single indirection, but can still reference the fields of the
+info table through a negative memory offset from the info table pointer.</p>
+<p>Here is a depiction with tables-next-to-code enabled:</p>
+<div class="figure" style="text-align: left"><p><img  src="../../../_images/tikz-9ac7c1a806690ce988332187ffaa95ac4c180c87.svg" alt="Figure made with TikZ" /></p>
+</div><p>The key change is that the info table pointer points to the entry code, while
+the rest of the info table can still be referenced via negative offsets from the
+entry code address.</p>
+</section>
+<section id="so-what-is-the-problem">
+<h2><span class="section-number">2.1.3.2. </span>So What is the Problem?<a class="headerlink" href="#so-what-is-the-problem" title="Link to this heading">¶</a></h2>
+<p>Tables-next-to-code has worked well for GHC for many years. However, it requires
+precise control over the placement of data and code in object files which is
+problematic for certain backends such as the LLVM backend. In addition, tables-next-to-code,
+while good, precludes other optimization strategies that GHC might use. For
+example, one could envision putting all info tables in a global offset table or
+coalescing the tables into a single section in the object file. Such a strategy
+might lead to better branch prediction, and therefore improved runtime
+performance on modern hardware. In addition to other strategies, tables-next-to-code creates
+far reaching and non-obvious effects in the compiler. For example, GHC does not
+typically <a class="footnote-reference brackets" href="#id12" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>  generate <code class="docutils literal notranslate"><span class="pre">call</span></code> or <code class="docutils literal notranslate"><span class="pre">ret</span></code> instructions because</p>
+</section>
+<section id="assessing-the-impact-of-tntc">
+<h2><span class="section-number">2.1.3.3. </span>Assessing the impact of tables-next-to-code<a class="headerlink" href="#assessing-the-impact-of-tntc" title="Link to this heading">¶</a></h2>
+<p>We’ll compare two GHC’s, both will be <code class="docutils literal notranslate"><span class="pre">default</span></code> <a class="footnote-reference brackets" href="#id13" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a> builds; one built with
+tables-next-to-code enabled, which I’ll call <code class="docutils literal notranslate"><span class="pre">TNTC</span></code> and one without, which I’ll call
+<code class="docutils literal notranslate"><span class="pre">NO-TNTC</span></code>. To compare the two we’ll run GHC’s nofib benchmark suite, and use
+<code class="docutils literal notranslate"><span class="pre">perf</span></code> to measure hardware and software events (more on these events later
+Unfortunately, a <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/issues/22792">bug</a>
+prevents us from compiling both GHC’s with <a class="reference internal" href="../../glossary.html#term-DWARF"><span class="xref std std-term">DWARF</span></a> symbols. So we’ll only
+be able to annotate GHC’s assembly output with the tables-next-to-code enabled GHC. All tests
+will be run on a local machine running:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>screenfetch<span class="w"> </span>-n
+<span class="w"> </span>doyougnu@7thChamber
+<span class="w"> </span>OS:<span class="w"> </span>NixOS<span class="w"> </span><span class="m">23</span>.11.20240312.51063ed<span class="w"> </span><span class="o">(</span>Tapir<span class="o">)</span>
+<span class="w"> </span>Kernel:<span class="w"> </span>x86_64<span class="w"> </span>Linux<span class="w"> </span><span class="m">6</span>.7.9-xanmod1
+<span class="w"> </span>Uptime:<span class="w"> </span>4h<span class="w"> </span>36m
+<span class="w"> </span>Packages:<span class="w"> </span><span class="m">9119</span>
+<span class="w"> </span>Shell:<span class="w"> </span>fish<span class="w"> </span><span class="m">3</span>.7.0
+<span class="w"> </span>Resolution:<span class="w"> </span>3000x1920
+<span class="w"> </span>WM:<span class="w"> </span>XMonad
+<span class="w"> </span>GTK<span class="w"> </span>Theme:<span class="w"> </span>Breeze-Dark<span class="w"> </span><span class="o">[</span>GTK2/3<span class="o">]</span>
+<span class="w"> </span>Icon<span class="w"> </span>Theme:<span class="w"> </span>breeze
+<span class="w"> </span>Font:<span class="w"> </span>Sans<span class="w"> </span>Serif<span class="w">  </span><span class="m">10</span>
+<span class="w"> </span>Disk:<span class="w"> </span>608G<span class="w"> </span>/<span class="w"> </span><span class="m">1</span>.3T<span class="w"> </span><span class="o">(</span><span class="m">50</span>%<span class="o">)</span>
+<span class="w"> </span>CPU:<span class="w"> </span>AMD<span class="w"> </span>Ryzen<span class="w"> </span><span class="m">7</span><span class="w"> </span>2700X<span class="w"> </span>Eight-Core<span class="w"> </span>@<span class="w"> </span>8x<span class="w"> </span><span class="m">3</span>.7GHz
+<span class="w"> </span>GPU:<span class="w"> </span>NVIDIA<span class="w"> </span>GeForce<span class="w"> </span>GTX<span class="w"> </span><span class="m">1080</span><span class="w"> </span>Ti
+<span class="w"> </span>RAM:<span class="w"> </span>6562MiB<span class="w"> </span>/<span class="w"> </span>64217MiB
+</pre></div>
+</div>
+<p>that is <a class="reference internal" href="../../Preliminaries/repeatable_measurements.html#repeatable-measurements"><span class="std std-ref">set up</span></a> for reproducible benchmarks.
+Lastly, we’ll alter <code class="docutils literal notranslate"><span class="pre">perf_event_paranoid</span></code> so that we can run <code class="docutils literal notranslate"><span class="pre">perf</span></code> and get
+data as a normal user:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>sysctl<span class="w"> </span>-w<span class="w"> </span>kernel.perf_event_paranoid<span class="o">=</span><span class="m">0</span>
+</pre></div>
+</div>
+<p>Note that this is not safe setting even though it not a persistent change and
+will be reset when you reboot your machine. Note that if you do not alter
+<code class="docutils literal notranslate"><span class="pre">perf_event_paranoid</span></code> you’ll receive partial output from <code class="docutils literal notranslate"><span class="pre">perf</span> <span class="pre">stat</span></code> or have
+to run all <code class="docutils literal notranslate"><span class="pre">perf</span></code> commands with <code class="docutils literal notranslate"><span class="pre">sudo</span></code>. For example, metrics such as
+<code class="docutils literal notranslate"><span class="pre">context-switches</span></code> will be reported as 0 if <code class="docutils literal notranslate"><span class="pre">perf_event_paranoid</span></code> is greater
+than 0.</p>
+</section>
+<section id="how-does-tables-next-to-code-affect-performance">
+<h2><span class="section-number">2.1.3.4. </span>How does Tables Next to Code Affect Performance<a class="headerlink" href="#how-does-tables-next-to-code-affect-performance" title="Link to this heading">¶</a></h2>
+<p>Below is a selection of the generated table from <code class="docutils literal notranslate"><span class="pre">nofib</span></code> which compares the
+compilers on a series of small programs; typically each program is only a module
+or two:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="w">  </span>NoFib<span class="w"> </span>Results
+
+-----------------------------------------------------------------------------
+<span class="w">     </span>Program<span class="w">           </span>Size<span class="w">    </span>Allocs<span class="w">   </span>Runtime<span class="w">   </span>Elapsed<span class="w">  </span>TotalMem
+-----------------------------------------------------------------------------
+<span class="w">            </span>CS<span class="w">          </span>+5.7%<span class="w">      </span><span class="m">0</span>.0%<span class="w">     </span><span class="m">0</span>.068<span class="w">     </span><span class="m">0</span>.068<span class="w">      </span><span class="m">0</span>.0%
+<span class="w">           </span>CSD<span class="w">          </span>+5.6%<span class="w">      </span><span class="m">0</span>.0%<span class="w">     </span>-4.7%<span class="w">     </span>-4.7%<span class="w">      </span><span class="m">0</span>.0%
+<span class="w">            </span>FS<span class="w">          </span>+5.8%<span class="w">      </span><span class="m">0</span>.0%<span class="w">     </span>+7.3%<span class="w">     </span>+7.2%<span class="w">      </span><span class="m">0</span>.0%
+<span class="w">             </span>S<span class="w">          </span>+5.7%<span class="w">      </span><span class="m">0</span>.0%<span class="w">     </span>-0.0%<span class="w">     </span>-0.1%<span class="w">      </span><span class="m">0</span>.0%
+<span class="w">            </span>VS<span class="w">          </span>+5.7%<span class="w">      </span><span class="m">0</span>.0%<span class="w">    </span>+12.2%<span class="w">    </span>+12.2%<span class="w">      </span><span class="m">0</span>.0%
+<span class="w">           </span>VSD<span class="w">          </span>+5.5%<span class="w">      </span><span class="m">0</span>.0%<span class="w">     </span><span class="m">0</span>.005<span class="w">     </span><span class="m">0</span>.005<span class="w">      </span><span class="m">0</span>.0%
+<span class="w">           </span>VSM<span class="w">          </span>+5.7%<span class="w">      </span><span class="m">0</span>.0%<span class="w">     </span><span class="m">0</span>.106<span class="w">     </span><span class="m">0</span>.107<span class="w">      </span><span class="m">0</span>.0%
+<span class="w">          </span>anna<span class="w">          </span>+7.0%<span class="w">      </span><span class="m">0</span>.0%<span class="w">    </span>+12.2%<span class="w">    </span>+12.3%<span class="w">      </span><span class="m">0</span>.0%
+<span class="w">          </span>ansi<span class="w">          </span>+3.2%<span class="w">      </span><span class="m">0</span>.0%<span class="w">     </span>+0.6%<span class="w">     </span>+0.6%<span class="w">      </span><span class="m">0</span>.0%
+<span class="w">          </span>atom<span class="w">          </span>+3.5%<span class="w">      </span><span class="m">0</span>.0%<span class="w">     </span>+4.3%<span class="w">     </span>+4.2%<span class="w">      </span><span class="m">0</span>.0%
+<span class="w">        </span>awards<span class="w">          </span>+3.3%<span class="w">      </span><span class="m">0</span>.0%<span class="w">     </span>-7.1%<span class="w">     </span>-7.1%<span class="w">      </span><span class="m">0</span>.0%
+<span class="w">        </span>banner<span class="w">          </span>+2.6%<span class="w">      </span><span class="m">0</span>.0%<span class="w">    </span>+26.2%<span class="w">    </span>+26.1%<span class="w">      </span><span class="m">0</span>.0%
+<span class="w">    </span>bernouilli<span class="w">          </span>+3.2%<span class="w">      </span><span class="m">0</span>.0%<span class="w">     </span>+8.0%<span class="w">     </span>+8.0%<span class="w">      </span><span class="m">0</span>.0%
+<span class="w">         </span>boyer<span class="w">          </span>+3.2%<span class="w">      </span><span class="m">0</span>.0%<span class="w">    </span>+14.3%<span class="w">    </span>+14.3%<span class="w">      </span><span class="m">0</span>.0%
+<span class="w">        </span>boyer2<span class="w">          </span>+3.4%<span class="w">      </span><span class="m">0</span>.0%<span class="w">    </span>+22.6%<span class="w">    </span>+22.6%<span class="w">      </span><span class="m">0</span>.0%
+<span class="w">          </span>bspt<span class="w">          </span>+4.1%<span class="w">      </span><span class="m">0</span>.0%<span class="w">     </span>+7.4%<span class="w">     </span>+7.4%<span class="w">      </span><span class="m">0</span>.0%
+<span class="w">        </span>primes<span class="w">          </span>+3.0%<span class="w">    </span>+20.7%<span class="w">    </span>+55.2%<span class="w">    </span>+55.1%<span class="w">     </span>+9.1%
+<span class="w">        </span>simple<span class="w">          </span>+5.0%<span class="w">      </span><span class="m">0</span>.0%<span class="w">     </span>+7.1%<span class="w">     </span>+7.1%<span class="w">     </span>-6.9%
+<span class="w">        </span>...
+<span class="w">        </span>many<span class="w"> </span>more...
+</pre></div>
+</div>
+<p>A minus indicates that <code class="docutils literal notranslate"><span class="pre">NO-TNTC</span></code> performed better than <code class="docutils literal notranslate"><span class="pre">TNTC</span></code>. These results
+are expected; tables-next-to-code tends to outperform <code class="docutils literal notranslate"><span class="pre">NO-TNTC</span></code> because it saves a pointer
+indirection in the runtime’s evaluation of heap objects. Let’s zoom into two
+benchmark programs that show the largest signal: <code class="docutils literal notranslate"><span class="pre">primes</span></code> which shows <code class="docutils literal notranslate"><span class="pre">TNTC</span></code>
+performing 55% faster than <code class="docutils literal notranslate"><span class="pre">NO-TNTC</span></code>, and <code class="docutils literal notranslate"><span class="pre">awards</span></code> which shows <code class="docutils literal notranslate"><span class="pre">NO-TNTC</span></code>
+performing 7% faster than <code class="docutils literal notranslate"><span class="pre">TNTC</span></code>. We’ll focus on <code class="docutils literal notranslate"><span class="pre">awards</span></code> because we want to
+understand why exactly tables-next-to-code is degrades for this exact program.</p>
+</section>
+<section id="awards">
+<h2><span class="section-number">2.1.3.5. </span>Awards<a class="headerlink" href="#awards" title="Link to this heading">¶</a></h2>
+<p>Here is the full <code class="docutils literal notranslate"><span class="pre">awards</span></code> program:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">import</span><span class="w"> </span><span class="nn">QSort</span>
+<span class="kr">import</span><span class="w"> </span><span class="nn">Data.List</span><span class="p">((</span><span class="o">\\</span><span class="p">))</span>
+<span class="kr">import</span><span class="w"> </span><span class="nn">System.Environment</span>
+<span class="kr">import</span><span class="w"> </span><span class="nn">Control.Monad</span>
+
+<span class="c1">-- Generate all possible permutations of length m from a list of scores</span>
+<span class="nf">perms</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="kt">[]</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">[]</span>
+<span class="nf">perms</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">l</span><span class="w">  </span><span class="ow">=</span><span class="w"> </span><span class="n">map</span><span class="w"> </span><span class="p">(</span><span class="kt">:</span><span class="w"> </span><span class="kt">[]</span><span class="p">)</span><span class="w"> </span><span class="n">l</span>
+<span class="nf">perms</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="kt">:</span><span class="n">ns</span><span class="p">)</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">map</span><span class="w"> </span><span class="p">((</span><span class="kt">:</span><span class="p">)</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">perms</span><span class="w"> </span><span class="p">(</span><span class="n">m</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">ns</span><span class="p">)</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="n">perms</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="n">ns</span>
+
+<span class="c1">-- Find the (sorted) list of possible awards for a list of scores</span>
+<span class="nf">awards</span><span class="w"> </span><span class="n">scores</span><span class="w"> </span><span class="ow">=</span>
+<span class="w">     </span><span class="n">award</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;Gold&quot;</span><span class="p">,</span><span class="mi">70</span><span class="p">)</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="n">award</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;Silver&quot;</span><span class="p">,</span><span class="mi">60</span><span class="p">)</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="n">award</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;Bronze&quot;</span><span class="p">,</span><span class="mi">50</span><span class="p">)</span>
+<span class="w">     </span><span class="kr">where</span><span class="w"> </span><span class="n">sumscores</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">map</span><span class="w"> </span><span class="p">(</span><span class="nf">\</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="p">(</span><span class="n">sum</span><span class="w"> </span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="n">perms</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="n">scores</span><span class="p">)</span>
+<span class="w">           </span><span class="n">atleast</span><span class="w"> </span><span class="n">threshold</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">filter</span><span class="w"> </span><span class="p">(</span><span class="nf">\</span><span class="p">(</span><span class="n">sum</span><span class="p">,</span><span class="n">p</span><span class="p">)</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">threshold</span><span class="p">)</span><span class="w"> </span><span class="n">sumscores</span>
+<span class="w">           </span><span class="n">award</span><span class="w"> </span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">threshold</span><span class="p">)</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">map</span><span class="w"> </span><span class="p">(</span><span class="nf">\</span><span class="w"> </span><span class="n">ps</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">ps</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="n">sort</span><span class="w"> </span><span class="p">(</span><span class="n">atleast</span><span class="w"> </span><span class="n">threshold</span><span class="p">))</span>
+
+<span class="c1">-- Find all possible awards for a list of scores, counting each score once only</span>
+<span class="nf">findawards</span><span class="w"> </span><span class="n">scores</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">null</span><span class="w"> </span><span class="n">theawards</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">[]</span>
+<span class="w">               </span><span class="o">|</span><span class="w"> </span><span class="n">otherwise</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">firstaward</span><span class="w"> </span><span class="kt">:</span><span class="w"> </span><span class="n">findawards</span><span class="w"> </span><span class="p">(</span><span class="n">scores</span><span class="w"> </span><span class="o">\\</span><span class="w"> </span><span class="n">perm</span><span class="p">)</span>
+<span class="w">     </span><span class="kr">where</span><span class="w"> </span><span class="n">firstaward</span><span class="o">@</span><span class="p">(</span><span class="n">award</span><span class="p">,(</span><span class="n">sum</span><span class="p">,</span><span class="n">perm</span><span class="p">))</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">head</span><span class="w"> </span><span class="n">theawards</span>
+<span class="w">           </span><span class="n">theawards</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">awards</span><span class="w"> </span><span class="n">scores</span>
+
+<span class="c1">-- Find the awards for all competitors, each competitor is a pair of</span>
+<span class="c1">-- (Name, list of scores)</span>
+<span class="nf">findallawards</span><span class="w"> </span><span class="n">competitors</span><span class="w"> </span><span class="ow">=</span>
+<span class="w">     </span><span class="n">map</span><span class="w"> </span><span class="p">(</span><span class="nf">\</span><span class="w"> </span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">scores</span><span class="p">)</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">findawards</span><span class="w"> </span><span class="n">scores</span><span class="p">))</span><span class="w"> </span><span class="n">competitors</span>
+
+<span class="nf">competitors</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">=</span>
+<span class="w">  </span><span class="p">[</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;Simon&quot;</span><span class="p">,[</span><span class="mi">35</span><span class="p">,</span><span class="mi">27</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="mi">34</span><span class="p">,</span><span class="mi">21</span><span class="p">])</span>
+<span class="w">  </span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;Hans&quot;</span><span class="p">,[</span><span class="mi">23</span><span class="p">,</span><span class="mi">19</span><span class="p">,</span><span class="mi">45</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="mi">17</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">14</span><span class="p">])</span>
+<span class="w">  </span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;Phil&quot;</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">18</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="mi">19</span><span class="p">,</span><span class="mi">34</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">21</span><span class="p">])</span>
+<span class="w">  </span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;Kevin&quot;</span><span class="p">,[</span><span class="mi">9</span><span class="p">,</span><span class="mi">23</span><span class="p">,</span><span class="mi">17</span><span class="p">,</span><span class="mi">54</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="mi">41</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">18</span><span class="p">,</span><span class="mi">14</span><span class="p">])</span>
+<span class="w">  </span><span class="p">]</span>
+
+<span class="nf">main</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kr">do</span>
+<span class="w">  </span><span class="p">(</span><span class="n">n</span><span class="kt">:</span><span class="kr">_</span><span class="p">)</span><span class="w"> </span><span class="ow">&lt;-</span><span class="w"> </span><span class="n">getArgs</span>
+<span class="w">  </span><span class="n">forM_</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="o">..</span><span class="n">read</span><span class="w"> </span><span class="n">n</span><span class="p">]</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="nf">\</span><span class="n">i</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kr">do</span>
+<span class="w">    </span><span class="n">print</span><span class="w"> </span><span class="p">(</span><span class="n">findallawards</span><span class="w"> </span><span class="p">(</span><span class="n">competitors</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="p">`</span><span class="n">mod</span><span class="p">`</span><span class="w"> </span><span class="mi">100</span><span class="p">)))</span>
+</pre></div>
+</div>
+<p>Notice that the only higher-ordered function is <code class="docutils literal notranslate"><span class="pre">map</span></code> and that all of the
+function arguments to <code class="docutils literal notranslate"><span class="pre">map</span></code> are <a class="reference internal" href="../../glossary.html#term-Known-Function"><span class="xref std std-term">known function</span></a>’s because they are
+lambdas. Note that this implementation does use a quick sort implementation
+defined in <code class="docutils literal notranslate"><span class="pre">QSort</span></code> that I have elided.</p>
+</section>
+<section id="inspecting-with-perf">
+<h2><span class="section-number">2.1.3.6. </span>Inspecting with Perf<a class="headerlink" href="#inspecting-with-perf" title="Link to this heading">¶</a></h2>
+<p>To investigate we’ll compile and run the program in <code class="docutils literal notranslate"><span class="pre">perf</span></code>. Perf is a
+statistical profiler that outputs key CPU counters (these counters are called
+<a class="reference external" href="https://www.intel.com/content/www/us/en/developer/articles/tool/performance-counter-monitor.html">PMC</a>’s
+for the curious).</p>
+<p>We begin with <code class="docutils literal notranslate"><span class="pre">perf</span> <span class="pre">stat</span></code> to get an overview of system behavior:</p>
+<p><code class="docutils literal notranslate"><span class="pre">TNTC</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>../../../_build/stage1/bin/ghc<span class="w"> </span>-fforce-recomp<span class="w"> </span>-O2<span class="w"> </span>Main.hs
+$<span class="w"> </span>perf<span class="w"> </span>stat<span class="w"> </span>--<span class="w"> </span>./Main<span class="w"> </span><span class="m">1000000</span><span class="w"> </span>&gt;<span class="w"> </span>/dev/null
+
+Performance<span class="w"> </span>counter<span class="w"> </span>stats<span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="s1">&#39;./Main 1000000&#39;</span>:
+
+<span class="w">        </span><span class="m">74</span>,973.30<span class="w"> </span>msec<span class="w"> </span>task-clock<span class="w">                </span><span class="c1">#    0.998 CPUs utilized</span>
+<span class="w">           </span><span class="m">13</span>,878<span class="w">      </span>context-switches<span class="w">          </span><span class="c1">#  185.106 /sec</span>
+<span class="w">              </span><span class="m">326</span><span class="w">      </span>cpu-migrations<span class="w">            </span><span class="c1">#    4.348 /sec</span>
+<span class="w">            </span><span class="m">1</span>,343<span class="w">      </span>page-faults<span class="w">               </span><span class="c1">#   17.913 /sec</span>
+<span class="w">  </span><span class="m">304</span>,754,865,610<span class="w">      </span>cycles<span class="w">                    </span><span class="c1">#    4.065 GHz</span>
+<span class="w">    </span><span class="m">4</span>,568,540,020<span class="w">      </span>stalled-cycles-frontend<span class="w">   </span><span class="c1">#    1.50% frontend cycles idle</span>
+<span class="w">   </span><span class="m">30</span>,297,886,463<span class="w">      </span>stalled-cycles-backend<span class="w">    </span><span class="c1">#    9.94% backend cycles idle</span>
+<span class="w">  </span><span class="m">446</span>,573,548,830<span class="w">      </span>instructions<span class="w">              </span><span class="c1">#    1.47  insn per cycle</span>
+<span class="w">                                                 </span><span class="c1">#    0.07  stalled cycles per insn</span>
+<span class="w">   </span><span class="m">93</span>,343,159,669<span class="w">      </span>branches<span class="w">                  </span><span class="c1">#    1.245 G/sec</span>
+<span class="w">    </span><span class="m">2</span>,225,134,283<span class="w">      </span>branch-misses<span class="w">             </span><span class="c1">#    2.38% of all branches</span>
+
+<span class="w">     </span><span class="m">75</span>.094121462<span class="w"> </span>seconds<span class="w"> </span><span class="nb">time</span><span class="w"> </span>elapsed
+
+<span class="w">     </span><span class="m">74</span>.605982000<span class="w"> </span>seconds<span class="w"> </span>user
+<span class="w">      </span><span class="m">0</span>.360473000<span class="w"> </span>seconds<span class="w"> </span>sys
+</pre></div>
+</div>
+<p>This output is particular to my machine, your output is likely to be different
+especially if you are using an Intel CPU rather than an AMD CPU. Consult the
+<a class="reference external" href="https://perf.wiki.kernel.org/index.php/Main_Page">perf wiki</a> or Brendan
+Gregg’s <a class="reference external" href="https://www.brendangregg.com/linuxperf.html">perf page</a> for details.</p>
+<p><code class="docutils literal notranslate"><span class="pre">perf</span> <span class="pre">stat</span></code> will create a file with the raw data called <code class="docutils literal notranslate"><span class="pre">perf.data</span></code>. If you
+run perf many times then the old data will be stored in <code class="docutils literal notranslate"><span class="pre">perf.data.old</span></code>.
+Counters give a low level view of how our program is interacting with the
+operating system and our machine. Here is a description of each counter perf
+reported in order:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">task-clock:u</span></code>: the <code class="docutils literal notranslate"><span class="pre">:u</span></code> is a <a class="reference external" href="https://perf.wiki.kernel.org/index.php/Tutorial#Counting_with_perf_stat">modifier</a>
+meaning the measured events are <code class="docutils literal notranslate"><span class="pre">user</span> <span class="pre">level</span></code> events, as opposed to <code class="docutils literal notranslate"><span class="pre">:k</span></code>
+meaning kernel level; see the <code class="docutils literal notranslate"><span class="pre">perf-list</span></code> man page for more. <code class="docutils literal notranslate"><span class="pre">task-clock</span></code>
+is a pre-defined software event that counts the time spent on the instrumented
+process. Not shown here is <code class="docutils literal notranslate"><span class="pre">cpu-clock</span></code> which measures the passage of time
+using the Linux CPU clock.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">context-switches</span></code>: A context-switch is occurs when the operating system
+switches the CPU from executing one process or thread to another. Here we see
+13,878 such switches.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cpu-migration</span></code>: Records the number of times the process moves from one CPU
+core to another during execution.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">page-faults</span></code>: This counts the number of times the process accesses memory
+that is not mapped into the current address space, thus requiring the
+operating system to load the memory page from disk. This metric counts both
+soft page faults and hard page faults.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cycles</span></code>: This counts the number of CPU clock cycles the processor executed
+for the process.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stalled-cycles-frontend</span></code>: This counts the number of CPU clock cycles during
+which the frontend of the CPU was waiting to fetch and decode instructions.
+There can be several reasons for frontend stalls, ranging from instruction
+cache misses, to branch mispredictions, to code bloat <a class="footnote-reference brackets" href="#id14" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stalled-cycles-backend</span></code>: This counts the number of CPU clock cycles during
+which the CPU backend was unable to execute instructions. A high count of
+stalled backend cycles means the CPU backend was waiting a long time in order
+to execute instructions. This usually implies data problems such as resource
+conflicts, lots of fetching data from disk, or data dependencies that
+prevented instruction level parallelism.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">instructions</span></code>: This counts the total number of instructions executed by the
+CPU for the process.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">branches</span></code>: This counts the total number of branch instructions that were
+executed by the CPU for the process.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">branch-misses</span></code>: This counts the number of times the branch predictor
+made the wrong branch prediction. Branch-misses reduce runtime
+performance because they lead to pipeline stalls.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">seconds</span> <span class="pre">time</span> <span class="pre">elapsed</span></code>: This is the total elapsed time from start to end of
+the perf profiling session.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">seconds</span> <span class="pre">user</span></code>: This is the total amount of CPU time spent in user-mode.
+This includes application code and libraries the process invokes.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">seconds</span> <span class="pre">sys</span></code>: This is the total amount CPU time spent executing in
+kernel-mode. This includes time spent on interrupts and syscalls.</p></li>
+</ul>
+<p>Now let’s check <code class="docutils literal notranslate"><span class="pre">NO-TNTC</span></code>:</p>
+<p><code class="docutils literal notranslate"><span class="pre">NO-TNTC</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>perf<span class="w"> </span>stat<span class="w"> </span>--<span class="w"> </span>./Main<span class="w"> </span><span class="m">1000000</span><span class="w"> </span>&gt;<span class="w"> </span>/dev/null
+Performance<span class="w"> </span>counter<span class="w"> </span>stats<span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="s1">&#39;./Main 1000000&#39;</span>:
+
+<span class="w">        </span><span class="m">73</span>,546.79<span class="w"> </span>msec<span class="w"> </span>task-clock<span class="w">                </span><span class="c1">#    0.996 CPUs utilized</span>
+<span class="w">           </span><span class="m">16</span>,798<span class="w">      </span>context-switches<span class="w">          </span><span class="c1">#  228.399 /sec</span>
+<span class="w">              </span><span class="m">238</span><span class="w">      </span>cpu-migrations<span class="w">            </span><span class="c1">#    3.236 /sec</span>
+<span class="w">            </span><span class="m">1</span>,341<span class="w">      </span>page-faults<span class="w">               </span><span class="c1">#   18.233 /sec</span>
+<span class="w">  </span><span class="m">299</span>,326,299,033<span class="w">      </span>cycles<span class="w">                    </span><span class="c1">#    4.070 GHz</span>
+<span class="w">    </span><span class="m">6</span>,508,574,913<span class="w">      </span>stalled-cycles-frontend<span class="w">   </span><span class="c1">#    2.17% frontend cycles idle</span>
+<span class="w">   </span><span class="m">30</span>,769,082,101<span class="w">      </span>stalled-cycles-backend<span class="w">    </span><span class="c1">#   10.28% backend cycles idle</span>
+<span class="w">  </span><span class="m">463</span>,247,432,092<span class="w">      </span>instructions<span class="w">              </span><span class="c1">#    1.55  insn per cycle</span>
+<span class="w">                                                 </span><span class="c1">#    0.07  stalled cycles per insn</span>
+<span class="w">   </span><span class="m">97</span>,175,762,387<span class="w">      </span>branches<span class="w">                  </span><span class="c1">#    1.321 G/sec</span>
+<span class="w">    </span><span class="m">2</span>,544,161,517<span class="w">      </span>branch-misses<span class="w">             </span><span class="c1">#    2.62% of all branches</span>
+
+<span class="w">     </span><span class="m">73</span>.828987308<span class="w"> </span>seconds<span class="w"> </span><span class="nb">time</span><span class="w"> </span>elapsed
+
+<span class="w">     </span><span class="m">73</span>.256927000<span class="w"> </span>seconds<span class="w"> </span>user
+<span class="w">      </span><span class="m">0</span>.276380000<span class="w"> </span>seconds<span class="w"> </span>sys
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">NO-TNTC</span></code> is roughly identical to <code class="docutils literal notranslate"><span class="pre">TNTC</span></code>. What is surprising is that
+<code class="docutils literal notranslate"><span class="pre">NO-TNTC</span></code> is about 2 seconds faster than <code class="docutils literal notranslate"><span class="pre">TNTC</span></code> even though it processes 17
+billion more instructions and 4 billion more branches. Also note that <code class="docutils literal notranslate"><span class="pre">TNTC</span></code>
+took 304 billion cycles, while <code class="docutils literal notranslate"><span class="pre">NO-TNTC</span></code> took 299 billion cycles. This is
+suspicious, and is suggestive of some kind of cache-miss because <code class="docutils literal notranslate"><span class="pre">TNTC</span></code> is
+taking <em>more</em> cycles to execute <em>less</em> instructions.</p>
+<section id="checking-the-l1-cache">
+<h3><span class="section-number">2.1.3.6.1. </span>Checking the L1 cache<a class="headerlink" href="#checking-the-l1-cache" title="Link to this heading">¶</a></h3>
+<p>Let’s zoom in on the CPU caches. To do so we’ll ask perf to only record events
+that for the L1 cache. You can list all of the available software and hardware
+events with <code class="docutils literal notranslate"><span class="pre">perf</span> <span class="pre">stat</span></code>, for example we can just get the counters for the L1
+cache:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>perf<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>L1-.cache
+
+<span class="w">  </span>L1-dcache-loads<span class="w"> </span>OR<span class="w"> </span>cpu/L1-dcache-loads/
+<span class="w">  </span>L1-dcache-load-misses<span class="w"> </span>OR<span class="w"> </span>cpu/L1-dcache-load-misses/
+<span class="w">  </span>L1-dcache-prefetches<span class="w"> </span>OR<span class="w"> </span>cpu/L1-dcache-prefetches/
+<span class="w">  </span>L1-icache-loads<span class="w"> </span>OR<span class="w"> </span>cpu/L1-icache-loads/
+<span class="w">  </span>L1-icache-load-misses<span class="w"> </span>OR<span class="w"> </span>cpu/L1-icache-load-misses/
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Perf is capable of instrumenting <code class="docutils literal notranslate"><span class="pre">raw</span> <span class="pre">counters</span></code> that are not
+displayed in <code class="docutils literal notranslate"><span class="pre">perf</span> <span class="pre">list</span></code>. These counters are full of interesting
+information. For example, <code class="docutils literal notranslate"><span class="pre">L2_LINES_OUT.DEMAND_CLEAN</span></code> is described as L2
+cache lines evicted by demand in <a class="reference external" href="https://www.intel.com/content/dam/www/public/us/en/documents/manuals/64-ia-32-architectures-software-developer-vol-3b-part-2-manual.pdf">Intel 64 and IA-32 Architectures Software
+Developer’s Manual Volume 3B: System Programming Guide, Part 2</a>.
+For AMD hardware see Section 13.2 of <a class="reference external" href="https://www.amd.com/content/dam/amd/en/documents/processor-tech-docs/programmer-references/24593.pdf">AMD64 Architecture Programmer’s Manual
+Volume 2: System Programming</a>.
+To see how to utilize these raw counter with perf, see the <a class="reference external" href="https://www.brendangregg.com/perf.html#More">this section</a> of Brendan Gregg’s perf
+resources.</p>
+</div>
+<p>and now we instrument perf to collect these counters for our program, note that
+I am showing L1 cache misses here, but you could repeat this analysis with any
+event of your choice:</p>
+<p><code class="docutils literal notranslate"><span class="pre">TNTC</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="w">  </span>$<span class="w"> </span>perf<span class="w"> </span>stat<span class="w"> </span>-e<span class="w"> </span>L1-dcache-load-misses,L1-dcache-loads,L1-icache-loads,L1-icache-load-misses,iTLB-loads,iTLB-load-misses<span class="w"> </span>--<span class="w"> </span>./Main<span class="w"> </span><span class="m">1000000</span><span class="w"> </span>&gt;<span class="w"> </span>/dev/null
+
+
+<span class="w">   </span>Performance<span class="w"> </span>counter<span class="w"> </span>stats<span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="s1">&#39;./Main 1000000&#39;</span>:
+
+<span class="w">  </span><span class="m">4</span>,484,273,070<span class="w">      </span>L1-dcache-load-misses<span class="w"> </span><span class="c1">#   2.37% of all L1-dcache accesses</span>
+<span class="m">189</span>,375,754,119<span class="w">      </span>L1-dcache-loads
+<span class="w"> </span><span class="m">51</span>,013,174,365<span class="w">      </span>L1-icache-loads
+<span class="w">  </span><span class="m">8</span>,601,767,295<span class="w">      </span>L1-icache-load-misses<span class="w"> </span><span class="c1">#   16.86% of all L1-icache accesses</span>
+
+<span class="w">   </span><span class="m">74</span>.512034367<span class="w"> </span>seconds<span class="w"> </span><span class="nb">time</span><span class="w"> </span>elapsed
+
+<span class="w">   </span><span class="m">74</span>.457035000<span class="w"> </span>seconds<span class="w"> </span>user
+<span class="w">    </span><span class="m">0</span>.096120000<span class="w"> </span>seconds<span class="w"> </span>sys
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">TNTC</span></code> shows a whopping 8.6 billion (roughly 16%) instruction cache load
+misses. Let’s check <code class="docutils literal notranslate"><span class="pre">NO-TNTC</span></code>:</p>
+<p><code class="docutils literal notranslate"><span class="pre">NO-TNTC</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="w"> </span>Performance<span class="w"> </span>counter<span class="w"> </span>stats<span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="s1">&#39;./Main 1000000&#39;</span>:
+
+<span class="w">  </span><span class="m">4</span>,607,677,283<span class="w">      </span>L1-dcache-load-misses<span class="w"> </span><span class="c1">#    2.03% of all L1-dcache accesses</span>
+<span class="m">227</span>,182,887,281<span class="w">      </span>L1-dcache-loads
+<span class="w"> </span><span class="m">53</span>,627,901,936<span class="w">      </span>L1-icache-loads
+<span class="w">  </span><span class="m">3</span>,579,524,387<span class="w">      </span>L1-icache-load-misses<span class="w"> </span><span class="c1">#    6.67% of all L1-icache accesses</span>
+
+<span class="w">   </span><span class="m">73</span>.919326122<span class="w"> </span>seconds<span class="w"> </span><span class="nb">time</span><span class="w"> </span>elapsed
+
+<span class="w">   </span><span class="m">73</span>.520569000<span class="w"> </span>seconds<span class="w"> </span>user
+<span class="w">    </span><span class="m">0</span>.252386000<span class="w"> </span>seconds<span class="w"> </span>sys
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">NO-TNTC</span></code> shows 3.5 billion L1 instruction cache misses, that is 5 billion
+less than <code class="docutils literal notranslate"><span class="pre">TNTC</span></code>. This is the likely cause of the runtime difference between
+the two.</p>
+<p>But we can go farther. Since we can instrument the <code class="docutils literal notranslate"><span class="pre">awards</span></code> benchmark with
+DWARF symbols with the <code class="docutils literal notranslate"><span class="pre">TNTC</span></code> enabled GHC, we can annotate the Haskell source
+code with counts of <code class="docutils literal notranslate"><span class="pre">L1-icache-load-misses</span></code>. To do so we’ll run <code class="docutils literal notranslate"><span class="pre">perf</span></code>
+<code class="docutils literal notranslate"><span class="pre">record</span></code> and then construct a report with <code class="docutils literal notranslate"><span class="pre">perf</span> <span class="pre">report</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>perf<span class="w"> </span>record<span class="w"> </span>-e<span class="w"> </span>L1-icache-load-misses<span class="w"> </span>--<span class="w"> </span>./Main<span class="w"> </span><span class="m">1000000</span><span class="w"> </span>&gt;<span class="w"> </span>/dev/null
+<span class="o">[</span><span class="w"> </span>perf<span class="w"> </span>record:<span class="w"> </span>Woken<span class="w"> </span>up<span class="w"> </span><span class="m">44</span><span class="w"> </span><span class="nb">times</span><span class="w"> </span>to<span class="w"> </span>write<span class="w"> </span>data<span class="w"> </span><span class="o">]</span>
+<span class="o">[</span><span class="w"> </span>perf<span class="w"> </span>record:<span class="w"> </span>Captured<span class="w"> </span>and<span class="w"> </span>wrote<span class="w"> </span><span class="m">11</span>.002<span class="w"> </span>MB<span class="w"> </span>perf.data<span class="w"> </span><span class="o">(</span><span class="m">287440</span><span class="w"> </span>samples<span class="o">)</span><span class="w"> </span><span class="o">]</span>
+
+$<span class="w"> </span>perf<span class="w"> </span>report
+<span class="c1"># To display the perf.data header info, please use --header/--header-only options.</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1"># Total Lost Samples: 0</span>
+<span class="c1">#</span>
+<span class="c1"># Samples: 268K of event &#39;L1-icache-load-misses&#39;</span>
+<span class="c1"># Event count (approx.): 5137935523</span>
+<span class="c1">#</span>
+<span class="c1"># Overhead  Command     Shared Object         Symbol</span>
+<span class="c1"># ........  ..........  ....................  ............................................................................</span>
+<span class="c1">#</span>
+<span class="w">    </span><span class="m">10</span>.10%<span class="w">  </span>Main<span class="w">        </span>Main<span class="w">                  </span><span class="o">[</span>.<span class="o">]</span><span class="w"> </span>ghczmbignum_GHCziNumziInteger_integerAdd_info
+<span class="w">     </span><span class="m">7</span>.94%<span class="w">  </span>Main<span class="w">        </span>Main<span class="w">                  </span><span class="o">[</span>.<span class="o">]</span><span class="w"> </span>stg_upd_frame_info+0xffffffffffc00003
+<span class="w">     </span><span class="m">5</span>.79%<span class="w">  </span>Main<span class="w">        </span>Main<span class="w">                  </span><span class="o">[</span>.<span class="o">]</span><span class="w"> </span>ghczminternal_GHCziInternalziBase_map_info
+<span class="w">     </span><span class="m">3</span>.91%<span class="w">  </span>Main<span class="w">        </span>Main<span class="w">                  </span><span class="o">[</span>.<span class="o">]</span><span class="w"> </span>_ghczminternal_GHCziInternalziIOziHandleziText_zdwwriteBlocks_r5v0_entry
+<span class="w">     </span><span class="m">3</span>.76%<span class="w">  </span>Main<span class="w">        </span>Main<span class="w">                  </span><span class="o">[</span>.<span class="o">]</span><span class="w"> </span>stg_unpack_cstring_utf8_info+0xffffffffffc00064
+<span class="w">     </span><span class="m">3</span>.47%<span class="w">  </span>Main<span class="w">        </span>Main<span class="w">                  </span><span class="o">[</span>.<span class="o">]</span><span class="w"> </span>ghczmbignum_GHCziNumziInteger_integerGe_info
+<span class="w">     </span><span class="m">3</span>.10%<span class="w">  </span>Main<span class="w">        </span>Main<span class="w">                  </span><span class="o">[</span>.<span class="o">]</span><span class="w"> </span>stg_IND_STATIC_info+0xffffffffffc00004
+<span class="w">     </span><span class="m">2</span>.56%<span class="w">  </span>Main<span class="w">        </span>Main<span class="w">                  </span><span class="o">[</span>.<span class="o">]</span><span class="w"> </span>ghczmbignum_GHCziNumziInteger_integerSub_info
+<span class="w">     </span><span class="m">2</span>.14%<span class="w">  </span>Main<span class="w">        </span>Main<span class="w">                  </span><span class="o">[</span>.<span class="o">]</span><span class="w"> </span>_ghczminternal_GHCziInternalziBase_sat_s4Ew_entry
+<span class="w">     </span><span class="m">2</span>.00%<span class="w">  </span>Main<span class="w">        </span>Main<span class="w">                  </span><span class="o">[</span>.<span class="o">]</span><span class="w"> </span>_ghczminternal_GHCziInternalziBase_sat_s4Ex_entry
+</pre></div>
+</div>
+<p>We see that perf reports 10% of the misses come from the
+<code class="docutils literal notranslate"><span class="pre">ghc-bignum::GHC.Num.Integer.integerAdd</span></code> info table, ~6% comes from the
+<code class="docutils literal notranslate"><span class="pre">ghc-internal::Ghc.Internal.Base.map</span></code> info table, and ~3.5% come from
+<code class="docutils literal notranslate"><span class="pre">ghc-bignum::GHC.Num.Integer.integerGe</span></code> (i.e., a greater-than comparison).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In general, symbols from the runtime system such as
+<code class="docutils literal notranslate"><span class="pre">stg_upd_frame_info...</span></code> will occur in the perf output. Typically you do not
+need to consider them because by virtue of being part of the runtime system and
+they will change in response to optimizing the source code.</p>
+</div>
+<p>By default perf opens a TUI and displays samples by function symbol. There are
+other display options, for example we can instrument the report by command and
+by shared object by passing <code class="docutils literal notranslate"><span class="pre">--sort</span> <span class="pre">comm,dso</span></code>. We can also print to <code class="docutils literal notranslate"><span class="pre">stdout</span></code>
+by passing <code class="docutils literal notranslate"><span class="pre">--stdio</span></code> and emit machine information with <code class="docutils literal notranslate"><span class="pre">--header</span></code>. Here is
+an example of such an invocation:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>perf<span class="w"> </span>report<span class="w"> </span>--stdio<span class="w"> </span>--sort<span class="w"> </span>comm,dso
+<span class="c1"># To display the perf.data header info, please use --header/--header-only options.</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1"># Total Lost Samples: 0</span>
+<span class="c1">#</span>
+<span class="c1"># Samples: 262K of event &#39;L1-icache-load-misses&#39;</span>
+<span class="c1"># Event count (approx.): 3955381394</span>
+<span class="c1">#</span>
+<span class="c1"># Overhead  Command     Shared Object</span>
+<span class="c1"># ........  ..........  .................</span>
+<span class="c1">#</span>
+<span class="w">    </span><span class="m">99</span>.04%<span class="w">  </span>Main<span class="w">        </span>Main
+<span class="w">     </span><span class="m">0</span>.62%<span class="w">  </span>Main<span class="w">        </span><span class="o">[</span>kernel.kallsyms<span class="o">]</span>
+<span class="w">     </span><span class="m">0</span>.13%<span class="w">  </span>ghc_ticker<span class="w">  </span><span class="o">[</span>kernel.kallsyms<span class="o">]</span>
+<span class="w">     </span><span class="m">0</span>.10%<span class="w">  </span>Main<span class="w">        </span><span class="o">[</span>nvidia<span class="o">]</span>
+<span class="w">     </span><span class="m">0</span>.05%<span class="w">  </span>Main<span class="w">        </span>libc.so.6
+<span class="w">     </span><span class="m">0</span>.02%<span class="w">  </span>ghc_ticker<span class="w">  </span>Main
+<span class="w">     </span><span class="m">0</span>.01%<span class="w">  </span>Main<span class="w">        </span><span class="o">[</span>vdso<span class="o">]</span>
+<span class="w">     </span><span class="m">0</span>.01%<span class="w">  </span>Main<span class="w">        </span><span class="o">[</span>xhci_hcd<span class="o">]</span>
+<span class="w">     </span><span class="m">0</span>.01%<span class="w">  </span>ghc_ticker<span class="w">  </span>libc.so.6
+<span class="w">     </span><span class="m">0</span>.00%<span class="w">  </span>Main<span class="w">        </span><span class="o">[</span>usbcore<span class="o">]</span>
+<span class="w">     </span><span class="m">0</span>.00%<span class="w">  </span>Main<span class="w">        </span><span class="o">[</span>hid<span class="o">]</span>
+<span class="w">     </span><span class="m">0</span>.00%<span class="w">  </span>Main<span class="w">        </span><span class="o">[</span>snd_usb_audio<span class="o">]</span>
+<span class="w">     </span><span class="m">0</span>.00%<span class="w">  </span>Main<span class="w">        </span><span class="o">[</span>nvidia_uvm<span class="o">]</span>
+<span class="w">     </span><span class="m">0</span>.00%<span class="w">  </span>Main<span class="w">        </span><span class="o">[</span>nvidia_modeset<span class="o">]</span>
+<span class="w">     </span><span class="m">0</span>.00%<span class="w">  </span>Main<span class="w">        </span><span class="o">[</span>evdev<span class="o">]</span>
+<span class="w">     </span><span class="m">0</span>.00%<span class="w">  </span>perf-exec<span class="w">   </span><span class="o">[</span>kernel.kallsyms<span class="o">]</span>
+</pre></div>
+</div>
+<p>For our purposes with <code class="docutils literal notranslate"><span class="pre">awards</span></code> this isn’t useful because we only have a single
+module. If we had more modules and packages then sorting by shared object would
+help us pinpoint the package where the regression we’re interested in occurred.
+Here is an example of the header:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>perf<span class="w"> </span>report<span class="w"> </span>--stdio<span class="w"> </span>--header
+<span class="c1"># ========</span>
+<span class="c1"># captured on    : Tue Apr  9 14:12:28 2024</span>
+<span class="c1"># header version : 1</span>
+<span class="c1"># data offset    : 320</span>
+<span class="c1"># data size      : 10527008</span>
+<span class="c1"># feat offset    : 10527328</span>
+<span class="c1"># hostname : 7thChamber</span>
+<span class="c1"># os release : 6.7.9-xanmod1</span>
+<span class="c1"># perf version : 6.6.21</span>
+<span class="c1"># arch : x86_64</span>
+<span class="c1"># nrcpus online : 8</span>
+<span class="c1"># nrcpus avail : 8</span>
+<span class="c1"># cpudesc : AMD Ryzen 7 2700X Eight-Core Processor</span>
+<span class="c1"># cpuid : AuthenticAMD,23,8,2</span>
+<span class="c1"># total memory : 65758408 kB</span>
+<span class="c1"># cmdline : /nix/store/z7vdgrrvg38hac3qns4hf2xpzhbjh1vk-perf-linux-6.6.21/bin/.perf-wrapped record -e L1-icache-load-misses -- ./Main 1000000</span>
+<span class="c1"># event : name = L1-icache-load-misses, , id = { 31, 32, 33, 34, 35, 36, 37, 38 }, type = 3 (PERF_TYPE_HW_CACHE), size = 136, config = 0x10001 (PERF_COUNT_HW_CACHE_RESULT_MISS | PERF_COUNT_HW_CACHE_OP_READ | PERF_COUNT_HW_CACHE_L1I), { sample_period, sample_freq } = 4000, sample_type = IP|TID|TIME|PERIOD, read_format = ID|LOST, disabled = 1, inherit = 1, mmap = 1, comm = 1, freq = 1, enable_on_exec = 1, task = 1, sample_id_all = 1, exclude_guest = 1, mmap2 = 1, comm_exec = 1, ksymbol = 1, bpf_event = 1</span>
+<span class="c1"># CPU_TOPOLOGY info available, use -I to display</span>
+<span class="c1"># NUMA_TOPOLOGY info available, use -I to display</span>
+<span class="c1"># pmu mappings: cpu = 4, amd_iommu_0 = 10, breakpoint = 5, kprobe = 8, msr = 11, power = 12, software = 1, tracepoint = 2, uprobe = 9</span>
+<span class="c1"># CACHE info available, use -I to display</span>
+<span class="c1"># time of first sample : 19867.055233</span>
+<span class="c1"># time of last sample : 19932.760237</span>
+<span class="c1"># sample duration :  65705.004 ms</span>
+<span class="c1"># MEM_TOPOLOGY info available, use -I to display</span>
+<span class="c1"># bpf_prog_info 20: bpf_prog_713a545fe0530ce7_restrict_filesystems addr 0xffffffffc00f06ac size 308</span>
+...
+...<span class="w"> </span><span class="c1">## bunch of bpf output similar to above</span>
+...
+<span class="c1"># cpu pmu capabilities: max_precise=0</span>
+<span class="c1"># missing features: TRACING_DATA BRANCH_STACK GROUP_DESC AUXTRACE STAT CLOCKID DIR_FORMAT COMPRESSED CLOCK_DATA HYBRID_TOPOLOGY</span>
+<span class="c1"># ========</span>
+</pre></div>
+</div>
+<p>Okay back to the program at hand. The perf output has suggested that the
+instruction cache misses are originating from some kind of traversal (hence the
+<code class="docutils literal notranslate"><span class="pre">Base.map</span></code>) which is comparing integers (hence the <code class="docutils literal notranslate"><span class="pre">Num.Integer.integerGe</span></code>)
+and eventually summing (hence the <code class="docutils literal notranslate"><span class="pre">Num.Integer.integerAdd</span></code>). This is enough
+information to roughly guess where the misses are originating from. If we check
+the source code there is only one reference to <code class="docutils literal notranslate"><span class="pre">(&gt;=)</span></code> and it occurs in the
+<code class="docutils literal notranslate"><span class="pre">awards</span></code> function in the <code class="docutils literal notranslate"><span class="pre">atleast</span></code> helper:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">awards</span><span class="w"> </span><span class="n">scores</span><span class="w"> </span><span class="ow">=</span>
+<span class="w">  </span><span class="o">...</span>
+<span class="w">  </span><span class="kr">where</span><span class="w"> </span><span class="n">sumscores</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">map</span><span class="w"> </span><span class="p">(</span><span class="nf">\</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="p">(</span><span class="n">sum</span><span class="w"> </span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="n">perms</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="n">scores</span><span class="p">)</span>
+<span class="w">        </span><span class="n">atleast</span><span class="w"> </span><span class="n">threshold</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">filter</span><span class="w"> </span><span class="p">(</span><span class="nf">\</span><span class="p">(</span><span class="n">sum</span><span class="p">,</span><span class="n">p</span><span class="p">)</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">threshold</span><span class="p">)</span><span class="w"> </span><span class="n">sumscores</span>
+<span class="w">        </span><span class="o">...</span>
+</pre></div>
+</div>
+<p>Notice that <code class="docutils literal notranslate"><span class="pre">atleast</span></code> uses a filter over <code class="docutils literal notranslate"><span class="pre">sumscores</span></code>, our <code class="docutils literal notranslate"><span class="pre">map</span></code> likely
+originates from <code class="docutils literal notranslate"><span class="pre">sumscores</span></code>, and the <code class="docutils literal notranslate"><span class="pre">integerGe</span></code> and <code class="docutils literal notranslate"><span class="pre">integerAdd</span></code> from
+<code class="docutils literal notranslate"><span class="pre">sum</span> <span class="pre">&gt;=</span> <span class="pre">threshold</span></code>. But this is guess work. For optimization we want to
+<a class="reference internal" href="../../Preliminaries/how_to_debug.html#don-t-think-look"><span class="std std-ref">Don’t Think, Look</span></a>, so are sure these functions are the functions we need
+to repair.</p>
+</section>
+<section id="mapping-perf-output-to-the-haskell-program">
+<h3><span class="section-number">2.1.3.6.2. </span>Mapping Perf Output to The Haskell Program<a class="headerlink" href="#mapping-perf-output-to-the-haskell-program" title="Link to this heading">¶</a></h3>
+<p>To connect the perf results with our program we can check the <code class="docutils literal notranslate"><span class="pre">Cmm</span></code> of the
+program to get the <a class="reference internal" href="../../glossary.html#term-Occurrence-Name"><span class="xref std std-term">Occurrence Name</span></a> of the function that is calling the
+symbols we identified above. Note that we could also check the assembly output,
+but <code class="docutils literal notranslate"><span class="pre">Cmm</span></code> is more concise, and because we are inspecting info tables, this
+information will be more explicit in <code class="docutils literal notranslate"><span class="pre">Cmm</span></code>. See the <a class="reference internal" href="../Cmm_Profiling/cmm.html#reading-cmm"><span class="std std-ref">Reading Cmm</span></a> for a refresher if needed. An alternative approach is to use
+<a class="reference internal" href="cachegrind.html#cachegrind-chapter"><span class="std std-ref">Cachegrind</span></a> and annotate the source code by compiling
+with <a class="reference internal" href="../../glossary.html#term-DWARF"><span class="xref std std-term">DWARF</span></a> symbols.</p>
+<p>So we’ll dump all the intermediate representations and count the references to
+<code class="docutils literal notranslate"><span class="pre">integerAdd_info</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1">### dump the IRs</span>
+$<span class="w"> </span>ghc<span class="w"> </span>-fforce-recomp<span class="w"> </span>-O2<span class="w"> </span>-ddump-asm<span class="w"> </span>-ddump-cmm<span class="w"> </span>-ddump-stg-final<span class="w"> </span>-ddump-simpl<span class="w"> </span>-ddump-to-file<span class="w"> </span>-g<span class="w"> </span>Main.hs
+<span class="o">[</span><span class="m">1</span><span class="w"> </span>of<span class="w"> </span><span class="m">3</span><span class="o">]</span><span class="w"> </span>Compiling<span class="w"> </span>QSort<span class="w">            </span><span class="o">(</span><span class="w"> </span>QSort.hs,<span class="w"> </span>QSort.o<span class="w"> </span><span class="o">)</span>
+...
+<span class="o">[</span><span class="m">3</span><span class="w"> </span>of<span class="w"> </span><span class="m">3</span><span class="o">]</span><span class="w"> </span>Linking<span class="w"> </span>Main<span class="w"> </span><span class="o">[</span>Objects<span class="w"> </span>changed<span class="o">]</span>
+</pre></div>
+</div>
+<p>And now count the references:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="o">$</span><span class="w"> </span><span class="n">cat</span><span class="w"> </span><span class="kt">Main</span><span class="o">.</span><span class="n">dump</span><span class="o">-</span><span class="n">cmm</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">grep</span><span class="w"> </span><span class="n">integerAdd_info</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">wc</span><span class="w"> </span><span class="o">-</span><span class="n">l</span>
+<span class="mi">2</span>
+</pre></div>
+</div>
+<p>We have exactly 2 references. What we want is to find the Cmm Label that hold
+the occurrence name. Here is the first match:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">go2_r3RZ_entry</span><span class="nb">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">//</span><span class="w">  </span><span class="p">[</span><span class="kt">R3</span><span class="p">,</span><span class="w"> </span><span class="kt">R2</span><span class="p">]</span>
+<span class="o">...</span>
+<span class="w">    </span><span class="n">c4al</span><span class="kt">:</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">c49Z</span><span class="o">/</span><span class="n">c4a7</span>
+<span class="w">        </span><span class="n">unwind</span><span class="w"> </span><span class="kt">Sp</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">Just</span><span class="w"> </span><span class="kt">Sp</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">I64</span><span class="p">[</span><span class="kt">Sp</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">16</span><span class="p">]</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">c4aa</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">R3</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">P64</span><span class="p">[</span><span class="n">_s3Uf</span><span class="ow">::</span><span class="kt">P64</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">6</span><span class="p">];</span>
+<span class="w">        </span><span class="kt">R2</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">_s3Ug</span><span class="ow">::</span><span class="kt">P64</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">P64</span><span class="p">[</span><span class="kt">Sp</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">8</span><span class="p">]</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">P64</span><span class="p">[</span><span class="n">_s3Uf</span><span class="ow">::</span><span class="kt">P64</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">14</span><span class="p">];</span>
+<span class="w">        </span><span class="kt">Sp</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">Sp</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">16</span><span class="p">;</span>
+<span class="w">        </span><span class="n">unwind</span><span class="w"> </span><span class="kt">Sp</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">Just</span><span class="w"> </span><span class="kt">Sp</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">16</span><span class="p">;</span>
+<span class="w">        </span><span class="n">call</span><span class="w"> </span><span class="kt">GHC</span><span class="o">.</span><span class="kt">Num</span><span class="o">.</span><span class="kt">Integer</span><span class="o">.</span><span class="n">integerAdd_info</span><span class="p">(</span><span class="kt">R3</span><span class="p">,</span>
+<span class="w">                                             </span><span class="kt">R2</span><span class="p">)</span><span class="w"> </span><span class="n">returns</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">c4aa</span><span class="p">,</span><span class="w"> </span><span class="n">args</span><span class="kt">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="kt">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="n">upd</span><span class="kt">:</span><span class="w"> </span><span class="mi">8</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>we see that the occurrence name <code class="docutils literal notranslate"><span class="pre">go2_r3RZ_entry</span></code> calls
+<code class="docutils literal notranslate"><span class="pre">GHC.Num.Integer.integerAdd_info</span></code> with the contents of <code class="docutils literal notranslate"><span class="pre">R3</span></code> and <code class="docutils literal notranslate"><span class="pre">R2</span></code> in
+block label <code class="docutils literal notranslate"><span class="pre">c4al</span></code>.
+Here is the second reference:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kt">Main</span><span class="o">.$</span><span class="n">wmain_entry</span><span class="nb">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">//</span><span class="w">  </span><span class="kt">[]</span>
+<span class="o">...</span>
+<span class="nf">c4nB</span><span class="kt">:</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">c4mR</span><span class="o">/</span><span class="n">c4n2</span><span class="o">/</span><span class="n">c4n9</span><span class="o">/</span><span class="n">c4nf</span><span class="o">/</span><span class="n">c4nk</span><span class="o">/</span><span class="n">c4no</span><span class="o">/</span><span class="n">c4nv</span>
+<span class="w">    </span><span class="n">unwind</span><span class="w"> </span><span class="kt">Sp</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">Just</span><span class="w"> </span><span class="kt">Sp</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">24</span><span class="p">;</span>
+<span class="w">    </span><span class="n">_s3VP</span><span class="ow">::</span><span class="kt">P64</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">P64</span><span class="p">[</span><span class="kt">Sp</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">8</span><span class="p">];</span>
+<span class="w">    </span><span class="kt">I64</span><span class="p">[</span><span class="kt">Sp</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">8</span><span class="p">]</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">c4nD</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">R3</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">lvl16_r3RV_closure</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">R2</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">_s3VP</span><span class="ow">::</span><span class="kt">P64</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">Sp</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">Sp</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">8</span><span class="p">;</span>
+<span class="w">    </span><span class="n">unwind</span><span class="w"> </span><span class="kt">Sp</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">Just</span><span class="w"> </span><span class="kt">Sp</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">16</span><span class="p">;</span>
+<span class="w">    </span><span class="n">call</span><span class="w"> </span><span class="kt">GHC</span><span class="o">.</span><span class="kt">Num</span><span class="o">.</span><span class="kt">Integer</span><span class="o">.</span><span class="n">integerAdd_info</span><span class="p">(</span><span class="kt">R3</span><span class="p">,</span>
+<span class="w">                                         </span><span class="kt">R2</span><span class="p">)</span><span class="w"> </span><span class="n">returns</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">c4nD</span><span class="p">,</span><span class="w"> </span><span class="n">args</span><span class="kt">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="kt">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="n">upd</span><span class="kt">:</span><span class="w"> </span><span class="mi">8</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Notice that both call sites exist in the entry code due to the <code class="docutils literal notranslate"><span class="pre">_entry</span></code>
+suffix. The first call site belongs to the function <code class="docutils literal notranslate"><span class="pre">go2_r3RZ</span></code>, and the second
+is for worker of <code class="docutils literal notranslate"><span class="pre">main</span></code>, hence the <code class="docutils literal notranslate"><span class="pre">$w</span></code> prefix. We’re interested in
+<code class="docutils literal notranslate"><span class="pre">go2_r3RZ</span></code>; if we inspect the <a class="reference internal" href="../Stg_RTS_Profiling/stg.html#reading-stg"><span class="std std-ref">Stg</span></a> we should be able to
+find that occurrence name:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>cat<span class="w"> </span>Main.dump-stg-final<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>go2_r3RZ<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
+<span class="m">3</span>
+</pre></div>
+</div>
+<p>There are three references, here is are the relevant parts of the Stg dump:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kt">Rec</span><span class="w"> </span><span class="p">{</span>
+<span class="nf">go2_r3RZ</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">[</span><span class="kt">GHC</span><span class="o">.</span><span class="kt">Num</span><span class="o">.</span><span class="kt">Integer</span><span class="o">.</span><span class="kt">Integer</span><span class="p">]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">GHC</span><span class="o">.</span><span class="kt">Num</span><span class="o">.</span><span class="kt">Integer</span><span class="o">.</span><span class="kt">Integer</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">GHC</span><span class="o">.</span><span class="kt">Num</span><span class="o">.</span><span class="kt">Integer</span><span class="o">.</span><span class="kt">Integer</span>
+<span class="p">[</span><span class="kt">GblId</span><span class="p">[</span><span class="kt">StrictWorker</span><span class="p">([</span><span class="o">!</span><span class="p">,</span><span class="w"> </span><span class="o">!</span><span class="p">])],</span>
+<span class="w"> </span><span class="kt">Arity</span><span class="ow">=</span><span class="mi">2</span><span class="p">,</span>
+<span class="w"> </span><span class="kt">Str</span><span class="o">=&lt;</span><span class="mi">1</span><span class="kt">L</span><span class="o">&gt;&lt;</span><span class="mi">1</span><span class="kt">L</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w"> </span><span class="kt">Unf</span><span class="ow">=</span><span class="kt">OtherCon</span><span class="w"> </span><span class="kt">[]</span><span class="p">]</span><span class="w"> </span><span class="ow">=</span>
+<span class="w">    </span><span class="p">{}</span><span class="w"> </span><span class="nf">\</span><span class="n">r</span><span class="w"> </span><span class="p">[</span><span class="n">ds_s3Uf</span><span class="w"> </span><span class="n">eta_s3Ug</span><span class="p">]</span>
+<span class="w">        </span><span class="kr">case</span><span class="w"> </span><span class="n">ds_s3Uf</span><span class="w"> </span><span class="kr">of</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="kt">[]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="n">eta_s3Ug</span><span class="p">;</span>
+<span class="w">          </span><span class="kt">:</span><span class="w"> </span><span class="n">y_s3Ui</span><span class="w"> </span><span class="p">[</span><span class="kt">Occ</span><span class="ow">=</span><span class="kt">Once1</span><span class="p">]</span><span class="w"> </span><span class="n">ys_s3Uj</span><span class="w"> </span><span class="p">[</span><span class="kt">Occ</span><span class="ow">=</span><span class="kt">Once1</span><span class="p">]</span><span class="w"> </span><span class="ow">-&gt;</span>
+<span class="w">              </span><span class="kr">case</span>
+<span class="w">                  </span><span class="kt">GHC</span><span class="o">.</span><span class="kt">Num</span><span class="o">.</span><span class="kt">Integer</span><span class="o">.</span><span class="n">integerAdd</span><span class="w"> </span><span class="n">eta_s3Ug</span><span class="w"> </span><span class="n">y_s3Ui</span>
+<span class="w">              </span><span class="kr">of</span>
+<span class="w">              </span><span class="n">sat_s3Uk</span><span class="w"> </span><span class="p">[</span><span class="kt">Occ</span><span class="ow">=</span><span class="kt">Once1</span><span class="p">]</span>
+<span class="w">              </span><span class="p">{</span>
+<span class="w">              </span><span class="n">__DEFAULT</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kr">case</span><span class="w"> </span><span class="n">ys_s3Uj</span><span class="w"> </span><span class="kr">of</span><span class="w"> </span><span class="n">ys_t3WF</span><span class="w"> </span><span class="p">[</span><span class="kt">Occ</span><span class="ow">=</span><span class="kt">Once1</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                 </span><span class="n">__DEFAULT</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="n">go2_r3RZ</span><span class="w"> </span><span class="n">ys_t3WF</span><span class="w"> </span><span class="n">sat_s3Uk</span><span class="p">;</span>
+<span class="w">                 </span><span class="p">};</span>
+<span class="w">              </span><span class="p">};</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="nf">end</span><span class="w"> </span><span class="kt">Rec</span><span class="w"> </span><span class="p">}</span>
+
+<span class="nf">lvl18_r3S0</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">[</span><span class="kt">GHC</span><span class="o">.</span><span class="kt">Num</span><span class="o">.</span><span class="kt">Integer</span><span class="o">.</span><span class="kt">Integer</span><span class="p">]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="p">(</span><span class="kt">GHC</span><span class="o">.</span><span class="kt">Num</span><span class="o">.</span><span class="kt">Integer</span><span class="o">.</span><span class="kt">Integer</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="kt">GHC</span><span class="o">.</span><span class="kt">Num</span><span class="o">.</span><span class="kt">Integer</span><span class="o">.</span><span class="kt">Integer</span><span class="p">])</span>
+<span class="p">[</span><span class="kt">GblId</span><span class="p">,</span><span class="w"> </span><span class="kt">Arity</span><span class="ow">=</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="kt">Str</span><span class="o">=&lt;</span><span class="kt">L</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="kt">Cpr</span><span class="ow">=</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="kt">Unf</span><span class="ow">=</span><span class="kt">OtherCon</span><span class="w"> </span><span class="kt">[]</span><span class="p">]</span><span class="w"> </span><span class="ow">=</span>
+<span class="w">    </span><span class="p">{}</span><span class="w"> </span><span class="nf">\</span><span class="n">r</span><span class="w"> </span><span class="p">[</span><span class="n">p_s3Ul</span><span class="p">]</span>
+<span class="w">        </span><span class="kr">let</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="n">sat_s3Um</span><span class="w"> </span><span class="p">[</span><span class="kt">Occ</span><span class="ow">=</span><span class="kt">Once1</span><span class="p">]</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">GHC</span><span class="o">.</span><span class="kt">Num</span><span class="o">.</span><span class="kt">Integer</span><span class="o">.</span><span class="kt">Integer</span>
+<span class="w">          </span><span class="p">[</span><span class="kt">LclId</span><span class="p">]</span><span class="w"> </span><span class="ow">=</span>
+<span class="w">              </span><span class="p">{</span><span class="n">p_s3Ul</span><span class="p">}</span><span class="w"> </span><span class="nf">\</span><span class="n">u</span><span class="w"> </span><span class="kt">[]</span>
+<span class="w">                  </span><span class="kr">case</span><span class="w"> </span><span class="n">p_s3Ul</span><span class="w"> </span><span class="kr">of</span><span class="w"> </span><span class="n">p_t3WH</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">__DEFAULT</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="n">go2_r3RZ</span><span class="w"> </span><span class="n">p_t3WH</span><span class="w"> </span><span class="n">lvl17_r3RY</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="kr">in</span><span class="w">  </span><span class="p">(,)</span><span class="w"> </span><span class="p">[</span><span class="n">sat_s3Um</span><span class="w"> </span><span class="n">p_s3Ul</span><span class="p">];</span>
+</pre></div>
+</div>
+<p>We see that <code class="docutils literal notranslate"><span class="pre">go2_r3RZ</span></code> is a recursive function with the type: <code class="docutils literal notranslate"><span class="pre">go2_r3RZ</span> <span class="pre">::</span> <span class="pre">[GHC.Num.Integer.Integer]</span> <span class="pre">-&gt;</span> <span class="pre">GHC.Num.Integer.Integer</span> <span class="pre">-&gt;</span> <span class="pre">GHC.Num.Integer.Integer</span></code>. Notably, <code class="docutils literal notranslate"><span class="pre">go2_r3RZ</span></code>’s only call site is in a floated out function
+<code class="docutils literal notranslate"><span class="pre">lvl18_r3S0</span></code> (<code class="docutils literal notranslate"><span class="pre">lvl18_r3S0</span></code> is floated out because it has the <code class="docutils literal notranslate"><span class="pre">lvl</span></code>
+prefix, which only comes from the float out pass in the simplifier). So,
+<code class="docutils literal notranslate"><span class="pre">go2_r3RZ</span></code> takes a list of integers and another integer, and produces an
+integer. Thus <code class="docutils literal notranslate"><span class="pre">go2_r3RZ</span></code> must be some kind of fold. From inspecting the body,
+we see that the second input <code class="docutils literal notranslate"><span class="pre">eta_s3Ug</span></code> is returned if the first input,
+<code class="docutils literal notranslate"><span class="pre">ds_s3Uf</span></code> is an empty list. If <code class="docutils literal notranslate"><span class="pre">ds_s3Uf</span></code> is not empty then the function adds
+the head of the list to the second input in this line:
+<code class="docutils literal notranslate"><span class="pre">GHC.Num.Integer.integerAdd</span> <span class="pre">eta_s3Ug</span> <span class="pre">y_s3Ui</span></code>, binds <code class="docutils literal notranslate"><span class="pre">sat_s3Uk</span></code> to the result
+and calls <code class="docutils literal notranslate"><span class="pre">go2_r3RZ</span></code> with the rest of the list and the new input. This should
+sound familiar; this is the Stg of the <code class="docutils literal notranslate"><span class="pre">sum</span></code> function. <code class="docutils literal notranslate"><span class="pre">ds_s3Uf</span></code> is the
+input list, and <code class="docutils literal notranslate"><span class="pre">eta_s3Ug</span></code> is the accumulator. Then for each element of the
+list we add the element to the accumulator. In fact, we can add confidence to
+our conclusion by checking the <a class="reference internal" href="../Core_Profiling/core.html#reading-core"><span class="std std-ref">Core</span></a>, which will include
+source code location tags:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kt">Rec</span><span class="w"> </span><span class="p">{</span>
+<span class="c1">-- RHS size: {terms: 12, types: 8, coercions: 0, joins: 0/0}</span>
+<span class="nf">go2_r3RZ</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">[</span><span class="kt">Integer</span><span class="p">]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Integer</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Integer</span>
+<span class="p">[</span><span class="kt">GblId</span><span class="p">[</span><span class="kt">StrictWorker</span><span class="p">([</span><span class="o">!</span><span class="p">,</span><span class="w"> </span><span class="o">!</span><span class="p">])],</span><span class="w"> </span><span class="kt">Arity</span><span class="ow">=</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="kt">Str</span><span class="o">=&lt;</span><span class="mi">1</span><span class="kt">L</span><span class="o">&gt;&lt;</span><span class="mi">1</span><span class="kt">L</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="kt">Unf</span><span class="ow">=</span><span class="kt">OtherCon</span><span class="w"> </span><span class="kt">[]</span><span class="p">]</span>
+<span class="nf">go2_r3RZ</span>
+<span class="w">  </span><span class="ow">=</span><span class="w"> </span><span class="nf">\</span><span class="w"> </span><span class="p">(</span><span class="n">ds_a3Nw</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">[</span><span class="kt">Integer</span><span class="p">])</span><span class="w"> </span><span class="p">(</span><span class="n">eta_B0</span><span class="w"> </span><span class="p">[</span><span class="kt">OS</span><span class="ow">=</span><span class="kt">OneShot</span><span class="p">]</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Integer</span><span class="p">)</span><span class="w"> </span><span class="ow">-&gt;</span>
+<span class="w">      </span><span class="kr">case</span><span class="w"> </span><span class="n">ds_a3Nw</span><span class="w"> </span><span class="kr">of</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">[]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="n">eta_B0</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">:</span><span class="w"> </span><span class="n">y_a3Nz</span><span class="w"> </span><span class="n">ys_a3NA</span><span class="w"> </span><span class="ow">-&gt;</span>
+<span class="w">          </span><span class="n">go2_r3RZ</span><span class="w"> </span><span class="n">ys_a3NA</span><span class="w"> </span><span class="p">(</span><span class="kt">GHC</span><span class="o">.</span><span class="kt">Num</span><span class="o">.</span><span class="kt">Integer</span><span class="o">.</span><span class="n">integerAdd</span><span class="w"> </span><span class="n">eta_B0</span><span class="w"> </span><span class="n">y_a3Nz</span><span class="p">)</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="nf">end</span><span class="w"> </span><span class="kt">Rec</span><span class="w"> </span><span class="p">}</span>
+
+<span class="c1">-- RHS size: {terms: 6, types: 5, coercions: 0, joins: 0/0}</span>
+<span class="nf">lvl18_r3S0</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">[</span><span class="kt">Integer</span><span class="p">]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="p">(</span><span class="kt">Integer</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="kt">Integer</span><span class="p">])</span>
+<span class="p">[</span><span class="kt">GblId</span><span class="p">,</span><span class="w"> </span><span class="kt">Arity</span><span class="ow">=</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="kt">Str</span><span class="o">=&lt;</span><span class="kt">L</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="kt">Cpr</span><span class="ow">=</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="kt">Unf</span><span class="ow">=</span><span class="kt">OtherCon</span><span class="w"> </span><span class="kt">[]</span><span class="p">]</span>
+<span class="nf">lvl18_r3S0</span>
+<span class="w">  </span><span class="ow">=</span><span class="w"> </span><span class="nf">\</span><span class="w"> </span><span class="p">(</span><span class="n">p_a1tH</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">[</span><span class="kt">Integer</span><span class="p">])</span><span class="w"> </span><span class="ow">-&gt;</span>
+<span class="w">      </span><span class="n">src</span><span class="o">&lt;</span><span class="kt">Main</span><span class="o">.</span><span class="n">hs</span><span class="kt">:</span><span class="mi">43</span><span class="kt">:</span><span class="mi">31</span><span class="o">-</span><span class="mi">49</span><span class="o">&gt;</span>
+<span class="w">      </span><span class="p">(</span><span class="n">src</span><span class="o">&lt;</span><span class="kt">Main</span><span class="o">.</span><span class="n">hs</span><span class="kt">:</span><span class="mi">43</span><span class="kt">:</span><span class="mi">40</span><span class="o">-</span><span class="mi">44</span><span class="o">&gt;</span><span class="w"> </span><span class="n">go2_r3RZ</span><span class="w"> </span><span class="n">p_a1tH</span><span class="w"> </span><span class="n">lvl17_r3RY</span><span class="p">,</span>
+<span class="w">       </span><span class="n">src</span><span class="o">&lt;</span><span class="kt">Main</span><span class="o">.</span><span class="n">hs</span><span class="kt">:</span><span class="mi">43</span><span class="kt">:</span><span class="mi">47</span><span class="o">&gt;</span><span class="w"> </span><span class="n">p_a1tH</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>From the above Core, we can see that the callsite of <code class="docutils literal notranslate"><span class="pre">go2_r3RZ</span></code> is exactly at
+<code class="docutils literal notranslate"><span class="pre">Main.hs</span></code> line 43, characters 40-44 and inside a tuple, which corresponds to
+this line in <code class="docutils literal notranslate"><span class="pre">awards</span></code>:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">--                                 right here</span>
+<span class="c1">--                               /</span>
+<span class="c1">--                               |</span>
+<span class="c1">--                               v</span>
+<span class="kr">where</span><span class="w"> </span><span class="n">sumscores</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">map</span><span class="w"> </span><span class="p">(</span><span class="nf">\</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="p">(</span><span class="n">sum</span><span class="w"> </span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="n">perms</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="n">scores</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now we can rephrase our working hypothesis: the <code class="docutils literal notranslate"><span class="pre">awards</span></code> program exhibits an
+L1 instruction cache miss rate of 16% with tables-next-to-code, with the call to <code class="docutils literal notranslate"><span class="pre">sum</span></code> in
+<code class="docutils literal notranslate"><span class="pre">sumscores</span></code> being responsible for 10% of the 16% miss rate. We now have a
+means of inspecting the program we want to optimize and a means for detecting if
+our optimizations have an impact.</p>
+</section>
+</section>
+<section id="conclusion">
+<h2><span class="section-number">2.1.3.7. </span>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">¶</a></h2>
+<p>We’ve come a long way. We’ve used perf to understand the machine behavior of a
+Haskell program, identified a hot spot that would not be possible using GHC’s
+tooling, and mapped that hot spot to the relevant function in the Haskell
+program. We have not fixed the hot spot, leaving that to future work, but we
+have gained a probe to <a class="reference internal" href="../../Preliminaries/how_to_debug.html#don-t-think-look"><span class="std std-ref">Don’t Think, Look</span></a>, and gained a deeper
+understanding of how our program actually runs. To conclude the chapter, we’ll
+show how to programmatically consume perf output so that you may integrate it
+into whatever workflow needed, and useful one-liners.</p>
+</section>
+<section id="programmatically-consuming-perf-output">
+<h2><span class="section-number">2.1.3.8. </span>Programmatically Consuming Perf Output<a class="headerlink" href="#programmatically-consuming-perf-output" title="Link to this heading">¶</a></h2>
+<p>Imagine that you would like to use <code class="docutils literal notranslate"><span class="pre">perf</span></code> in your project’s continuous
+integration to catch future L1 instruction cache miss regressions, or to track
+any other low level metric. <code class="docutils literal notranslate"><span class="pre">perf</span> <span class="pre">stat</span></code> helpfully provides the option <code class="docutils literal notranslate"><span class="pre">-x</span></code>
+to emit information via a separator and the option <code class="docutils literal notranslate"><span class="pre">-o</span></code> to output to a file.
+Here are some examples:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>perf<span class="w"> </span>stat<span class="w"> </span>-x,<span class="w"> </span>--<span class="w"> </span>./Main<span class="w"> </span><span class="m">1000000</span><span class="w"> </span>&gt;<span class="w"> </span>/dev/null
+<span class="m">64701</span>.16,msec,task-clock,64701157666,100.00,1.002,CPUs<span class="w"> </span>utilized
+<span class="m">6733</span>,,context-switches,64701157666,100.00,104.063,/sec
+<span class="m">153</span>,,cpu-migrations,64701157666,100.00,2.365,/sec
+<span class="m">1291</span>,,page-faults,64701157666,100.00,19.953,/sec
+<span class="m">264690533400</span>,,cycles,64701157666,100.00,4.091,GHz
+<span class="m">5760949125</span>,,stalled-cycles-frontend,64701157666,100.00,2.18,frontend<span class="w"> </span>cycles<span class="w"> </span>idle
+<span class="m">18551959048</span>,,stalled-cycles-backend,64701157666,100.00,7.01,backend<span class="w"> </span>cycles<span class="w"> </span>idle
+<span class="m">425064193324</span>,,instructions,64701157666,100.00,1.61,insn<span class="w"> </span>per<span class="w"> </span>cycle
+,,,,,0.04,stalled<span class="w"> </span>cycles<span class="w"> </span>per<span class="w"> </span>insn
+<span class="m">85795758030</span>,,branches,64701157666,100.00,1.326,G/sec
+<span class="m">2404110819</span>,,branch-misses,64701157666,100.00,2.80,of<span class="w"> </span>all<span class="w"> </span>branches
+</pre></div>
+</div>
+<p>Notice the <code class="docutils literal notranslate"><span class="pre">-x,</span></code> which instructs perf to use a comma as a separator. We can
+also combine this with the <code class="docutils literal notranslate"><span class="pre">-e</span></code> option to track only the events we care about:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>perf<span class="w"> </span>stat<span class="w"> </span>-x,<span class="w"> </span>-e<span class="w"> </span>instructions,branch-misses<span class="w"> </span>--<span class="w"> </span>./Main<span class="w"> </span><span class="m">1000000</span><span class="w"> </span>&gt;<span class="w"> </span>/dev/null
+<span class="m">425066725899</span>,,instructions,63633632343,100.00,,
+<span class="m">2367849357</span>,,branch-misses,63633632343,100.00,,
+</pre></div>
+</div>
+<p>And we can emit this all to a file of our choosing, with <code class="docutils literal notranslate"><span class="pre">-o</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>perf<span class="w"> </span>stat<span class="w"> </span>-x,<span class="w"> </span>-e<span class="w"> </span>instructions,branch-misses<span class="w"> </span>-o<span class="w"> </span>my-perf-data<span class="w"> </span>--<span class="w"> </span>./Main<span class="w"> </span><span class="m">1000000</span><span class="w"> </span>&gt;<span class="w"> </span>/dev/null
+$<span class="w"> </span>cat<span class="w"> </span>my-perf-data
+<span class="c1"># started on Wed Apr 24 11:18:56 2024</span>
+
+<span class="m">425115750611</span>,,instructions,64005529152,100.00,,
+<span class="m">2397300420</span>,,branch-misses,64005529152,100.00,,
+</pre></div>
+</div>
+<p>And of course we can pipe this to <code class="docutils literal notranslate"><span class="pre">awk</span></code> to post process and grab the values:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>cat<span class="w"> </span>my-perf-data<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span>-F<span class="s1">&#39;,&#39;</span><span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span>
+<span class="c1"># started on Wed Apr 24 11:18:56 2024</span>
+
+<span class="m">425115750611</span>
+<span class="m">2397300420</span>
+</pre></div>
+</div>
+<p>Or you can have perf directly generate json with the <code class="docutils literal notranslate"><span class="pre">-j</span></code> flag:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>perf<span class="w"> </span>stat<span class="w"> </span>-j<span class="w"> </span>-e<span class="w"> </span>instructions,branch-misses<span class="w"> </span>--<span class="w"> </span>./Main<span class="w"> </span><span class="m">1000000</span><span class="w"> </span>&gt;<span class="w"> </span>/dev/null
+<span class="o">{</span><span class="s2">&quot;counter-value&quot;</span><span class="w"> </span>:<span class="w"> </span><span class="s2">&quot;425045921494.000000&quot;</span>
+,<span class="w"> </span><span class="s2">&quot;unit&quot;</span><span class="w"> </span>:<span class="w"> </span><span class="s2">&quot;&quot;</span>
+,<span class="w"> </span><span class="s2">&quot;event&quot;</span><span class="w"> </span>:<span class="w"> </span><span class="s2">&quot;instructions&quot;</span>
+,<span class="w"> </span><span class="s2">&quot;event-runtime&quot;</span><span class="w"> </span>:<span class="w"> </span><span class="m">62691486738</span>
+,<span class="w"> </span><span class="s2">&quot;pcnt-running&quot;</span><span class="w"> </span>:<span class="w"> </span><span class="m">100</span>.00
+,<span class="w"> </span><span class="s2">&quot;metric-value&quot;</span><span class="w"> </span>:<span class="w"> </span><span class="s2">&quot;0.000000&quot;</span>
+,<span class="w"> </span><span class="s2">&quot;metric-unit&quot;</span><span class="w"> </span>:<span class="w"> </span><span class="s2">&quot;insn per cycle&quot;</span>
+<span class="o">}</span>
+<span class="o">{</span><span class="s2">&quot;counter-value&quot;</span><span class="w"> </span>:<span class="w"> </span><span class="s2">&quot;2393928086.000000&quot;</span>
+,<span class="w"> </span><span class="s2">&quot;unit&quot;</span><span class="w"> </span>:<span class="w"> </span><span class="s2">&quot;&quot;</span>
+,<span class="w"> </span><span class="s2">&quot;event&quot;</span><span class="w"> </span>:<span class="w"> </span><span class="s2">&quot;branch-misses&quot;</span>
+,<span class="w"> </span><span class="s2">&quot;event-runtime&quot;</span><span class="w"> </span>:<span class="w"> </span><span class="m">62691486738</span>
+,<span class="w"> </span><span class="s2">&quot;pcnt-running&quot;</span><span class="w"> </span>:<span class="w"> </span><span class="m">100</span>.00
+,<span class="w"> </span><span class="s2">&quot;metric-value&quot;</span><span class="w"> </span>:<span class="w"> </span><span class="s2">&quot;0.000000&quot;</span>
+,<span class="w"> </span><span class="s2">&quot;metric-unit&quot;</span><span class="w"> </span>:<span class="w"> </span><span class="s2">&quot;of all branches&quot;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</section>
+<section id="helpful-one-liners">
+<h2><span class="section-number">2.1.3.9. </span>Helpful One Liners<a class="headerlink" href="#helpful-one-liners" title="Link to this heading">¶</a></h2>
+<p>The most robust list is given by <a class="reference external" href="https://www.brendangregg.com/perf.html#OneLiners">Brendan Gregg</a>.</p>
+<ol class="arabic">
+<li><p>Visualizing with <a class="reference external" href="https://www.speedscope.app/">speedscope</a>. Speedscope
+directly <a class="reference external" href="https://github.com/jlfwong/speedscope/wiki/Importing-from-perf-(linux)">supports</a>
+perf. You can drop your <code class="docutils literal notranslate"><span class="pre">perf.data</span></code> directly into the web app or if you
+have speedscope installed locally you can just do:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>perf<span class="w"> </span>script<span class="w"> </span>-i<span class="w"> </span>perf.data<span class="w"> </span><span class="p">|</span><span class="w"> </span>speedscope<span class="w"> </span>-
+</pre></div>
+</div>
+</li>
+</ol>
+<div class="help-wanted admonition">
+<p class="admonition-title">Help Wanted</p>
+<p>If you come up with some useful one liners then please <a class="reference external" href="https://github.com/haskellfoundation/hs-opt-handbook.github.io">open</a> pull
+request and contribute to the Haskell community!</p>
+</div>
+</section>
+<section id="references-and-further-reading">
+<h2><span class="section-number">2.1.3.10. </span>References and Further Reading<a class="headerlink" href="#references-and-further-reading" title="Link to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>The <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/wikis/rts/storage/heap-objects#info-tables">Info Tables wiki</a> entry</p></li>
+<li><p>The tables-next-to-code <a class="reference external" href="https://lists.llvm.org/pipermail/llvm-dev/2012-February/047544.html">discussion</a>
+on the llvm mailing list.</p></li>
+<li><p>For more tables-next-to-code description see: <span id="id6">Marlow and Jones [<a class="reference internal" href="../../../contents.html#id15" title="Simon Marlow and Simon Peyton Jones. Making a fast curry: push/enter vs. eval/apply for higher-order languages. In Proceedings of the Ninth ACM SIGPLAN International Conference on Functional Programming, ICFP '04, 4–15. New York, NY, USA, 2004. Association for Computing Machinery. URL: https://doi.org/10.1145/1016850.1016856, doi:10.1145/1016850.1016856.">3</a>]</span> Section 4.4, and
+<span id="id7">Marlow <em>et al.</em> [<a class="reference internal" href="../../../contents.html#id11" title="Simon Marlow, Alexey Rodriguez Yakushev, and Simon Peyton Jones. Faster laziness using dynamic pointer tagging. SIGPLAN Not., 42(9):277–288, oct 2007. URL: https://doi.org/10.1145/1291220.1291194, doi:10.1145/1291220.1291194.">4</a>]</span> Section 2, <span id="id8">Jones <em>et al.</em> [<a class="reference internal" href="../../../contents.html#id3" title="Peyton Jones, Simon L, and Simon Peyton Jones. Implementing lazy functional languages on stock hardware: the spineless tagless g-machine. Journal of Functional Programming, 2:127-202, July 1992. URL: https://www.microsoft.com/en-us/research/publication/implementing-lazy-functional-languages-on-stock-hardware-the-spineless-tagless-g-machine/.">5</a>]</span>
+Section 7.</p></li>
+<li><p><a class="reference external" href="http://sandsoftwaresound.net/perf/perf-tutorial-hot-spots/">This</a> perf
+tutorial, which shows the use of perf to find hotspots on a raspberry pi.</p></li>
+<li><p>The <a class="reference external" href="https://perf.wiki.kernel.org/index.php/Main_Page">perf wiki</a>.</p></li>
+</ol>
+</section>
+<section id="footnotes">
+<h2><span class="section-number">2.1.3.11. </span>Footnotes<a class="headerlink" href="#footnotes" title="Link to this heading">¶</a></h2>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id9" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>In fact it was even described in the canonical STG paper: see
+<span id="id10">Jones <em>et al.</em> [<a class="reference internal" href="../../../contents.html#id3" title="Peyton Jones, Simon L, and Simon Peyton Jones. Implementing lazy functional languages on stock hardware: the spineless tagless g-machine. Journal of Functional Programming, 2:127-202, July 1992. URL: https://www.microsoft.com/en-us/research/publication/implementing-lazy-functional-languages-on-stock-hardware-the-spineless-tagless-g-machine/.">5</a>]</span> Section 7.6.</p>
+</aside>
+<aside class="footnote brackets" id="id11" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p>There are exceptions to this because not all heap objects require an
+entry code. For example:</p>
+<ol class="arabic simple">
+<li><p>PAP’s do not require an entry code because they can only be applied to
+more arguments using the <a class="reference internal" href="../Stg_RTS_Profiling/stg.html#reading-stg"><span class="std std-ref">Generic Apply Functions</span></a>.</p></li>
+<li><p><a class="reference internal" href="../../glossary.html#term-Unlifted"><span class="xref std std-term">Unlifted</span></a> objects cannot be evaluated and therefore don’t have
+an entry code.</p></li>
+</ol>
+</aside>
+<aside class="footnote brackets" id="id12" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
+<p>GHC can be built in many different ways which we call <code class="docutils literal notranslate"><span class="pre">flavors</span></code>. The
+<code class="docutils literal notranslate"><span class="pre">default</span></code> flavor is one such provided by GHC’s build tool <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/blob/master/hadrian/README.md?ref_type=heads">Hadrian</a>.</p>
+</aside>
+<aside class="footnote brackets" id="id13" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">4</a><span class="fn-bracket">]</span></span>
+<p>I say “typically” because GHC will use <code class="docutils literal notranslate"><span class="pre">call</span></code> in some circumstances
+such as creating <a class="reference internal" href="../../glossary.html#term-CAF"><span class="xref std std-term">CAF</span></a>’s, see <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/blob/master/rts/sm/Storage.c?ref_type=heads#L425">Note [CAF management]</a></p>
+</aside>
+<aside class="footnote brackets" id="id14" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">5</a><span class="fn-bracket">]</span></span>
+<p>Larger code size will slow down the program because there is simply more
+code to process. But its contribution to runtime performance is not as
+great as the <em>locality</em> between data and the code operating on the data.
+This is why code bloat is problematic; with lots of code, achieving
+locality between code and data becomes much harder. See <a class="reference external" href="https://harmful.cat-v.org/software/OO_programming/_pdf/Pitfalls_of_Object_Oriented_Programming_GCAP_09.pdf">this
+presentation</a>
+for more.</p>
+</aside>
+</aside>
+</section>
 </section>
 
 
@@ -215,11 +1024,11 @@
             <div class="inner"><ul class="page-nav">
   <li class="prev">
     <a href="linux_time.html"
-       title="previous chapter">← <span class="section-number">2.1.1. </span><span class="lightgrey">The Linux time command</span></a>
+       title="previous chapter">← <span class="section-number">2.1.2. </span><span class="lightgrey">The Linux time command</span></a>
   </li>
   <li class="next">
     <a href="dtrace.html"
-       title="next chapter"><span class="section-number">2.1.3. </span><span class="lightgrey">Dtrace</span> →</a>
+       title="next chapter"><span class="section-number">2.1.4. </span><span class="lightgrey">Dtrace</span> →</a>
   </li>
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2022-2024, Jeffrey Young (doyougnu).

@@ -206,7 +206,7 @@
             
   <span class="target" id="lambda-lifting-chapter"></span><section id="lambda-lifting">
 <h1><span class="section-number">3.2.3. </span><span class="incremental">Lambda Lifting</span><a class="headerlink" href="#lambda-lifting" title="Link to this heading">¶</a></h1>
-<p>Lambda Lifting <span id="id1">[<a class="reference internal" href="../../../contents.html#id12" title="Thomas Johnsson. Lambda lifting: transforming programs to recursive equations. In Jean-Pierre Jouannaud, editor, Functional Programming Languages and Computer Architecture, 190–203. Berlin, Heidelberg, 1985. Springer Berlin Heidelberg.">4</a>]</span> is a classic rewriting technique that
+<p>Lambda Lifting <span id="id1">[<a class="reference internal" href="../../../contents.html#id12" title="Thomas Johnsson. Lambda lifting: transforming programs to recursive equations. In Jean-Pierre Jouannaud, editor, Functional Programming Languages and Computer Architecture, 190–203. Berlin, Heidelberg, 1985. Springer Berlin Heidelberg.">6</a>]</span> is a classic rewriting technique that
 avoids excess closure allocations and removes free variables from a function. It
 avoids closure allocation by moving local functions out of an enclosing function
 to the <a class="reference internal" href="../../glossary.html#term-Top-Level"><span class="xref std std-term">top-level</span></a>. It then removes free variables by adding parameters to
@@ -314,7 +314,7 @@ optimizations.</p>
 <p>Lambda lifting in GHC is also <em>Selective</em>. GHC uses a cost model that calculates
 hypothetical heap allocations a function will induce. GHC lists heuristics for
 when <em>not</em> to lambda lift in <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/blob/master/compiler/GHC/Stg/Lift/Analysis.hs#L46">Note [When to lift]</a>
-, we repeat the basic ideas here. See <span id="id3">Graf and Jones [<a class="reference internal" href="../../../contents.html#id13" title="Sebastian Graf and Simon Peyton Jones. Selective lambda lifting. 2019. URL: https://arxiv.org/abs/1910.11717, doi:10.48550/ARXIV.1910.11717.">5</a>]</span>, and the
+, we repeat the basic ideas here. See <span id="id3">Graf and Jones [<a class="reference internal" href="../../../contents.html#id13" title="Sebastian Graf and Simon Peyton Jones. Selective lambda lifting. 2019. URL: https://arxiv.org/abs/1910.11717, doi:10.48550/ARXIV.1910.11717.">7</a>]</span>, and the
 <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/wikis/late-lam-lift">lambda lifting wiki</a> entry for more details.</p>
 <p>GHC does not lambda lift:</p>
 <ol class="arabic simple">
@@ -374,7 +374,7 @@ the program. Performance may also degrade if the existing closures grow as a
 result of the lambda lift. Both kinds of extra allocation slow the program down
 and increases pressure on the garbage collector. So it is important to learn to
 read the program from the perspective of memory. Consider this example from
-<span id="id4">Graf and Jones [<a class="reference internal" href="../../../contents.html#id13" title="Sebastian Graf and Simon Peyton Jones. Selective lambda lifting. 2019. URL: https://arxiv.org/abs/1910.11717, doi:10.48550/ARXIV.1910.11717.">5</a>]</span>:</p>
+<span id="id4">Graf and Jones [<a class="reference internal" href="../../../contents.html#id13" title="Sebastian Graf and Simon Peyton Jones. Selective lambda lifting. 2019. URL: https://arxiv.org/abs/1910.11717, doi:10.48550/ARXIV.1910.11717.">7</a>]</span>:</p>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- unlifted.</span>
 
 <span class="c1">-- f&#39;s increases heap because it must have a closure that includes the &#39;x&#39;</span>
@@ -456,7 +456,7 @@ the STG. Or, you may compare STG with and without lifting explicitly enabled.</p
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="f1" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">1</a><span class="fn-bracket">]</span></span>
-<p>This program and example comes from <span id="id5">Graf and Jones [<a class="reference internal" href="../../../contents.html#id13" title="Sebastian Graf and Simon Peyton Jones. Selective lambda lifting. 2019. URL: https://arxiv.org/abs/1910.11717, doi:10.48550/ARXIV.1910.11717.">5</a>]</span>;
+<p>This program and example comes from <span id="id5">Graf and Jones [<a class="reference internal" href="../../../contents.html#id13" title="Sebastian Graf and Simon Peyton Jones. Selective lambda lifting. 2019. URL: https://arxiv.org/abs/1910.11717, doi:10.48550/ARXIV.1910.11717.">7</a>]</span>;
 thank you for your labor!:</p>
 </aside>
 </aside>

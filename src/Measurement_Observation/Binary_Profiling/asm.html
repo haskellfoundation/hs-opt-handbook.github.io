@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html  lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+      <title>2.1.1. Reading Asm</title>
+    
+          <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+          <link rel="stylesheet" href="../../../_static/theme.css " type="text/css" />
+          <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
+          <link rel="stylesheet" href="../../../_static/css/s4defs-roles.css" type="text/css" />
+          <link rel="stylesheet" href="../../../_static/css/iframe.css" type="text/css" />
+          <link rel="stylesheet" href="../../../_static/css/admonitions.css" type="text/css" />
+          <link rel="stylesheet" href="../../../_static/css/s4defs-roles.css" type="text/css" />
+          <link rel="stylesheet" href="../../../_static/css/iframe.css" type="text/css" />
+          <link rel="stylesheet" href="../../../_static/css/admonitions.css" type="text/css" />
+      
+      <!-- sphinx script_files -->
+        <script src="../../../_static/documentation_options.js?v=d45e8c67"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../_static/copybutton.js?v=f281be69"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+      
+      <!-- bundled in js (rollup iife) -->
+      <!-- <script src="../../../_static/theme-vendors.js"></script> -->
+      <script src="../../../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../../../genindex.html" />
+  <link rel="search" title="Search" href="../../../search.html" />
+  <link rel="next" title="2.1.2. The Linux time command" href="linux_time.html" />
+  <link rel="prev" title="2.1. Binary Profiling and Probing" href="index.html" /> 
+  </head>
+
+  <body>
+    <div id="app">
+    <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../../../contents.html" class="home-link">
+    
+      <span class="site-name">Haskell Optimization Handbook</span>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+  
+    <div class="nav-item">
+      <a href="../../../contents.html#haskell-optimization-handbook"
+         class="nav-link ">
+         Table of Contents
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../contents.html#indices-and-tables"
+         class="nav-link ">
+         indices and tables
+      </a>
+    </div>
+  
+
+
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+  
+    <div class="nav-item">
+      <a href="../../../contents.html#haskell-optimization-handbook"
+         class="nav-link ">
+         Table of Contents
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../contents.html#indices-and-tables"
+         class="nav-link ">
+         indices and tables
+      </a>
+    </div>
+  
+
+
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../../../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../contents.html#haskell-optimization-handbook">Table of Contents</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../../Preliminaries/index.html" class="reference internal ">Preliminaries</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../index.html" class="reference internal ">Measurement, Profiling, and Observation</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../../Optimizations/index.html" class="reference internal ">Optimizations</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../../Case_Studies/index.html" class="reference internal ">Case Studies</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../contents.html#indices-and-tables">indices and tables</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../../glossary.html" class="reference internal ">Glossary</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../../../contents.html">Docs</a> &raquo;</li>
+    
+      <li><a href="../index.html"><span class="section-number">2. </span>Measurement, Profiling, and Observation</a> &raquo;</li>
+    
+      <li><a href="index.html"><span class="section-number">2.1. </span>Binary Profiling and Probing</a> &raquo;</li>
+    
+    <li><span class="section-number">2.1.1. </span>Reading Asm</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+  <li class="prev">
+    <a href="index.html"
+       title="previous chapter">← <span class="section-number">2.1. </span>Binary Profiling and Probing</a>
+  </li>
+  <li class="next">
+    <a href="linux_time.html"
+       title="next chapter"><span class="section-number">2.1.2. </span><span class="lightgrey">The Linux time command</span> →</a>
+  </li>
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main" v-pre>
+            
+  <section id="reading-asm">
+<span id="id1"></span><h1><span class="section-number">2.1.1. </span>Reading Asm<a class="headerlink" href="#reading-asm" title="Link to this heading">¶</a></h1>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<p>Core output (the 0 at the end is the program’s result):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Resolving dependencies...
+Build profile: -w ghc-9.4.8 -O1
+In order, the following will be built (use -v for more details):
+ - lethargy-0.1.0.0 (exe:lethargy-asm)  --enable-profiling (first run)
+Configuring executable &#39;lethargy-asm&#39; for lethargy-0.1.0.0..
+Preprocessing executable &#39;lethargy-asm&#39; for lethargy-0.1.0.0..
+Building executable &#39;lethargy-asm&#39; for lethargy-0.1.0.0..
+[1 of 1] Compiling Main             ( app/Main.hs, /tmp/nix-build-hoh-0.0.1.drv-0/9md3k21pndnsf5x85blcmbb9z59zw51x-source/code/dist-newstyle/build/x86_64-linux/ghc-9.4.8/lethargy-0.1.0.0/x/lethargy-asm/build/lethargy-asm/lethargy-asm-tmp/Main.p_o )
+
+==================== Asm code ====================
+.section .rodata.str,&quot;aMS&quot;,@progbits,1
+.align 1
+.align 1
+c1xa_str:
+	.string &quot;main&quot;
+
+
+
+==================== Asm code ====================
+.section .rodata.str,&quot;aMS&quot;,@progbits,1
+.align 1
+.align 1
+c1xc_str:
+	.string &quot;Main&quot;
+
+
+
+==================== Asm code ====================
+.section .rodata.str,&quot;aMS&quot;,@progbits,1
+.align 1
+.align 1
+c1xe_str:
+	.string &quot;app/Main.hs:5:1-33&quot;
+
+
+
+==================== Asm code ====================
+.section .data
+.align 8
+.align 1
+.globl main
+.type main, @object
+main:
+	.quad	0
+	.quad	c1xa_str
+	.quad	c1xc_str
+	.quad	c1xe_str
+	.quad	0
+	.quad	0
+	.quad	0
+	.quad	0
+
+
+
+==================== Asm code ====================
+.section .rodata.str,&quot;aMS&quot;,@progbits,1
+.align 1
+.align 1
+c1xh_str:
+	.string &quot;CAF&quot;
+
+
+
+==================== Asm code ====================
+.section .rodata.str,&quot;aMS&quot;,@progbits,1
+.align 1
+.align 1
+c1xj_str:
+	.string &quot;Main&quot;
+
+
+
+==================== Asm code ====================
+.section .rodata.str,&quot;aMS&quot;,@progbits,1
+.align 1
+.align 1
+c1xl_str:
+	.string &quot;&lt;entire-module&gt;&quot;
+
+
+
+==================== Asm code ====================
+.section .data
+.align 8
+.align 1
+.globl CAF
+.type CAF, @object
+CAF:
+	.quad	0
+	.quad	c1xh_str
+	.quad	c1xj_str
+	.quad	c1xl_str
+	.quad	0
+	.quad	0
+	.quad	99
+	.quad	0
+
+
+
+==================== Asm code ====================
+.section .data
+.align 8
+.align 1
+.globl CAF_ccs
+.type CAF_ccs, @object
+CAF_ccs:
+	.quad	0
+	.quad	CAF
+	.quad	0
+	.quad	0
+	.quad	0
+	.quad	0
+	.quad	0
+	.quad	0
+	.quad	0
+	.quad	0
+	.quad	0
+	.quad	0
+
+
+
+==================== Asm code ====================
+.section .rodata.str,&quot;aMS&quot;,@progbits,1
+.align 1
+.align 1
+.globl Main.$trModule2_bytes
+.type Main.$trModule2_bytes, @object
+Main.$trModule2_bytes:
+	.string &quot;Main&quot;
+
+
+
+==================== Asm code ====================
+.section .rodata.str,&quot;aMS&quot;,@progbits,1
+.align 1
+.align 1
+.globl Main.$trModule4_bytes
+.type Main.$trModule4_bytes, @object
+Main.$trModule4_bytes:
+	.string &quot;main&quot;
+
+
+
+==================== Asm code ====================
+.section .rodata.str,&quot;aMS&quot;,@progbits,1
+.align 1
+.align 1
+.globl Main.main3_bytes
+.type Main.main3_bytes, @object
+Main.main3_bytes:
+	.string &quot;Hello, Haskell!&quot;
+
+
+
+==================== Asm code ====================
+.section .rodata.str,&quot;aMS&quot;,@progbits,1
+.align 1
+.align 1
+i1xD_str:
+	.string &quot;[]&quot;
+
+
+
+==================== Asm code ====================
+.section .rodata.str,&quot;aMS&quot;,@progbits,1
+.align 1
+.align 1
+i1xE_str:
+	.string &quot;&lt;main:Main.main2_r1ug&gt;&quot;
+
+
+
+==================== Asm code ====================
+.section .text
+.align 8
+.align 8
+	.long	i1xD_str-(Main.main2_info)+0
+	.long	0
+	.long	i1xE_str-(Main.main2_info)+0
+	.long	0
+	.quad	0
+	.long	21
+	.long	0
+.globl Main.main2_info
+.type Main.main2_info, @function
+Main.main2_info:
+_blk_c1xA:
+	movq %rbx,%rax
+	cmpl $0,era(%rip)
+	jbe _blk_c1xs
+_blk_c1xt:
+	movq $1152921504606846976,%rcx
+	movl era(%rip),%edx
+	orq %rcx,%rdx
+	movq $1152921503533105152,%rcx
+	movq 16(%rax),%rsi
+	andq %rcx,%rsi
+	orq %rdx,%rsi
+	movq %rsi,16(%rax)
+_blk_c1xs:
+	leaq -32(%rbp),%rcx
+	cmpq %r15,%rcx
+	jb _blk_c1xB
+_blk_c1xC:
+	subq $8,%rsp
+	movq %r13,%rcx
+	movq %rax,%rsi
+	movq %rcx,%rdi
+	movq %rax,%rcx
+	xorl %eax,%eax
+	movq %rcx,%r14
+	call newCAF
+	addq $8,%rsp
+	testq %rax,%rax
+	je _blk_c1xz
+_blk_c1xy:
+	movq $stg_bh_upd_frame_info,-32(%rbp)
+	movq %rax,-8(%rbp)
+	movq 864(%r13),%rax
+	movq %rax,-24(%rbp)
+	movq 8(%rbx),%rax
+	movq %rax,864(%r13)
+	leaq Main.main3_bytes(%rip),%r14
+	addq $-32,%rbp
+	jmp GHC.CString.unpackCString#_info
+_blk_c1xz:
+	jmp *(%r14)
+_blk_c1xB:
+	movq %rax,%rbx
+	jmp *-16(%r13)
+	.size Main.main2_info, .-Main.main2_info
+
+
+
+==================== Asm code ====================
+.section .data
+.align 8
+.align 1
+.globl Main.main2_closure
+.type Main.main2_closure, @object
+Main.main2_closure:
+	.quad	Main.main2_info
+	.quad	CAF_ccs
+	.quad	0
+	.quad	0
+	.quad	0
+	.quad	0
+
+
+
+==================== Asm code ====================
+.section .data
+.align 8
+.align 1
+_u1y8_srt:
+	.quad	stg_SRT_3_info
+	.quad	CCS_DONT_CARE
+	.quad	0
+	.quad	GHC.IO.Handle.Text.hPutStr2_closure
+	.quad	GHC.IO.Handle.FD.stdout_closure
+	.quad	Main.main2_closure
+	.quad	0
+
+
+
+==================== Asm code ====================
+.section .rodata.str,&quot;aMS&quot;,@progbits,1
+.align 1
+.align 1
+i1y9_str:
+	.string &quot;-&gt;(#,#)&quot;
+
+
+
+==================== Asm code ====================
+.section .rodata.str,&quot;aMS&quot;,@progbits,1
+.align 1
+.align 1
+i1ya_str:
+	.string &quot;&lt;main:Main.main1_r1uf&gt;&quot;
+
+
+
+==================== Asm code ====================
+.section .text
+.align 8
+.align 8
+	.long	i1y9_str-(Main.main1_info)+0
+	.long	0
+	.long	i1ya_str-(Main.main1_info)+0
+	.long	0
+	.quad	0
+	.long	21
+	.long	_u1y8_srt-(Main.main1_info)+0
+.globl Main.main1_info
+.type Main.main1_info, @function
+Main.main1_info:
+_blk_c1y5:
+	movq %rbx,%rax
+	cmpl $0,era(%rip)
+	jbe _blk_c1xW
+_blk_c1xX:
+	movq $1152921504606846976,%rcx
+	movl era(%rip),%edx
+	orq %rcx,%rdx
+	movq $1152921503533105152,%rcx
+	movq 16(%rax),%rsi
+	andq %rcx,%rsi
+	orq %rdx,%rsi
+	movq %rsi,16(%rax)
+_blk_c1xW:
+	leaq -32(%rbp),%rcx
+	cmpq %r15,%rcx
+	jb _blk_c1y6
+_blk_c1y7:
+	subq $8,%rsp
+	movq %r13,%rcx
+	movq %rax,%rsi
+	movq %rcx,%rdi
+	movq %rax,%rcx
+	xorl %eax,%eax
+	movq %rcx,%r14
+	call newCAF
+	addq $8,%rsp
+	testq %rax,%rax
+	je _blk_c1y3
+_blk_c1y2:
+	movq $stg_bh_upd_frame_info,-32(%rbp)
+	movq %rax,-8(%rbp)
+	movq 864(%r13),%rax
+	movq %rax,-24(%rbp)
+	movq 8(%rbx),%rax
+	movq %rax,864(%r13)
+	movq 864(%r13),%rax
+	leaq main(%rip),%rbx
+	subq $8,%rsp
+	movq %rbx,%rsi
+	movq %rax,%rdi
+	xorl %eax,%eax
+	call pushCostCentre
+	addq $8,%rsp
+	incq 48(%rax)
+	movq %rax,864(%r13)
+	leaq GHC.Types.True_closure+2(%rip),%rdi
+	leaq Main.main2_closure(%rip),%rsi
+	leaq GHC.IO.Handle.FD.stdout_closure(%rip),%r14
+	leaq GHC.IO.Handle.Text.hPutStr2_closure+4(%rip),%rbx
+	addq $-32,%rbp
+	jmp stg_ap_ppp_fast
+_blk_c1y3:
+	jmp *(%r14)
+_blk_c1y6:
+	movq %rax,%rbx
+	jmp *-16(%r13)
+	.size Main.main1_info, .-Main.main1_info
+
+
+
+==================== Asm code ====================
+.section .data
+.align 8
+.align 1
+.globl Main.main1_closure
+.type Main.main1_closure, @object
+Main.main1_closure:
+	.quad	Main.main1_info
+	.quad	CAF_ccs
+	.quad	0
+	.quad	0
+	.quad	0
+	.quad	0
+
+
+
+==================== Asm code ====================
+.section .data
+.align 8
+.align 1
+.globl Main.main_closure
+.type Main.main_closure, @object
+Main.main_closure:
+	.quad	stg_IND_STATIC_info
+	.quad	CAF_ccs
+	.quad	0
+	.quad	Main.main1_closure
+	.quad	0
+	.quad	0
+
+
+
+==================== Asm code ====================
+.section .rodata.str,&quot;aMS&quot;,@progbits,1
+.align 1
+.align 1
+i1yD_str:
+	.string &quot;-&gt;(#,#)&quot;
+
+
+
+==================== Asm code ====================
+.section .rodata.str,&quot;aMS&quot;,@progbits,1
+.align 1
+.align 1
+i1yE_str:
+	.string &quot;&lt;main:Main.main4_r1ui&gt;&quot;
+
+
+
+==================== Asm code ====================
+.section .text
+.align 8
+.align 8
+	.quad	4294967299
+	.long	i1yD_str-(Main.main4_info)+0
+	.long	0
+	.long	i1yE_str-(Main.main4_info)+0
+	.long	0
+	.quad	2
+	.long	14
+	.long	0
+.globl Main.main4_info
+.type Main.main4_info, @function
+Main.main4_info:
+_blk_c1yA:
+	leaq Main.main1_closure(%rip),%r14
+	jmp GHC.TopHandler.runMainIO1_info
+	.size Main.main4_info, .-Main.main4_info
+
+
+
+==================== Asm code ====================
+.section .data
+.align 8
+.align 1
+.globl Main.main4_closure
+.type Main.main4_closure, @object
+Main.main4_closure:
+	.quad	Main.main4_info
+	.quad	CCS_DONT_CARE
+	.quad	0
+	.quad	GHC.TopHandler.runMainIO1_closure
+	.quad	Main.main1_closure
+	.quad	0
+
+
+
+==================== Asm code ====================
+.section .rodata.str,&quot;aMS&quot;,@progbits,1
+.align 1
+.align 1
+i1yR_str:
+	.string &quot;IO&quot;
+
+
+
+==================== Asm code ====================
+.section .rodata.str,&quot;aMS&quot;,@progbits,1
+.align 1
+.align 1
+i1yS_str:
+	.string &quot;&lt;main::Main.main_01D&gt;&quot;
+
+
+
+==================== Asm code ====================
+.section .text
+.align 8
+.align 8
+	.quad	4294967299
+	.long	i1yR_str-(:Main.main_info)+0
+	.long	0
+	.long	i1yS_str-(:Main.main_info)+0
+	.long	0
+	.quad	0
+	.long	14
+	.long	Main.main4_closure-(:Main.main_info)+0
+.globl :Main.main_info
+.type :Main.main_info, @function
+:Main.main_info:
+_blk_c1yO:
+	jmp Main.main4_info
+	.size :Main.main_info, .-:Main.main_info
+
+
+
+==================== Asm code ====================
+.section .data
+.align 8
+.align 1
+.globl :Main.main_closure
+.type :Main.main_closure, @object
+:Main.main_closure:
+	.quad	:Main.main_info
+	.quad	CCS_DONT_CARE
+	.quad	0
+	.quad	0
+
+
+
+==================== Asm code ====================
+.section .data
+.align 8
+.align 1
+.globl Main.$trModule3_closure
+.type Main.$trModule3_closure, @object
+Main.$trModule3_closure:
+	.quad	GHC.Types.TrNameS_con_info
+	.quad	CCS_DONT_CARE
+	.quad	0
+	.quad	Main.$trModule4_bytes
+
+
+
+==================== Asm code ====================
+.section .data
+.align 8
+.align 1
+.globl Main.$trModule1_closure
+.type Main.$trModule1_closure, @object
+Main.$trModule1_closure:
+	.quad	GHC.Types.TrNameS_con_info
+	.quad	CCS_DONT_CARE
+	.quad	0
+	.quad	Main.$trModule2_bytes
+
+
+
+==================== Asm code ====================
+.section .data
+.align 8
+.align 1
+.globl Main.$trModule_closure
+.type Main.$trModule_closure, @object
+Main.$trModule_closure:
+	.quad	GHC.Types.Module_con_info
+	.quad	CCS_DONT_CARE
+	.quad	0
+	.quad	Main.$trModule3_closure+1
+	.quad	Main.$trModule1_closure+1
+	.quad	3
+
+
+
+==================== Asm code ====================
+.section .init_array
+.align 8
+.align 1
+.globl main:Main_init_arr
+.type main:Main_init_arr, @object
+main:Main_init_arr:
+	.quad	main:Main_init__prof_init
+
+</pre></div>
+</div>
+</section>
+
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+  <li class="prev">
+    <a href="index.html"
+       title="previous chapter">← <span class="section-number">2.1. </span>Binary Profiling and Probing</a>
+  </li>
+  <li class="next">
+    <a href="linux_time.html"
+       title="next chapter"><span class="section-number">2.1.2. </span><span class="lightgrey">The Linux time command</span> →</a>
+  </li>
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2022-2024, Jeffrey Young (doyougnu).
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.2.6 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
+</div>
+            </div>
+          </div>
+      </page>
+    </div></div>
+    
+    
+  </body>
+</html>

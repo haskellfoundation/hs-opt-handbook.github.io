@@ -31,7 +31,7 @@
     
   <link rel="index" title="Index" href="../../../genindex.html" />
   <link rel="search" title="Search" href="../../../search.html" />
-  <link rel="next" title="2.1.1. The Linux time command" href="linux_time.html" />
+  <link rel="next" title="2.1.1. Reading Asm" href="asm.html" />
   <link rel="prev" title="2. Measurement, Profiling, and Observation" href="../index.html" /> 
   </head>
 
@@ -193,8 +193,8 @@
        title="previous chapter">← <span class="section-number">2. </span>Measurement, Profiling, and Observation</a>
   </li>
   <li class="next">
-    <a href="linux_time.html"
-       title="next chapter"><span class="section-number">2.1.1. </span><span class="lightgrey">The Linux time command</span> →</a>
+    <a href="asm.html"
+       title="next chapter"><span class="section-number">2.1.1. </span>Reading Asm →</a>
   </li>
 </ul>
   
@@ -206,11 +206,25 @@
 <h1><span class="section-number">2.1. </span>Binary Profiling and Probing<a class="headerlink" href="#binary-profiling-and-probing" title="Link to this heading">¶</a></h1>
 <div class="toctree-wrapper compound" id="binary-prof">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="linux_time.html">2.1.1. <span class="lightgrey">The Linux time command</span></a></li>
-<li class="toctree-l1"><a class="reference internal" href="linux_perf.html">2.1.2. <span class="lightgrey">The Linux perf utility</span></a></li>
-<li class="toctree-l1"><a class="reference internal" href="dtrace.html">2.1.3. <span class="lightgrey">Dtrace</span></a></li>
-<li class="toctree-l1"><a class="reference internal" href="valgrind.html">2.1.4. <span class="lightgrey">Valgrind</span></a></li>
-<li class="toctree-l1"><a class="reference internal" href="cachegrind.html">2.1.5. <span class="lightgrey">Using Cachegrind</span></a></li>
+<li class="toctree-l1"><a class="reference internal" href="asm.html">2.1.1. Reading Asm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linux_time.html">2.1.2. <span class="lightgrey">The Linux time command</span></a></li>
+<li class="toctree-l1"><a class="reference internal" href="linux_perf.html">2.1.3. The Linux perf utility</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="linux_perf.html#what-is-tables-next-to-code">2.1.3.1. What is Tables-Next-to-Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux_perf.html#so-what-is-the-problem">2.1.3.2. So What is the Problem?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux_perf.html#assessing-the-impact-of-tntc">2.1.3.3. Assessing the impact of tables-next-to-code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux_perf.html#how-does-tables-next-to-code-affect-performance">2.1.3.4. How does Tables Next to Code Affect Performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux_perf.html#awards">2.1.3.5. Awards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux_perf.html#inspecting-with-perf">2.1.3.6. Inspecting with Perf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux_perf.html#conclusion">2.1.3.7. Conclusion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux_perf.html#programmatically-consuming-perf-output">2.1.3.8. Programmatically Consuming Perf Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux_perf.html#helpful-one-liners">2.1.3.9. Helpful One Liners</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux_perf.html#references-and-further-reading">2.1.3.10. References and Further Reading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux_perf.html#footnotes">2.1.3.11. Footnotes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="dtrace.html">2.1.4. <span class="lightgrey">Dtrace</span></a></li>
+<li class="toctree-l1"><a class="reference internal" href="valgrind.html">2.1.5. <span class="lightgrey">Valgrind</span></a></li>
+<li class="toctree-l1"><a class="reference internal" href="cachegrind.html">2.1.6. <span class="lightgrey">Using Cachegrind</span></a></li>
 </ul>
 </div>
 </section>
@@ -224,8 +238,8 @@
        title="previous chapter">← <span class="section-number">2. </span>Measurement, Profiling, and Observation</a>
   </li>
   <li class="next">
-    <a href="linux_time.html"
-       title="next chapter"><span class="section-number">2.1.1. </span><span class="lightgrey">The Linux time command</span> →</a>
+    <a href="asm.html"
+       title="next chapter"><span class="section-number">2.1.1. </span>Reading Asm →</a>
   </li>
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2022-2024, Jeffrey Young (doyougnu).

@@ -539,7 +539,7 @@ constructors (five vs nine). We find that is not the case, instead
 Furthermore, a value of <code class="docutils literal notranslate"><span class="pre">LotsOfInts2</span></code> allocates 9 words (72 bytes), which is 6
 more words than expected <em>and</em> indicates that the value was not detected as a
 CAF. What we’re observing is the benefits of pointer-tagging optimizations (see
-<span id="id2">Marlow <em>et al.</em> [<a class="reference internal" href="../../../contents.html#id11" title="Simon Marlow, Alexey Rodriguez Yakushev, and Simon Peyton Jones. Faster laziness using dynamic pointer tagging. SIGPLAN Not., 42(9):277–288, oct 2007. URL: https://doi.org/10.1145/1291220.1291194, doi:10.1145/1291220.1291194.">3</a>]</span>). When a datatype has 8 or less (4 or less on
+<span id="id2">Marlow <em>et al.</em> [<a class="reference internal" href="../../../contents.html#id11" title="Simon Marlow, Alexey Rodriguez Yakushev, and Simon Peyton Jones. Faster laziness using dynamic pointer tagging. SIGPLAN Not., 42(9):277–288, oct 2007. URL: https://doi.org/10.1145/1291220.1291194, doi:10.1145/1291220.1291194.">4</a>]</span>). When a datatype has 8 or less (4 or less on
 32-bit machines) constructors GHC uses the last 3-bits (2-bits on 32-bit) of the
 constructor’s pointer to store information about the constructor. This produces
 a significant speedup and lowers memory costs in many ways: It allows the

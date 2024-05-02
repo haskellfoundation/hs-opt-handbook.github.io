@@ -420,6 +420,10 @@ allocation of their program across many functions, modules and packages, which
 is not a common experience when writing Haskell. For our purposes’, we’ll
 inspect examples that GHC should have no problem finding and optimizing. See the
 <a class="reference internal" href="../Case_Studies/sbv_572.html#sbv572"><span class="std std-ref">Impact of seq Removal on SBV’s cache</span></a> case study for an example of excessive memory allocation in a widely used library.</p>
+<div class="admonition-todo admonition" id="id6">
+<p class="admonition-title">Todo</p>
+<p>Not yet written, see <a class="reference external" href="https://github.com/input-output-hk/hs-opt-handbook.github.io/issues/18">#18</a></p>
+</div>
 <p>While
 GHC is good at optimizing these cases, becoming familiar with these code
 transformations is beneficial; it trains you to start thinking in terms of
@@ -569,6 +573,10 @@ than expressing that meaning through functions.</p>
 <p>When the program domain lacks composability, functions will become overly large
 and overly concerned with implementation details; <em>that</em> is high impedance
 expressing itself in the implementation.</p>
+<div class="admonition-todo admonition" id="id10">
+<p class="admonition-title">Todo</p>
+<p>Need example as case study see <a class="reference external" href="https://github.com/input-output-hk/hs-opt-handbook.github.io/issues/20">#20</a></p>
+</div>
 </section>
 <section id="problem-domain-invariants-are-difficult-to-express">
 <h4><span class="section-number">1.2.5.2.3. </span>Problem Domain Invariants are Difficult to Express<a class="headerlink" href="#problem-domain-invariants-are-difficult-to-express" title="Link to this heading">¶</a></h4>

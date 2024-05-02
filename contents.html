@@ -209,11 +209,12 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="src/Measurement_Observation/index.html">2. Measurement, Profiling, and Observation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="src/Measurement_Observation/Binary_Profiling/index.html">2.1. Binary Profiling and Probing</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Binary_Profiling/linux_time.html">2.1.1. <span class="lightgrey">The Linux time command</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Binary_Profiling/linux_perf.html">2.1.2. <span class="lightgrey">The Linux perf utility</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Binary_Profiling/dtrace.html">2.1.3. <span class="lightgrey">Dtrace</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Binary_Profiling/valgrind.html">2.1.4. <span class="lightgrey">Valgrind</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Binary_Profiling/cachegrind.html">2.1.5. <span class="lightgrey">Using Cachegrind</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Binary_Profiling/asm.html">2.1.1. Reading Asm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Binary_Profiling/linux_time.html">2.1.2. <span class="lightgrey">The Linux time command</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Binary_Profiling/linux_perf.html">2.1.3. The Linux perf utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Binary_Profiling/dtrace.html">2.1.4. <span class="lightgrey">Dtrace</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Binary_Profiling/valgrind.html">2.1.5. <span class="lightgrey">Valgrind</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="src/Measurement_Observation/Binary_Profiling/cachegrind.html">2.1.6. <span class="lightgrey">Using Cachegrind</span></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="src/Measurement_Observation/Thread_Profiling/index.html">2.2. Thread Level Profiling</a><ul>
@@ -320,57 +321,57 @@
 <span class="label"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></span>
 <p>Simon Peyton Jones and Andre Santos. A transformation-based optimiser for haskell. <em>Science of Computer Programming</em>, October 1997. URL: <a class="reference external" href="https://www.microsoft.com/en-us/research/publication/a-transformation-based-optimiser-for-haskell/">https://www.microsoft.com/en-us/research/publication/a-transformation-based-optimiser-for-haskell/</a>.</p>
 </div>
-<div class="citation" id="id11" role="doc-biblioentry">
+<div class="citation" id="id15" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></span>
+<p>Simon Marlow and Simon Peyton Jones. Making a fast curry: push/enter vs. eval/apply for higher-order languages. In <em>Proceedings of the Ninth ACM SIGPLAN International Conference on Functional Programming</em>, ICFP '04, 4–15. New York, NY, USA, 2004. Association for Computing Machinery. URL: <a class="reference external" href="https://doi.org/10.1145/1016850.1016856">https://doi.org/10.1145/1016850.1016856</a>, <a class="reference external" href="https://doi.org/10.1145/1016850.1016856">doi:10.1145/1016850.1016856</a>.</p>
+</div>
+<div class="citation" id="id11" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></span>
 <p>Simon Marlow, Alexey Rodriguez Yakushev, and Simon Peyton Jones. Faster laziness using dynamic pointer tagging. <em>SIGPLAN Not.</em>, 42(9):277–288, oct 2007. URL: <a class="reference external" href="https://doi.org/10.1145/1291220.1291194">https://doi.org/10.1145/1291220.1291194</a>, <a class="reference external" href="https://doi.org/10.1145/1291220.1291194">doi:10.1145/1291220.1291194</a>.</p>
 </div>
+<div class="citation" id="id3" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></span>
+<p>Peyton Jones, Simon L, and Simon Peyton Jones. Implementing lazy functional languages on stock hardware: the spineless tagless g-machine. <em>Journal of Functional Programming</em>, 2:127–202, July 1992. URL: <a class="reference external" href="https://www.microsoft.com/en-us/research/publication/implementing-lazy-functional-languages-on-stock-hardware-the-spineless-tagless-g-machine/">https://www.microsoft.com/en-us/research/publication/implementing-lazy-functional-languages-on-stock-hardware-the-spineless-tagless-g-machine/</a>.</p>
+</div>
 <div class="citation" id="id12" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></span>
 <p>Thomas Johnsson. Lambda lifting: transforming programs to recursive equations. In Jean-Pierre Jouannaud, editor, <em>Functional Programming Languages and Computer Architecture</em>, 190–203. Berlin, Heidelberg, 1985. Springer Berlin Heidelberg.</p>
 </div>
 <div class="citation" id="id13" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></span>
 <p>Sebastian Graf and Simon Peyton Jones. Selective lambda lifting. 2019. URL: <a class="reference external" href="https://arxiv.org/abs/1910.11717">https://arxiv.org/abs/1910.11717</a>, <a class="reference external" href="https://doi.org/10.48550/ARXIV.1910.11717">doi:10.48550/ARXIV.1910.11717</a>.</p>
 </div>
 <div class="citation" id="id18" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span>8<span class="fn-bracket">]</span></span>
 <p>Phil Bagwell. Ideal hash trees. Technical Report, Ecole polytechnique fédérale de Lausanne, 2001.</p>
 </div>
 <div class="citation" id="id19" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span>9<span class="fn-bracket">]</span></span>
 <p>Paul Hudak, John Hughes, Simon Peyton Jones, and Philip Wadler. A history of haskell: being lazy with class. In <em>Proceedings of the Third ACM SIGPLAN Conference on History of Programming Languages</em>, HOPL III, 12–1–12–55. New York, NY, USA, 2007. Association for Computing Machinery. URL: <a class="reference external" href="https://doi.org/10.1145/1238844.1238856">https://doi.org/10.1145/1238844.1238856</a>, <a class="reference external" href="https://doi.org/10.1145/1238844.1238856">doi:10.1145/1238844.1238856</a>.</p>
 </div>
 <div class="citation" id="id14" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>8<span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span>10<span class="fn-bracket">]</span></span>
 <p>Sebastian Graf. Call arity vs. demand analysis. August 2017.</p>
 </div>
 <div class="citation" id="id16" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>9<span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span>11<span class="fn-bracket">]</span></span>
 <p>Ilya Sergey, Dimitrios Vytiniotis, and Simon Peyton Jones. Modular, higher-order cardinality analysis in theory and practice. <em>SIGPLAN Not.</em>, 49(1):335–347, jan 2014. URL: <a class="reference external" href="https://doi.org/10.1145/2578855.2535861">https://doi.org/10.1145/2578855.2535861</a>, <a class="reference external" href="https://doi.org/10.1145/2578855.2535861">doi:10.1145/2578855.2535861</a>.</p>
 </div>
-<div class="citation" id="id3" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>10<span class="fn-bracket">]</span></span>
-<p>Peyton Jones, Simon L, and Simon Peyton Jones. Implementing lazy functional languages on stock hardware: the spineless tagless g-machine. <em>Journal of Functional Programming</em>, 2:127–202, July 1992. URL: <a class="reference external" href="https://www.microsoft.com/en-us/research/publication/implementing-lazy-functional-languages-on-stock-hardware-the-spineless-tagless-g-machine/">https://www.microsoft.com/en-us/research/publication/implementing-lazy-functional-languages-on-stock-hardware-the-spineless-tagless-g-machine/</a>.</p>
+<div class="citation" id="id7" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>12<span class="fn-bracket">]</span></span>
+<p>Simon L. Peyton Jones and Jon Salkild. The spineless tagless g-machine. In <em>Proceedings of the Fourth International Conference on Functional Programming Languages and Computer Architecture</em>, FPCA '89, 184–201. New York, NY, USA, 1989. Association for Computing Machinery. URL: <a class="reference external" href="https://doi.org/10.1145/99370.99385">https://doi.org/10.1145/99370.99385</a>, <a class="reference external" href="https://doi.org/10.1145/99370.99385">doi:10.1145/99370.99385</a>.</p>
 </div>
 <div class="citation" id="id2" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>11<span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span>13<span class="fn-bracket">]</span></span>
 <p>Luke Maurer, Paul Downen, Zena M. Ariola, and Simon Peyton Jones. Compiling without continuations. In <em>Proceedings of the 38th ACM SIGPLAN Conference on Programming Language Design and Implementation</em>, PLDI 2017, 482–494. New York, NY, USA, 2017. Association for Computing Machinery. URL: <a class="reference external" href="https://doi.org/10.1145/3062341.3062380">https://doi.org/10.1145/3062341.3062380</a>, <a class="reference external" href="https://doi.org/10.1145/3062341.3062380">doi:10.1145/3062341.3062380</a>.</p>
 </div>
 <div class="citation" id="id9" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>12<span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span>14<span class="fn-bracket">]</span></span>
 <p>Richard A. Eisenberg and Simon Peyton Jones. Levity polymorphism. <em>SIGPLAN Not.</em>, 52(6):525–539, jun 2017. URL: <a class="reference external" href="https://doi.org/10.1145/3140587.3062357">https://doi.org/10.1145/3140587.3062357</a>, <a class="reference external" href="https://doi.org/10.1145/3140587.3062357">doi:10.1145/3140587.3062357</a>.</p>
 </div>
 <div class="citation" id="id8" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>13<span class="fn-bracket">]</span></span>
-<p>WD Partain, A Santos, and Simon Peyton Jones. Let-floating: moving bindings to give faster programs. May 1996. ACM SIGPLAN International Conference on Functional Programming (ICFP'96). URL: <a class="reference external" href="https://www.microsoft.com/en-us/research/publication/let-floating-moving-bindings-to-give-faster-programs/">https://www.microsoft.com/en-us/research/publication/let-floating-moving-bindings-to-give-faster-programs/</a>.</p>
-</div>
-<div class="citation" id="id7" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>14<span class="fn-bracket">]</span></span>
-<p>Simon L. Peyton Jones and Jon Salkild. The spineless tagless g-machine. In <em>Proceedings of the Fourth International Conference on Functional Programming Languages and Computer Architecture</em>, FPCA '89, 184–201. New York, NY, USA, 1989. Association for Computing Machinery. URL: <a class="reference external" href="https://doi.org/10.1145/99370.99385">https://doi.org/10.1145/99370.99385</a>, <a class="reference external" href="https://doi.org/10.1145/99370.99385">doi:10.1145/99370.99385</a>.</p>
-</div>
-<div class="citation" id="id15" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span>15<span class="fn-bracket">]</span></span>
-<p>Simon Marlow and Simon Peyton Jones. Making a fast curry: push/enter vs. eval/apply for higher-order languages. In <em>Proceedings of the Ninth ACM SIGPLAN International Conference on Functional Programming</em>, ICFP '04, 4–15. New York, NY, USA, 2004. Association for Computing Machinery. URL: <a class="reference external" href="https://doi.org/10.1145/1016850.1016856">https://doi.org/10.1145/1016850.1016856</a>, <a class="reference external" href="https://doi.org/10.1145/1016850.1016856">doi:10.1145/1016850.1016856</a>.</p>
+<p>WD Partain, A Santos, and Simon Peyton Jones. Let-floating: moving bindings to give faster programs. May 1996. ACM SIGPLAN International Conference on Functional Programming (ICFP'96). URL: <a class="reference external" href="https://www.microsoft.com/en-us/research/publication/let-floating-moving-bindings-to-give-faster-programs/">https://www.microsoft.com/en-us/research/publication/let-floating-moving-bindings-to-give-faster-programs/</a>.</p>
 </div>
 </div>
 </div>
