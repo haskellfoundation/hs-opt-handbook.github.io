@@ -969,13 +969,13 @@ Footnotes
        #. :term:`Unlifted` objects cannot be evaluated and therefore don't have
           an entry code.
 
-.. [#] GHC can be built in many different ways which we call ``flavors``. The
-       ``default`` flavor is one such provided by GHC's build tool `Hadrian
-       <https://gitlab.haskell.org/ghc/ghc/-/blob/master/hadrian/README.md?ref_type=heads>`__.
-
 .. [#] I say "typically" because GHC will use ``call`` in some circumstances
        such as creating :term:`CAF`'s, see :ghcSource:`Note [CAF management]
        <rts/sm/Storage.c?ref_type=heads#L425>`
+
+.. [#] GHC can be built in many different ways which we call ``flavors``. The
+       ``default`` flavor is one such provided by GHC's build tool `Hadrian
+       <https://gitlab.haskell.org/ghc/ghc/-/blob/master/hadrian/README.md?ref_type=heads>`__.
 
 .. [#] Larger code size will slow down the program because there is simply more
        code to process. But its contribution to runtime performance is not as
