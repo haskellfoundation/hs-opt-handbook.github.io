@@ -918,7 +918,7 @@ Helpful One Liners
 
 The most robust list is given by `Brendan Gregg <https://www.brendangregg.com/perf.html#OneLiners>`__.
 
-#. Visualizing with `speedscope<https://www.speedscope.app/>`__. Speedscope
+#. Visualizing with `speedscope <https://www.speedscope.app/>`__. Speedscope
    directly `supports
    <https://github.com/jlfwong/speedscope/wiki/Importing-from-perf-(linux)>`__
    perf. You can drop your ``perf.data`` directly into the web app or if you
