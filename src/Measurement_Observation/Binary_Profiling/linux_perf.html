@@ -264,11 +264,11 @@ coalescing the tables into a single section in the object file. Such a strategy
 might lead to better branch prediction, and therefore improved runtime
 performance on modern hardware. In addition to other strategies, tables-next-to-code creates
 far reaching and non-obvious effects in the compiler. For example, GHC does not
-typically <a class="footnote-reference brackets" href="#id12" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>  generate <code class="docutils literal notranslate"><span class="pre">call</span></code> or <code class="docutils literal notranslate"><span class="pre">ret</span></code> instructions because</p>
+typically generate <code class="docutils literal notranslate"><span class="pre">call</span></code> or <code class="docutils literal notranslate"><span class="pre">ret</span></code> instructions <a class="footnote-reference brackets" href="#id12" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>.</p>
 </section>
 <section id="assessing-the-impact-of-tntc">
 <h2><span class="section-number">2.1.3.3. </span>Assessing the impact of tables-next-to-code<a class="headerlink" href="#assessing-the-impact-of-tntc" title="Link to this heading">¶</a></h2>
-<p>We’ll compare two GHC’s, both will be <code class="docutils literal notranslate"><span class="pre">default</span></code> <a class="footnote-reference brackets" href="#id13" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a> builds; one built with
+<p>We’ll compare two GHC’s, both will be <code class="docutils literal notranslate"><span class="pre">default</span></code> <a class="footnote-reference brackets" href="#id14" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a> builds; one built with
 tables-next-to-code enabled, which I’ll call <code class="docutils literal notranslate"><span class="pre">TNTC</span></code> and one without, which I’ll call
 <code class="docutils literal notranslate"><span class="pre">NO-TNTC</span></code>. To compare the two we’ll run GHC’s nofib benchmark suite, and use
 <code class="docutils literal notranslate"><span class="pre">perf</span></code> to measure hardware and software events (more on these events later
@@ -345,7 +345,7 @@ indirection in the runtime’s evaluation of heap objects. Let’s zoom into two
 benchmark programs that show the largest signal: <code class="docutils literal notranslate"><span class="pre">primes</span></code> which shows <code class="docutils literal notranslate"><span class="pre">TNTC</span></code>
 performing 55% faster than <code class="docutils literal notranslate"><span class="pre">NO-TNTC</span></code>, and <code class="docutils literal notranslate"><span class="pre">awards</span></code> which shows <code class="docutils literal notranslate"><span class="pre">NO-TNTC</span></code>
 performing 7% faster than <code class="docutils literal notranslate"><span class="pre">TNTC</span></code>. We’ll focus on <code class="docutils literal notranslate"><span class="pre">awards</span></code> because we want to
-understand why exactly tables-next-to-code is degrades for this exact program.</p>
+understand why exactly tables-next-to-code degrades for this exact program.</p>
 </section>
 <section id="awards">
 <h2><span class="section-number">2.1.3.5. </span>Awards<a class="headerlink" href="#awards" title="Link to this heading">¶</a></h2>
@@ -436,13 +436,23 @@ run perf many times then the old data will be stored in <code class="docutils li
 Counters give a low level view of how our program is interacting with the
 operating system and our machine. Here is a description of each counter perf
 reported in order:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You may see output such as <code class="docutils literal notranslate"><span class="pre">task-clock:u</span></code> instead of <code class="docutils literal notranslate"><span class="pre">task-clock</span></code>
+(note the extra <code class="docutils literal notranslate"><span class="pre">:u</span></code>). These suffixes are <a class="reference external" href="https://perf.wiki.kernel.org/index.php/Tutorial#Counting_with_perf_stat">modifiers</a>
+which indicate the level at which the event was measured. For example,
+<code class="docutils literal notranslate"><span class="pre">cycles:k</span></code> is the number of cycles that perf detected in kernel mode, while
+<code class="docutils literal notranslate"><span class="pre">cycles:u</span></code> is the number of cycles in user mode. By default, if given the
+proper permissions perf will measure both user and kernel level events. You
+can directly specify the levels by suffixing an event name with a modifier or
+combination of modifiers. For instance, <code class="docutils literal notranslate"><span class="pre">perf</span> <span class="pre">stat</span> <span class="pre">-e</span> <span class="pre">task-clock:uk</span></code> will
+measure the task-clock at both user and kernel level; see the <code class="docutils literal notranslate"><span class="pre">perf-list</span></code>
+man page for more.</p>
+</div>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">task-clock:u</span></code>: the <code class="docutils literal notranslate"><span class="pre">:u</span></code> is a <a class="reference external" href="https://perf.wiki.kernel.org/index.php/Tutorial#Counting_with_perf_stat">modifier</a>
-meaning the measured events are <code class="docutils literal notranslate"><span class="pre">user</span> <span class="pre">level</span></code> events, as opposed to <code class="docutils literal notranslate"><span class="pre">:k</span></code>
-meaning kernel level; see the <code class="docutils literal notranslate"><span class="pre">perf-list</span></code> man page for more. <code class="docutils literal notranslate"><span class="pre">task-clock</span></code>
-is a pre-defined software event that counts the time spent on the instrumented
-process. Not shown here is <code class="docutils literal notranslate"><span class="pre">cpu-clock</span></code> which measures the passage of time
-using the Linux CPU clock.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">task-clock</span></code>:. <code class="docutils literal notranslate"><span class="pre">task-clock</span></code> is a pre-defined software event that counts
+the time spent on the instrumented process. Not shown here is <code class="docutils literal notranslate"><span class="pre">cpu-clock</span></code>
+which measures the passage of time using the Linux CPU clock.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">context-switches</span></code>: A context-switch is occurs when the operating system
 switches the CPU from executing one process or thread to another. Here we see
 13,878 such switches.</p></li>
@@ -457,7 +467,7 @@ for the process.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">stalled-cycles-frontend</span></code>: This counts the number of CPU clock cycles during
 which the frontend of the CPU was waiting to fetch and decode instructions.
 There can be several reasons for frontend stalls, ranging from instruction
-cache misses, to branch mispredictions, to code bloat <a class="footnote-reference brackets" href="#id14" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>.</p></li>
+cache misses, to branch mispredictions, to code bloat <a class="footnote-reference brackets" href="#id15" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">stalled-cycles-backend</span></code>: This counts the number of CPU clock cycles during
 which the CPU backend was unable to execute instructions. A high count of
 stalled backend cycles means the CPU backend was waiting a long time in order
@@ -997,14 +1007,34 @@ an entry code.</p></li>
 <aside class="footnote brackets" id="id12" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
 <p>I say “typically” because GHC will use <code class="docutils literal notranslate"><span class="pre">call</span></code> in some circumstances
-such as creating <a class="reference internal" href="../../glossary.html#term-CAF"><span class="xref std std-term">CAF</span></a>’s, see <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/blob/master/rts/sm/Storage.c?ref_type=heads#L425">Note [CAF management]</a></p>
+such as creating <a class="reference internal" href="../../glossary.html#term-CAF"><span class="xref std std-term">CAF</span></a>’s, see <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/blob/master/rts/sm/Storage.c?ref_type=heads#L425">Note [CAF management]</a>. The reasons GHC does not use
+<code class="docutils literal notranslate"><span class="pre">call</span></code> or <code class="docutils literal notranslate"><span class="pre">ret</span></code> are deeply ingrained. First, GHC maintains a separate
+stack from the system-supported C stack. The tradeoff is that this allows
+GHC to completely maintain its own stack, create many tiny stacks for
+each thread, check for stack overflow and reallocate the stack if
+necessary. If GHC generated <code class="docutils literal notranslate"><span class="pre">call</span></code> and <code class="docutils literal notranslate"><span class="pre">ret</span></code> instructions, and used
+the C stack then it would lose these capabilities, but in return gain
+better branch prediction by virtue of the <code class="docutils literal notranslate"><span class="pre">call</span></code> and <code class="docutils literal notranslate"><span class="pre">ret</span></code>
+instructions which have special support in most hardware. In this case,
+GHC would have to push a return address or a continuation to the C stack
+in order to use the <code class="docutils literal notranslate"><span class="pre">call</span></code> and <code class="docutils literal notranslate"><span class="pre">ret</span></code> instructions. The second reason
+is that a <code class="docutils literal notranslate"><span class="pre">case</span></code> is operationally preceded by an info table that
+describes its stack frame layout. If the scrutinee of the <code class="docutils literal notranslate"><span class="pre">case</span></code> is
+evaluated via a <code class="docutils literal notranslate"><span class="pre">call</span></code> which then returns with <code class="docutils literal notranslate"><span class="pre">ret</span></code>, then upon a
+return, control flow will be at the instruction <em>after</em> the case.
+Therefore, the info table would no longer be <em>immediately</em> before the
+return address and thus create havoc in the garbage collector which
+relies on that information. Thus, if <code class="docutils literal notranslate"><span class="pre">case</span></code> and <code class="docutils literal notranslate"><span class="pre">ret</span></code> are to be used,
+then the runtime cannot rely on tables-next-to-code since the tables will no longer be
+next to the relevant code. See <span id="id13">Marlow <em>et al.</em> [<a class="reference internal" href="../../../contents.html#id11" title="Simon Marlow, Alexey Rodriguez Yakushev, and Simon Peyton Jones. Faster laziness using dynamic pointer tagging. SIGPLAN Not., 42(9):277–288, oct 2007. URL: https://doi.org/10.1145/1291220.1291194, doi:10.1145/1291220.1291194.">4</a>]</span> Section
+7.1, which I have heavily borrowed from here for more.</p>
 </aside>
-<aside class="footnote brackets" id="id13" role="doc-footnote">
+<aside class="footnote brackets" id="id14" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">4</a><span class="fn-bracket">]</span></span>
 <p>GHC can be built in many different ways which we call <code class="docutils literal notranslate"><span class="pre">flavors</span></code>. The
 <code class="docutils literal notranslate"><span class="pre">default</span></code> flavor is one such provided by GHC’s build tool <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/blob/master/hadrian/README.md?ref_type=heads">Hadrian</a>.</p>
 </aside>
-<aside class="footnote brackets" id="id14" role="doc-footnote">
+<aside class="footnote brackets" id="id15" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">5</a><span class="fn-bracket">]</span></span>
 <p>Larger code size will slow down the program because there is simply more
 code to process. But its contribution to runtime performance is not as
