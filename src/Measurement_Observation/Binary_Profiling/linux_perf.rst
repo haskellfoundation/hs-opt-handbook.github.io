@@ -144,7 +144,7 @@ coalescing the tables into a single section in the object file. Such a strategy
 might lead to better branch prediction, and therefore improved runtime
 performance on modern hardware. In addition to other strategies, |TNTC| creates
 far reaching and non-obvious effects in the compiler. For example, GHC does not
-typically [#]_  generate ``call`` or ``ret`` instructions because
+typically generate ``call`` or ``ret`` instructions [#]_.
 
 Assessing the impact of |TNTC|
 ------------------------------
@@ -233,7 +233,7 @@ indirection in the runtime's evaluation of heap objects. Let's zoom into two
 benchmark programs that show the largest signal: ``primes`` which shows ``TNTC``
 performing 55% faster than ``NO-TNTC``, and ``awards`` which shows ``NO-TNTC``
 performing 7% faster than ``TNTC``. We'll focus on ``awards`` because we want to
-understand why exactly |TNTC| is degrades for this exact program.
+understand why exactly |TNTC| degrades for this exact program.
 
 Awards
 ------
@@ -335,13 +335,21 @@ Counters give a low level view of how our program is interacting with the
 operating system and our machine. Here is a description of each counter perf
 reported in order:
 
-- ``task-clock:u``: the ``:u`` is a `modifier
-  <https://perf.wiki.kernel.org/index.php/Tutorial#Counting_with_perf_stat>`__
-  meaning the measured events are ``user level`` events, as opposed to ``:k``
-  meaning kernel level; see the ``perf-list`` man page for more. ``task-clock``
-  is a pre-defined software event that counts the time spent on the instrumented
-  process. Not shown here is ``cpu-clock`` which measures the passage of time
-  using the Linux CPU clock.
+.. note:: You may see output such as ``task-clock:u`` instead of ``task-clock``
+   (note the extra ``:u``). These suffixes are `modifiers
+   <https://perf.wiki.kernel.org/index.php/Tutorial#Counting_with_perf_stat>`__
+   which indicate the level at which the event was measured. For example,
+   ``cycles:k`` is the number of cycles that perf detected in kernel mode, while
+   ``cycles:u`` is the number of cycles in user mode. By default, if given the
+   proper permissions perf will measure both user and kernel level events. You
+   can directly specify the levels by suffixing an event name with a modifier or
+   combination of modifiers. For instance, ``perf stat -e task-clock:uk`` will
+   measure the task-clock at both user and kernel level; see the ``perf-list``
+   man page for more.
+
+- ``task-clock``:. ``task-clock`` is a pre-defined software event that counts
+  the time spent on the instrumented process. Not shown here is ``cpu-clock``
+  which measures the passage of time using the Linux CPU clock.
 
 - ``context-switches``: A context-switch is occurs when the operating system
   switches the CPU from executing one process or thread to another. Here we see
@@ -665,7 +673,7 @@ So we'll dump all the intermediate representations and count the references to
    ### dump the IRs
    $ ghc -fforce-recomp -O2 -ddump-asm -ddump-cmm -ddump-stg-final -ddump-simpl -ddump-to-file -g Main.hs
    [1 of 3] Compiling QSort            ( QSort.hs, QSort.o )
-   ... 
+   ...
    [3 of 3] Linking Main [Objects changed]
 
 And now count the references:
@@ -695,7 +703,7 @@ the occurrence name. Here is the first match:
 
 we see that the occurrence name ``go2_r3RZ_entry`` calls
 ``GHC.Num.Integer.integerAdd_info`` with the contents of ``R3`` and ``R2`` in
-block label ``c4al``. 
+block label ``c4al``.
 Here is the second reference:
 
 .. code-block:: haskell
@@ -819,7 +827,7 @@ Now we can rephrase our working hypothesis: the ``awards`` program exhibits an
 L1 instruction cache miss rate of 16% with |TNTC|, with the call to ``sum`` in
 ``sumscores`` being responsible for 10% of the 16% miss rate. We now have a
 means of inspecting the program we want to optimize and a means for detecting if
-our optimizations have an impact. 
+our optimizations have an impact.
 
 Conclusion
 ----------
@@ -971,7 +979,28 @@ Footnotes
 
 .. [#] I say "typically" because GHC will use ``call`` in some circumstances
        such as creating :term:`CAF`'s, see :ghcSource:`Note [CAF management]
-       <rts/sm/Storage.c?ref_type=heads#L425>`
+       <rts/sm/Storage.c?ref_type=heads#L425>`. The reasons GHC does not use
+       ``call`` or ``ret`` are deeply ingrained. First, GHC maintains a separate
+       stack from the system-supported C stack. The tradeoff is that this allows
+       GHC to completely maintain its own stack, create many tiny stacks for
+       each thread, check for stack overflow and reallocate the stack if
+       necessary. If GHC generated ``call`` and ``ret`` instructions, and used
+       the C stack then it would lose these capabilities, but in return gain
+       better branch prediction by virtue of the ``call`` and ``ret``
+       instructions which have special support in most hardware. In this case,
+       GHC would have to push a return address or a continuation to the C stack
+       in order to use the ``call`` and ``ret`` instructions. The second reason
+       is that a ``case`` is operationally preceded by an info table that
+       describes its stack frame layout. If the scrutinee of the ``case`` is
+       evaluated via a ``call`` which then returns with ``ret``, then upon a
+       return, control flow will be at the instruction *after* the case.
+       Therefore, the info table would no longer be *immediately* before the
+       return address and thus create havoc in the garbage collector which
+       relies on that information. Thus, if ``case`` and ``ret`` are to be used,
+       then the runtime cannot rely on |TNTC| since the tables will no longer be
+       next to the relevant code. See :cite:t:`pointerTaggingLaziness` Section
+       7.1, which I have heavily borrowed from here for more.
+
 
 .. [#] GHC can be built in many different ways which we call ``flavors``. The
        ``default`` flavor is one such provided by GHC's build tool `Hadrian
