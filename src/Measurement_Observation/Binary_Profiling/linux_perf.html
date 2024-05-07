@@ -234,21 +234,22 @@ which is a constant that describes the kind of closure, for example, a
 <a class="reference internal" href="../../glossary.html#term-Thunk"><span class="xref std std-term">Thunk</span></a>, Data Constructor, <a class="reference internal" href="../../glossary.html#term-PAP"><span class="xref std std-term">PAP</span></a> etc.; the <a class="reference internal" href="../../glossary.html#term-SRT"><span class="xref std std-term">SRT</span></a> <code class="docutils literal notranslate"><span class="pre">bitmap</span></code>,
 which the garbage collector requires to collect <a class="reference internal" href="../../glossary.html#term-CAF"><span class="xref std std-term">CAF</span></a>’s. Lastly, the info
 table will hold the <a class="reference internal" href="../../glossary.html#term-Entry-Code"><span class="xref std std-term">entry code</span></a> pointer for the heap object if one exists
-<a class="footnote-reference brackets" href="#id11" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> . For more see <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/blob/master/rts/include/rts/storage/InfoTables.h">InfoTables.h</a> for exact details and other variants.</p>
+<a class="footnote-reference brackets" href="#id11" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> . For more see <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/blob/master/rts/include/rts/storage/InfoTables.h">InfoTables.h</a> and <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/blob/master/rts/include/rts/storage/Storage.h">Closures.h</a> for exact details and variants.</p>
 <p>Here is a depiction of the heap object layout without tables-next-to-code enabled. Code is
 represented in orange and data in blue. Boxes which have a dashed outline change
 depending on the type of heap object and build:</p>
 <div class="figure" style="text-align: left"><p><img  src="../../../_images/tikz-2ce56ab7d0223ce8614bc79f82a16c805c8cc6c3.svg" alt="Figure made with TikZ" /></p>
-</div><p>Tables-next-to-code does two things: first it removes the entry code pointer
-from the info table and second, it moves the entry code itself to the address
-immediately after the info table and sets the info table pointer itself to the
-address of the entry code. This setup allows the runtime system to save a
-pointer indirection because the info table pointer now points to the entry code.
-Thus, when jumping to the entry code, which is a common operation, the runtime
-system saves a single indirection, but can still reference the fields of the
-info table through a negative memory offset from the info table pointer.</p>
+</div><p>Tables-next-to-code does two things: first it removes the entry code pointer and
+places the type specific fields before the <code class="docutils literal notranslate"><span class="pre">Closure</span> <span class="pre">Type</span></code>, and second, it
+moves the entry code itself to the address immediately after the info table and
+sets the info table pointer to the address of the entry code. This setup allows
+the runtime system to save a pointer indirection because the info table pointer
+now points to the entry code. Thus, when jumping to the entry code, which is a
+common operation, the runtime system saves a single indirection, but can still
+reference the fields of the info table through a negative memory offset from
+the info table pointer.</p>
 <p>Here is a depiction with tables-next-to-code enabled:</p>
-<div class="figure" style="text-align: left"><p><img  src="../../../_images/tikz-9ac7c1a806690ce988332187ffaa95ac4c180c87.svg" alt="Figure made with TikZ" /></p>
+<div class="figure" style="text-align: left"><p><img  src="../../../_images/tikz-37e031dca7a0f5fe10a05bea1924af509e4478bf.svg" alt="Figure made with TikZ" /></p>
 </div><p>The key change is that the info table pointer points to the entry code, while
 the rest of the info table can still be referenced via negative offsets from the
 entry code address.</p>
