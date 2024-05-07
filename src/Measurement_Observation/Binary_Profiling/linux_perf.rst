@@ -38,7 +38,8 @@ which is a constant that describes the kind of closure, for example, a
 which the garbage collector requires to collect :term:`CAF`'s. Lastly, the info
 table will hold the :term:`entry code` pointer for the heap object if one exists
 [#]_ . For more see :ghcSource:`InfoTables.h
-<rts/include/rts/storage/InfoTables.h>` for exact details and other variants.
+<rts/include/rts/storage/InfoTables.h>` and :ghcSource:`Closures.h
+<rts/include/rts/storage/Storage.h>` for exact details and variants.
 
 Here is a depiction of the heap object layout without |TNTC| enabled. Code is
 represented in orange and data in blue. Boxes which have a dashed outline change
@@ -83,14 +84,15 @@ depending on the type of heap object and build:
     \draw[->, thick] (ip.south) |- (ecp.north west) node[midway] {};
     \draw[->, thick] (ecp.east) |- (ec.west) node[midway] {};
 
-Tables-next-to-code does two things: first it removes the entry code pointer
-from the info table and second, it moves the entry code itself to the address
-immediately after the info table and sets the info table pointer itself to the
-address of the entry code. This setup allows the runtime system to save a
-pointer indirection because the info table pointer now points to the entry code.
-Thus, when jumping to the entry code, which is a common operation, the runtime
-system saves a single indirection, but can still reference the fields of the
-info table through a negative memory offset from the info table pointer.
+Tables-next-to-code does two things: first it removes the entry code pointer and
+places the type specific fields before the ``Closure Type``, and second, it
+moves the entry code itself to the address immediately after the info table and
+sets the info table pointer to the address of the entry code. This setup allows
+the runtime system to save a pointer indirection because the info table pointer
+now points to the entry code. Thus, when jumping to the entry code, which is a
+common operation, the runtime system saves a single indirection, but can still
+reference the fields of the info table through a negative memory offset from
+the info table pointer.
 
 Here is a depiction with |TNTC| enabled:
 
@@ -111,7 +113,11 @@ Here is a depiction with |TNTC| enabled:
     (6,2.25)--node[rotate=0, yshift=7mm](header){Object Header} (14,2.25);
 
     \node[below of=ip, draw,rectangle, thick, fill=blue!10,
-    minimum width=4cm, minimum height=2cm, xshift=5cm, yshift=-3cm] (layout) {Layout};
+    minimum width=4cm, minimum height=2cm, xshift=5cm, yshift=-5cm] (layout) {Layout};
+
+    \node[above of=layout, draw,rectangle, thick, dashed, fill=blue!10,
+    minimum width=4cm, minimum height=2cm, yshift=1cm] (other) {Type Specific
+     Fields};
 
     \node[below of=layout, draw,rectangle, thick, fill=blue!10,
     minimum width=4cm, minimum height=2cm, yshift=-1cm] (ct) {Closure Type};
@@ -119,11 +125,7 @@ Here is a depiction with |TNTC| enabled:
     \node[below of=ct, draw,rectangle, thick, fill=blue!10,
     minimum width=4cm, minimum height=2cm, yshift=-1cm] (srt) {SRT Bitmap};
 
-    \node[below of=srt, draw,rectangle, thick, dashed, fill=blue!10,
-    minimum width=4cm, minimum height=2cm, yshift=-1cm] (other) {Type Specific
-     Fields};
-
-    \node[below of=other, draw,rectangle, thick, fill=orange!20,
+    \node[below of=srt, draw,rectangle, thick, fill=orange!20,
     minimum width=4cm, minimum height=2cm, yshift=-1cm] (ec) {Entry Code};
 
     \draw[->, thick] (ip.south) |- (ec.north west) node[midway] {};
