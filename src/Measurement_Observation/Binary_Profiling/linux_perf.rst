@@ -432,8 +432,9 @@ took 304 billion cycles, while ``NO-TNTC`` took 299 billion cycles. This is
 suspicious, and is suggestive of some kind of cache-miss because ``TNTC`` is
 taking *more* cycles to execute *less* instructions.
 
+.. _Checking the L1 Cache:
 
-Checking the L1 cache
+Checking the L1 Cache
 ^^^^^^^^^^^^^^^^^^^^^
 
 Let's zoom in on the CPU caches. To do so we'll ask perf to only record events

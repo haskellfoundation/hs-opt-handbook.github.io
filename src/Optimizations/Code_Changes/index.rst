@@ -9,6 +9,7 @@ Library Agnostic Changes
    lazy_tuples
    appropriate_folds
    parse_dont_validate
+   data_oriented_design
    using_ghc_exts
    inlining
    specialization
