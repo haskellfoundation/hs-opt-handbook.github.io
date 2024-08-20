@@ -26,6 +26,10 @@ by `Input Output Global <https://iohk.io/>`_.
 Release History
 ---------------
 
+* August, 2024
+
+  * :ref:`Philosophies of Optimization <Philosophies of Optimization Chapter>` first draft finished.
+
 * April, 2024
 
   * :ref:`Linux Perf <Perf Chapter>` first draft finished.
