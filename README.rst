@@ -87,12 +87,6 @@ With nix and flakes, run:
 
    nix develop -c make html
 
-With nix and flakes, and to autobuild run:
-
-.. code-block:: bash
-
-   nix develop -c sphinx-autobuild . _build/html
-
 With nix and no flakes, run:
 
 .. code-block:: bash
@@ -105,16 +99,11 @@ To rebuild the book everytime any ``*.rst*`` file changes do:
 
    find . -name "*.rst" | entr -sc '<your-build-command-here>'
 
-or use ``sphinx-autobuild``:
+or use the ``autobuild.sh`` script in the scripts directory:
 
-.. code-block:: bash
-
-   sphinx-autobuild . _build/html
-
-
-You can then check the output in ``_build/html`` or load directory into whatever
+You can then check the output in ``result/indexhtml`` or load that directory into whatever
 browser you'd like:
 
 .. code-block:: bash
 
-   firefox _build/html/index.html
+   firefox result/html/index.html
