@@ -215,7 +215,7 @@ upon its output and employ <code class="docutils literal notranslate"><span clas
 <section id="what-is-tables-next-to-code">
 <h2><span class="section-number">2.1.3.1. </span>What is Tables-Next-to-Code<a class="headerlink" href="#what-is-tables-next-to-code" title="Link to this heading">¶</a></h2>
 <p>Tables-next-to-code (TNTC) is a memory layout optimization in GHC that has been
-used for a very long time <a class="footnote-reference brackets" href="#id9" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. Every heap object has an object header followed
+used for a very long time <a class="footnote-reference brackets" href="#id10" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. Every heap object has an object header followed
 by a payload. The contents of the header depends on the kind of build <em>and</em> the
 type of object. For example, a profiling build will include <code class="docutils literal notranslate"><span class="pre">StgProfHeader</span></code>,
 while a parallel build adds an additional word to the header only for thunks
@@ -234,7 +234,7 @@ which is a constant that describes the kind of closure, for example, a
 <a class="reference internal" href="../../glossary.html#term-Thunk"><span class="xref std std-term">Thunk</span></a>, Data Constructor, <a class="reference internal" href="../../glossary.html#term-PAP"><span class="xref std std-term">PAP</span></a> etc.; the <a class="reference internal" href="../../glossary.html#term-SRT"><span class="xref std std-term">SRT</span></a> <code class="docutils literal notranslate"><span class="pre">bitmap</span></code>,
 which the garbage collector requires to collect <a class="reference internal" href="../../glossary.html#term-CAF"><span class="xref std std-term">CAF</span></a>’s. Lastly, the info
 table will hold the <a class="reference internal" href="../../glossary.html#term-Entry-Code"><span class="xref std std-term">entry code</span></a> pointer for the heap object if one exists
-<a class="footnote-reference brackets" href="#id11" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> . For more see <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/blob/master/rts/include/rts/storage/InfoTables.h">InfoTables.h</a> and <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/blob/master/rts/include/rts/storage/Storage.h">Closures.h</a> for exact details and variants.</p>
+<a class="footnote-reference brackets" href="#id12" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> . For more see <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/blob/master/rts/include/rts/storage/InfoTables.h">InfoTables.h</a> and <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/blob/master/rts/include/rts/storage/Storage.h">Closures.h</a> for exact details and variants.</p>
 <p>Here is a depiction of the heap object layout without tables-next-to-code enabled. Code is
 represented in orange and data in blue. Boxes which have a dashed outline change
 depending on the type of heap object and build:</p>
@@ -265,11 +265,11 @@ coalescing the tables into a single section in the object file. Such a strategy
 might lead to better branch prediction, and therefore improved runtime
 performance on modern hardware. In addition to other strategies, tables-next-to-code creates
 far reaching and non-obvious effects in the compiler. For example, GHC does not
-typically generate <code class="docutils literal notranslate"><span class="pre">call</span></code> or <code class="docutils literal notranslate"><span class="pre">ret</span></code> instructions <a class="footnote-reference brackets" href="#id12" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>.</p>
+typically generate <code class="docutils literal notranslate"><span class="pre">call</span></code> or <code class="docutils literal notranslate"><span class="pre">ret</span></code> instructions <a class="footnote-reference brackets" href="#id13" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>.</p>
 </section>
 <section id="assessing-the-impact-of-tntc">
 <h2><span class="section-number">2.1.3.3. </span>Assessing the impact of tables-next-to-code<a class="headerlink" href="#assessing-the-impact-of-tntc" title="Link to this heading">¶</a></h2>
-<p>We’ll compare two GHC’s, both will be <code class="docutils literal notranslate"><span class="pre">default</span></code> <a class="footnote-reference brackets" href="#id14" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a> builds; one built with
+<p>We’ll compare two GHC’s, both will be <code class="docutils literal notranslate"><span class="pre">default</span></code> <a class="footnote-reference brackets" href="#id15" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a> builds; one built with
 tables-next-to-code enabled, which I’ll call <code class="docutils literal notranslate"><span class="pre">TNTC</span></code> and one without, which I’ll call
 <code class="docutils literal notranslate"><span class="pre">NO-TNTC</span></code>. To compare the two we’ll run GHC’s nofib benchmark suite, and use
 <code class="docutils literal notranslate"><span class="pre">perf</span></code> to measure hardware and software events (more on these events later
@@ -468,7 +468,7 @@ for the process.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">stalled-cycles-frontend</span></code>: This counts the number of CPU clock cycles during
 which the frontend of the CPU was waiting to fetch and decode instructions.
 There can be several reasons for frontend stalls, ranging from instruction
-cache misses, to branch mispredictions, to code bloat <a class="footnote-reference brackets" href="#id15" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>.</p></li>
+cache misses, to branch mispredictions, to code bloat <a class="footnote-reference brackets" href="#id16" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">stalled-cycles-backend</span></code>: This counts the number of CPU clock cycles during
 which the CPU backend was unable to execute instructions. A high count of
 stalled backend cycles means the CPU backend was waiting a long time in order
@@ -519,7 +519,7 @@ took 304 billion cycles, while <code class="docutils literal notranslate"><span 
 suspicious, and is suggestive of some kind of cache-miss because <code class="docutils literal notranslate"><span class="pre">TNTC</span></code> is
 taking <em>more</em> cycles to execute <em>less</em> instructions.</p>
 <section id="checking-the-l1-cache">
-<h3><span class="section-number">2.1.3.6.1. </span>Checking the L1 cache<a class="headerlink" href="#checking-the-l1-cache" title="Link to this heading">¶</a></h3>
+<span id="id6"></span><h3><span class="section-number">2.1.3.6.1. </span>Checking the L1 Cache<a class="headerlink" href="#checking-the-l1-cache" title="Link to this heading">¶</a></h3>
 <p>Let’s zoom in on the CPU caches. To do so we’ll ask perf to only record events
 that for the L1 cache. You can list all of the available software and hardware
 events with <code class="docutils literal notranslate"><span class="pre">perf</span> <span class="pre">stat</span></code>, for example we can just get the counters for the L1
@@ -978,8 +978,8 @@ request and contribute to the Haskell community!</p>
 <li><p>The <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/wikis/rts/storage/heap-objects#info-tables">Info Tables wiki</a> entry</p></li>
 <li><p>The tables-next-to-code <a class="reference external" href="https://lists.llvm.org/pipermail/llvm-dev/2012-February/047544.html">discussion</a>
 on the llvm mailing list.</p></li>
-<li><p>For more tables-next-to-code description see: <span id="id6">Marlow and Jones [<a class="reference internal" href="../../../contents.html#id15" title="Simon Marlow and Simon Peyton Jones. Making a fast curry: push/enter vs. eval/apply for higher-order languages. In Proceedings of the Ninth ACM SIGPLAN International Conference on Functional Programming, ICFP '04, 4–15. New York, NY, USA, 2004. Association for Computing Machinery. URL: https://doi.org/10.1145/1016850.1016856, doi:10.1145/1016850.1016856.">3</a>]</span> Section 4.4, and
-<span id="id7">Marlow <em>et al.</em> [<a class="reference internal" href="../../../contents.html#id11" title="Simon Marlow, Alexey Rodriguez Yakushev, and Simon Peyton Jones. Faster laziness using dynamic pointer tagging. SIGPLAN Not., 42(9):277–288, oct 2007. URL: https://doi.org/10.1145/1291220.1291194, doi:10.1145/1291220.1291194.">4</a>]</span> Section 2, <span id="id8">Jones <em>et al.</em> [<a class="reference internal" href="../../../contents.html#id3" title="Peyton Jones, Simon L, and Simon Peyton Jones. Implementing lazy functional languages on stock hardware: the spineless tagless g-machine. Journal of Functional Programming, 2:127-202, July 1992. URL: https://www.microsoft.com/en-us/research/publication/implementing-lazy-functional-languages-on-stock-hardware-the-spineless-tagless-g-machine/.">5</a>]</span>
+<li><p>For more tables-next-to-code description see: <span id="id7">Marlow and Jones [<a class="reference internal" href="../../../contents.html#id15" title="Simon Marlow and Simon Peyton Jones. Making a fast curry: push/enter vs. eval/apply for higher-order languages. In Proceedings of the Ninth ACM SIGPLAN International Conference on Functional Programming, ICFP '04, 4–15. New York, NY, USA, 2004. Association for Computing Machinery. URL: https://doi.org/10.1145/1016850.1016856, doi:10.1145/1016850.1016856.">3</a>]</span> Section 4.4, and
+<span id="id8">Marlow <em>et al.</em> [<a class="reference internal" href="../../../contents.html#id11" title="Simon Marlow, Alexey Rodriguez Yakushev, and Simon Peyton Jones. Faster laziness using dynamic pointer tagging. SIGPLAN Not., 42(9):277–288, oct 2007. URL: https://doi.org/10.1145/1291220.1291194, doi:10.1145/1291220.1291194.">4</a>]</span> Section 2, <span id="id9">Jones <em>et al.</em> [<a class="reference internal" href="../../../contents.html#id3" title="Peyton Jones, Simon L, and Simon Peyton Jones. Implementing lazy functional languages on stock hardware: the spineless tagless g-machine. Journal of Functional Programming, 2:127-202, July 1992. URL: https://www.microsoft.com/en-us/research/publication/implementing-lazy-functional-languages-on-stock-hardware-the-spineless-tagless-g-machine/.">5</a>]</span>
 Section 7.</p></li>
 <li><p><a class="reference external" href="http://sandsoftwaresound.net/perf/perf-tutorial-hot-spots/">This</a> perf
 tutorial, which shows the use of perf to find hotspots on a raspberry pi.</p></li>
@@ -989,12 +989,12 @@ tutorial, which shows the use of perf to find hotspots on a raspberry pi.</p></l
 <section id="footnotes">
 <h2><span class="section-number">2.1.3.11. </span>Footnotes<a class="headerlink" href="#footnotes" title="Link to this heading">¶</a></h2>
 <aside class="footnote-list brackets">
-<aside class="footnote brackets" id="id9" role="doc-footnote">
+<aside class="footnote brackets" id="id10" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
 <p>In fact it was even described in the canonical STG paper: see
-<span id="id10">Jones <em>et al.</em> [<a class="reference internal" href="../../../contents.html#id3" title="Peyton Jones, Simon L, and Simon Peyton Jones. Implementing lazy functional languages on stock hardware: the spineless tagless g-machine. Journal of Functional Programming, 2:127-202, July 1992. URL: https://www.microsoft.com/en-us/research/publication/implementing-lazy-functional-languages-on-stock-hardware-the-spineless-tagless-g-machine/.">5</a>]</span> Section 7.6.</p>
+<span id="id11">Jones <em>et al.</em> [<a class="reference internal" href="../../../contents.html#id3" title="Peyton Jones, Simon L, and Simon Peyton Jones. Implementing lazy functional languages on stock hardware: the spineless tagless g-machine. Journal of Functional Programming, 2:127-202, July 1992. URL: https://www.microsoft.com/en-us/research/publication/implementing-lazy-functional-languages-on-stock-hardware-the-spineless-tagless-g-machine/.">5</a>]</span> Section 7.6.</p>
 </aside>
-<aside class="footnote brackets" id="id11" role="doc-footnote">
+<aside class="footnote brackets" id="id12" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
 <p>There are exceptions to this because not all heap objects require an
 entry code. For example:</p>
@@ -1005,7 +1005,7 @@ more arguments using the <a class="reference internal" href="../Stg_RTS_Profilin
 an entry code.</p></li>
 </ol>
 </aside>
-<aside class="footnote brackets" id="id12" role="doc-footnote">
+<aside class="footnote brackets" id="id13" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
 <p>I say “typically” because GHC will use <code class="docutils literal notranslate"><span class="pre">call</span></code> in some circumstances
 such as creating <a class="reference internal" href="../../glossary.html#term-CAF"><span class="xref std std-term">CAF</span></a>’s, see <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/blob/master/rts/sm/Storage.c?ref_type=heads#L425">Note [CAF management]</a>. The reasons GHC does not use
@@ -1027,15 +1027,15 @@ Therefore, the info table would no longer be <em>immediately</em> before the
 return address and thus create havoc in the garbage collector which
 relies on that information. Thus, if <code class="docutils literal notranslate"><span class="pre">case</span></code> and <code class="docutils literal notranslate"><span class="pre">ret</span></code> are to be used,
 then the runtime cannot rely on tables-next-to-code since the tables will no longer be
-next to the relevant code. See <span id="id13">Marlow <em>et al.</em> [<a class="reference internal" href="../../../contents.html#id11" title="Simon Marlow, Alexey Rodriguez Yakushev, and Simon Peyton Jones. Faster laziness using dynamic pointer tagging. SIGPLAN Not., 42(9):277–288, oct 2007. URL: https://doi.org/10.1145/1291220.1291194, doi:10.1145/1291220.1291194.">4</a>]</span> Section
+next to the relevant code. See <span id="id14">Marlow <em>et al.</em> [<a class="reference internal" href="../../../contents.html#id11" title="Simon Marlow, Alexey Rodriguez Yakushev, and Simon Peyton Jones. Faster laziness using dynamic pointer tagging. SIGPLAN Not., 42(9):277–288, oct 2007. URL: https://doi.org/10.1145/1291220.1291194, doi:10.1145/1291220.1291194.">4</a>]</span> Section
 7.1, which I have heavily borrowed from here for more.</p>
 </aside>
-<aside class="footnote brackets" id="id14" role="doc-footnote">
+<aside class="footnote brackets" id="id15" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">4</a><span class="fn-bracket">]</span></span>
 <p>GHC can be built in many different ways which we call <code class="docutils literal notranslate"><span class="pre">flavors</span></code>. The
 <code class="docutils literal notranslate"><span class="pre">default</span></code> flavor is one such provided by GHC’s build tool <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/blob/master/hadrian/README.md?ref_type=heads">Hadrian</a>.</p>
 </aside>
-<aside class="footnote brackets" id="id15" role="doc-footnote">
+<aside class="footnote brackets" id="id16" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">5</a><span class="fn-bracket">]</span></span>
 <p>Larger code size will slow down the program because there is simply more
 code to process. But its contribution to runtime performance is not as
