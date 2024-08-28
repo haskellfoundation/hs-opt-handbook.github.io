@@ -5,11 +5,6 @@ Glossary
 
 .. glossary::
 
-   Arity
-
-      The arity of a function is the number of arguments the function must take
-      to conclude to a result.
-
    Algebraic Data Type
 
       First implemented in the Hope programming language
@@ -58,12 +53,109 @@ Glossary
          for a glossary entry. If you have a good resource or would like to take
          a stab at this entry then please make an issue and have at it!
 
+   Arity
+
+      The arity of a function is the number of arguments the function must take
+      to conclude to a result.
+
+   Atomic : Type
+
+      In type theory, an atomic type, also sometimes called a base type. is a
+      type that is not divisible because it contains no internal structure. For
+      example, a tuple in not atomic because *has* an internal structure because
+      it is a composition of two other types: the ``fst`` and ``snd`` elements,
+      and we can *decompose* it without knowing anything about those elements
+      via the ``fst`` and ``snd`` projections. In contrast, ``Int``, ``Float``,
+      ``Bool``, ``Char``, and ``String`` are atomic because they are not the
+      composition of other types, they are simply sets of unstructured values.
+      See :cite:t:`TAPL` Section 11.1 for more.
+
+      Note that this is from a *theoretical* perspective. From an
+      *implementation* perspective these types *do* have structure, for example
+      ``String`` implemented as a list of characters and a ``Float`` is
+      implemented in memory as a bitvector with three fields: a sign bit, a set
+      of bits for the exponent, and a set of bits for the fraction (in `IEEE 754
+      <https://en.wikipedia.org/wiki/IEEE_754>`__).
 
    Boxed : Levity
 
       A Boxed value is a value that is represented by a pointer to the heap. For
-      example, a value such as ``1729 :: Int`` is represented as:
+      example, a value such as ``1729 :: Int`` is defined as:
 
+      .. code-block:: haskell
+
+         -- in GHC.Types in the ghc-prim library
+         -- ...
+         -- | A fixed-precision integer type with at least the range @[-2^29 .. 2^29-1]@.
+         -- The exact range for a given implementation can be determined by using
+         -- 'Prelude.minBound' and 'Prelude.maxBound' from the 'Prelude.Bounded' class.
+         data Int = I# Int#
+
+
+      and is represented in memory as:
+
+      .. tikz::
+         :libs: shapes, arrows.meta, positioning
+         :align: center
+
+         \begin{tikzpicture}[
+            node distance=50pt and 1.5cm,
+            data/.style={draw, minimum width=1.5cm, minimum height=2cm},
+            pointer/.style={draw, minimum width=1cm, minimum height=2cm,-{Stealth[scale=2]}},
+            dot/.style={circle, fill, inner sep=1pt}
+         ]
+
+         % Nodes off the linked list
+         \node[data] (cons) {I\#};
+         \node[pointer, right= -\the\pgflinewidth of cons.east] (p1) {};
+         \node[data, right=of p1] (int) {1729\# :: Int\#};
+
+         % Pointers (arrows) between nodes
+         \draw[pointer] (p1.center)  -- (int.west);
+         \draw[dot]     (p1.center) circle (3pt);
+
+         \end{tikzpicture}
+
+      the *box* is the ``I#`` constructor because it "boxes" the payload with a
+      pointer (represented as an arrow). The payload is a heap object that is an
+      :term:`unboxed` type ``Int#``, which in this case, is the unboxed literal
+      ``1729#``.
+
+   CAF
+
+     A CAF, or Constant Applicative Form, is a Haskell value which contains no
+     free variables and is not a function. Consider these examples:
+
+     .. code-block:: haskell
+
+        -- these are CAFs
+        -- A static literal is a CAF
+        foo :: Int
+        foo = 12
+
+        -- A reducible expression that requires no input is a CAF
+        bar :: (Int, [Int])
+        bar = ((*) 10 10, [1..])
+
+        -- not a lambda, curried functions that can be reduced when given an
+        -- input are CAFs
+        baz :: Int -> Int
+        baz = (*) 3
+
+        -- not CAFs
+        qux :: Int -> Int
+        qux e = e * 3     -- equivalent to baz but is a lambda so not a CAF
+
+        quux :: Int -> Int
+        quux = (*) x      -- x is free thus not a CAF
+
+     These values are *constant* because they don't bind any variables or have
+     any free variables. Because they are constant they are floated (see
+     :term:`Let Floating`) to the top of the program, and statically allocated
+     during compile time. Since they are statically allocated at compile time
+     CAFs are pinned memory and special treatment in the runtime system. Thus,
+     heavily allocating CAFs can increase memory residency. See
+     :cite:t:`jones1992implementing` Section 10.8 for more details.
 
    Cardinality Analysis
 
@@ -71,6 +163,12 @@ Glossary
       lambda-expression is called, (2) Which components of a data structure are
       never evaluated, (3) How many times a particular thunk is evaluated. See
       :cite:t:`callArityVsDemandAnalysis` and :cite:t:`hoCardinality` for more.
+
+   Compound Types
+
+      Compound type are another name for an :term:`algebraic data type`. We
+      refer the reader to that entry.
+
 
    Closure
 
@@ -128,42 +226,6 @@ Glossary
       another strategy to handle free variables that does not incur extra heap
       allocation. See :cite:t:`lambdaLifting` and
       :cite:t:`selectiveLambdaLifting` for more.
-
-   CAF
-
-     A CAF, or Constant Applicative Form, is a Haskell value which contains no
-     free variables and is not a function. Consider these examples:
-
-     .. code-block:: haskell
-
-        -- these are CAFs
-        -- A static literal is a CAF
-        foo :: Int
-        foo = 12
-
-        -- A reducible expression that requires no input is a CAF
-        bar :: (Int, [Int])
-        bar = ((*) 10 10, [1..])
-
-        -- not a lambda, curried functions that can be reduced when given an
-        -- input are CAFs
-        baz :: Int -> Int
-        baz = (*) 3
-
-        -- not CAFs
-        qux :: Int -> Int
-        qux e = e * 3     -- equivalent to baz but is a lambda so not a CAF
-
-        quux :: Int -> Int
-        quux = (*) x      -- x is free thus not a CAF
-
-     These values are *constant* because they don't bind any variables or have
-     any free variables. Because they are constant they are floated (see
-     :term:`Let Floating`) to the top of the program, and statically allocated
-     during compile time. Since they are statically allocated at compile time
-     CAFs are pinned memory and special treatment in the runtime system. Thus,
-     heavily allocating CAFs can increase memory residency. See
-     :cite:t:`jones1992implementing` Section 10.8 for more details.
 
    DWARF : Format
 
@@ -400,9 +462,8 @@ Glossary
       We say that ``x`` is *shared* in this program because each of the three
       references of ``x`` refer to the ``x`` defined in the ``let``. If ``x`` is
       not shared that the list ``[1..n]`` would be allocated *for each*
-      reference of ``x``. Thus, sharing is fundamental to performance oriented
-      Haskell because it reduces allocations, leverages call-by-need, and saves
-      work.
+      reference of ``x``. Sharing is fundamental to performance oriented Haskell
+      because it reduces allocations, leverages call-by-need, and saves work.
 
    Shotgun Debugging : Debugging
 
@@ -440,8 +501,9 @@ Glossary
 
    Unboxed : Levity
 
-      An UnBoxed value is a value that is represented by the value itself.
-      UnBoxed values therefore cannot be lazy, like boxed values.
+      An Unboxed value is a value that is represented by the value itself and
+      not a pointer to an object on the heap. Unboxed values therefore cannot be
+      lazy, like :term:`boxed` values.
 
    Unlifted : Levity
 
