@@ -101,9 +101,11 @@ To rebuild the book everytime any ``*.rst*`` file changes do:
 
 or use the ``autobuild.sh`` script in the scripts directory:
 
-You can then check the output in ``result/indexhtml`` or load that directory into whatever
+You can then check the output in ``result/index.html`` or load that directory into whatever
 browser you'd like:
 
 .. code-block:: bash
 
    firefox result/html/index.html
+
+or use the ``sphinx-autobuild-wrapped.sh`` script in the scripts directory.

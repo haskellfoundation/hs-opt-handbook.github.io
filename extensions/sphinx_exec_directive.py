@@ -11,6 +11,7 @@ from docutils import nodes
 from docutils.parsers.rst import directives, Directive, Parser
 from docutils.utils import new_document
 
+root_dir = os.path.abspath(".")
 context = dict()
 previous_rst = None
 
@@ -83,7 +84,7 @@ def execute_code(runner, globals_dict=None):
         # do the business
         if runner['with'] == 'cabal' or runner['with'] == 'stack':
             if runner['project_dir']:
-                with cd(Path(runner['project_dir'])):
+                with cd(root_dir + '/' + (runner['project_dir'])):
                     payload   = [runner['with']] + runner['args']
                     comp_proc = subprocess.run(payload, capture_output=True, text=True)
                     out       = comp_proc.stdout

@@ -13,3 +13,4 @@ GHC Optimizations
    lambda_lifting
    loopification
    worker_wrapper
+   demand_analysis

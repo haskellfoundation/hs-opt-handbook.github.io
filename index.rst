@@ -26,6 +26,10 @@ by `Input Output Global <https://iohk.io/>`_.
 Release History
 ---------------
 
+* September, 2024
+
+  * :ref:`Memory Footprints of Data Types <Memory Footprint of Data Types Chapter>` first draft finished.
+
 * August, 2024
 
   * :ref:`Philosophies of Optimization <Philosophies of Optimization Chapter>` first draft finished.

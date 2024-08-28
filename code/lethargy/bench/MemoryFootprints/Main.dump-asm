@@ -1,0 +1,940 @@
+
+==================== Asm code ====================
+2024-09-25 15:30:27.824166753 UTC
+
+.section .rodata.str,"aMS",@progbits,1
+.align 1
+.align 1
+.globl Main.$tc'Foo3_bytes
+.type Main.$tc'Foo3_bytes, @object
+Main.$tc'Foo3_bytes:
+	.string "'Foo"
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.824341816 UTC
+
+.section .rodata.str,"aMS",@progbits,1
+.align 1
+.align 1
+.globl Main.$tcFoo2_bytes
+.type Main.$tcFoo2_bytes, @object
+Main.$tcFoo2_bytes:
+	.string "Foo"
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.824482778 UTC
+
+.section .rodata.str,"aMS",@progbits,1
+.align 1
+.align 1
+.globl Main.$trModule2_bytes
+.type Main.$trModule2_bytes, @object
+Main.$trModule2_bytes:
+	.string "Main"
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.824621999 UTC
+
+.section .rodata.str,"aMS",@progbits,1
+.align 1
+.align 1
+.globl Main.$trModule4_bytes
+.type Main.$trModule4_bytes, @object
+Main.$trModule4_bytes:
+	.string "main"
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.826745348 UTC
+
+.section .text
+.align 8
+.align 8
+	.quad	17179869208
+	.quad	0
+	.long	14
+	.long	0
+.globl Main.$WFoo_info
+.type Main.$WFoo_info, @function
+Main.$WFoo_info:
+.Lc1Qc:
+	leaq -32(%rbp),%rax
+	cmpq %r15,%rax
+	jb .Lc1Qg
+.Lc1Qh:
+	movq $.Lblock_c1Q9_info,-32(%rbp)
+	movq %r14,%rbx
+	movq %rsi,-24(%rbp)
+	movq %rdi,-16(%rbp)
+	movq %r8,-8(%rbp)
+	addq $-32,%rbp
+	testb $7,%bl
+	jne .Lc1Q9
+.Lc1Qa:
+	jmp *(%rbx)
+.align 8
+	.quad	3
+	.long	30
+	.long	0
+.Lblock_c1Q9_info:
+.Lc1Q9:
+	addq $40,%r12
+	cmpq 856(%r13),%r12
+	ja .Lc1Qk
+.Lc1Qj:
+	movw 7(%rbx),%ax
+	movq $Main.Foo_con_info,-32(%r12)
+	movq 8(%rbp),%rbx
+	movq %rbx,-24(%r12)
+	movq 16(%rbp),%rbx
+	movq %rbx,-16(%r12)
+	movq 24(%rbp),%rbx
+	movq %rbx,-8(%r12)
+	movw %ax,(%r12)
+	leaq -31(%r12),%rbx
+	addq $32,%rbp
+	jmp *(%rbp)
+.Lc1Qk:
+	movq $40,904(%r13)
+	jmp stg_gc_unpt_r1
+.Lc1Qg:
+	leaq Main.$WFoo_closure(%rip),%rbx
+	jmp *-8(%r13)
+	.size Main.$WFoo_info, .-Main.$WFoo_info
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.827012131 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.$WFoo_closure
+.type Main.$WFoo_closure, @object
+Main.$WFoo_closure:
+	.quad	Main.$WFoo_info
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.827176944 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.a_unit_closure
+.type Main.a_unit_closure, @object
+Main.a_unit_closure:
+	.quad	()_con_info
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.827384566 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.a_char_closure
+.type Main.a_char_closure, @object
+Main.a_char_closure:
+	.quad	GHC.Types.C#_con_info
+	.quad	97
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.827579319 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.a_pair_closure
+.type Main.a_pair_closure, @object
+Main.a_pair_closure:
+	.quad	(,)_con_info
+	.quad	stg_INTLIKE_closure+273
+	.quad	stg_INTLIKE_closure+289
+	.quad	3
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.827737611 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.a_bool_closure
+.type Main.a_bool_closure, @object
+Main.a_bool_closure:
+	.quad	GHC.Types.True_con_info
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.827902303 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.a_int_closure
+.type Main.a_int_closure, @object
+Main.a_int_closure:
+	.quad	GHC.Types.I#_con_info
+	.quad	32
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.828057705 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.a_word_closure
+.type Main.a_word_closure, @object
+Main.a_word_closure:
+	.quad	GHC.Types.W#_con_info
+	.quad	64
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.828228308 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.$trModule3_closure
+.type Main.$trModule3_closure, @object
+Main.$trModule3_closure:
+	.quad	GHC.Types.TrNameS_con_info
+	.quad	Main.$trModule4_bytes
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.82840549 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.$trModule1_closure
+.type Main.$trModule1_closure, @object
+Main.$trModule1_closure:
+	.quad	GHC.Types.TrNameS_con_info
+	.quad	Main.$trModule2_bytes
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.828596463 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.$trModule_closure
+.type Main.$trModule_closure, @object
+Main.$trModule_closure:
+	.quad	GHC.Types.Module_con_info
+	.quad	Main.$trModule3_closure+1
+	.quad	Main.$trModule1_closure+1
+	.quad	3
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.828789555 UTC
+
+.section .data
+.align 8
+.align 1
+.L$krep_r1Nf_closure:
+	.quad	GHC.Types.KindRepTyConApp_con_info
+	.quad	GHC.Word.$tcWord16_closure+1
+	.quad	GHC.Types.[]_closure+1
+	.quad	3
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.828954488 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.$tcFoo1_closure
+.type Main.$tcFoo1_closure, @object
+Main.$tcFoo1_closure:
+	.quad	GHC.Types.TrNameS_con_info
+	.quad	Main.$tcFoo2_bytes
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.82915891 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.$tcFoo_closure
+.type Main.$tcFoo_closure, @object
+Main.$tcFoo_closure:
+	.quad	GHC.Types.TyCon_con_info
+	.quad	Main.$trModule_closure+1
+	.quad	Main.$tcFoo1_closure+1
+	.quad	GHC.Types.krep$*_closure+5
+	.quad	-7523502201464684303
+	.quad	5632872878386440321
+	.quad	0
+	.quad	3
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.829364493 UTC
+
+.section .data
+.align 8
+.align 1
+.L$krep1_r1Ng_closure:
+	.quad	GHC.Types.KindRepTyConApp_con_info
+	.quad	Main.$tcFoo_closure+1
+	.quad	GHC.Types.[]_closure+1
+	.quad	3
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.829539206 UTC
+
+.section .data
+.align 8
+.align 1
+.L$krep2_r1Nh_closure:
+	.quad	GHC.Types.KindRepFun_con_info
+	.quad	.L$krep_r1Nf_closure+1
+	.quad	.L$krep1_r1Ng_closure+1
+	.quad	3
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.829710168 UTC
+
+.section .data
+.align 8
+.align 1
+.L$krep3_r1Ni_closure:
+	.quad	GHC.Types.KindRepFun_con_info
+	.quad	.L$krep_r1Nf_closure+1
+	.quad	.L$krep2_r1Nh_closure+4
+	.quad	3
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.82988551 UTC
+
+.section .data
+.align 8
+.align 1
+.L$krep4_r1Nj_closure:
+	.quad	GHC.Types.KindRepFun_con_info
+	.quad	.L$krep_r1Nf_closure+1
+	.quad	.L$krep3_r1Ni_closure+4
+	.quad	3
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.830058263 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.$tc'Foo1_closure
+.type Main.$tc'Foo1_closure, @object
+Main.$tc'Foo1_closure:
+	.quad	GHC.Types.KindRepFun_con_info
+	.quad	.L$krep_r1Nf_closure+1
+	.quad	.L$krep4_r1Nj_closure+4
+	.quad	3
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.830232605 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.$tc'Foo2_closure
+.type Main.$tc'Foo2_closure, @object
+Main.$tc'Foo2_closure:
+	.quad	GHC.Types.TrNameS_con_info
+	.quad	Main.$tc'Foo3_bytes
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.830446548 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.$tc'Foo_closure
+.type Main.$tc'Foo_closure, @object
+Main.$tc'Foo_closure:
+	.quad	GHC.Types.TyCon_con_info
+	.quad	Main.$trModule_closure+1
+	.quad	Main.$tc'Foo2_closure+1
+	.quad	Main.$tc'Foo1_closure+4
+	.quad	-5532351385536533687
+	.quad	3469517689446113737
+	.quad	0
+	.quad	3
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.831259999 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.a_pair_result_closure
+.type Main.a_pair_result_closure, @object
+Main.a_pair_result_closure:
+	.quad	GHC.Types.I#_con_info
+	.quad	3
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.832179091 UTC
+
+.section .text
+.align 8
+.align 8
+	.quad	0
+	.long	21
+	.long	0
+.globl Main.main2_info
+.type Main.main2_info, @function
+Main.main2_info:
+.Lc1QT:
+	leaq -16(%rbp),%rax
+	cmpq %r15,%rax
+	jb .Lc1QU
+.Lc1QV:
+	subq $8,%rsp
+	movq %r13,%rax
+	movq %rbx,%rsi
+	movq %rax,%rdi
+	xorl %eax,%eax
+	call newCAF
+	addq $8,%rsp
+	testq %rax,%rax
+	je .Lc1QR
+.Lc1QQ:
+	movq $stg_bh_upd_frame_info,-16(%rbp)
+	movq %rax,-8(%rbp)
+	leaq GHC.Types.[]_closure+1(%rip),%rsi
+	movq stg_INTLIKE_closure+312(%rip),%r14
+	addq $-16,%rbp
+	jmp GHC.Show.itos_info
+.Lc1QR:
+	jmp *(%rbx)
+.Lc1QU:
+	jmp *-16(%r13)
+	.size Main.main2_info, .-Main.main2_info
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.832383694 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.main2_closure
+.type Main.main2_closure, @object
+Main.main2_closure:
+	.quad	Main.main2_info
+	.quad	0
+	.quad	0
+	.quad	0
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.832792069 UTC
+
+.section .text
+.align 8
+.align 8
+	.quad	4294967299
+	.quad	3
+	.long	14
+	.long	0
+.globl Main.main1_info
+.type Main.main1_info, @function
+Main.main1_info:
+.Lc1R5:
+	leaq GHC.Types.True_closure+2(%rip),%rdi
+	leaq Main.main2_closure(%rip),%rsi
+	leaq GHC.IO.Handle.FD.stdout_closure(%rip),%r14
+	jmp GHC.IO.Handle.Text.hPutStr2_info
+	.size Main.main1_info, .-Main.main1_info
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.832910301 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.main1_closure
+.type Main.main1_closure, @object
+Main.main1_closure:
+	.quad	Main.main1_info
+	.quad	GHC.IO.Handle.Text.hPutStr2_closure
+	.quad	GHC.IO.Handle.FD.stdout_closure
+	.quad	Main.main2_closure
+	.quad	0
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.833223725 UTC
+
+.section .text
+.align 8
+.align 8
+	.quad	4294967299
+	.quad	0
+	.long	14
+	.long	Main.main1_closure-(Main.main_info)+0
+.globl Main.main_info
+.type Main.main_info, @function
+Main.main_info:
+.Lc1Rf:
+	jmp Main.main1_info
+	.size Main.main_info, .-Main.main_info
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.833329917 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.main_closure
+.type Main.main_closure, @object
+Main.main_closure:
+	.quad	Main.main_info
+	.quad	0
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.833697492 UTC
+
+.section .text
+.align 8
+.align 8
+	.quad	4294967299
+	.quad	2
+	.long	14
+	.long	0
+.globl Main.main3_info
+.type Main.main3_info, @function
+Main.main3_info:
+.Lc1Rp:
+	leaq Main.main1_closure+1(%rip),%r14
+	jmp GHC.TopHandler.runMainIO1_info
+	.size Main.main3_info, .-Main.main3_info
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.833799023 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.main3_closure
+.type Main.main3_closure, @object
+Main.main3_closure:
+	.quad	Main.main3_info
+	.quad	Main.main1_closure
+	.quad	GHC.TopHandler.runMainIO1_closure
+	.quad	0
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.834124618 UTC
+
+.section .text
+.align 8
+.align 8
+	.quad	4294967299
+	.quad	0
+	.long	14
+	.long	Main.main3_closure-(:Main.main_info)+0
+.globl :Main.main_info
+.type :Main.main_info, @function
+:Main.main_info:
+.Lc1Rz:
+	jmp Main.main3_info
+	.size :Main.main_info, .-:Main.main_info
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.834217709 UTC
+
+.section .data
+.align 8
+.align 1
+.globl :Main.main_closure
+.type :Main.main_closure, @object
+:Main.main_closure:
+	.quad	:Main.main_info
+	.quad	0
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.834411641 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.a_int8_closure
+.type Main.a_int8_closure, @object
+Main.a_int8_closure:
+	.quad	GHC.Int.I8#_con_info
+	.byte	8
+	.long	0
+	.word	0
+	.byte	0
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.834585474 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.a_int16_closure
+.type Main.a_int16_closure, @object
+Main.a_int16_closure:
+	.quad	GHC.Int.I16#_con_info
+	.word	16
+	.long	0
+	.word	0
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.834739436 UTC
+
+.section .data
+.align 8
+.align 1
+.La_list1_r1Nk_closure:
+	.quad	GHC.Int.I16#_con_info
+	.word	1
+	.long	0
+	.word	0
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.834881228 UTC
+
+.section .data
+.align 8
+.align 1
+.La_list2_r1Nl_closure:
+	.quad	GHC.Int.I16#_con_info
+	.word	2
+	.long	0
+	.word	0
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.83502336 UTC
+
+.section .data
+.align 8
+.align 1
+.La_list3_r1Nm_closure:
+	.quad	GHC.Int.I16#_con_info
+	.word	3
+	.long	0
+	.word	0
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.835171572 UTC
+
+.section .data
+.align 8
+.align 1
+.La_list4_r1Nn_closure:
+	.quad	GHC.Int.I16#_con_info
+	.word	4
+	.long	0
+	.word	0
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.835343044 UTC
+
+.section .data
+.align 8
+.align 1
+.La_list5_r1No_closure:
+	.quad	:_con_info
+	.quad	.La_list4_r1Nn_closure+1
+	.quad	GHC.Types.[]_closure+1
+	.quad	3
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.835503096 UTC
+
+.section .data
+.align 8
+.align 1
+.La_list6_r1Np_closure:
+	.quad	:_con_info
+	.quad	.La_list3_r1Nm_closure+1
+	.quad	.La_list5_r1No_closure+2
+	.quad	3
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.835659338 UTC
+
+.section .data
+.align 8
+.align 1
+.La_list7_r1Nq_closure:
+	.quad	:_con_info
+	.quad	.La_list2_r1Nl_closure+1
+	.quad	.La_list6_r1Np_closure+2
+	.quad	3
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.83581602 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.a_list_closure
+.type Main.a_list_closure, @object
+Main.a_list_closure:
+	.quad	:_con_info
+	.quad	.La_list1_r1Nk_closure+1
+	.quad	.La_list7_r1Nq_closure+2
+	.quad	3
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.835968832 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.a_int64_closure
+.type Main.a_int64_closure, @object
+Main.a_int64_closure:
+	.quad	GHC.Int.I64#_con_info
+	.quad	64
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.836125565 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.a_word8_closure
+.type Main.a_word8_closure, @object
+Main.a_word8_closure:
+	.quad	GHC.Word.W8#_con_info
+	.byte	8
+	.long	0
+	.word	0
+	.byte	0
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.83655616 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.a_word64_closure
+.type Main.a_word64_closure, @object
+Main.a_word64_closure:
+	.quad	GHC.Word.W64#_con_info
+	.quad	64
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.836752643 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.a_foo3_closure
+.type Main.a_foo3_closure, @object
+Main.a_foo3_closure:
+	.quad	GHC.Word.W16#_con_info
+	.word	234
+	.long	0
+	.word	0
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.836936926 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.a_foo2_closure
+.type Main.a_foo2_closure, @object
+Main.a_foo2_closure:
+	.quad	GHC.Word.W16#_con_info
+	.word	345
+	.long	0
+	.word	0
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.837106368 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.a_foo1_closure
+.type Main.a_foo1_closure, @object
+Main.a_foo1_closure:
+	.quad	GHC.Word.W16#_con_info
+	.word	456
+	.long	0
+	.word	0
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.837309251 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.a_foo_closure
+.type Main.a_foo_closure, @object
+Main.a_foo_closure:
+	.quad	Main.Foo_con_info
+	.quad	Main.a_foo3_closure+1
+	.quad	Main.a_foo2_closure+1
+	.quad	Main.a_foo1_closure+1
+	.word	123
+	.long	0
+	.word	0
+	.quad	3
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.837511773 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.a_word16_closure
+.type Main.a_word16_closure, @object
+Main.a_word16_closure:
+	.quad	GHC.Word.W16#_con_info
+	.word	16
+	.long	0
+	.word	0
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.838418876 UTC
+
+.section .text
+.align 8
+.globl Main.Foo_slow
+.type Main.Foo_slow, @function
+Main.Foo_slow:
+.Lc1RY:
+	movq 24(%rbp),%r8
+	movq 16(%rbp),%rdi
+	movq 8(%rbp),%rsi
+	movq (%rbp),%rax
+	movw %ax,%r14w
+	addq $32,%rbp
+	jmp Main.Foo_info
+	.size Main.Foo_slow, .-Main.Foo_slow
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.83874312 UTC
+
+.section .text
+.align 8
+.align 8
+	.quad	Main.Foo_slow-(Main.Foo_info)+0
+	.quad	68
+	.quad	17179869184
+	.quad	0
+	.long	14
+	.long	0
+.globl Main.Foo_info
+.type Main.Foo_info, @function
+Main.Foo_info:
+.Lc1S3:
+	addq $40,%r12
+	cmpq 856(%r13),%r12
+	ja .Lc1S7
+.Lc1S6:
+	movq $Main.Foo_con_info,-32(%r12)
+	movq %rsi,-24(%r12)
+	movq %rdi,-16(%r12)
+	movq %r8,-8(%r12)
+	movw %r14w,(%r12)
+	leaq -31(%r12),%rbx
+	jmp *(%rbp)
+.Lc1S7:
+	movq $40,904(%r13)
+	leaq Main.Foo_closure(%rip),%rbx
+	movq %r14,-32(%rbp)
+	movq %rsi,-24(%rbp)
+	movq %rdi,-16(%rbp)
+	movq %r8,-8(%rbp)
+	addq $-32,%rbp
+	jmp *-8(%r13)
+	.size Main.Foo_info, .-Main.Foo_info
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.838948193 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.Foo_closure
+.type Main.Foo_closure, @object
+Main.Foo_closure:
+	.quad	Main.Foo_info
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.839223546 UTC
+
+.section .rodata.str,"aMS",@progbits,1
+.align 1
+.align 1
+i1Sg_str:
+	.string "main:Main.Foo"
+
+
+==================== Asm code ====================
+2024-09-25 15:30:27.839349968 UTC
+
+.section .text
+.align 8
+.align 8
+	.quad	i1Sg_str-(Main.Foo_con_info)+0
+	.quad	4294967299
+	.long	1
+	.long	0
+.globl Main.Foo_con_info
+.type Main.Foo_con_info, @object
+Main.Foo_con_info:
+.Lc1Sf:
+	incq %rbx
+	jmp *(%rbp)
+	.size Main.Foo_con_info, .-Main.Foo_con_info
+

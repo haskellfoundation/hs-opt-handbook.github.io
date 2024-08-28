@@ -13,3 +13,4 @@ _build
 # nix stuff
 .direnv/
 result
+_result
