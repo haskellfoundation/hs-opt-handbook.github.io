@@ -33,7 +33,6 @@ executable lethargy-asm
     default-language: Haskell2010
     ghc-options:      -ddump-asm
 
-
 benchmark inlining
   type            : exitcode-stdio-1.0
   default-language: Haskell2010
@@ -104,3 +103,15 @@ benchmark weigh
                , gauge
                , text
                , random
+
+benchmark memory-footprints
+  type            : exitcode-stdio-1.0
+  default-language: Haskell2010
+  ghc-options     : -O2 -threaded
+  build-depends: base >= 4.15
+               , containers
+               , deepseq
+               , gauge
+               , unordered-containers
+  hs-source-dirs: bench/MemoryFootprints
+  main-is: Main.hs

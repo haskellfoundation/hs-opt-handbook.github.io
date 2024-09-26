@@ -1,0 +1,643 @@
+
+==================== Output Cmm ====================
+2024-09-26 18:31:57.985890721 UTC
+
+[section ""cstring" . c1qA_str" {
+     c1qA_str:
+         I8[] "main"
+ },
+ section ""cstring" . c1qB_str" {
+     c1qB_str:
+         I8[] "Main"
+ },
+ section ""cstring" . c1qC_str" {
+     c1qC_str:
+         I8[] "app/Main.hs:14:1-16"
+ },
+ section ""data" . main" {
+     main:
+         const 0;
+         const c1qA_str;
+         const c1qB_str;
+         const c1qC_str;
+         const 0;
+         const 0;
+         const 0;
+         const 0;
+ },
+ section ""cstring" . c1qD_str" {
+     c1qD_str:
+         I8[] "my_foo"
+ },
+ section ""cstring" . c1qE_str" {
+     c1qE_str:
+         I8[] "Main"
+ },
+ section ""cstring" . c1qF_str" {
+     c1qF_str:
+         I8[] "app/Main.hs:11:1-20"
+ },
+ section ""data" . my_foo" {
+     my_foo:
+         const 0;
+         const c1qD_str;
+         const c1qE_str;
+         const c1qF_str;
+         const 0;
+         const 0;
+         const 0;
+         const 0;
+ },
+ section ""cstring" . c1qG_str" {
+     c1qG_str:
+         I8[] "CAF"
+ },
+ section ""cstring" . c1qH_str" {
+     c1qH_str:
+         I8[] "Main"
+ },
+ section ""cstring" . c1qI_str" {
+     c1qI_str:
+         I8[] "<entire-module>"
+ },
+ section ""data" . CAF" {
+     CAF:
+         const 0;
+         const c1qG_str;
+         const c1qH_str;
+         const c1qI_str;
+         const 0;
+         const 0;
+         const 99;
+         const 0;
+ },
+ section ""data" . CAF_ccs" {
+     CAF_ccs:
+         const 0;
+         const CAF;
+         const 0;
+         const 0;
+         const 0;
+         const 0;
+         const 0;
+         const 0;
+         const 0;
+         const 0;
+         const 0;
+         const 0;
+ }]
+
+
+==================== Output Cmm ====================
+2024-09-26 18:31:57.988991181 UTC
+
+[section ""cstring" . Main.$tc'Foo3_bytes" {
+     Main.$tc'Foo3_bytes:
+         I8[] "'Foo"
+ }]
+
+
+==================== Output Cmm ====================
+2024-09-26 18:31:57.989243442 UTC
+
+[section ""cstring" . Main.$tcFoo2_bytes" {
+     Main.$tcFoo2_bytes:
+         I8[] "Foo"
+ }]
+
+
+==================== Output Cmm ====================
+2024-09-26 18:31:57.989858721 UTC
+
+[section ""cstring" . Main.$trModule2_bytes" {
+     Main.$trModule2_bytes:
+         I8[] "Main"
+ }]
+
+
+==================== Output Cmm ====================
+2024-09-26 18:31:57.990118927 UTC
+
+[section ""cstring" . Main.$trModule4_bytes" {
+     Main.$trModule4_bytes:
+         I8[] "main"
+ }]
+
+
+==================== Output Cmm ====================
+2024-09-26 18:31:57.990718626 UTC
+
+[Main.$WFoo_entry() { //  [R3, R2]
+         { info_tbls: [(c1r5,
+                        label: block_c1r5_info
+                        rep: StackRep [True, False]
+                        srt: Nothing),
+                       (c1r8,
+                        label: Main.$WFoo_info
+                        rep: HeapRep static { Fun {arity: 2 fun_type: ArgSpec 15} }
+                        type: [45,62,62,70,111,111]
+                        desc: [60,109,97,105,110,58,77,97,105,110,46,36,87,70,111,111,95,114,66,81,62]
+                        srt: Nothing),
+                       (c1rc,
+                        label: block_c1rc_info
+                        rep: StackRep [True, True]
+                        srt: Nothing)]
+           stack_info: arg_space: 8
+         }
+     {offset
+       c1r8: // global
+           if ((Sp + -24) < SpLim) (likely: False) goto c1ri; else goto c1rj;
+       c1ri: // global
+           R1 = Main.$WFoo_closure;
+           call (stg_gc_fun)(R3, R2, R1) args: 8, res: 0, upd: 8;
+       c1rj: // global
+           I64[Sp - 24] = c1r5;
+           R1 = R2;
+           I64[Sp - 16] = CCCS;
+           P64[Sp - 8] = R3;
+           Sp = Sp - 24;
+           if (R1 & 7 != 0) goto c1r5; else goto c1r6;
+       c1r6: // global
+           call (I64[R1])(R1) returns to c1r5, args: 8, res: 8, upd: 8;
+       c1r5: // global
+           CCCS = I64[Sp + 8];
+           I64[Sp] = c1rc;
+           _s1qu::I16 = I16[R1 + 23];
+           R1 = P64[Sp + 16];
+           I16[Sp + 8] = _s1qu::I16;
+           I64[Sp + 16] = CCCS;
+           if (R1 & 7 != 0) goto c1rc; else goto c1rd;
+       c1rd: // global
+           call (I64[R1])(R1) returns to c1rc, args: 8, res: 8, upd: 8;
+       c1rc: // global
+           CCCS = I64[Sp + 16];
+           Hp = Hp + 32;
+           if (Hp > HpLim) (likely: False) goto c1rn; else goto c1rm;
+       c1rn: // global
+           HpAlloc = 32;
+           call stg_gc_unpt_r1(R1) returns to c1rc, args: 8, res: 8, upd: 8;
+       c1rm: // global
+           _s1qu::I16 = I16[Sp + 8];
+           _s1qw::I16 = I16[R1 + 23];
+           I64[CCCS + 72] = I64[CCCS + 72] + 2;
+           I64[Hp - 24] = Main.Foo_con_info;
+           I64[Hp - 16] = CCCS;
+           I64[Hp - 8] = %MO_UU_Conv_W32_W64(I32[era]) << 30;
+           I16[Hp] = _s1qu::I16;
+           I16[Hp + 2] = _s1qw::I16;
+           R1 = Hp - 23;
+           Sp = Sp + 24;
+           call (P64[Sp])(R1) args: 8, res: 0, upd: 8;
+     }
+ },
+ section ""data" . Main.$WFoo_closure" {
+     Main.$WFoo_closure:
+         const Main.$WFoo_info;
+         const CCS_DONT_CARE;
+         const 0;
+ }]
+
+
+==================== Output Cmm ====================
+2024-09-26 18:31:57.992467161 UTC
+
+[section ""data" . Main.$trModule3_closure" {
+     Main.$trModule3_closure:
+         const GHC.Types.TrNameS_con_info;
+         const CCS_DONT_CARE;
+         const 0;
+         const Main.$trModule4_bytes;
+ }]
+
+
+==================== Output Cmm ====================
+2024-09-26 18:31:57.992803499 UTC
+
+[section ""data" . Main.$trModule1_closure" {
+     Main.$trModule1_closure:
+         const GHC.Types.TrNameS_con_info;
+         const CCS_DONT_CARE;
+         const 0;
+         const Main.$trModule2_bytes;
+ }]
+
+
+==================== Output Cmm ====================
+2024-09-26 18:31:57.9931039 UTC
+
+[section ""data" . Main.$trModule_closure" {
+     Main.$trModule_closure:
+         const GHC.Types.Module_con_info;
+         const CCS_DONT_CARE;
+         const 0;
+         const Main.$trModule3_closure+1;
+         const Main.$trModule1_closure+1;
+         const 3;
+ }]
+
+
+==================== Output Cmm ====================
+2024-09-26 18:31:57.99348406 UTC
+
+[section ""data" . $krep_r1nT_closure" {
+     $krep_r1nT_closure:
+         const GHC.Types.KindRepTyConApp_con_info;
+         const CCS_DONT_CARE;
+         const 0;
+         const GHC.Int.$tcInt16_closure+1;
+         const GHC.Types.[]_closure+1;
+         const 3;
+ }]
+
+
+==================== Output Cmm ====================
+2024-09-26 18:31:57.993802304 UTC
+
+[section ""data" . Main.$tcFoo1_closure" {
+     Main.$tcFoo1_closure:
+         const GHC.Types.TrNameS_con_info;
+         const CCS_DONT_CARE;
+         const 0;
+         const Main.$tcFoo2_bytes;
+ }]
+
+
+==================== Output Cmm ====================
+2024-09-26 18:31:57.994096062 UTC
+
+[section ""data" . Main.$tcFoo_closure" {
+     Main.$tcFoo_closure:
+         const GHC.Types.TyCon_con_info;
+         const CCS_DONT_CARE;
+         const 0;
+         const Main.$trModule_closure+1;
+         const Main.$tcFoo1_closure+1;
+         const GHC.Types.krep$*_closure+5;
+         const 10923241872244867313;
+         const 5632872878386440321;
+         const 0;
+         const 3;
+ }]
+
+
+==================== Output Cmm ====================
+2024-09-26 18:31:57.994413024 UTC
+
+[section ""data" . $krep1_r1nU_closure" {
+     $krep1_r1nU_closure:
+         const GHC.Types.KindRepTyConApp_con_info;
+         const CCS_DONT_CARE;
+         const 0;
+         const Main.$tcFoo_closure+1;
+         const GHC.Types.[]_closure+1;
+         const 3;
+ }]
+
+
+==================== Output Cmm ====================
+2024-09-26 18:31:57.994749493 UTC
+
+[section ""data" . $krep2_r1nV_closure" {
+     $krep2_r1nV_closure:
+         const GHC.Types.KindRepFun_con_info;
+         const CCS_DONT_CARE;
+         const 0;
+         const $krep_r1nT_closure+1;
+         const $krep1_r1nU_closure+1;
+         const 3;
+ }]
+
+
+==================== Output Cmm ====================
+2024-09-26 18:31:57.995050344 UTC
+
+[section ""data" . Main.$tc'Foo1_closure" {
+     Main.$tc'Foo1_closure:
+         const GHC.Types.KindRepFun_con_info;
+         const CCS_DONT_CARE;
+         const 0;
+         const $krep_r1nT_closure+1;
+         const $krep2_r1nV_closure+4;
+         const 3;
+ }]
+
+
+==================== Output Cmm ====================
+2024-09-26 18:31:57.995435844 UTC
+
+[section ""data" . Main.$tc'Foo2_closure" {
+     Main.$tc'Foo2_closure:
+         const GHC.Types.TrNameS_con_info;
+         const CCS_DONT_CARE;
+         const 0;
+         const Main.$tc'Foo3_bytes;
+ }]
+
+
+==================== Output Cmm ====================
+2024-09-26 18:31:57.995742327 UTC
+
+[section ""data" . Main.$tc'Foo_closure" {
+     Main.$tc'Foo_closure:
+         const GHC.Types.TyCon_con_info;
+         const CCS_DONT_CARE;
+         const 0;
+         const Main.$trModule_closure+1;
+         const Main.$tc'Foo2_closure+1;
+         const Main.$tc'Foo1_closure+4;
+         const 12914392688173017929;
+         const 3469517689446113737;
+         const 0;
+         const 3;
+ }]
+
+
+==================== Output Cmm ====================
+2024-09-26 18:31:57.99623183 UTC
+
+[Main.my_foo_entry() { //  [R1]
+         { info_tbls: [(c1rZ,
+                        label: Main.my_foo_info
+                        rep: HeapRep static { Thunk }
+                        type: [70,111,111]
+                        desc: [60,109,97,105,110,58,77,97,105,110,46,109,121,95,102,111,111,95,114,103,116,62]
+                        srt: Nothing)]
+           stack_info: arg_space: 8
+         }
+     {offset
+       c1rZ: // global
+           _rgt::P64 = R1;
+           if (I32[era] <= 0 :: W32) goto c1rP; else goto c1rQ;
+       c1rQ: // global
+           I64[_rgt::P64 + 16] = I64[_rgt::P64 + 16] & 1152921503533105152 | %MO_UU_Conv_W32_W64(I32[era]) | 1152921504606846976;
+           goto c1rP;
+       c1rP: // global
+           if ((Sp + -32) < SpLim) (likely: False) goto c1s0; else goto c1s1;
+       c1s1: // global
+           Hp = Hp + 32;
+           if (Hp > HpLim) (likely: False) goto c1s3; else goto c1s2;
+       c1s3: // global
+           HpAlloc = 32;
+           goto c1s0;
+       c1s0: // global
+           R1 = _rgt::P64;
+           call (stg_gc_enter_1)(R1) args: 8, res: 0, upd: 8;
+       c1s2: // global
+           (_c1rU::I64) = call "ccall" arg hints:  [PtrHint,
+                                                    PtrHint]  result hints:  [PtrHint] newCAF(BaseReg, _rgt::P64);
+           if (_c1rU::I64 == 0) goto c1rW; else goto c1rV;
+       c1rW: // global
+           call (I64[_rgt::P64])() args: 8, res: 0, upd: 8;
+       c1rV: // global
+           I64[Sp - 32] = stg_bh_upd_frame_info;
+           I64[Sp - 8] = _c1rU::I64;
+           I64[Sp - 24] = CCCS;
+           CCCS = I64[R1 + 8];
+           (_c1rX::I64) = call "ccall" arg hints:  [PtrHint,
+                                                    PtrHint]  result hints:  [PtrHint] pushCostCentre(CCCS, my_foo);
+           I64[_c1rX::I64 + 48] = I64[_c1rX::I64 + 48] + 1;
+           I64[CCCS + 72] = I64[CCCS + 72] + 2;
+           I64[Hp - 24] = Main.Foo_con_info;
+           I64[Hp - 16] = CCCS;
+           I64[Hp - 8] = %MO_UU_Conv_W32_W64(I32[era]) << 30;
+           I16[Hp] = 123 :: W16;
+           I16[Hp + 2] = 321 :: W16;
+           R1 = Hp - 23;
+           Sp = Sp - 32;
+           call (P64[Sp])(R1) args: 40, res: 0, upd: 40;
+     }
+ },
+ section ""data" . Main.my_foo_closure" {
+     Main.my_foo_closure:
+         const Main.my_foo_info;
+         const CAF_ccs;
+         const 0;
+         const 0;
+         const 0;
+         const 0;
+ }]
+
+
+==================== Output Cmm ====================
+2024-09-26 18:31:57.998215154 UTC
+
+[sat_s1qy_entry() { //  [R1]
+         { info_tbls: [(c1sK,
+                        label: sat_s1qy_info
+                        rep: HeapRep 1 nonptrs { Fun {arity: 1 fun_type: ArgSpec 3} }
+                        type: [45,62,40,35,44,35,41]
+                        desc: [60,109,97,105,110,58,77,97,105,110,46,115,97,116,95,115,49,113,121,62]
+                        srt: Nothing)]
+           stack_info: arg_space: 8
+         }
+     {offset
+       c1sK: // global
+           _s1qy::P64 = R1;
+           if (I32[era] <= 0 :: W32) goto c1sH; else goto c1sI;
+       c1sI: // global
+           I64[_s1qy::P64 + 15] = I64[_s1qy::P64 + 15] & 1152921503533105152 | %MO_UU_Conv_W32_W64(I32[era]) | 1152921504606846976;
+           goto c1sH;
+       c1sH: // global
+           call "ccall" arg hints:  [PtrHint,
+                                     PtrHint]  result hints:  [] enterFunCCS(BaseReg, I64[_s1qy::P64 + 7]);
+           R1 = GHC.Tuple.()_closure+1;
+           call (P64[Sp])(R1) args: 8, res: 0, upd: 8;
+     }
+ },
+ Main.main1_entry() { //  [R1]
+         { info_tbls: [(c1sN,
+                        label: Main.main1_info
+                        rep: HeapRep static { Thunk }
+                        type: [45,62,40,35,44,35,41]
+                        desc: [60,109,97,105,110,58,77,97,105,110,46,109,97,105,110,49,95,114,49,110,82,62]
+                        srt: Nothing)]
+           stack_info: arg_space: 8
+         }
+     {offset
+       c1sN: // global
+           _r1nR::P64 = R1;
+           if (I32[era] <= 0 :: W32) goto c1st; else goto c1su;
+       c1su: // global
+           I64[_r1nR::P64 + 16] = I64[_r1nR::P64 + 16] & 1152921503533105152 | %MO_UU_Conv_W32_W64(I32[era]) | 1152921504606846976;
+           goto c1st;
+       c1st: // global
+           if ((Sp + -32) < SpLim) (likely: False) goto c1sO; else goto c1sP;
+       c1sP: // global
+           Hp = Hp + 32;
+           if (Hp > HpLim) (likely: False) goto c1sR; else goto c1sQ;
+       c1sR: // global
+           HpAlloc = 32;
+           goto c1sO;
+       c1sO: // global
+           R1 = _r1nR::P64;
+           call (stg_gc_enter_1)(R1) args: 8, res: 0, upd: 8;
+       c1sQ: // global
+           (_c1sy::I64) = call "ccall" arg hints:  [PtrHint,
+                                                    PtrHint]  result hints:  [PtrHint] newCAF(BaseReg, _r1nR::P64);
+           if (_c1sy::I64 == 0) goto c1sA; else goto c1sz;
+       c1sA: // global
+           call (I64[_r1nR::P64])() args: 8, res: 0, upd: 8;
+       c1sz: // global
+           I64[Sp - 32] = stg_bh_upd_frame_info;
+           I64[Sp - 8] = _c1sy::I64;
+           I64[Sp - 24] = CCCS;
+           CCCS = I64[R1 + 8];
+           (_c1sB::I64) = call "ccall" arg hints:  [PtrHint,
+                                                    PtrHint]  result hints:  [PtrHint] pushCostCentre(CCCS, main);
+           I64[_c1sB::I64 + 48] = I64[_c1sB::I64 + 48] + 1;
+           I64[CCCS + 72] = I64[CCCS + 72] + 2;
+           I64[Hp - 24] = sat_s1qy_info;
+           I64[Hp - 16] = CCCS;
+           I64[Hp - 8] = %MO_UU_Conv_W32_W64(I32[era]) << 30;
+           R1 = Hp - 23;
+           Sp = Sp - 32;
+           call stg_ap_0_fast(R1) args: 40, res: 0, upd: 40;
+     }
+ },
+ section ""data" . Main.main1_closure" {
+     Main.main1_closure:
+         const Main.main1_info;
+         const CAF_ccs;
+         const 0;
+         const 0;
+         const 0;
+         const 0;
+ }]
+
+
+==================== Output Cmm ====================
+2024-09-26 18:31:58.000729569 UTC
+
+[section ""data" . Main.main_closure" {
+     Main.main_closure:
+         const stg_IND_STATIC_info;
+         const CAF_ccs;
+         const 0;
+         const Main.main1_closure;
+         const 0;
+         const 0;
+ }]
+
+
+==================== Output Cmm ====================
+2024-09-26 18:31:58.001090703 UTC
+
+[Main.main2_entry() { //  []
+         { info_tbls: [(c1tB,
+                        label: Main.main2_info
+                        rep: HeapRep static { Fun {arity: 1 fun_type: ArgSpec 3} }
+                        type: [45,62,40,35,44,35,41]
+                        desc: [60,109,97,105,110,58,77,97,105,110,46,109,97,105,110,50,95,114,49,110,83,62]
+                        srt: Nothing)]
+           stack_info: arg_space: 8
+         }
+     {offset
+       c1tB: // global
+           R2 = Main.main1_closure;
+           call GHC.TopHandler.runMainIO1_info(R2) args: 8, res: 0, upd: 8;
+     }
+ },
+ section ""data" . Main.main2_closure" {
+     Main.main2_closure:
+         const Main.main2_info;
+         const CCS_DONT_CARE;
+         const 0;
+         const GHC.TopHandler.runMainIO1_closure;
+         const Main.main1_closure;
+         const 0;
+ }]
+
+
+==================== Output Cmm ====================
+2024-09-26 18:31:58.001983751 UTC
+
+[:Main.main_entry() { //  []
+         { info_tbls: [(c1tP,
+                        label: :Main.main_info
+                        rep: HeapRep static { Fun {arity: 1 fun_type: ArgSpec 3} }
+                        type: [73,79]
+                        desc: [60,109,97,105,110,58,58,77,97,105,110,46,109,97,105,110,95,48,49,68,62]
+                        srt: Just Main.main2_closure)]
+           stack_info: arg_space: 8
+         }
+     {offset
+       c1tP: // global
+           call Main.main2_info() args: 8, res: 0, upd: 8;
+     }
+ },
+ section ""data" . :Main.main_closure" {
+     :Main.main_closure:
+         const :Main.main_info;
+         const CCS_DONT_CARE;
+         const 0;
+         const 0;
+ }]
+
+
+==================== Output Cmm ====================
+2024-09-26 18:31:58.00303845 UTC
+
+[Main.Foo_entry() { //  [R3, R2]
+         { info_tbls: [(c1u4,
+                        label: Main.Foo_info
+                        rep: HeapRep static { Fun {arity: 2 fun_type: ArgSpec 12} }
+                        type: [45,62,62,70,111,111]
+                        desc: [60,109,97,105,110,58,77,97,105,110,46,70,111,111,95,114,66,82,62]
+                        srt: Nothing)]
+           stack_info: arg_space: 8
+         }
+     {offset
+       c1u4: // global
+           Hp = Hp + 32;
+           _B1::I16 = %MO_XX_Conv_W64_W16(R3);
+           _B0::I16 = %MO_XX_Conv_W64_W16(R2);
+           if (Hp > HpLim) (likely: False) goto c1u8; else goto c1u7;
+       c1u8: // global
+           HpAlloc = 32;
+           R3 = %MO_XX_Conv_W16_W64(_B1::I16);
+           R2 = %MO_XX_Conv_W16_W64(_B0::I16);
+           R1 = Main.Foo_closure;
+           call (stg_gc_fun)(R3, R2, R1) args: 8, res: 0, upd: 8;
+       c1u7: // global
+           I64[CCCS + 72] = I64[CCCS + 72] + 2;
+           I64[Hp - 24] = Main.Foo_con_info;
+           I64[Hp - 16] = CCCS;
+           I64[Hp - 8] = %MO_UU_Conv_W32_W64(I32[era]) << 30;
+           I16[Hp] = _B0::I16;
+           I16[Hp + 2] = _B1::I16;
+           R1 = Hp - 23;
+           call (P64[Sp])(R1) args: 8, res: 0, upd: 8;
+     }
+ },
+ section ""data" . Main.Foo_closure" {
+     Main.Foo_closure:
+         const Main.Foo_info;
+         const CCS_DONT_CARE;
+         const 0;
+ }]
+
+
+==================== Output Cmm ====================
+2024-09-26 18:31:58.004200409 UTC
+
+[Main.Foo_con_entry() { //  []
+         { info_tbls: [(c1um,
+                        label: Main.Foo_con_info
+                        rep: HeapRep 1 nonptrs { Con {tag: 0 descr:"main:Main.Foo"} }
+                        type: [70,111,111]
+                        desc: [70,111,111]
+                        srt: Nothing)]
+           stack_info: arg_space: 8
+         }
+     {offset
+       c1um: // global
+           if (I32[era] <= 0 :: W32) goto c1uj; else goto c1uk;
+       c1uk: // global
+           I64[R1 + 16] = I64[R1 + 16] & 1152921503533105152 | %MO_UU_Conv_W32_W64(I32[era]) | 1152921504606846976;
+           goto c1uj;
+       c1uj: // global
+           R1 = R1 + 1;
+           call (P64[Sp])(R1) args: 8, res: 0, upd: 8;
+     }
+ }]
+

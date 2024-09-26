@@ -31,7 +31,7 @@
     
   <link rel="index" title="Index" href="../../genindex.html" />
   <link rel="search" title="Search" href="../../search.html" />
-  <link rel="next" title="Glossary" href="../glossary.html" />
+  <link rel="next" title="4.4. Rearchitecting with Data-Oriented Design" href="data_oriented_design.html" />
   <link rel="prev" title="4.2. SBV and the Bizarre GHC Regression" href="sbv_642.html" /> 
   </head>
 
@@ -193,8 +193,8 @@
        title="previous chapter">← <span class="section-number">4.2. </span>SBV and the Bizarre GHC Regression</a>
   </li>
   <li class="next">
-    <a href="../glossary.html"
-       title="next chapter">Glossary →</a>
+    <a href="data_oriented_design.html"
+       title="next chapter"><span class="section-number">4.4. </span><span class="lightgrey">Rearchitecting with Data-Oriented Design</span> →</a>
   </li>
 </ul>
   
@@ -406,7 +406,7 @@ comparisons will be required in order to rebalance the tree, which will slow
 down writes and merges.</p>
 <p>A better datastructure for maps indexed over <code class="docutils literal notranslate"><span class="pre">String</span></code> like types is
 <code class="docutils literal notranslate"><span class="pre">Data.HashMap</span></code> from the <code class="docutils literal notranslate"><span class="pre">unordered-containers</span></code> library. These maps are
-<em>Hashed Array Mapped Trie’s</em>, or HAMTs for short (see <span id="id4">Bagwell [<a class="reference internal" href="../../contents.html#id18" title="Phil Bagwell. Ideal hash trees. Technical Report, Ecole polytechnique fédérale de Lausanne, 2001.">8</a>]</span>).
+<em>Hashed Array Mapped Trie’s</em>, or HAMTs for short (see <span id="id4">Bagwell [<a class="reference internal" href="../../contents.html#id18" title="Phil Bagwell. Ideal hash trees. Technical Report, Ecole polytechnique fédérale de Lausanne, 2001.">6</a>]</span>).
 HAMTs index over a <code class="docutils literal notranslate"><span class="pre">hash</span></code> that uniquely represents the key. These data
 structures are efficient for any key type where equality could be expensive;
 such as <code class="docutils literal notranslate"><span class="pre">String</span></code>, <code class="docutils literal notranslate"><span class="pre">Text</span></code> or inductive data types that derive <code class="docutils literal notranslate"><span class="pre">Eq</span></code>.</p>
@@ -1528,8 +1528,8 @@ also has a good review.</p>
        title="previous chapter">← <span class="section-number">4.2. </span>SBV and the Bizarre GHC Regression</a>
   </li>
   <li class="next">
-    <a href="../glossary.html"
-       title="next chapter">Glossary →</a>
+    <a href="data_oriented_design.html"
+       title="next chapter"><span class="section-number">4.4. </span><span class="lightgrey">Rearchitecting with Data-Oriented Design</span> →</a>
   </li>
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2022-2024, Jeffrey Young (doyougnu).

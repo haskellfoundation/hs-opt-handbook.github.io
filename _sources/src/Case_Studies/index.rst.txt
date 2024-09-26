@@ -8,3 +8,4 @@ Case Studies
    sbv_572
    sbv_642
    klister
+   data_oriented_design

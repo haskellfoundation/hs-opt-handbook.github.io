@@ -7,4 +7,4 @@ Core Probes and Profiling
    :name: core_prof
 
    core
-   size
+   data_type_memory_footprint

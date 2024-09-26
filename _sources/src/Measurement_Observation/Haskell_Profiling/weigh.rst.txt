@@ -153,9 +153,9 @@ allocation. For example, consider this program:
     value "Foo2"       (Foo2 one two)
 
 
-One might :ref:`expect <Memory Footprint>` ``()``, ``1``, and ``True`` to be 0,
-2 and 0 machine words respectively. However, this is not the case; here is the
-output from weigh:
+One might :ref:`expect <Memory Footprint of Data Types Chapter>` ``()``, ``1``,
+and ``True`` to be 0, 2 and 0 machine words respectively. However, this is not
+the case; here is the output from weigh:
 
 .. code-block:: bash
 

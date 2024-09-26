@@ -1,0 +1,1119 @@
+
+==================== Asm code ====================
+2024-09-26 18:31:57.986365508 UTC
+
+.section .rodata.str,"aMS",@progbits,1
+.align 1
+.align 1
+c1qA_str:
+	.string "main"
+
+
+==================== Asm code ====================
+2024-09-26 18:31:57.986522852 UTC
+
+.section .rodata.str,"aMS",@progbits,1
+.align 1
+.align 1
+c1qB_str:
+	.string "Main"
+
+
+==================== Asm code ====================
+2024-09-26 18:31:57.986667482 UTC
+
+.section .rodata.str,"aMS",@progbits,1
+.align 1
+.align 1
+c1qC_str:
+	.string "app/Main.hs:14:1-16"
+
+
+==================== Asm code ====================
+2024-09-26 18:31:57.987772886 UTC
+
+.section .data
+.align 8
+.align 1
+.globl main
+.type main, @object
+main:
+	.quad	0
+	.quad	c1qA_str
+	.quad	c1qB_str
+	.quad	c1qC_str
+	.quad	0
+	.quad	0
+	.quad	0
+	.quad	0
+
+
+==================== Asm code ====================
+2024-09-26 18:31:57.987912056 UTC
+
+.section .rodata.str,"aMS",@progbits,1
+.align 1
+.align 1
+c1qD_str:
+	.string "my_foo"
+
+
+==================== Asm code ====================
+2024-09-26 18:31:57.988029635 UTC
+
+.section .rodata.str,"aMS",@progbits,1
+.align 1
+.align 1
+c1qE_str:
+	.string "Main"
+
+
+==================== Asm code ====================
+2024-09-26 18:31:57.988145141 UTC
+
+.section .rodata.str,"aMS",@progbits,1
+.align 1
+.align 1
+c1qF_str:
+	.string "app/Main.hs:11:1-20"
+
+
+==================== Asm code ====================
+2024-09-26 18:31:57.988267449 UTC
+
+.section .data
+.align 8
+.align 1
+.globl my_foo
+.type my_foo, @object
+my_foo:
+	.quad	0
+	.quad	c1qD_str
+	.quad	c1qE_str
+	.quad	c1qF_str
+	.quad	0
+	.quad	0
+	.quad	0
+	.quad	0
+
+
+==================== Asm code ====================
+2024-09-26 18:31:57.988387503 UTC
+
+.section .rodata.str,"aMS",@progbits,1
+.align 1
+.align 1
+c1qG_str:
+	.string "CAF"
+
+
+==================== Asm code ====================
+2024-09-26 18:31:57.988500084 UTC
+
+.section .rodata.str,"aMS",@progbits,1
+.align 1
+.align 1
+c1qH_str:
+	.string "Main"
+
+
+==================== Asm code ====================
+2024-09-26 18:31:57.988628163 UTC
+
+.section .rodata.str,"aMS",@progbits,1
+.align 1
+.align 1
+c1qI_str:
+	.string "<entire-module>"
+
+
+==================== Asm code ====================
+2024-09-26 18:31:57.988749319 UTC
+
+.section .data
+.align 8
+.align 1
+.globl CAF
+.type CAF, @object
+CAF:
+	.quad	0
+	.quad	c1qG_str
+	.quad	c1qH_str
+	.quad	c1qI_str
+	.quad	0
+	.quad	0
+	.quad	99
+	.quad	0
+
+
+==================== Asm code ====================
+2024-09-26 18:31:57.988870505 UTC
+
+.section .data
+.align 8
+.align 1
+.globl CAF_ccs
+.type CAF_ccs, @object
+CAF_ccs:
+	.quad	0
+	.quad	CAF
+	.quad	0
+	.quad	0
+	.quad	0
+	.quad	0
+	.quad	0
+	.quad	0
+	.quad	0
+	.quad	0
+	.quad	0
+	.quad	0
+
+
+==================== Asm code ====================
+2024-09-26 18:31:57.989126944 UTC
+
+.section .rodata.str,"aMS",@progbits,1
+.align 1
+.align 1
+.globl Main.$tc'Foo3_bytes
+.type Main.$tc'Foo3_bytes, @object
+Main.$tc'Foo3_bytes:
+	.string "'Foo"
+
+
+==================== Asm code ====================
+2024-09-26 18:31:57.989722075 UTC
+
+.section .rodata.str,"aMS",@progbits,1
+.align 1
+.align 1
+.globl Main.$tcFoo2_bytes
+.type Main.$tcFoo2_bytes, @object
+Main.$tcFoo2_bytes:
+	.string "Foo"
+
+
+==================== Asm code ====================
+2024-09-26 18:31:57.989995496 UTC
+
+.section .rodata.str,"aMS",@progbits,1
+.align 1
+.align 1
+.globl Main.$trModule2_bytes
+.type Main.$trModule2_bytes, @object
+Main.$trModule2_bytes:
+	.string "Main"
+
+
+==================== Asm code ====================
+2024-09-26 18:31:57.990251283 UTC
+
+.section .rodata.str,"aMS",@progbits,1
+.align 1
+.align 1
+.globl Main.$trModule4_bytes
+.type Main.$trModule4_bytes, @object
+Main.$trModule4_bytes:
+	.string "main"
+
+
+==================== Asm code ====================
+2024-09-26 18:31:57.991218379 UTC
+
+.section .rodata.str,"aMS",@progbits,1
+.align 1
+.align 1
+i1ro_str:
+	.string "->>Foo"
+
+
+==================== Asm code ====================
+2024-09-26 18:31:57.991450944 UTC
+
+.section .rodata.str,"aMS",@progbits,1
+.align 1
+.align 1
+i1rp_str:
+	.string "<main:Main.$WFoo_rBQ>"
+
+
+==================== Asm code ====================
+2024-09-26 18:31:57.992024795 UTC
+
+.section .text
+.align 8
+.align 8
+	.quad	8589934607
+	.long	i1ro_str-(Main.$WFoo_info)+0
+	.long	0
+	.long	i1rp_str-(Main.$WFoo_info)+0
+	.long	0
+	.quad	0
+	.long	14
+	.long	0
+.globl Main.$WFoo_info
+.type Main.$WFoo_info, @function
+Main.$WFoo_info:
+_blk_c1r8:
+	leaq -24(%rbp),%rax
+	cmpq %r15,%rax
+	jb _blk_c1ri
+_blk_c1rj:
+	movq $block_c1r5_info,-24(%rbp)
+	movq %r14,%rbx
+	movq 864(%r13),%rax
+	movq %rax,-16(%rbp)
+	movq %rsi,-8(%rbp)
+	addq $-24,%rbp
+	testb $7,%bl
+	jne _blk_c1r5
+_blk_c1r6:
+	jmp *(%rbx)
+.align 8
+	.quad	0
+	.quad	0
+	.quad	66
+	.long	30
+	.long	0
+block_c1r5_info:
+_blk_c1r5:
+	movq 8(%rbp),%rax
+	movq %rax,864(%r13)
+	movq $block_c1rc_info,(%rbp)
+	movw 23(%rbx),%ax
+	movq 16(%rbp),%rbx
+	movw %ax,8(%rbp)
+	movq 864(%r13),%rax
+	movq %rax,16(%rbp)
+	testb $7,%bl
+	jne _blk_c1rc
+_blk_c1rd:
+	jmp *(%rbx)
+.align 8
+	.quad	0
+	.quad	0
+	.quad	194
+	.long	30
+	.long	0
+block_c1rc_info:
+_blk_c1rc:
+	movq 16(%rbp),%rax
+	movq %rax,864(%r13)
+	addq $32,%r12
+	cmpq 856(%r13),%r12
+	ja _blk_c1rn
+_blk_c1rm:
+	movw 8(%rbp),%ax
+	movw 23(%rbx),%bx
+	movq 864(%r13),%rcx
+	addq $2,72(%rcx)
+	movq $Main.Foo_con_info,-24(%r12)
+	movq 864(%r13),%rcx
+	movq %rcx,-16(%r12)
+	movl era(%rip),%ecx
+	shlq $30,%rcx
+	movq %rcx,-8(%r12)
+	movw %ax,(%r12)
+	movw %bx,2(%r12)
+	leaq -23(%r12),%rbx
+	addq $24,%rbp
+	jmp *(%rbp)
+_blk_c1rn:
+	movq $32,904(%r13)
+	jmp stg_gc_unpt_r1
+_blk_c1ri:
+	leaq Main.$WFoo_closure(%rip),%rbx
+	jmp *-8(%r13)
+	.size Main.$WFoo_info, .-Main.$WFoo_info
+
+
+==================== Asm code ====================
+2024-09-26 18:31:57.992326108 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.$WFoo_closure
+.type Main.$WFoo_closure, @object
+Main.$WFoo_closure:
+	.quad	Main.$WFoo_info
+	.quad	CCS_DONT_CARE
+	.quad	0
+
+
+==================== Asm code ====================
+2024-09-26 18:31:57.9926593 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.$trModule3_closure
+.type Main.$trModule3_closure, @object
+Main.$trModule3_closure:
+	.quad	GHC.Types.TrNameS_con_info
+	.quad	CCS_DONT_CARE
+	.quad	0
+	.quad	Main.$trModule4_bytes
+
+
+==================== Asm code ====================
+2024-09-26 18:31:57.99295944 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.$trModule1_closure
+.type Main.$trModule1_closure, @object
+Main.$trModule1_closure:
+	.quad	GHC.Types.TrNameS_con_info
+	.quad	CCS_DONT_CARE
+	.quad	0
+	.quad	Main.$trModule2_bytes
+
+
+==================== Asm code ====================
+2024-09-26 18:31:57.993258398 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.$trModule_closure
+.type Main.$trModule_closure, @object
+Main.$trModule_closure:
+	.quad	GHC.Types.Module_con_info
+	.quad	CCS_DONT_CARE
+	.quad	0
+	.quad	Main.$trModule3_closure+1
+	.quad	Main.$trModule1_closure+1
+	.quad	3
+
+
+==================== Asm code ====================
+2024-09-26 18:31:57.99366099 UTC
+
+.section .data
+.align 8
+.align 1
+$krep_r1nT_closure:
+	.quad	GHC.Types.KindRepTyConApp_con_info
+	.quad	CCS_DONT_CARE
+	.quad	0
+	.quad	GHC.Int.$tcInt16_closure+1
+	.quad	GHC.Types.[]_closure+1
+	.quad	3
+
+
+==================== Asm code ====================
+2024-09-26 18:31:57.993950601 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.$tcFoo1_closure
+.type Main.$tcFoo1_closure, @object
+Main.$tcFoo1_closure:
+	.quad	GHC.Types.TrNameS_con_info
+	.quad	CCS_DONT_CARE
+	.quad	0
+	.quad	Main.$tcFoo2_bytes
+
+
+==================== Asm code ====================
+2024-09-26 18:31:57.994263906 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.$tcFoo_closure
+.type Main.$tcFoo_closure, @object
+Main.$tcFoo_closure:
+	.quad	GHC.Types.TyCon_con_info
+	.quad	CCS_DONT_CARE
+	.quad	0
+	.quad	Main.$trModule_closure+1
+	.quad	Main.$tcFoo1_closure+1
+	.quad	GHC.Types.krep$*_closure+5
+	.quad	-7523502201464684303
+	.quad	5632872878386440321
+	.quad	0
+	.quad	3
+
+
+==================== Asm code ====================
+2024-09-26 18:31:57.994603099 UTC
+
+.section .data
+.align 8
+.align 1
+$krep1_r1nU_closure:
+	.quad	GHC.Types.KindRepTyConApp_con_info
+	.quad	CCS_DONT_CARE
+	.quad	0
+	.quad	Main.$tcFoo_closure+1
+	.quad	GHC.Types.[]_closure+1
+	.quad	3
+
+
+==================== Asm code ====================
+2024-09-26 18:31:57.994904622 UTC
+
+.section .data
+.align 8
+.align 1
+$krep2_r1nV_closure:
+	.quad	GHC.Types.KindRepFun_con_info
+	.quad	CCS_DONT_CARE
+	.quad	0
+	.quad	$krep_r1nT_closure+1
+	.quad	$krep1_r1nU_closure+1
+	.quad	3
+
+
+==================== Asm code ====================
+2024-09-26 18:31:57.995292857 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.$tc'Foo1_closure
+.type Main.$tc'Foo1_closure, @object
+Main.$tc'Foo1_closure:
+	.quad	GHC.Types.KindRepFun_con_info
+	.quad	CCS_DONT_CARE
+	.quad	0
+	.quad	$krep_r1nT_closure+1
+	.quad	$krep2_r1nV_closure+4
+	.quad	3
+
+
+==================== Asm code ====================
+2024-09-26 18:31:57.995595933 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.$tc'Foo2_closure
+.type Main.$tc'Foo2_closure, @object
+Main.$tc'Foo2_closure:
+	.quad	GHC.Types.TrNameS_con_info
+	.quad	CCS_DONT_CARE
+	.quad	0
+	.quad	Main.$tc'Foo3_bytes
+
+
+==================== Asm code ====================
+2024-09-26 18:31:57.995908326 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.$tc'Foo_closure
+.type Main.$tc'Foo_closure, @object
+Main.$tc'Foo_closure:
+	.quad	GHC.Types.TyCon_con_info
+	.quad	CCS_DONT_CARE
+	.quad	0
+	.quad	Main.$trModule_closure+1
+	.quad	Main.$tc'Foo2_closure+1
+	.quad	Main.$tc'Foo1_closure+4
+	.quad	-5532351385536533687
+	.quad	3469517689446113737
+	.quad	0
+	.quad	3
+
+
+==================== Asm code ====================
+2024-09-26 18:31:57.996684606 UTC
+
+.section .rodata.str,"aMS",@progbits,1
+.align 1
+.align 1
+i1s4_str:
+	.string "Foo"
+
+
+==================== Asm code ====================
+2024-09-26 18:31:57.996918523 UTC
+
+.section .rodata.str,"aMS",@progbits,1
+.align 1
+.align 1
+i1s5_str:
+	.string "<main:Main.my_foo_rgt>"
+
+
+==================== Asm code ====================
+2024-09-26 18:31:57.997520957 UTC
+
+.section .text
+.align 8
+.align 8
+	.long	i1s4_str-(Main.my_foo_info)+0
+	.long	0
+	.long	i1s5_str-(Main.my_foo_info)+0
+	.long	0
+	.quad	0
+	.long	21
+	.long	0
+.globl Main.my_foo_info
+.type Main.my_foo_info, @function
+Main.my_foo_info:
+_blk_c1rZ:
+	movq %rbx,%rax
+	cmpl $0,era(%rip)
+	jbe _blk_c1rP
+_blk_c1rQ:
+	movq $1152921504606846976,%rcx
+	movl era(%rip),%edx
+	orq %rcx,%rdx
+	movq $1152921503533105152,%rcx
+	movq 16(%rax),%rsi
+	andq %rcx,%rsi
+	orq %rdx,%rsi
+	movq %rsi,16(%rax)
+_blk_c1rP:
+	leaq -32(%rbp),%rcx
+	cmpq %r15,%rcx
+	jb _blk_c1s0
+_blk_c1s1:
+	addq $32,%r12
+	cmpq 856(%r13),%r12
+	ja _blk_c1s3
+_blk_c1s2:
+	subq $8,%rsp
+	movq %r13,%rcx
+	movq %rax,%rsi
+	movq %rcx,%rdi
+	movq %rax,%rcx
+	xorl %eax,%eax
+	movq %rcx,%r14
+	call newCAF
+	addq $8,%rsp
+	testq %rax,%rax
+	je _blk_c1rW
+_blk_c1rV:
+	movq $stg_bh_upd_frame_info,-32(%rbp)
+	movq %rax,-8(%rbp)
+	movq 864(%r13),%rax
+	movq %rax,-24(%rbp)
+	movq 8(%rbx),%rax
+	movq %rax,864(%r13)
+	movq 864(%r13),%rax
+	leaq my_foo(%rip),%rbx
+	subq $8,%rsp
+	movq %rbx,%rsi
+	movq %rax,%rdi
+	xorl %eax,%eax
+	call pushCostCentre
+	addq $8,%rsp
+	incq 48(%rax)
+	movq 864(%r13),%rax
+	addq $2,72(%rax)
+	movq $Main.Foo_con_info,-24(%r12)
+	movq 864(%r13),%rax
+	movq %rax,-16(%r12)
+	movl era(%rip),%eax
+	shlq $30,%rax
+	movq %rax,-8(%r12)
+	movw $123,(%r12)
+	movw $321,2(%r12)
+	leaq -23(%r12),%rbx
+	addq $-32,%rbp
+	jmp *(%rbp)
+_blk_c1rW:
+	jmp *(%r14)
+_blk_c1s3:
+	movq $32,904(%r13)
+_blk_c1s0:
+	movq %rax,%rbx
+	jmp *-16(%r13)
+	.size Main.my_foo_info, .-Main.my_foo_info
+
+
+==================== Asm code ====================
+2024-09-26 18:31:57.997828262 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.my_foo_closure
+.type Main.my_foo_closure, @object
+Main.my_foo_closure:
+	.quad	Main.my_foo_info
+	.quad	CAF_ccs
+	.quad	0
+	.quad	0
+	.quad	0
+	.quad	0
+
+
+==================== Asm code ====================
+2024-09-26 18:31:57.998897418 UTC
+
+.section .rodata.str,"aMS",@progbits,1
+.align 1
+.align 1
+i1sS_str:
+	.string "->(#,#)"
+
+
+==================== Asm code ====================
+2024-09-26 18:31:57.999028763 UTC
+
+.section .rodata.str,"aMS",@progbits,1
+.align 1
+.align 1
+i1sT_str:
+	.string "<main:Main.sat_s1qy>"
+
+
+==================== Asm code ====================
+2024-09-26 18:31:57.999343851 UTC
+
+.section .text
+.align 8
+.align 8
+	.quad	4294967299
+	.long	i1sS_str-(sat_s1qy_info)+0
+	.long	0
+	.long	i1sT_str-(sat_s1qy_info)+0
+	.long	0
+	.quad	4294967296
+	.long	10
+	.long	0
+sat_s1qy_info:
+_blk_c1sK:
+	cmpl $0,era(%rip)
+	jbe _blk_c1sH
+_blk_c1sI:
+	movq $1152921504606846976,%rax
+	movl era(%rip),%ecx
+	orq %rax,%rcx
+	movq $1152921503533105152,%rax
+	movq 15(%rbx),%rdx
+	andq %rax,%rdx
+	orq %rcx,%rdx
+	movq %rdx,15(%rbx)
+_blk_c1sH:
+	movq %r13,%rax
+	movq 7(%rbx),%rbx
+	subq $8,%rsp
+	movq %rbx,%rsi
+	movq %rax,%rdi
+	xorl %eax,%eax
+	call enterFunCCS
+	addq $8,%rsp
+	leaq GHC.Tuple.()_closure+1(%rip),%rbx
+	jmp *(%rbp)
+	.size sat_s1qy_info, .-sat_s1qy_info
+
+
+==================== Asm code ====================
+2024-09-26 18:31:57.999567519 UTC
+
+.section .rodata.str,"aMS",@progbits,1
+.align 1
+.align 1
+i1sU_str:
+	.string "->(#,#)"
+
+
+==================== Asm code ====================
+2024-09-26 18:31:57.999701569 UTC
+
+.section .rodata.str,"aMS",@progbits,1
+.align 1
+.align 1
+i1sV_str:
+	.string "<main:Main.main1_r1nR>"
+
+
+==================== Asm code ====================
+2024-09-26 18:31:58.000206903 UTC
+
+.section .text
+.align 8
+.align 8
+	.long	i1sU_str-(Main.main1_info)+0
+	.long	0
+	.long	i1sV_str-(Main.main1_info)+0
+	.long	0
+	.quad	0
+	.long	21
+	.long	0
+.globl Main.main1_info
+.type Main.main1_info, @function
+Main.main1_info:
+_blk_c1sN:
+	movq %rbx,%rax
+	cmpl $0,era(%rip)
+	jbe _blk_c1st
+_blk_c1su:
+	movq $1152921504606846976,%rcx
+	movl era(%rip),%edx
+	orq %rcx,%rdx
+	movq $1152921503533105152,%rcx
+	movq 16(%rax),%rsi
+	andq %rcx,%rsi
+	orq %rdx,%rsi
+	movq %rsi,16(%rax)
+_blk_c1st:
+	leaq -32(%rbp),%rcx
+	cmpq %r15,%rcx
+	jb _blk_c1sO
+_blk_c1sP:
+	addq $32,%r12
+	cmpq 856(%r13),%r12
+	ja _blk_c1sR
+_blk_c1sQ:
+	subq $8,%rsp
+	movq %r13,%rcx
+	movq %rax,%rsi
+	movq %rcx,%rdi
+	movq %rax,%rcx
+	xorl %eax,%eax
+	movq %rcx,%r14
+	call newCAF
+	addq $8,%rsp
+	testq %rax,%rax
+	je _blk_c1sA
+_blk_c1sz:
+	movq $stg_bh_upd_frame_info,-32(%rbp)
+	movq %rax,-8(%rbp)
+	movq 864(%r13),%rax
+	movq %rax,-24(%rbp)
+	movq 8(%rbx),%rax
+	movq %rax,864(%r13)
+	movq 864(%r13),%rax
+	leaq main(%rip),%rbx
+	subq $8,%rsp
+	movq %rbx,%rsi
+	movq %rax,%rdi
+	xorl %eax,%eax
+	call pushCostCentre
+	addq $8,%rsp
+	incq 48(%rax)
+	movq 864(%r13),%rax
+	addq $2,72(%rax)
+	movq $sat_s1qy_info,-24(%r12)
+	movq 864(%r13),%rax
+	movq %rax,-16(%r12)
+	movl era(%rip),%eax
+	shlq $30,%rax
+	movq %rax,-8(%r12)
+	leaq -23(%r12),%rbx
+	addq $-32,%rbp
+	jmp stg_ap_0_fast
+_blk_c1sA:
+	jmp *(%r14)
+_blk_c1sR:
+	movq $32,904(%r13)
+_blk_c1sO:
+	movq %rax,%rbx
+	jmp *-16(%r13)
+	.size Main.main1_info, .-Main.main1_info
+
+
+==================== Asm code ====================
+2024-09-26 18:31:58.000481265 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.main1_closure
+.type Main.main1_closure, @object
+Main.main1_closure:
+	.quad	Main.main1_info
+	.quad	CAF_ccs
+	.quad	0
+	.quad	0
+	.quad	0
+	.quad	0
+
+
+==================== Asm code ====================
+2024-09-26 18:31:58.000886882 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.main_closure
+.type Main.main_closure, @object
+Main.main_closure:
+	.quad	stg_IND_STATIC_info
+	.quad	CAF_ccs
+	.quad	0
+	.quad	Main.main1_closure
+	.quad	0
+	.quad	0
+
+
+==================== Asm code ====================
+2024-09-26 18:31:58.001309722 UTC
+
+.section .rodata.str,"aMS",@progbits,1
+.align 1
+.align 1
+i1tE_str:
+	.string "->(#,#)"
+
+
+==================== Asm code ====================
+2024-09-26 18:31:58.001433513 UTC
+
+.section .rodata.str,"aMS",@progbits,1
+.align 1
+.align 1
+i1tF_str:
+	.string "<main:Main.main2_r1nS>"
+
+
+==================== Asm code ====================
+2024-09-26 18:31:58.001625853 UTC
+
+.section .text
+.align 8
+.align 8
+	.quad	4294967299
+	.long	i1tE_str-(Main.main2_info)+0
+	.long	0
+	.long	i1tF_str-(Main.main2_info)+0
+	.long	0
+	.quad	2
+	.long	14
+	.long	0
+.globl Main.main2_info
+.type Main.main2_info, @function
+Main.main2_info:
+_blk_c1tB:
+	leaq Main.main1_closure(%rip),%r14
+	jmp GHC.TopHandler.runMainIO1_info
+	.size Main.main2_info, .-Main.main2_info
+
+
+==================== Asm code ====================
+2024-09-26 18:31:58.001787404 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.main2_closure
+.type Main.main2_closure, @object
+Main.main2_closure:
+	.quad	Main.main2_info
+	.quad	CCS_DONT_CARE
+	.quad	0
+	.quad	GHC.TopHandler.runMainIO1_closure
+	.quad	Main.main1_closure
+	.quad	0
+
+
+==================== Asm code ====================
+2024-09-26 18:31:58.00219789 UTC
+
+.section .rodata.str,"aMS",@progbits,1
+.align 1
+.align 1
+i1tS_str:
+	.string "IO"
+
+
+==================== Asm code ====================
+2024-09-26 18:31:58.002323365 UTC
+
+.section .rodata.str,"aMS",@progbits,1
+.align 1
+.align 1
+i1tT_str:
+	.string "<main::Main.main_01D>"
+
+
+==================== Asm code ====================
+2024-09-26 18:31:58.002582589 UTC
+
+.section .text
+.align 8
+.align 8
+	.quad	4294967299
+	.long	i1tS_str-(:Main.main_info)+0
+	.long	0
+	.long	i1tT_str-(:Main.main_info)+0
+	.long	0
+	.quad	0
+	.long	14
+	.long	Main.main2_closure-(:Main.main_info)+0
+.globl :Main.main_info
+.type :Main.main_info, @function
+:Main.main_info:
+_blk_c1tP:
+	jmp Main.main2_info
+	.size :Main.main_info, .-:Main.main_info
+
+
+==================== Asm code ====================
+2024-09-26 18:31:58.002747006 UTC
+
+.section .data
+.align 8
+.align 1
+.globl :Main.main_closure
+.type :Main.main_closure, @object
+:Main.main_closure:
+	.quad	:Main.main_info
+	.quad	CCS_DONT_CARE
+	.quad	0
+	.quad	0
+
+
+==================== Asm code ====================
+2024-09-26 18:31:58.003356674 UTC
+
+.section .rodata.str,"aMS",@progbits,1
+.align 1
+.align 1
+i1u9_str:
+	.string "->>Foo"
+
+
+==================== Asm code ====================
+2024-09-26 18:31:58.003479644 UTC
+
+.section .rodata.str,"aMS",@progbits,1
+.align 1
+.align 1
+i1ua_str:
+	.string "<main:Main.Foo_rBR>"
+
+
+==================== Asm code ====================
+2024-09-26 18:31:58.003809951 UTC
+
+.section .text
+.align 8
+.align 8
+	.quad	8589934604
+	.long	i1u9_str-(Main.Foo_info)+0
+	.long	0
+	.long	i1ua_str-(Main.Foo_info)+0
+	.long	0
+	.quad	0
+	.long	14
+	.long	0
+.globl Main.Foo_info
+.type Main.Foo_info, @function
+Main.Foo_info:
+_blk_c1u4:
+	addq $32,%r12
+	cmpq 856(%r13),%r12
+	ja _blk_c1u8
+_blk_c1u7:
+	movq 864(%r13),%rax
+	addq $2,72(%rax)
+	movq $Main.Foo_con_info,-24(%r12)
+	movq 864(%r13),%rax
+	movq %rax,-16(%r12)
+	movl era(%rip),%eax
+	shlq $30,%rax
+	movq %rax,-8(%r12)
+	movw %r14w,(%r12)
+	movw %si,2(%r12)
+	leaq -23(%r12),%rbx
+	jmp *(%rbp)
+_blk_c1u8:
+	movq $32,904(%r13)
+	leaq Main.Foo_closure(%rip),%rbx
+	jmp *-8(%r13)
+	.size Main.Foo_info, .-Main.Foo_info
+
+
+==================== Asm code ====================
+2024-09-26 18:31:58.004008371 UTC
+
+.section .data
+.align 8
+.align 1
+.globl Main.Foo_closure
+.type Main.Foo_closure, @object
+Main.Foo_closure:
+	.quad	Main.Foo_info
+	.quad	CCS_DONT_CARE
+	.quad	0
+
+
+==================== Asm code ====================
+2024-09-26 18:31:58.004542779 UTC
+
+.section .rodata.str,"aMS",@progbits,1
+.align 1
+.align 1
+i1un_str:
+	.string "Foo"
+
+
+==================== Asm code ====================
+2024-09-26 18:31:58.0046881 UTC
+
+.section .rodata.str,"aMS",@progbits,1
+.align 1
+.align 1
+i1uo_str:
+	.string "Foo"
+
+
+==================== Asm code ====================
+2024-09-26 18:31:58.004808104 UTC
+
+.section .rodata.str,"aMS",@progbits,1
+.align 1
+.align 1
+i1up_str:
+	.string "main:Main.Foo"
+
+
+==================== Asm code ====================
+2024-09-26 18:31:58.005085292 UTC
+
+.section .text
+.align 8
+.align 8
+	.long	i1up_str-(Main.Foo_con_info)+0
+	.long	0
+	.long	i1un_str-(Main.Foo_con_info)+0
+	.long	0
+	.long	i1uo_str-(Main.Foo_con_info)+0
+	.long	0
+	.quad	4294967296
+	.long	3
+	.long	0
+.globl Main.Foo_con_info
+.type Main.Foo_con_info, @object
+Main.Foo_con_info:
+_blk_c1um:
+	cmpl $0,era(%rip)
+	jbe _blk_c1uj
+_blk_c1uk:
+	movq $1152921504606846976,%rax
+	movl era(%rip),%ecx
+	orq %rax,%rcx
+	movq $1152921503533105152,%rax
+	movq 16(%rbx),%rdx
+	andq %rax,%rdx
+	orq %rcx,%rdx
+	movq %rdx,16(%rbx)
+_blk_c1uj:
+	incq %rbx
+	jmp *(%rbp)
+	.size Main.Foo_con_info, .-Main.Foo_con_info
+
+
+==================== Asm code ====================
+2024-09-26 18:31:58.005289533 UTC
+
+.section .init_array
+.align 8
+.align 1
+.globl main:Main_init_arr
+.type main:Main_init_arr, @object
+main:Main_init_arr:
+	.quad	main:Main_init__prof_init
+

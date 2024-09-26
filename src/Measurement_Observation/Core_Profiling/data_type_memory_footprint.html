@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html  lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+      <title>2.5.2. Memory Footprints of Data Types</title>
+    
+          <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+          <link rel="stylesheet" href="../../../_static/theme.css " type="text/css" />
+          <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
+          <link rel="stylesheet" href="../../../_static/css/s4defs-roles.css" type="text/css" />
+          <link rel="stylesheet" href="../../../_static/css/iframe.css" type="text/css" />
+          <link rel="stylesheet" href="../../../_static/css/admonitions.css" type="text/css" />
+          <link rel="stylesheet" href="../../../_static/css/s4defs-roles.css" type="text/css" />
+          <link rel="stylesheet" href="../../../_static/css/iframe.css" type="text/css" />
+          <link rel="stylesheet" href="../../../_static/css/admonitions.css" type="text/css" />
+      
+      <!-- sphinx script_files -->
+        <script src="../../../_static/documentation_options.js?v=d45e8c67"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../_static/copybutton.js?v=f281be69"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+      
+      <!-- bundled in js (rollup iife) -->
+      <!-- <script src="../../../_static/theme-vendors.js"></script> -->
+      <script src="../../../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../../../genindex.html" />
+  <link rel="search" title="Search" href="../../../search.html" />
+  <link rel="next" title="2.6. Haskell Level Probing and Profiling" href="../Haskell_Profiling/index.html" />
+  <link rel="prev" title="2.5.1. Reading Core" href="core.html" /> 
+  </head>
+
+  <body>
+    <div id="app">
+    <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../../../contents.html" class="home-link">
+    
+      <span class="site-name">Haskell Optimization Handbook</span>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+  
+    <div class="nav-item">
+      <a href="../../../contents.html#haskell-optimization-handbook"
+         class="nav-link ">
+         Table of Contents
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../contents.html#indices-and-tables"
+         class="nav-link ">
+         indices and tables
+      </a>
+    </div>
+  
+
+
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+  
+    <div class="nav-item">
+      <a href="../../../contents.html#haskell-optimization-handbook"
+         class="nav-link ">
+         Table of Contents
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../contents.html#indices-and-tables"
+         class="nav-link ">
+         indices and tables
+      </a>
+    </div>
+  
+
+
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../../../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../contents.html#haskell-optimization-handbook">Table of Contents</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../../Preliminaries/index.html" class="reference internal ">Preliminaries</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../index.html" class="reference internal ">Measurement, Profiling, and Observation</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../../Optimizations/index.html" class="reference internal ">Optimizations</a>
+            
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../../Case_Studies/index.html" class="reference internal ">Case Studies</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../contents.html#indices-and-tables">indices and tables</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 ">
+            
+              <a href="../../glossary.html" class="reference internal ">Glossary</a>
+            
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../../../contents.html">Docs</a> &raquo;</li>
+    
+      <li><a href="../index.html"><span class="section-number">2. </span>Measurement, Profiling, and Observation</a> &raquo;</li>
+    
+      <li><a href="index.html"><span class="section-number">2.5. </span>Core Probes and Profiling</a> &raquo;</li>
+    
+    <li><span class="section-number">2.5.2. </span>Memory Footprints of Data Types</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+  <li class="prev">
+    <a href="core.html"
+       title="previous chapter">← <span class="section-number">2.5.1. </span><span class="lightgrey">Reading Core</span></a>
+  </li>
+  <li class="next">
+    <a href="../Haskell_Profiling/index.html"
+       title="next chapter"><span class="section-number">2.6. </span>Haskell Level Probing and Profiling →</a>
+  </li>
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main" v-pre>
+            
+  <section id="memory-footprints-of-data-types">
+<span id="memory-footprint-of-data-types-chapter"></span><h1><span class="section-number">2.5.2. </span>Memory Footprints of Data Types<a class="headerlink" href="#memory-footprints-of-data-types" title="Link to this heading">¶</a></h1>
+<p>Low level languages such as C or Rust use types to describe the memory
+requirements of a symbol. In a performance oriented mindset this is a killer
+feature and an essential tool to writing <a class="reference internal" href="../../Preliminaries/philosophies_of_optimization.html#non-pessimization"><span class="std std-ref">non-pessimized</span></a>, and <a class="reference internal" href="../../Optimizations/Code_Changes/data_oriented_design.html#data-oriented-design-chapter"><span class="std std-ref">data-oriented</span></a>
+code.</p>
+<p>Fortunately all is not lost. We can do similar reasoning in Haskell. This
+chapter describes how to statically reason about the memory your data types will
+require. After reading the chapter one should be able to read a data type
+declaration and perform back of the napkin math to reason about the worst case
+(no optimizations or sharing) memory footprint.</p>
+<section id="what-is-the-point">
+<h2><span class="section-number">2.5.2.1. </span>What is the Point<a class="headerlink" href="#what-is-the-point" title="Link to this heading">¶</a></h2>
+<p>Modern CPU’s are fast and memory is abundant so what is the point. Certainly
+these things are true, but for performance-oriented Haskell we care about the
+caching behavior of our code. <em>Every piece</em> of code that one writes will go
+through a CPU’s L1 caches and the behavior of those caches will have an
+immediate and drastic impact on the performance of your code. So much so that
+not missing the data cache is one of the <a class="reference internal" href="../../Preliminaries/golden_rules.html#golden-rules-chapter"><span class="std std-ref">golden rules</span></a> of performance-oriented Haskell. The best way to have a cache hit
+rather than a miss is to architect the program to require smaller data that can
+more easily fit neatly into a cache line. Therefore, the first step is to
+writing cache friendly code is understanding the memory footprint of your data
+types so that you understand what you are asking of the CPU.</p>
+</section>
+<section id="atomic-types">
+<h2><span class="section-number">2.5.2.2. </span>Atomic Types<a class="headerlink" href="#atomic-types" title="Link to this heading">¶</a></h2>
+<p><a class="reference internal" href="../../glossary.html#term-Atomic"><span class="xref std std-term">Atomic</span></a> types are defined and implemented in GHC as <em>builtins</em>. Most of
+these types are a single machine word or two:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Data Type</p></th>
+<th class="head"><p>Size (Words)</p></th>
+<th class="head"><p>Notes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>()</p></td>
+<td><p>0</p></td>
+<td><p>will be shared</p></td>
+</tr>
+<tr class="row-odd"><td><p>Bool</p></td>
+<td><p>0</p></td>
+<td><p>will be shared</p></td>
+</tr>
+<tr class="row-even"><td><p>Char</p></td>
+<td><p>2</p></td>
+<td><p>will be shared</p></td>
+</tr>
+<tr class="row-odd"><td><p>Int</p></td>
+<td><p>2</p></td>
+<td><p>Could be shared, see the on sharing section</p></td>
+</tr>
+<tr class="row-even"><td><p>Int8</p></td>
+<td><p>2</p></td>
+<td><p>Due to alignment</p></td>
+</tr>
+<tr class="row-odd"><td><p>Int16</p></td>
+<td><p>2</p></td>
+<td><p>Due to alignment</p></td>
+</tr>
+<tr class="row-even"><td><p>Int32</p></td>
+<td><p>2</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Int64</p></td>
+<td><p>2</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Int64 (32-bit)</p></td>
+<td><p>3</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Word</p></td>
+<td><p>2</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Word8</p></td>
+<td><p>2</p></td>
+<td><p>Due to alignment</p></td>
+</tr>
+<tr class="row-odd"><td><p>Word16</p></td>
+<td><p>2</p></td>
+<td><p>Due to alignment</p></td>
+</tr>
+<tr class="row-even"><td><p>Word32</p></td>
+<td><p>2</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Word64</p></td>
+<td><p>2</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Word64 (32-bit)</p></td>
+<td><p>3</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Double</p></td>
+<td><p>2</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Double (32-bit)</p></td>
+<td><p>3</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Integer</p></td>
+<td><p>2</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Integer (32-bit)</p></td>
+<td><p>3</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="boxed-data-types">
+<h2><span class="section-number">2.5.2.3. </span>Boxed Data Types<a class="headerlink" href="#boxed-data-types" title="Link to this heading">¶</a></h2>
+<p><a class="reference internal" href="../../glossary.html#term-Boxed"><span class="xref std std-term">Boxed</span></a> data types are ubiquitous in Haskell programs. The strategy for
+any boxed data type is to count the machine words required to represent each
+data constructor. To count the machine words we count the number of fields, add
+one for the constructor header (which is the constructor’s <a class="reference internal" href="../../glossary.html#term-Info-Table"><span class="xref std std-term">info table</span></a>),
+and then sum that amount to the amount of memory required for the data types
+each field points to. This works because boxed types represent fields with
+pointers, which are a single machine word. For example, consider this
+monomorphic list-like data type:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">data</span><span class="w"> </span><span class="kt">MyIntList</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">MyCons</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">MyIntList</span>
+<span class="w">               </span><span class="o">|</span><span class="w"> </span><span class="kt">Nil</span>
+</pre></div>
+</div>
+<p>This type has two constructors: <code class="docutils literal notranslate"><span class="pre">Nil</span></code> which has no fields, and <code class="docutils literal notranslate"><span class="pre">MyCons</span></code>
+which has two fields, an <code class="docutils literal notranslate"><span class="pre">Int</span></code> and the rest of the list. Therefore a single
+<code class="docutils literal notranslate"><span class="pre">MyCons</span></code> will need:</p>
+<ul class="simple">
+<li><p>one word for the <code class="docutils literal notranslate"><span class="pre">MyCons</span></code> constructor header.</p></li>
+<li><p>one word for a pointer to an <code class="docutils literal notranslate"><span class="pre">Int</span></code> plus the machine words needed to represent an <code class="docutils literal notranslate"><span class="pre">Int</span></code>.</p></li>
+<li><p>one word for a pointer to a <code class="docutils literal notranslate"><span class="pre">MyIntList</span></code> plus the machine words required for
+the rest of the <code class="docutils literal notranslate"><span class="pre">MyIntList</span></code>.</p></li>
+</ul>
+<p>The only unknown is the memory footprint of an <code class="docutils literal notranslate"><span class="pre">Int</span></code>. Fortunately, <code class="docutils literal notranslate"><span class="pre">Int</span></code>’s
+are boxed, so we can use the same strategy. Here is its definition:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- in GHC.Types in the ghc-prim library</span>
+<span class="c1">-- ...</span>
+<span class="c1">-- | A fixed-precision integer type with at least the range @[-2^29 .. 2^29-1]@.</span>
+<span class="c1">-- The exact range for a given implementation can be determined by using</span>
+<span class="c1">-- &#39;Prelude.minBound&#39; and &#39;Prelude.maxBound&#39; from the &#39;Prelude.Bounded&#39; class.</span>
+<span class="kr">data</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">I</span><span class="o">#</span><span class="w"> </span><span class="kt">Int</span><span class="o">#</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">Int#</span></code> is the payload, it is an <a class="reference internal" href="../../glossary.html#term-Atomic"><span class="xref std std-term">atomic</span></a>, unboxed type. Thus an
+<code class="docutils literal notranslate"><span class="pre">Int</span></code> needs two words: one for the constructor header of <code class="docutils literal notranslate"><span class="pre">I#</span></code>, and one for
+the payload <code class="docutils literal notranslate"><span class="pre">Int#</span></code>. This means a <code class="docutils literal notranslate"><span class="pre">MyCons</span></code> will require, in the worst case,
+six machine words: 1 for <code class="docutils literal notranslate"><span class="pre">MyCons</span></code>, 2 for the pointers, 2 for the <code class="docutils literal notranslate"><span class="pre">Int</span></code> and 1
+for <code class="docutils literal notranslate"><span class="pre">Nil</span></code> because <code class="docutils literal notranslate"><span class="pre">Nil</span></code> is only a constructor.</p>
+<p>As an example, consider a singleton list <code class="docutils literal notranslate"><span class="pre">MyCons</span> <span class="pre">7</span> <span class="pre">Nil</span></code>. This what the
+singleton will look like in memory:</p>
+<div class="figure" style="text-align: center"><p><img  src="../../../_images/tikz-9b11101586347d87b70fe99423448a1df0dc00b3.svg" alt="Figure made with TikZ" /></p>
+</div><p>Each box is a machine word and each arrow is a pointer to some location in the heap.</p>
+<p>Earlier I was careful to say <em>in the worst case</em> because our analysis does not
+consider <a class="reference internal" href="../../glossary.html#term-Sharing"><span class="xref std std-term">sharing</span></a> or strictness. In general, we cannot assess how much
+sharing will happen at runtime without the code in question. However, we can
+still make some safe assumptions. For example, in GHC there is only one empty
+list which is repeatedly shared. If we assume that <code class="docutils literal notranslate"><span class="pre">Nil</span></code> has the same behavior
+then <code class="docutils literal notranslate"><span class="pre">MyCons</span> <span class="pre">7</span> <span class="pre">Nil</span></code> will only require five words instead of six. For the
+memory diagrams in this book, we’ll represent sharing as a dashed outline when needed:</p>
+<div class="figure" style="text-align: center"><p><img  src="../../../_images/tikz-08dd70236fc8f3c2bf8c6124addf4663eaa54144.svg" alt="Figure made with TikZ" /></p>
+</div><section id="a-more-complicated-example">
+<h3><span class="section-number">2.5.2.3.1. </span>A More Complicated Example<a class="headerlink" href="#a-more-complicated-example" title="Link to this heading">¶</a></h3>
+<p>Our last example was simple, what about a type such as a <code class="docutils literal notranslate"><span class="pre">Data.HashMap</span></code>:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- from Data.HashMap.Internal</span>
+<span class="kr">data</span><span class="w"> </span><span class="kt">HashMap</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="n">v</span>
+<span class="w">    </span><span class="ow">=</span><span class="w"> </span><span class="kt">Empty</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="kt">BitmapIndexed</span><span class="w"> </span><span class="o">!</span><span class="kt">Bitmap</span><span class="w"> </span><span class="o">!</span><span class="p">(</span><span class="kt">A</span><span class="o">.</span><span class="kt">Array</span><span class="w"> </span><span class="p">(</span><span class="kt">HashMap</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="n">v</span><span class="p">))</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="kt">Leaf</span><span class="w"> </span><span class="o">!</span><span class="kt">Hash</span><span class="w"> </span><span class="o">!</span><span class="p">(</span><span class="kt">Leaf</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="n">v</span><span class="p">)</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="kt">Full</span><span class="w"> </span><span class="o">!</span><span class="p">(</span><span class="kt">A</span><span class="o">.</span><span class="kt">Array</span><span class="w"> </span><span class="p">(</span><span class="kt">HashMap</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="n">v</span><span class="p">))</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="kt">Collision</span><span class="w"> </span><span class="o">!</span><span class="kt">Hash</span><span class="w"> </span><span class="o">!</span><span class="p">(</span><span class="kt">A</span><span class="o">.</span><span class="kt">Array</span><span class="w"> </span><span class="p">(</span><span class="kt">Leaf</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="n">v</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>This type has type variables <code class="docutils literal notranslate"><span class="pre">k</span></code> and <code class="docutils literal notranslate"><span class="pre">a</span></code>, bang patterns and uses other types
+such as: <code class="docutils literal notranslate"><span class="pre">Bitmap</span></code>, <code class="docutils literal notranslate"><span class="pre">Hash</span></code>, <code class="docutils literal notranslate"><span class="pre">Leaf</span></code> and <code class="docutils literal notranslate"><span class="pre">Array</span></code>. For types like this the
+strategy remains the same. We assess the memory footprint by counting machine
+words for each constructor and each type in use. Type variables are represented
+and counted as pointers. The only difference is that the memory footprint can
+change depending an what the type variable reifies to. For example, a value of
+<code class="docutils literal notranslate"><span class="pre">HashMap</span> <span class="pre">Bool</span> <span class="pre">v</span></code> will have a smaller footprint than a value of <code class="docutils literal notranslate"><span class="pre">HashMap</span>
+<span class="pre">MyIntList</span> <span class="pre">v</span></code> because <code class="docutils literal notranslate"><span class="pre">Bool</span></code> will have a smaller footprint than <code class="docutils literal notranslate"><span class="pre">MyIntList</span></code>.
+Furthermore, <code class="docutils literal notranslate"><span class="pre">True</span></code> and <code class="docutils literal notranslate"><span class="pre">False</span></code> are statically allocated data constructors
+that are always shared, so the only memory costs incurred are pointers.</p>
+<p>Note that our last example showed this without type variables via <code class="docutils literal notranslate"><span class="pre">Nil</span></code>.
+<code class="docutils literal notranslate"><span class="pre">Nil</span></code> was the value that the <code class="docutils literal notranslate"><span class="pre">MyIntList</span></code> pointer in <code class="docutils literal notranslate"><span class="pre">MyCons</span></code> pointed to.
+Imagine if the example had been <code class="docutils literal notranslate"><span class="pre">MyCons</span> <span class="pre">7</span> <span class="pre">(MyCons</span> <span class="pre">5</span> <span class="pre">Nil)</span></code>, then this value
+would have a larger footprint (seven words assuming a shared <code class="docutils literal notranslate"><span class="pre">Nil</span></code> ) because
+the list tail pointer would have pointed to a heavier value than <code class="docutils literal notranslate"><span class="pre">Nil</span></code>.</p>
+<p>First let’s assess the memory footprint for the type that are used in each
+constructor:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- all of these are from Data.HashMap.Internal</span>
+<span class="kr">type</span><span class="w"> </span><span class="kt">Bitmap</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">Word</span>
+<span class="o">...</span>
+<span class="kr">type</span><span class="w"> </span><span class="kt">Hash</span><span class="w">   </span><span class="ow">=</span><span class="w"> </span><span class="kt">Word</span>
+<span class="o">...</span>
+<span class="kr">data</span><span class="w"> </span><span class="kt">Leaf</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">L</span><span class="w"> </span><span class="o">!</span><span class="n">k</span><span class="w"> </span><span class="n">v</span>
+</pre></div>
+</div>
+<p>We see that <code class="docutils literal notranslate"><span class="pre">Bitmap</span></code> and <code class="docutils literal notranslate"><span class="pre">Hash</span></code> are a single machine word and <code class="docutils literal notranslate"><span class="pre">Leaf</span></code> is a
+partially strict pair with two fields. <code class="docutils literal notranslate"><span class="pre">Leaf</span></code> will need a total of three words
+plus the size of <code class="docutils literal notranslate"><span class="pre">k</span></code> and <code class="docutils literal notranslate"><span class="pre">v</span></code>. For now, we will ignore strictness and focus
+only on the worst case, we’ll return to strictness later in the chapter.</p>
+<p>This only leaves <code class="docutils literal notranslate"><span class="pre">Array</span></code>. Here is its definition:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Data.HashMap.Internal.Array</span>
+<span class="kr">data</span><span class="w"> </span><span class="kt">Array</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">Array</span><span class="w"> </span><span class="p">{</span><span class="n">unArray</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="o">!</span><span class="p">(</span><span class="kt">SmallArray</span><span class="o">#</span><span class="w"> </span><span class="n">a</span><span class="p">)}</span>
+</pre></div>
+</div>
+<p>An <code class="docutils literal notranslate"><span class="pre">Array</span></code> is a wrapper around an unboxed <code class="docutils literal notranslate"><span class="pre">SmallArray#</span></code>. <code class="docutils literal notranslate"><span class="pre">SmallArray#</span></code> is
+one of GHC’s primitive types that are exposed through the <code class="docutils literal notranslate"><span class="pre">GHC.Exts</span></code> module in
+<code class="docutils literal notranslate"><span class="pre">base</span></code>, but are defined in the <a class="reference external" href="https://hackage.haskell.org/package/ghc-prim-0.11.0/docs/GHC-Prim.html#g:19">ghc-prim</a>
+boot library for GHC:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="c1">// in rts/storage/Closures.h</span>
+<span class="c1">// A small array of head objects, ie SmallArray# and MutableSmallArray#</span>
+<span class="c1">//</span>
+<span class="c1">// Closure types: SMALL_MUT_ARR_PTRS_CLEAN, SMALL_MUT_ARR_PTRS_DIRTY,</span>
+<span class="c1">// SMALL_MUT_ARR_PTRS_FROZEN_DIRTY, SMALL_MUT_ARR_PTRS_FROZEN_CLEAN,</span>
+<span class="k">typedef</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">StgHeader</span><span class="w">   </span><span class="n">header</span><span class="p">;</span>
+<span class="w">    </span><span class="n">StgWord</span><span class="w">     </span><span class="n">ptrs</span><span class="p">;</span>
+<span class="w">    </span><span class="n">StgClosure</span><span class="w"> </span><span class="o">*</span><span class="n">payload</span><span class="p">[]</span><span class="w"> </span><span class="n">MUT_FIELD</span><span class="p">;</span>
+<span class="p">}</span><span class="w"> </span><span class="n">StgSmallMutArrPtrs</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You’ll notice that I do not discuss <code class="docutils literal notranslate"><span class="pre">MUT_FIELD</span></code>, this macro is used by
+GHC’s RTS to mark fields which can be modified by the mutator during garbage
+collection, but it expands to nothing. For more see this <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/blob/master/rts/include/stg/SMP.h?ref_type=heads#L144">note</a>.</p>
+</div>
+<p>A <code class="docutils literal notranslate"><span class="pre">smallArray#</span></code> is a C struct with a <code class="docutils literal notranslate"><span class="pre">StgHeader</span></code>, a <code class="docutils literal notranslate"><span class="pre">StgWord</span></code> and an array
+of pointers that point to the closures which are the contents of the array. An
+<code class="docutils literal notranslate"><span class="pre">StgHeader</span></code> is defined as:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w"> </span><span class="c1">// If TABLES_NEXT_TO_CODE is defined, then `info` is offset by</span>
+<span class="w"> </span><span class="c1">// `\texttt{sizeof}(StgInfoTable)` and so points to the `code` field of the</span>
+<span class="w"> </span><span class="c1">// StgInfoTable! You may want to use `get_itbl` to get the pointer to the</span>
+<span class="w"> </span><span class="c1">// start of the info table. See</span>
+<span class="w"> </span><span class="c1">// https://gitlab.haskell.org/ghc/ghc/-/wikis/commentary/rts/storage/heap-objects#tables_next_to_code.</span>
+<span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">StgInfoTable</span><span class="o">*</span><span class="w"> </span><span class="n">info</span><span class="p">;</span>
+
+<span class="cp">#if defined(PROFILING)</span>
+<span class="w">    </span><span class="n">StgProfHeader</span><span class="w">         </span><span class="n">prof</span><span class="p">;</span>
+<span class="cp">#endif</span>
+<span class="p">}</span><span class="w"> </span><span class="n">StgHeader</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>We’ll assume we are not profiling and are compiling with tables-next-to-code.
+With these assumptions the <code class="docutils literal notranslate"><span class="pre">StgHeader</span></code> is just a pointer to a <code class="docutils literal notranslate"><span class="pre">StgInfoTable</span></code>
+and thus just a single machine word. Similarly, an <code class="docutils literal notranslate"><span class="pre">StgWord</span></code> is a
+machine word:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// in ghc/rts/includes/stg/Types.h</span>
+<span class="cm">/*</span>
+<span class="cm"> * Stg{Int,Word} are defined such that they have the exact same size as a</span>
+<span class="cm"> * void pointer.</span>
+<span class="cm"> */</span>
+<span class="cp">#if SIZEOF_VOID_P == 8</span>
+<span class="k">typedef</span><span class="w"> </span><span class="kt">int64_t</span><span class="w">            </span><span class="n">StgInt</span><span class="p">;</span>
+<span class="k">typedef</span><span class="w"> </span><span class="kt">uint64_t</span><span class="w">           </span><span class="n">StgWord</span><span class="p">;</span>
+<span class="p">...</span>
+<span class="cp">#elif SIZEOF_VOID_P == 4</span>
+<span class="k">typedef</span><span class="w"> </span><span class="kt">int32_t</span><span class="w">            </span><span class="n">StgInt</span><span class="p">;</span>
+<span class="k">typedef</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w">           </span><span class="n">StgWord</span><span class="p">;</span>
+<span class="p">...</span>
+<span class="cp">#endif</span>
+</pre></div>
+</div>
+<p>This means that a singleton array will be one word for the header, one word for
+the <code class="docutils literal notranslate"><span class="pre">ptrs</span></code> field, <code class="docutils literal notranslate"><span class="pre">n</span></code> pointers for <code class="docutils literal notranslate"><span class="pre">n</span></code> elements plus the size of those
+elements. We can summarize this all into a equation that calculates the size of
+<code class="docutils literal notranslate"><span class="pre">n</span></code> element array: <span class="math notranslate nohighlight">\(2 + n + n(\texttt{sizeof}(element))\)</span>.</p>
+<p>Let’s walk through how we derived that equation. We know that there will always
+be a constant overhead of two words due to the header and <code class="docutils literal notranslate"><span class="pre">ptrs</span></code> field, and
+that each element will require a pointer. This gives us <code class="docutils literal notranslate"><span class="pre">2</span> <span class="pre">+</span> <span class="pre">n</span></code>; then all that
+is left is the size of the elements themselves and which we know we have <code class="docutils literal notranslate"><span class="pre">n</span></code>
+of. Let’s use a datatype as an example to check our assumptions. Assume we have
+a <em>singleton</em> array consisting of an <code class="docutils literal notranslate"><span class="pre">Int</span></code>. This singleton array will need one
+word for the header, one for the <code class="docutils literal notranslate"><span class="pre">ptrs</span></code> field; this is the constant 2. Next it
+will need one pointer to the <code class="docutils literal notranslate"><span class="pre">Int</span></code> heap object because <span class="math notranslate nohighlight">\(n = 1\)</span>, and
+finally two words for the <code class="docutils literal notranslate"><span class="pre">Int</span></code> itself. Thus, yielding a total of five words.
+Here is the calculation:</p>
+<div class="math notranslate nohighlight">
+\begin{align*}
+     \texttt{sizeof}(\text{SmallArray}, 1, \text{Int}) =&amp;\; 2 + 1 + 1(\texttt{sizeof}(\text{Int})) \\
+     =&amp;\; 3 + 1(\texttt{sizeof}(\text{Int})) \\
+     =&amp;\; 3 + 1(2) \\
+     =&amp;\; 3 + 2 \\
+     =&amp;\; 5     \\
+\end{align*}</div><p>Now consider an array with two <code class="docutils literal notranslate"><span class="pre">Int</span></code>’s. This array will require three <em>more</em>
+words: one more pointer, and two more for the <code class="docutils literal notranslate"><span class="pre">Int</span></code> payload, for a total of
+eight:</p>
+<div class="math notranslate nohighlight">
+\begin{align*}
+     \texttt{sizeof}(\text{SmallArray}, 2, \text{Int}) =&amp;\; 2 + 2 + 2(\texttt{sizeof}(\text{Int})) \\
+     =&amp;\; 4 + 2(\texttt{sizeof}(\text{Int})) \\
+     =&amp;\; 4 + 2(2) \\
+     =&amp;\; 4 + 4 \\
+     =&amp;\; 8     \\
+\end{align*}</div><p>Let’s take stock of what we know:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Bitmap</span></code> <span class="math notranslate nohighlight">\(\rightarrow\)</span>  1 word</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Hash</span></code>     <span class="math notranslate nohighlight">\(\rightarrow\)</span>  1 word</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Leaf</span></code>     <span class="math notranslate nohighlight">\(\rightarrow\)</span>  <span class="math notranslate nohighlight">\(3 + \texttt{sizeof}(k) + \texttt{sizeof}(v)\)</span>  words</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Array</span></code>   <span class="math notranslate nohighlight">\(\rightarrow\)</span>  <span class="math notranslate nohighlight">\(2 + n + n(\texttt{sizeof}(v))\)</span>  words (<code class="docutils literal notranslate"><span class="pre">v</span></code>
+becomes the array elements by definition)</p></li>
+</ul>
+<p>Now we can assess <code class="docutils literal notranslate"><span class="pre">HashMap</span></code>. <code class="docutils literal notranslate"><span class="pre">HashMap</span></code> has five constructors. We’ll proceed
+in order beginning with <code class="docutils literal notranslate"><span class="pre">Empty</span></code>. <code class="docutils literal notranslate"><span class="pre">Empty</span></code> will take a single word just like
+<code class="docutils literal notranslate"><span class="pre">Nil</span></code>. <code class="docutils literal notranslate"><span class="pre">BitmapIndexed</span></code> is next. It is defined as:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kt">BitmapIndexed</span><span class="w"> </span><span class="o">!</span><span class="p">(</span><span class="kt">Bitmap</span><span class="p">)</span><span class="w"> </span><span class="o">!</span><span class="p">(</span><span class="kt">A</span><span class="o">.</span><span class="kt">Array</span><span class="w"> </span><span class="p">(</span><span class="kt">HashMap</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="n">v</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>So we have one word for the constructor, one for the <code class="docutils literal notranslate"><span class="pre">Bitmap</span></code> and then the
+array. The best we can do is express the size in terms of <code class="docutils literal notranslate"><span class="pre">k</span></code> and <code class="docutils literal notranslate"><span class="pre">v</span></code> since
+we do not know what these types will reify to. This gives us:</p>
+<div class="math notranslate nohighlight">
+\begin{align*}
+     \texttt{sizeof}(\text{BitmapIndexed}, n, k, v) =&amp;\; 1 + 1 +\texttt{sizeof}(\text{Array}(\text{HashMap}\;k\;v)) \\
+     =&amp;\; 2 +\texttt{sizeof}(\text{Array}(\text{HashMap}\;k\;v)) \\
+     =&amp;\; 2 +(2 + n + n(\texttt{sizeof}(\text{HashMap}\;k\;v))       \\
+     =&amp;\; 4 + n + n(\texttt{sizeof}(\text{HashMap}\;k\;v)
+\end{align*}</div><p>Following <code class="docutils literal notranslate"><span class="pre">BitmapIndexed</span></code> is <code class="docutils literal notranslate"><span class="pre">Leaf</span></code>. <code class="docutils literal notranslate"><span class="pre">Leaf</span></code> is defined as:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kt">Leaf</span><span class="w"> </span><span class="o">!</span><span class="kt">Hash</span><span class="w"> </span><span class="o">!</span><span class="p">(</span><span class="kt">Leaf</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="n">v</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We have one word for the <code class="docutils literal notranslate"><span class="pre">Leaf</span></code> constructor, two words for <code class="docutils literal notranslate"><span class="pre">Hash</span></code>: one for a
+pointer and one for the payload we deduced above. <code class="docutils literal notranslate"><span class="pre">Hash</span></code> is not unpacked and
+thus is represented as a pointer to the <code class="docutils literal notranslate"><span class="pre">Hash</span></code> payload. This leaves only the
+<code class="docutils literal notranslate"><span class="pre">Leaf</span></code> type which we analyzed earlier. For definitions like this, it is
+helpful to inline the constituent data types, like so:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kt">Leaf</span><span class="w"> </span><span class="o">!</span><span class="kt">Hash</span><span class="w"> </span><span class="o">!</span><span class="p">(</span><span class="kt">L</span><span class="w"> </span><span class="o">!</span><span class="n">k</span><span class="w"> </span><span class="n">v</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This flattens the data structure and keeps everything in one place. The only
+caveat is that one must remember there is a pointer that points to <code class="docutils literal notranslate"><span class="pre">L</span></code> from
+<code class="docutils literal notranslate"><span class="pre">Leaf</span></code>. I’ve indicated this with the open parenthesis: <code class="docutils literal notranslate"><span class="pre">(</span></code> . Recall that
+<code class="docutils literal notranslate"><span class="pre">L</span></code> defines a strict pair which requires three words, one for <code class="docutils literal notranslate"><span class="pre">L</span></code> and two
+pointers to each element. Now we can calculate the memory footprint in terms of
+<code class="docutils literal notranslate"><span class="pre">k</span></code> and <code class="docutils literal notranslate"><span class="pre">v</span></code> just as before:</p>
+<div class="math notranslate nohighlight">
+\begin{align*}
+     \texttt{sizeof}(\text{Leaf}, k, v) =&amp;\; 1 + 2 +(1 +
+     \texttt{sizeof}(\text{Leaf k v})) \\
+     =&amp;\; 4 + \texttt{sizeof}(\text{Leaf k v})) \\
+     =&amp;\; 4 + (3 + \texttt{sizeof}(k) + \texttt{sizeof}(v)) \\
+     =&amp;\; 7 + \texttt{sizeof}(k) + \texttt{sizeof}(v))
+\end{align*}</div><p>All we have left is <code class="docutils literal notranslate"><span class="pre">Full</span></code> and <code class="docutils literal notranslate"><span class="pre">Collision</span></code>. <code class="docutils literal notranslate"><span class="pre">Full</span></code> is a special case. The
+unordered-containers HashMap is a Hashed Mapped Array Trie <span id="id1">[<a class="reference internal" href="../../../contents.html#id18" title="Phil Bagwell. Ideal hash trees. Technical Report, Ecole polytechnique fédérale de Lausanne, 2001.">6</a>]</span>
+where a full array contains a maximum of 32 elements. Thus a <code class="docutils literal notranslate"><span class="pre">Full</span></code> will need
+one word for the <code class="docutils literal notranslate"><span class="pre">Full</span></code> header, and then
+<span class="math notranslate nohighlight">\(\texttt{sizeof}(\text{Array}(\text{HashMap}\;k\;v))\)</span>. Fortunately we
+already calculated that for <code class="docutils literal notranslate"><span class="pre">BitmapmIndexed</span></code>. Thus a <code class="docutils literal notranslate"><span class="pre">Full</span></code> will be:</p>
+<div class="math notranslate nohighlight">
+\begin{align*}
+     \texttt{sizeof}(\text{Full}, 32, k, v) =&amp;\; 1 +\texttt{sizeof}(\text{Array}(\text{HashMap}\;k\;v)) \\
+     =&amp;\; 1 + (2 + n + n(\texttt{sizeof}(\text{HashMap}\;k\;v))       \\
+     =&amp;\; 1 + (2 + 32 + 32(\texttt{sizeof}(\text{HashMap}\;k\;v))       \\
+     =&amp;\; 35 + 32(\texttt{sizeof}(\text{HashMap}\;k\;v)
+\end{align*}</div><p>All we have left is <code class="docutils literal notranslate"><span class="pre">Collision</span></code>. Fortunately we’ve already calculated the
+footprint of <code class="docutils literal notranslate"><span class="pre">Collision</span></code> because <code class="docutils literal notranslate"><span class="pre">Collision</span></code> is defined as:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kt">Collision</span><span class="w"> </span><span class="o">!</span><span class="kt">Hash</span><span class="w"> </span><span class="o">!</span><span class="p">(</span><span class="kt">A</span><span class="o">.</span><span class="kt">Array</span><span class="w"> </span><span class="p">(</span><span class="kt">Leaf</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="n">v</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>which is isomorphic to <code class="docutils literal notranslate"><span class="pre">BitmapIndexed</span></code> because <code class="docutils literal notranslate"><span class="pre">Hash</span></code> and <code class="docutils literal notranslate"><span class="pre">Bitmap</span></code> have
+the same footprint and we know how to calculate <code class="docutils literal notranslate"><span class="pre">A.Array</span> <span class="pre">(Leaf</span> <span class="pre">k</span> <span class="pre">v)</span></code>. Thus:</p>
+<div class="math notranslate nohighlight">
+\begin{align*}
+     \texttt{sizeof}(\text{Collision}, n, k, v) =&amp;\; 1 + 1 +\texttt{sizeof}(\text{Array}(\text{HashMap}\;k\;v)) \\
+     =&amp;\; 4 + n + n(\texttt{sizeof}(\text{HashMap}\;k\;v)
+\end{align*}</div><p>As an aside, this result reveals potential performance issues on reads for a
+full hash map. 35 words is 280 bytes, a cache line is typically 64 bytes (or 8
+words) so just with the constants, a <code class="docutils literal notranslate"><span class="pre">Full</span></code> will consume 4 cache lines
+_unevenly_; <span class="math notranslate nohighlight">\(64 * 4 = 256\)</span> always leaving 24 bytes leftover on the fifth
+cache line. Furthermore let’s consider what the memory footprint of a
+<code class="docutils literal notranslate"><span class="pre">HashMap</span> <span class="pre">Int</span> <span class="pre">Int</span></code> that is a single <code class="docutils literal notranslate"><span class="pre">Full</span></code> will be. This will require:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align*}
+        \texttt{sizeof}(\texttt{Full}, 32, \texttt{Int}, \texttt{Int}) =&amp;\; 35 +
+        32(\texttt{sizeof}(\text{HashMap}\;\texttt{Int}\;\texttt{Int}) \\
+        =&amp;\; 35 + 32(\texttt{sizeof}(\text{Leaf}\;\texttt{Int}\;\texttt{Int}) \\
+        =&amp;\; 35 + 32(7 + \texttt{sizeof}(\texttt{Int}) + \texttt{sizeof}(\texttt{Int})) \\
+        =&amp;\; 35 + 32(7 + 2 + 2) \\
+        =&amp;\; 35 + 32(11) \\
+        =&amp;\; 35 + 352    \\
+        =&amp;\; 387
+\end{align*}\end{split}\]</div>
+<p>A total of 387 words which is 3, 096 bytes or roughly 3KiB, just for 32
+elements! Unfortunately, this also will not be a cache friendly data structure.
+To store 387 words we need <span class="math notranslate nohighlight">\(\frac{387}{8} = 48\)</span> cache lines. But 387 is
+not a multiple of 2, so there will be <span class="math notranslate nohighlight">\(387 \bmod{} 8 = 3\)</span> words of
+leftover space on the final cache line <a class="footnote-reference brackets" href="#id4" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. A more cache friendly data
+structure would ensure that a <code class="docutils literal notranslate"><span class="pre">Full</span></code> always fit evenly into a set of cache
+lines and would thereby avoid fragmenting the cache. One caveat is that this
+wasted space will change depending on the sizes of the key and value.</p>
+</section>
+</section>
+<section id="other-ways">
+<h2><span class="section-number">2.5.2.4. </span>Other Ways<a class="headerlink" href="#other-ways" title="Link to this heading">¶</a></h2>
+<p>We’ve learned how to statically analyze a data type. But often times there are
+easier ways than reasoning. For example, you can always <a class="reference internal" href="../Haskell_Profiling/weigh.html#weigh-chapter"><span class="std std-ref">weigh</span></a> your data types. Although this <em>will</em> consider sharing.</p>
+<section id="read-the-assembly-output">
+<h3><span class="section-number">2.5.2.4.1. </span>Read the Assembly Output<a class="headerlink" href="#read-the-assembly-output" title="Link to this heading">¶</a></h3>
+<p>Besides <code class="docutils literal notranslate"><span class="pre">weigh</span></code>, we can practice <a class="reference internal" href="../../Preliminaries/how_to_debug.html#don-t-think-look"><span class="std std-ref">don’t think look</span></a>
+by inspecting the <code class="docutils literal notranslate"><span class="pre">.data</span></code> sections of GHC’s generated assembly. Here is an
+example for some primitive types. The idea is that if we create a top level
+binding that will be <em>statically</em> allocated at compile time. This static
+allocation will then appear in the <code class="docutils literal notranslate"><span class="pre">.data</span></code> section of the assembly code. Here
+is a quick refresher on assembly sizes:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Directive</p></th>
+<th class="head"><p>Size (Bytes)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>.byte</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>.word</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td><p>.long</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-odd"><td><p>.quad</p></td>
+<td><p>8</p></td>
+</tr>
+</tbody>
+</table>
+<p>And here is our example program.</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="cm">{-# OPTIONS_GHC -O2 -ddump-asm #-}</span>
+
+<span class="cm">{-# NOINLINE a_unit #-}</span>
+<span class="nf">a_unit</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="nb">()</span>
+<span class="nf">a_unit</span><span class="w"> </span><span class="ow">=</span><span class="w">  </span><span class="nb">()</span>
+
+<span class="cm">{-# NOINLINE x #-}</span>
+<span class="nf">a_bool</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Bool</span>
+<span class="nf">a_bool</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">True</span>
+
+<span class="cm">{-# NOINLINE a_int8 #-}</span>
+<span class="nf">a_int8</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int8</span>
+<span class="nf">a_int8</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="mi">1</span>
+
+<span class="cm">{-# NOINLINE a_int16 #-}</span>
+<span class="nf">a_int16</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int16</span>
+<span class="nf">a_int16</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="mi">1823</span>
+
+<span class="cm">{-# NOINLINE a_int #-}</span>
+<span class="nf">a_int</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span>
+<span class="nf">a_int</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="mi">123</span>
+
+<span class="cm">{-# NOINLINE a_int64 #-}</span>
+<span class="nf">a_int64</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int64</span>
+<span class="nf">a_int64</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="mi">1234</span>
+
+<span class="cm">{-# NOINLINE a_word8 #-}</span>
+<span class="nf">a_word8</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Word8</span>
+<span class="nf">a_word8</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="mi">1</span>
+
+<span class="cm">{-# NOINLINE a_word16 #-}</span>
+<span class="nf">a_word16</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Word16</span>
+<span class="nf">a_word16</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="mi">12</span>
+
+<span class="cm">{-# NOINLINE a_word #-}</span>
+<span class="nf">a_word</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Word</span>
+<span class="nf">a_word</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="mi">123</span>
+
+<span class="cm">{-# NOINLINE a_word64 #-}</span>
+<span class="nf">a_word64</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Word64</span>
+<span class="nf">a_word64</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="mi">1234</span>
+</pre></div>
+</div>
+<p>We’ll handle these in chunks beginning with a unit. Recall that in the
+<a class="reference internal" href="../Haskell_Profiling/weigh.html#weigh-chapter"><span class="std std-ref">Weigh Chapter</span></a> a <code class="docutils literal notranslate"><span class="pre">()</span></code> was measured to be 0 allocations
+because only one <code class="docutils literal notranslate"><span class="pre">()</span></code> exists in GHC and is shared for all references. But here
+we can see the truth:</p>
+<div class="highlight-asm notranslate"><div class="highlight"><pre><span></span><span class="na">.section</span><span class="w"> </span><span class="no">.data</span>
+<span class="na">.align</span><span class="w"> </span><span class="mi">8</span>
+<span class="na">.align</span><span class="w"> </span><span class="mi">1</span>
+<span class="na">.globl</span><span class="w"> </span><span class="no">Main.a_unit_closure</span>
+<span class="na">.type</span><span class="w"> </span><span class="no">Main.a_unit_closure</span><span class="p">,</span><span class="w"> </span><span class="na">@object</span>
+<span class="nl">Main.a_unit_closure:</span>
+<span class="w">   </span><span class="na">.quad</span><span class="w">     </span><span class="p">()</span><span class="no">_con_info</span>
+</pre></div>
+</div>
+<p>Our unit value is a reference to the shared info-table for the one true <code class="docutils literal notranslate"><span class="pre">()</span></code>,
+which requires a <code class="docutils literal notranslate"><span class="pre">.quad</span></code>. <code class="docutils literal notranslate"><span class="pre">.quad</span></code> is a <em>quad word</em> meaning it is 8 bytes
+(quad because its four <code class="docutils literal notranslate"><span class="pre">.word</span></code>’s), or 64-bits (this was run on a 64-bit
+machine). What about <code class="docutils literal notranslate"><span class="pre">Bool</span></code>:</p>
+<div class="highlight-asm notranslate"><div class="highlight"><pre><span></span><span class="na">.section</span><span class="w"> </span><span class="no">.data</span>
+<span class="na">.align</span><span class="w"> </span><span class="mi">8</span>
+<span class="na">.align</span><span class="w"> </span><span class="mi">1</span>
+<span class="na">.globl</span><span class="w"> </span><span class="no">Main.a_bool_closure</span>
+<span class="na">.type</span><span class="w"> </span><span class="no">Main.a_bool_closure</span><span class="p">,</span><span class="w"> </span><span class="na">@object</span>
+<span class="nl">Main.a_bool_closure:</span>
+<span class="w">     </span><span class="na">.quad</span><span class="w">   </span><span class="no">GHC.Types.True_con_info</span>
+</pre></div>
+</div>
+<p>The same is true for <code class="docutils literal notranslate"><span class="pre">a_bool</span></code>; the <code class="docutils literal notranslate"><span class="pre">True</span></code> is a pointer to the one <code class="docutils literal notranslate"><span class="pre">True</span></code>
+value called <code class="docutils literal notranslate"><span class="pre">GHC.Types.True_con_info</span></code>, and thus takes a single word. Let’s
+check the Int-like fixnums:</p>
+<div class="highlight-asm notranslate"><div class="highlight"><pre><span></span><span class="na">.section</span><span class="w"> </span><span class="no">.data</span>
+<span class="na">.align</span><span class="w"> </span><span class="mi">8</span>
+<span class="na">.align</span><span class="w"> </span><span class="mi">1</span>
+<span class="na">.globl</span><span class="w"> </span><span class="no">Main.a_int8_closure</span>
+<span class="na">.type</span><span class="w"> </span><span class="no">Main.a_int8_closure</span><span class="p">,</span><span class="w"> </span><span class="na">@object</span>
+<span class="nl">Main.a_int8_closure:</span>
+<span class="w">     </span><span class="na">.quad</span><span class="w">   </span><span class="no">GHC.Int.I8</span><span class="c1">#_con_info</span>
+<span class="w">     </span><span class="na">.byte</span><span class="w">   </span><span class="mi">8</span>
+<span class="w">     </span><span class="na">.long</span><span class="w">   </span><span class="mi">0</span>
+<span class="w">     </span><span class="na">.word</span><span class="w">   </span><span class="mi">0</span>
+<span class="w">     </span><span class="na">.byte</span><span class="w">   </span><span class="mi">0</span>
+
+<span class="na">...</span>
+
+<span class="na">.section</span><span class="w"> </span><span class="no">.data</span>
+<span class="na">.align</span><span class="w"> </span><span class="mi">8</span>
+<span class="na">.align</span><span class="w"> </span><span class="mi">1</span>
+<span class="na">.globl</span><span class="w"> </span><span class="no">Main.a_int16_closure</span>
+<span class="na">.type</span><span class="w"> </span><span class="no">Main.a_int16_closure</span><span class="p">,</span><span class="w"> </span><span class="na">@object</span>
+<span class="nl">Main.a_int16_closure:</span>
+<span class="w">     </span><span class="na">.quad</span><span class="w">   </span><span class="no">GHC.Int.I16</span><span class="c1">#_con_info</span>
+<span class="w">     </span><span class="na">.word</span><span class="w">   </span><span class="mi">16</span>
+<span class="w">     </span><span class="na">.long</span><span class="w">   </span><span class="mi">0</span>
+<span class="w">     </span><span class="na">.word</span><span class="w">   </span><span class="mi">0</span>
+
+<span class="na">...</span>
+
+<span class="na">.section</span><span class="w"> </span><span class="no">.data</span>
+<span class="na">.align</span><span class="w"> </span><span class="mi">8</span>
+<span class="na">.align</span><span class="w"> </span><span class="mi">1</span>
+<span class="na">.globl</span><span class="w"> </span><span class="no">Main.a_int_closure</span>
+<span class="na">.type</span><span class="w"> </span><span class="no">Main.a_int_closure</span><span class="p">,</span><span class="w"> </span><span class="na">@object</span>
+<span class="nl">Main.a_int_closure:</span>
+<span class="w">     </span><span class="na">.quad</span><span class="w">   </span><span class="no">GHC.Types.I</span><span class="c1">#_con_info</span>
+<span class="w">     </span><span class="na">.quad</span><span class="w">   </span><span class="mi">32</span>
+
+<span class="na">...</span>
+
+<span class="na">.section</span><span class="w"> </span><span class="no">.data</span>
+<span class="na">.align</span><span class="w"> </span><span class="mi">8</span>
+<span class="na">.align</span><span class="w"> </span><span class="mi">1</span>
+<span class="na">.globl</span><span class="w"> </span><span class="no">Main.a_int64_closure</span>
+<span class="na">.type</span><span class="w"> </span><span class="no">Main.a_int64_closure</span><span class="p">,</span><span class="w"> </span><span class="na">@object</span>
+<span class="nl">Main.a_int64_closure:</span>
+<span class="w">     </span><span class="na">.quad</span><span class="w">   </span><span class="no">GHC.Int.I64</span><span class="c1">#_con_info</span>
+<span class="w">     </span><span class="na">.quad</span><span class="w">   </span><span class="mi">64</span>
+</pre></div>
+</div>
+<p>We see that our <code class="docutils literal notranslate"><span class="pre">a_int8</span> <span class="pre">::</span> <span class="pre">Int8</span></code> requires one word for the data constructor
+header: <code class="docutils literal notranslate"><span class="pre">.quad</span> <span class="pre">GHC.Int.I8#_con_info</span></code>, and then requires one byte for the
+payload: <code class="docutils literal notranslate"><span class="pre">.byte</span> <span class="pre">8</span></code>, but then requires another 7 bytes: <code class="docutils literal notranslate"><span class="pre">.long</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">.word</span>
+<span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">.byte</span> <span class="pre">0</span></code> all initialized to 0. GHC is smartly padding this value to fit
+evenly into the data cache. Without this padding, <code class="docutils literal notranslate"><span class="pre">a_int</span></code> would require <em>65</em>
+bytes (the info table pointer + 1 byte for the payload) which is guaranteed to
+never fit evenly into the data cache. This padding is good, we should be happy
+that GHC does it for us. However, the padding is still empty space which is
+wasteful. If this were a real program a good optimization would be to increase
+memory efficiency by utilizing this extra space. See the <a class="reference internal" href="../../Case_Studies/data_oriented_design.html#data-oriented-design-case-study"><span class="std std-ref">Data-Oriented
+Design Case Study</span></a> for an example.</p>
+<p>We see similar padding for <code class="docutils literal notranslate"><span class="pre">a_int16</span></code>, while <code class="docutils literal notranslate"><span class="pre">a_int</span></code> and <code class="docutils literal notranslate"><span class="pre">a_int64</span></code> take two
+words as we expect. The sized <code class="docutils literal notranslate"><span class="pre">Word</span></code> types are identically sized to the
+<code class="docutils literal notranslate"><span class="pre">Int</span></code> types:</p>
+<div class="highlight-asm notranslate"><div class="highlight"><pre><span></span><span class="na">.section</span><span class="w"> </span><span class="no">.data</span>
+<span class="na">.align</span><span class="w"> </span><span class="mi">8</span>
+<span class="na">.align</span><span class="w"> </span><span class="mi">1</span>
+<span class="na">.globl</span><span class="w"> </span><span class="no">Main.a_word8_closure</span>
+<span class="na">.type</span><span class="w"> </span><span class="no">Main.a_word8_closure</span><span class="p">,</span><span class="w"> </span><span class="na">@object</span>
+<span class="nl">Main.a_word8_closure:</span>
+<span class="w">     </span><span class="na">.quad</span><span class="w">   </span><span class="no">GHC.Word.W8</span><span class="c1">#_con_info</span>
+<span class="w">     </span><span class="na">.byte</span><span class="w">   </span><span class="mi">8</span>
+<span class="w">     </span><span class="na">.long</span><span class="w">   </span><span class="mi">0</span>
+<span class="w">     </span><span class="na">.word</span><span class="w">   </span><span class="mi">0</span>
+<span class="w">     </span><span class="na">.byte</span><span class="w">   </span><span class="mi">0</span>
+
+<span class="na">...</span>
+
+<span class="na">.section</span><span class="w"> </span><span class="no">.data</span>
+<span class="na">.align</span><span class="w"> </span><span class="mi">8</span>
+<span class="na">.align</span><span class="w"> </span><span class="mi">1</span>
+<span class="na">.globl</span><span class="w"> </span><span class="no">Main.a_word16_closure</span>
+<span class="na">.type</span><span class="w"> </span><span class="no">Main.a_word16_closure</span><span class="p">,</span><span class="w"> </span><span class="na">@object</span>
+<span class="nl">Main.a_word16_closure:</span>
+<span class="w">     </span><span class="na">.quad</span><span class="w">   </span><span class="no">GHC.Word.W16</span><span class="c1">#_con_info</span>
+<span class="w">     </span><span class="na">.word</span><span class="w">   </span><span class="mi">16</span>
+<span class="w">     </span><span class="na">.long</span><span class="w">   </span><span class="mi">0</span>
+<span class="w">     </span><span class="na">.word</span><span class="w">   </span><span class="mi">0</span>
+
+<span class="na">...</span>
+
+<span class="na">.section</span><span class="w"> </span><span class="no">.data</span>
+<span class="na">.align</span><span class="w"> </span><span class="mi">8</span>
+<span class="na">.align</span><span class="w"> </span><span class="mi">1</span>
+<span class="na">.globl</span><span class="w"> </span><span class="no">Main.a_word_closure</span>
+<span class="na">.type</span><span class="w"> </span><span class="no">Main.a_word_closure</span><span class="p">,</span><span class="w"> </span><span class="na">@object</span>
+<span class="nl">Main.a_word_closure:</span>
+<span class="w">     </span><span class="na">.quad</span><span class="w">   </span><span class="no">GHC.Types.W</span><span class="c1">#_con_info</span>
+<span class="w">     </span><span class="na">.quad</span><span class="w">   </span><span class="mi">32</span>
+
+<span class="na">...</span>
+
+<span class="na">.section</span><span class="w"> </span><span class="no">.data</span>
+<span class="na">.align</span><span class="w"> </span><span class="mi">8</span>
+<span class="na">.align</span><span class="w"> </span><span class="mi">1</span>
+<span class="na">.globl</span><span class="w"> </span><span class="no">Main.a_word64_closure</span>
+<span class="na">.type</span><span class="w"> </span><span class="no">Main.a_word64_closure</span><span class="p">,</span><span class="w"> </span><span class="na">@object</span>
+<span class="nl">Main.a_word64_closure:</span>
+<span class="w">     </span><span class="na">.quad</span><span class="w">   </span><span class="no">GHC.Word.W64</span><span class="c1">#_con_info</span>
+<span class="w">     </span><span class="na">.quad</span><span class="w">   </span><span class="mi">64</span>
+</pre></div>
+</div>
+<p>Unfortunately, this will only work for boxed data types as we cannot (<a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/issues/17521">yet</a> have a top level unlifted
+data type (which an unboxed type is). Another curiosity are the representation
+of top level <a class="reference internal" href="../../glossary.html#term-Compound-Types"><span class="xref std std-term">compound types</span></a>. For example, with this:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="cm">{-# NOINLINE a_pair#-}</span>
+<span class="nf">a_pair</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">(</span><span class="kt">Int</span><span class="p">,</span><span class="kt">Int</span><span class="p">)</span>
+<span class="nf">a_pair</span><span class="w"> </span><span class="ow">=</span><span class="w">  </span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="cm">{-# NOINLINE a_list#-}</span>
+<span class="nf">a_list</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">[</span><span class="kt">Int16</span><span class="p">]</span>
+<span class="nf">a_list</span><span class="w"> </span><span class="ow">=</span><span class="w">  </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>GHC generates:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>.section .data
+.align 8
+.align 1
+.globl Main.a_pair_closure
+.type Main.a_pair_closure, @object
+Main.a_pair_closure:
+        .quad        (,)_con_info
+        .quad        stg_INTLIKE_closure+273
+        .quad        stg_INTLIKE_closure+289
+        .quad        3
+</pre></div>
+</div>
+<div class="help-wanted admonition">
+<p class="admonition-title">Help Wanted</p>
+<p>These <code class="docutils literal notranslate"><span class="pre">+</span></code> disturb the <code class="docutils literal notranslate"><span class="pre">asm</span></code> lexer in sphinx. I’ve tried to escape them to
+no avail so this block lacks syntax highlighting. If you know how to resolve
+this please <a class="reference external" href="https://github.com/haskellfoundation/hs-opt-handbook.github.io/issues/117">contribute</a>!</p>
+</div>
+<p>Which is just what we expected: one word (<code class="docutils literal notranslate"><span class="pre">.quad</span> <span class="pre">(,)_con_info</span></code>) for the data
+constructor header, one for <code class="docutils literal notranslate"><span class="pre">fst</span></code> (<code class="docutils literal notranslate"><span class="pre">.quad</span> <span class="pre">stg_INTLIKE_closure+273</span></code> ), and
+one <code class="docutils literal notranslate"><span class="pre">snd</span></code> (<code class="docutils literal notranslate"><span class="pre">.quad</span> <span class="pre">stg_INTLIKE_closure+289</span></code>). However, GHC has added another
+word that is mysteriously set to 3: <code class="docutils literal notranslate"><span class="pre">.quad</span> <span class="pre">3</span></code>. This extra word is an
+optimization that GHC applies which tags the symbol <code class="docutils literal notranslate"><span class="pre">Main.a_pair_closure</span></code> as a
+static constructor that contains no <a class="reference internal" href="../../glossary.html#term-CAF"><span class="xref std std-term">CAF</span></a> references. This tag (the 3)
+instructs the garbage collector to ignore this symbol during garbage collection.
+If <code class="docutils literal notranslate"><span class="pre">Main.a_pair_closure</span></code> was found to possibly have a CAF then the tag would
+have been 0 but the extra word would still exist <a class="footnote-reference brackets" href="#id5" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> . So does this mean that
+our analysis is incorrect? No, this data is only checked and loaded during a
+garbage collection event, it is a by product of our abuse of <code class="docutils literal notranslate"><span class="pre">NOINLINE</span></code> to
+create a static top-level closure.</p>
+</section>
+<section id="about-strictness">
+<h3><span class="section-number">2.5.2.4.2. </span>About Strictness<a class="headerlink" href="#about-strictness" title="Link to this heading">¶</a></h3>
+<p>Now we can finally discuss strictness. Consider this program:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">module</span><span class="w"> </span><span class="nn">Example</span><span class="w"> </span><span class="kr">where</span>
+
+<span class="kr">import</span><span class="w"> </span><span class="nn">Data.Word</span>
+
+<span class="kr">data</span><span class="w"> </span><span class="kt">Foo</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">Foo</span><span class="w"> </span><span class="kt">Word16</span><span class="w"> </span><span class="kt">Word16</span><span class="w"> </span><span class="kt">Word16</span><span class="w"> </span><span class="kt">Word16</span>
+
+<span class="cm">{-# NOINLINE a_foo #-}</span>
+<span class="nf">a_foo</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Foo</span>
+<span class="nf">a_foo</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">Foo</span><span class="w"> </span><span class="mi">123</span><span class="w"> </span><span class="mi">234</span><span class="w"> </span><span class="mi">345</span><span class="w"> </span><span class="mi">456</span>
+
+<span class="nf">main</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">IO</span><span class="w"> </span><span class="nb">()</span>
+<span class="nf">main</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">return</span><span class="w"> </span><span class="nb">()</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Foo</span></code> has one constructor and four fields; each of which is a <code class="docutils literal notranslate"><span class="pre">Word16</span></code>. So
+we should expect that a <code class="docutils literal notranslate"><span class="pre">Foo</span></code> will be nine words: one for the header, and then
+each <code class="docutils literal notranslate"><span class="pre">Word16</span></code> is a pointer to the <code class="docutils literal notranslate"><span class="pre">Word16#</span></code> payload which will include
+padding to align to 64 bits. Let’s check the assembly:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Example_a_foo_closure:
+    .quad   Example_Foo_con_info
+    .quad   Example_a_foo4_closure+1  ;; these closures are the &quot;boxes&quot;
+    .quad   Example_a_foo3_closure+1  ;; in boxed data types!
+    .quad   Example_a_foo2_closure+1  ;; this +1 is a pointer tag
+    .quad   Example_a_foo1_closure+1  ;; meaning the value is evaluated.
+    .quad   3
+</pre></div>
+</div>
+<p>Ignoring the <code class="docutils literal notranslate"><span class="pre">.quad</span> <span class="pre">3</span></code> tag, we find a word for the constructor’s info table:
+<code class="docutils literal notranslate"><span class="pre">.quad</span> <span class="pre">Example_Foo_con_info</span></code>, and a word for each field which is the
+aforementioned pointers. Here are what those closures look like:</p>
+<div class="highlight-asm notranslate"><div class="highlight"><pre><span></span><span class="nl">Example_a_foo4_closure:</span>
+<span class="w">     </span><span class="na">.quad</span><span class="w">   </span><span class="no">base_GHCziWord_W16zh_con_info</span>
+<span class="w">     </span><span class="na">.word</span><span class="w">   </span><span class="mi">123</span>
+<span class="w">     </span><span class="na">.long</span><span class="w">   </span><span class="mi">0</span>
+<span class="w">     </span><span class="na">.word</span><span class="w">   </span><span class="mi">0</span>
+<span class="nl">Example_a_foo3_closure:</span>
+<span class="w">        </span><span class="na">.quad</span><span class="w">   </span><span class="no">base_GHCziWord_W16zh_con_info</span>
+<span class="w">        </span><span class="na">.word</span><span class="w">   </span><span class="mi">234</span>
+<span class="w">        </span><span class="na">.long</span><span class="w">   </span><span class="mi">0</span>
+<span class="w">        </span><span class="na">.word</span><span class="w">   </span><span class="mi">0</span>
+<span class="nl">Example_a_foo2_closure:</span>
+<span class="w">        </span><span class="na">.quad</span><span class="w">   </span><span class="no">base_GHCziWord_W16zh_con_info</span>
+<span class="w">        </span><span class="na">.word</span><span class="w">   </span><span class="mi">345</span>
+<span class="w">        </span><span class="na">.long</span><span class="w">   </span><span class="mi">0</span>
+<span class="w">        </span><span class="na">.word</span><span class="w">   </span><span class="mi">0</span>
+<span class="nl">Example_a_foo1_closure:</span>
+<span class="w">        </span><span class="na">.quad</span><span class="w">   </span><span class="no">base_GHCziWord_W16zh_con_info</span>
+<span class="w">        </span><span class="na">.word</span><span class="w">   </span><span class="mi">456</span>
+<span class="w">        </span><span class="na">.long</span><span class="w">   </span><span class="mi">0</span>
+<span class="w">        </span><span class="na">.word</span><span class="w">   </span><span class="mi">0</span>
+</pre></div>
+</div>
+<p>Each closure is two words: one for the <code class="docutils literal notranslate"><span class="pre">Word16</span></code> info table,
+<code class="docutils literal notranslate"><span class="pre">.quad</span> <span class="pre">base_GHCziWord_W16zh_con_info</span></code>;
+then two bytes for the payloads, <code class="docutils literal notranslate"><span class="pre">.word</span> <span class="pre">123</span></code>,
+<code class="docutils literal notranslate"><span class="pre">.word</span> <span class="pre">234</span></code> etc.; and then six bytes of padding, <code class="docutils literal notranslate"><span class="pre">.long</span> <span class="pre">0</span></code> and <code class="docutils literal notranslate"><span class="pre">.word</span> <span class="pre">0</span></code>.
+This matches our expectations. Now let’s add some strictness to the first two fields:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">module</span><span class="w"> </span><span class="nn">Example</span><span class="w"> </span><span class="kr">where</span>
+
+<span class="kr">import</span><span class="w"> </span><span class="nn">Data.Word</span>
+
+<span class="c1">-- now the first two fields are strict</span>
+<span class="kr">data</span><span class="w"> </span><span class="kt">Foo</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">Foo</span><span class="w"> </span><span class="o">!</span><span class="kt">Word16</span><span class="w"> </span><span class="o">!</span><span class="kt">Word16</span><span class="w"> </span><span class="kt">Word16</span><span class="w"> </span><span class="kt">Word16</span>
+
+<span class="cm">{-# NOINLINE a_foo #-}</span>
+<span class="nf">a_foo</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Foo</span>
+<span class="nf">a_foo</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">Foo</span><span class="w"> </span><span class="mi">123</span><span class="w"> </span><span class="mi">234</span><span class="w"> </span><span class="mi">345</span><span class="w"> </span><span class="mi">456</span>
+
+<span class="nf">main</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">IO</span><span class="w"> </span><span class="nb">()</span>
+<span class="nf">main</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">return</span><span class="w"> </span><span class="nb">()</span>
+</pre></div>
+</div>
+<p>and here is the assembly:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Example_a_foo_closure:
+        .quad   Example_Foo_con_info
+        .quad   Example_a_foo2_closure+1
+        .quad   Example_a_foo1_closure+1
+        .word   123
+        .word   234
+        .long   0
+        .quad   3
+</pre></div>
+</div>
+<p>Our <code class="docutils literal notranslate"><span class="pre">a_foo</span></code> object has reduced in size! The payloads for first two fields are
+now inlined into the closure. Now <code class="docutils literal notranslate"><span class="pre">a_foo</span></code> requires one word for the header,
+four for the third and fourth fields, and then just one extra word for padding
+and the first and second fields yielding a total footprint of 6 words. Let’s
+make <code class="docutils literal notranslate"><span class="pre">Foo</span></code> strict in every field, taking this process to its logical
+conclusion:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="cm">{-# LANGUAGE StrictData #-}</span>
+<span class="kr">module</span><span class="w"> </span><span class="nn">Example</span><span class="w"> </span><span class="kr">where</span>
+
+<span class="kr">import</span><span class="w"> </span><span class="nn">Data.Word</span>
+
+<span class="c1">-- Now we use Strict data instead of bang patters</span>
+<span class="kr">data</span><span class="w"> </span><span class="kt">Foo</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">Foo</span><span class="w"> </span><span class="kt">Word16</span><span class="w"> </span><span class="kt">Word16</span><span class="w"> </span><span class="kt">Word16</span><span class="w"> </span><span class="kt">Word16</span>
+
+<span class="c1">-- also notice that NOINLINE is not necessary</span>
+<span class="nf">a_foo</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Foo</span>
+<span class="nf">a_foo</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">Foo</span><span class="w"> </span><span class="mi">123</span><span class="w"> </span><span class="mi">234</span><span class="w"> </span><span class="mi">345</span><span class="w"> </span><span class="mi">456</span>
+
+<span class="nf">main</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">IO</span><span class="w"> </span><span class="nb">()</span>
+<span class="nf">main</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">return</span><span class="w"> </span><span class="nb">()</span>
+</pre></div>
+</div>
+<p>which generates the following assembly:</p>
+<div class="highlight-asm notranslate"><div class="highlight"><pre><span></span><span class="nl">Example_a_foo_closure:</span>
+<span class="w">     </span><span class="na">.quad</span><span class="w">   </span><span class="no">Example_Foo_con_info</span>
+<span class="w">     </span><span class="na">.word</span><span class="w">   </span><span class="mi">123</span>
+<span class="w">     </span><span class="na">.word</span><span class="w">   </span><span class="mi">234</span>
+<span class="w">     </span><span class="na">.word</span><span class="w">   </span><span class="mi">345</span>
+<span class="w">     </span><span class="na">.word</span><span class="w">   </span><span class="mi">456</span>
+</pre></div>
+</div>
+<p>Exactly what we expected. <code class="docutils literal notranslate"><span class="pre">a_foo</span></code> is now only two words. Good job GHC! What is
+happening here is that GHC’s <a class="reference internal" href="../../Optimizations/GHC_opt/demand_analysis.html#demand-analysis-chapter"><span class="std std-ref">Demand Analysis</span></a>
+has concluded that it is safe to unbox the <code class="docutils literal notranslate"><span class="pre">Word16</span></code> payloads for <code class="docutils literal notranslate"><span class="pre">a_foo</span></code>
+because they are marked as strict. The key point is that strictness can matter
+when assessing memory footprints. For the worst case, you should assume demand
+analysis cannot help you and analyze your data structures as we did above.
+Assuming GHC’s demand analysis works in your favor gives you the best case. Be
+sure to <a class="reference internal" href="../../Preliminaries/how_to_debug.html#don-t-think-look"><span class="std std-ref">don’t think look</span></a> by checking the Cmm or the
+assembly. Here is what the Cmm in this case will looks like:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">section</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="kr">data</span><span class="s">&quot; . a_foo_closure&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">     </span><span class="n">a_foo_closure</span><span class="kt">:</span>
+<span class="w">         </span><span class="n">const</span><span class="w"> </span><span class="kt">Foo_con_info</span><span class="p">;</span>
+<span class="w">         </span><span class="n">const</span><span class="w"> </span><span class="mi">123</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">W16</span><span class="p">;</span>
+<span class="w">         </span><span class="n">const</span><span class="w"> </span><span class="mi">234</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">W16</span><span class="p">;</span>
+<span class="w">         </span><span class="n">const</span><span class="w"> </span><span class="mi">345</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">W16</span><span class="p">;</span>
+<span class="w">         </span><span class="n">const</span><span class="w"> </span><span class="mi">456</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">W16</span><span class="p">;</span>
+<span class="w"> </span><span class="p">}]</span>
+</pre></div>
+</div>
+<p>Which also shows the more compact <code class="docutils literal notranslate"><span class="pre">foo</span></code> closure.</p>
+</section>
+<section id="about-sharing">
+<h3><span class="section-number">2.5.2.4.3. </span>About Sharing<a class="headerlink" href="#about-sharing" title="Link to this heading">¶</a></h3>
+<p>Consider this program:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">module</span><span class="w"> </span><span class="nn">Example</span><span class="w"> </span><span class="kr">where</span>
+
+<span class="cm">{-# NOINLINE a_list #-}</span>
+<span class="nf">a_list</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">[</span><span class="kt">Int</span><span class="p">]</span>
+<span class="nf">a_list</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="mi">1729</span><span class="w"> </span><span class="kt">:</span><span class="w"> </span><span class="kt">[]</span>
+
+<span class="nf">main</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">IO</span><span class="w"> </span><span class="nb">()</span>
+<span class="nf">main</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">return</span><span class="w"> </span><span class="nb">()</span>
+</pre></div>
+</div>
+<p>This program defines a singleton list just like <code class="docutils literal notranslate"><span class="pre">MyIntList</span></code> above. Earlier we
+stated that <code class="docutils literal notranslate"><span class="pre">Nil</span></code>, or <code class="docutils literal notranslate"><span class="pre">[]</span></code> is shared. Now we can read the assembly to
+observe what exactly that looks like. If it is actually shared then we should
+see some kind of reference to the builtin <code class="docutils literal notranslate"><span class="pre">[]</span></code> constructor. Here is the
+relevant assembly:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Example_a_list_closure:
+        .quad   ghczmprim_GHCziTypes_ZC_con_info
+        .quad   .LrH2_closure+1
+        .quad   ghczmprim_GHCziTypes_ZMZN_closure+1
+        .quad   3
+</pre></div>
+</div>
+<div class="highlight-asm notranslate"><div class="highlight"><pre><span></span><span class="nl">.LrH2_closure:</span>
+<span class="w">  </span><span class="na">.quad</span><span class="w">   </span><span class="no">ghczmprim_GHCziTypes_Izh_con_info</span>
+<span class="w">  </span><span class="na">.quad</span><span class="w">   </span><span class="mi">1729</span>
+</pre></div>
+</div>
+<p>Sure enough, we see an info table pointer:
+<code class="docutils literal notranslate"><span class="pre">.quad</span> <span class="pre">ghczmprim_GHCziTypes_ZC_con_info</span></code> for <code class="docutils literal notranslate"><span class="pre">:</span></code>; a pointer to our payload,
+<code class="docutils literal notranslate"><span class="pre">.quad</span> <span class="pre">.LrH2_closure+1</span></code>; and a pointer to some other closure,
+<code class="docutils literal notranslate"><span class="pre">.quad</span> <span class="pre">ghczmprim_GHCziTypes_ZMZN_closure+1</span></code>. Notice that both of the ghc-prim pointers
+are <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/blob/master/libraries/ghc-boot/GHC/Utils/Encoding.hs?ref_type=heads#L43">Z-encoded</a>. So we’ll <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/blob/master/libraries/ghc-boot/GHC/Utils/Encoding.hs?ref_type=heads#L119">translate</a>:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- in ghc-boot library</span>
+<span class="c1">-- GHC.Utils.Encoding module</span>
+
+<span class="c1">-- Constructors</span>
+<span class="o">...</span>
+<span class="nf">encode_ch</span><span class="w"> </span><span class="sc">&#39;[&#39;</span><span class="w">  </span><span class="ow">=</span><span class="w"> </span><span class="s">&quot;ZM&quot;</span>
+<span class="nf">encode_ch</span><span class="w"> </span><span class="sc">&#39;]&#39;</span><span class="w">  </span><span class="ow">=</span><span class="w"> </span><span class="s">&quot;ZN&quot;</span>
+<span class="nf">encode_ch</span><span class="w"> </span><span class="sc">&#39;:&#39;</span><span class="w">  </span><span class="ow">=</span><span class="w"> </span><span class="s">&quot;ZC&quot;</span>
+<span class="o">...</span>
+
+<span class="nf">decode_lower</span><span class="w"> </span><span class="sc">&#39;i&#39;</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="sc">&#39;.&#39;</span>
+<span class="o">...</span>
+<span class="nf">decode_lower</span><span class="w"> </span><span class="sc">&#39;m&#39;</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="sc">&#39;-&#39;</span>
+</pre></div>
+</div>
+<p>So a <code class="docutils literal notranslate"><span class="pre">ghczmprim_GHCziTypes_ZC_con_info</span></code> is <code class="docutils literal notranslate"><span class="pre">ghc-prim_GHC.Types_:_con_info</span></code>,
+and a <code class="docutils literal notranslate"><span class="pre">ghczmprim_GHCziTypes_ZMZN_closure+1</span></code> is
+<code class="docutils literal notranslate"><span class="pre">ghc-prim_GHC.Types_[]_closure+1</span></code>! This is what sharing looks like at the
+assembly level. That is, sharing is simply a reference to the shared data type.
+Note that this is more easily observed in the Cmm:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">section</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="kr">data</span><span class="s">&quot; . a_list_closure&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">a_list_closure</span><span class="kt">:</span>
+<span class="w">      </span><span class="n">const</span><span class="w"> </span><span class="kt">:</span><span class="n">_con_info</span><span class="p">;</span>
+<span class="w">      </span><span class="n">const</span><span class="w"> </span><span class="n">a_list1_rHe_closure</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+<span class="w">      </span><span class="n">const</span><span class="w"> </span><span class="kt">[]</span><span class="n">_closure</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+<span class="w">      </span><span class="n">const</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
+<span class="p">}]</span>
+
+<span class="p">[</span><span class="n">section</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="kr">data</span><span class="s">&quot; . a_list1_rH2_closure&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">a_list1_rH2_closure</span><span class="kt">:</span>
+<span class="w">        </span><span class="n">const</span><span class="w"> </span><span class="kt">I</span><span class="o">#</span><span class="n">_con_info</span><span class="p">;</span>
+<span class="w">        </span><span class="n">const</span><span class="w"> </span><span class="mi">1729</span><span class="p">;</span>
+<span class="p">}]</span>
+</pre></div>
+</div>
+<p>Because Cmm is not z-encoded yet.</p>
+<p>I say <em>usually</em> on purpose; consider this program:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">module</span><span class="w"> </span><span class="nn">Example</span><span class="w"> </span><span class="kr">where</span>
+
+<span class="cm">{-# NOINLINE a_list #-}</span>
+<span class="nf">a_list</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">[</span><span class="kt">Int</span><span class="p">]</span>
+<span class="nf">a_list</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="mi">255</span><span class="w"> </span><span class="kt">:</span><span class="w"> </span><span class="kt">[]</span>
+
+<span class="nf">main</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">IO</span><span class="w"> </span><span class="nb">()</span>
+<span class="nf">main</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">return</span><span class="w"> </span><span class="nb">()</span>
+</pre></div>
+</div>
+<p>The only change is that the value is now 255 rather than <a class="reference external" href="https://en.wikipedia.org/wiki/1729_(number)">ramanujan’s number</a>. Now let’s look at
+the corresponding assembly:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Example_a_list_closure:
+     .quad   ghczmprim_GHCziTypes_ZC_con_info
+     .quad   stg_INTLIKE_closure+4337
+     .quad   ghczmprim_GHCziTypes_ZMZN_closure+1
+     .quad   3
+</pre></div>
+</div>
+<p>Our closure has changed! Instead of a pointer to a closure that is observable we
+have an offset pointer: <code class="docutils literal notranslate"><span class="pre">stg_INTLIKE_closure+4337</span></code>. We are observing a nuance
+in GHC’s runtime system. GHC stores <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/blob/master/rts/StgMiscClosures.cmm?ref_type=heads#L991">static representations</a>
+to <code class="docutils literal notranslate"><span class="pre">Char</span></code> and small <code class="docutils literal notranslate"><span class="pre">Int</span></code>’s so that it can cleverly replace these heap
+objects with static references. 255 is the largest <code class="docutils literal notranslate"><span class="pre">Int</span></code> of this kind that
+will be shared, had we chosen 256, then GHC would produce:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span> Example_a_list_closure:
+      .quad   ghczmprim_GHCziTypes_ZC_con_info
+      .quad   .LrH2_closure+1
+      .quad   ghczmprim_GHCziTypes_ZMZN_closure+1
+      .quad   3
+.LrH2_closure:
+      .quad   ghczmprim_GHCziTypes_Izh_con_info
+      .quad   256
+</pre></div>
+</div>
+<p>Which is identical to what we observed earlier. Note that this only occurs with
+an <code class="docutils literal notranslate"><span class="pre">Int</span></code>. GHC will not generate this code with an <code class="docutils literal notranslate"><span class="pre">Int8</span></code>, <code class="docutils literal notranslate"><span class="pre">Word8</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Int64</span></code> and the rest.</p>
+</section>
+<section id="use-ghc-vis">
+<h3><span class="section-number">2.5.2.4.4. </span>Use GHC-vis<a class="headerlink" href="#use-ghc-vis" title="Link to this heading">¶</a></h3>
+<p>Another method is to use <a class="reference external" href="https://dennis.felsing.org/ghc-vis/">ghc-vis</a> .
+GHC-vis is a plugin for GHCi that outputs graphiz graphs which show the memory
+representation of a data type. Its documentation is very readable and it is
+still actively maintained so we encourage interested parties to contribute or
+give it a try. One caveat though: the documentation is representative of GHC’s
+internal types pre-GHC-9.0.</p>
+</section>
+</section>
+</section>
+<section id="summary">
+<h1><span class="section-number">2.5.3. </span>Summary<a class="headerlink" href="#summary" title="Link to this heading">¶</a></h1>
+<p>We’ve come a long way. We have added two tools to our optimization toolbox.
+First, a method to observe the memory footprint of a data type by inspecting the
+GHC generated assembly. Second, a method to analyze the worst case size of a
+data type by reading its definition and assessing its footprint. Along the way
+we have also observed the effect of strictness, what sharing looks like at a low
+level and observed GHC character and small <code class="docutils literal notranslate"><span class="pre">Int</span></code> cache pool.</p>
+<p>Assessing the memory footprint of your data types should be one of the first
+techniques you employ. It is non-invasive, doesn’t require a full rebuild, and
+will help you understand what the CPU must do in order to compute your program.
+More importantly it is requisite to understanding the cache behavior of your
+program. This can be especially powerful if you already know where the hot loop
+in your implementation <em>or</em> architecture is. By reducing the memory footprint of
+that data you’ll be all but guaranteed to speed up your system.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If this chapter has helped you implement a speedup in your system or if you
+want to add a footprint derivation just as I did for <code class="docutils literal notranslate"><span class="pre">HashMap</span></code> above then
+please <a class="reference external" href="https://github.com/haskellfoundation/hs-opt-handbook.github.io/blob/main/Contributing.rst">contribute</a>!</p>
+</div>
+</section>
+<section id="references">
+<h1><span class="section-number">2.5.4. </span>References<a class="headerlink" href="#references" title="Link to this heading">¶</a></h1>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id4" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">1</a><span class="fn-bracket">]</span></span>
+<p>The HashMap behaves this way because of <a class="reference external" href="https://github.com/haskell-unordered-containers/unordered-containers/pull/317">yours truly</a>.
+Even though the cache behavior is poor, the 16-bit base was worse because
+it created HashMaps with a more deeply nested structure. This meant even
+<em>more</em> pointer chasing in full cases. For the interested, you can observe
+the effect in the data posted in the pull request I have linked.</p>
+</aside>
+<aside class="footnote brackets" id="id5" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">2</a><span class="fn-bracket">]</span></span>
+<p>The <a class="reference external" href="https://www.fpcomplete.com/blog/2016/05/weigh-package/">Haskell Wiki</a> page. Although
+it has not been updated in some time.</p>
+</aside>
+<aside class="footnote brackets" id="id6" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></span>
+<p>For the interested, <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/blob/master/compiler/GHC/StgToCmm/Heap.hs?ref_type=heads#L215">here</a>
+is where the tag is applied and <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/blob/master/rts/sm/Storage.h?ref_type=heads#L134">here</a>
+is an explanation of the tag from the perspective of the garbage collector.
+This tag will also appear in Cmm because it is applied during the STG to Cmm
+pass. For example here is the Cmm data declaration for <code class="docutils literal notranslate"><span class="pre">a_pair</span></code> :</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">section</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="kr">data</span><span class="s">&quot; . Main.a_pair_closure&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">     </span><span class="kt">Main</span><span class="o">.</span><span class="n">a_pair_closure</span><span class="kt">:</span>
+<span class="w">         </span><span class="n">const</span><span class="w"> </span><span class="p">(,)</span><span class="n">_con_info</span><span class="p">;</span>
+<span class="w">         </span><span class="n">const</span><span class="w"> </span><span class="n">stg_INTLIKE_closure</span><span class="o">+</span><span class="mi">273</span><span class="p">;</span>
+<span class="w">         </span><span class="n">const</span><span class="w"> </span><span class="n">stg_INTLIKE_closure</span><span class="o">+</span><span class="mi">289</span><span class="p">;</span>
+<span class="w">         </span><span class="n">const</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
+<span class="w"> </span><span class="p">}]</span>
+</pre></div>
+</div>
+<p>Which indeed shows the <code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">3</span></code>.</p>
+</aside>
+</aside>
+</section>
+
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+  <li class="prev">
+    <a href="core.html"
+       title="previous chapter">← <span class="section-number">2.5.1. </span><span class="lightgrey">Reading Core</span></a>
+  </li>
+  <li class="next">
+    <a href="../Haskell_Profiling/index.html"
+       title="next chapter"><span class="section-number">2.6. </span>Haskell Level Probing and Profiling →</a>
+  </li>
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2022-2024, Jeffrey Young (doyougnu).
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.2.6 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
+</div>
+            </div>
+          </div>
+      </page>
+    </div></div>
+    
+    
+  </body>
+</html>
