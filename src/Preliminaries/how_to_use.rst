@@ -32,12 +32,12 @@ picking your favorite Haskell library and attempting to optimize that!
 
 The book assumes you are using GHC |ghcVersion| and a Linux distribution (kernel
 version ``5.8`` and higher). Should you be using an older compiler than some
-sections, such as :ref:`Using EventLog
+sections, such as :ref:`using EventLog
 <EventLog Chapter>`; which arrived in ``GHC 8.8``
-may still be useful, while others such as :ref:`Using Cachegrind
+may still be useful, while others such as :ref:`using Cachegrind
 <Cachegrind Chapter>`; which relies on
 :term:`DWARF` symbols (added in ``GHC 8.10.x``) may not be applicable.
-Similarly, some chapters, such as :ref:`Using perf
+Similarly, some chapters, such as :ref:`using perf
 <Perf Chapter>` will only be
 applicable for Linux and Linux based operating systems.
 
@@ -61,21 +61,25 @@ Where to Begin
 --------------
 
 The book is structured into discrete independent parts to better serve as a
-handbook. Thus, the book is not meant to be read in a linear order. Instead, one
-should pick and choose which chapter to read next based on their needs because
-*the book assumes you have a problem that needs solving*.
+handbook and is not meant to be read in a linear order. Instead, one should pick
+and choose which chapter to read next based on their needs because *the book
+assumes you have a problem that needs solving*.
 
-There are two parts: Part 1, focuses on measurement, profiling and observation
-of Haskell programs. This part is ordered from the bottom-up; it begins with
-tools and probes that are language agnostic and close to the machine, such as
-:ref:`Perf <Perf Chapter>` and :ref:`Cachegrind <Cachegrind Chapter>`, then
-proceeds through each `intermediate representation
+The best place to start is :ref:`triage <Triage>`, this should help you
+narrow down your next steps. If you are short on time, or just have a problem to
+solve, then skip to the :ref:`checklist <The Checklist>`.
+
+The book is roughly divided into two parts: Part 1, focuses on measurement,
+profiling and observation of Haskell programs. This part is ordered from the
+bottom-up; it begins with tools and probes that are language agnostic and close
+to the machine, such as :ref:`perf <Perf Chapter>` and :ref:`cachegrind
+<Cachegrind Chapter>`, then proceeds through each `intermediate representation
 <https://en.wikipedia.org/wiki/Intermediate_representation#:~:text=An%20intermediate%20representation%20(IR)%20is,such%20as%20optimization%20and%20translation.>`_
 (IR) describing the tools, probes, and information available at each IR.
 
 Part 2, provides an ordered sequence of techniques to optimize code. It is
 ordered from the easiest methods, such as choosing the right libraries; to the
-hardest and more invasive methods, such as exploiting :ref:`Backpack <Backpack
+hardest and more invasive methods, such as exploiting :ref:`backpack <Backpack
 Chapter>` for fine-grained :term:`Unboxed` data types or exploiting
 :term:`Levity Polymorphism` to control the runtime representation of a data
 type.

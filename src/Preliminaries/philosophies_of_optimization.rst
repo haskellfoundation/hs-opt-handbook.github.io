@@ -172,7 +172,7 @@ statements for they will waste your time and iteration cycles.
 
 
 References and Footnotes
-========================
+------------------------
 
 .. [#] See `this <https://youtu.be/pgoetgxecw8?si=0csotFBkya5gGDvJ>`__ series by
        Casey Muratori. We thank him for his labor.
