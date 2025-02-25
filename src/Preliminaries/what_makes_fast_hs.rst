@@ -1,4 +1,4 @@
-.. _sec-lethargy:
+.. _What Makes Fast HS Chapter:
 
 The Programs of Consistent Lethargy
 ===================================
@@ -148,7 +148,6 @@ without thinking about their memory representation; and especially around
 laziness. As such, most of these instances are well known and have floated
 around the community for some time.
 
-
 How does Excessive Pointer Chasing Slow Down Runtime Performance?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -256,7 +255,7 @@ quality); second, in order to observe it, the programmer must track the memory
 allocation of their program across many functions, modules and packages, which
 is not a common experience when writing Haskell. For our purposes', we'll
 inspect examples that GHC should have no problem finding and optimizing. See the
-:ref:`Impact of seq Removal on SBV's cache <SBV572>` case study for an example of excessive memory allocation in a widely used library. 
+:ref:`Impact of seq Removal on SBV's cache <SBV572>` case study for an example of excessive memory allocation in a widely used library.
 
 .. todo::
    Not yet written, see `#18 <https://github.com/input-output-hk/hs-opt-handbook.github.io/issues/18>`_
@@ -267,6 +266,7 @@ transformations is beneficial; it trains you to start thinking in terms of
 memory allocation when reading or writing Haskell code, and teaches you to
 perform these optimizations manually when GHC fails to optimize.
 
+.. _excessive-closure-allocation:
 
 How does Excessive Closure Allocation Slow Down Runtime Performance
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -441,6 +441,8 @@ expressing itself in the implementation.
 .. todo::
    Need example as case study see `#20 <https://github.com/input-output-hk/hs-opt-handbook.github.io/issues/20>`_
 
+
+.. _shotgun-parsing:
 
 Problem Domain Invariants are Difficult to Express
 """"""""""""""""""""""""""""""""""""""""""""""""""
