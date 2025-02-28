@@ -31,7 +31,7 @@
     
   <link rel="index" title="Index" href="../../genindex.html" />
   <link rel="search" title="Search" href="../../search.html" />
-  <link rel="next" title="1.2. The Programs of Consistent Lethargy" href="what_makes_fast_hs.html" />
+  <link rel="next" title="1.2. Triage" href="triage.html" />
   <link rel="prev" title="1. Preliminaries" href="index.html" /> 
   </head>
 
@@ -193,8 +193,8 @@
        title="previous chapter">← <span class="section-number">1. </span>Preliminaries</a>
   </li>
   <li class="next">
-    <a href="what_makes_fast_hs.html"
-       title="next chapter"><span class="section-number">1.2. </span>The Programs of Consistent Lethargy →</a>
+    <a href="triage.html"
+       title="next chapter"><span class="section-number">1.2. </span>Triage →</a>
   </li>
 </ul>
   
@@ -227,10 +227,10 @@ optimization rabbit hole. If you have no code to optimize, then you may consider
 picking your favorite Haskell library and attempting to optimize that!</p>
 <p>The book assumes you are using GHC 9.2.x and a Linux distribution (kernel
 version <code class="docutils literal notranslate"><span class="pre">5.8</span></code> and higher). Should you be using an older compiler than some
-sections, such as <a class="reference internal" href="../Measurement_Observation/Haskell_Profiling/eventlog.html#eventlog-chapter"><span class="std std-ref">Using EventLog</span></a>; which arrived in <code class="docutils literal notranslate"><span class="pre">GHC</span> <span class="pre">8.8</span></code>
-may still be useful, while others such as <a class="reference internal" href="../Measurement_Observation/Binary_Profiling/cachegrind.html#cachegrind-chapter"><span class="std std-ref">Using Cachegrind</span></a>; which relies on
+sections, such as <a class="reference internal" href="../Measurement_Observation/Haskell_Profiling/eventlog.html#eventlog-chapter"><span class="std std-ref">using EventLog</span></a>; which arrived in <code class="docutils literal notranslate"><span class="pre">GHC</span> <span class="pre">8.8</span></code>
+may still be useful, while others such as <a class="reference internal" href="../Measurement_Observation/Binary_Profiling/cachegrind.html#cachegrind-chapter"><span class="std std-ref">using Cachegrind</span></a>; which relies on
 <a class="reference internal" href="../glossary.html#term-DWARF"><span class="xref std std-term">DWARF</span></a> symbols (added in <code class="docutils literal notranslate"><span class="pre">GHC</span> <span class="pre">8.10.x</span></code>) may not be applicable.
-Similarly, some chapters, such as <a class="reference internal" href="../Measurement_Observation/Binary_Profiling/linux_perf.html#perf-chapter"><span class="std std-ref">Using perf</span></a> will only be
+Similarly, some chapters, such as <a class="reference internal" href="../Measurement_Observation/Binary_Profiling/linux_perf.html#perf-chapter"><span class="std std-ref">using perf</span></a> will only be
 applicable for Linux and Linux based operating systems.</p>
 </section>
 <section id="notation">
@@ -252,18 +252,20 @@ constant <span class="math notranslate nohighlight">\(c\)</span>.</p></li>
 <section id="where-to-begin">
 <h2><span class="section-number">1.1.5. </span>Where to Begin<a class="headerlink" href="#where-to-begin" title="Link to this heading">¶</a></h2>
 <p>The book is structured into discrete independent parts to better serve as a
-handbook. Thus, the book is not meant to be read in a linear order. Instead, one
-should pick and choose which chapter to read next based on their needs because
-<em>the book assumes you have a problem that needs solving</em>.</p>
-<p>There are two parts: Part 1, focuses on measurement, profiling and observation
-of Haskell programs. This part is ordered from the bottom-up; it begins with
-tools and probes that are language agnostic and close to the machine, such as
-<a class="reference internal" href="../Measurement_Observation/Binary_Profiling/linux_perf.html#perf-chapter"><span class="std std-ref">Perf</span></a> and <a class="reference internal" href="../Measurement_Observation/Binary_Profiling/cachegrind.html#cachegrind-chapter"><span class="std std-ref">Cachegrind</span></a>, then
-proceeds through each <a class="reference external" href="https://en.wikipedia.org/wiki/Intermediate_representation#:~:text=An%20intermediate%20representation%20(IR)%20is,such%20as%20optimization%20and%20translation.">intermediate representation</a>
+handbook and is not meant to be read in a linear order. Instead, one should pick
+and choose which chapter to read next based on their needs because <em>the book
+assumes you have a problem that needs solving</em>.</p>
+<p>The best place to start is <a class="reference internal" href="triage.html#triage"><span class="std std-ref">triage</span></a>, this should help you
+narrow down your next steps. If you are short on time, or just have a problem to
+solve, then skip to the <a class="reference internal" href="the_checklist.html#the-checklist"><span class="std std-ref">checklist</span></a>.</p>
+<p>The book is roughly divided into two parts: Part 1, focuses on measurement,
+profiling and observation of Haskell programs. This part is ordered from the
+bottom-up; it begins with tools and probes that are language agnostic and close
+to the machine, such as <a class="reference internal" href="../Measurement_Observation/Binary_Profiling/linux_perf.html#perf-chapter"><span class="std std-ref">perf</span></a> and <a class="reference internal" href="../Measurement_Observation/Binary_Profiling/cachegrind.html#cachegrind-chapter"><span class="std std-ref">cachegrind</span></a>, then proceeds through each <a class="reference external" href="https://en.wikipedia.org/wiki/Intermediate_representation#:~:text=An%20intermediate%20representation%20(IR)%20is,such%20as%20optimization%20and%20translation.">intermediate representation</a>
 (IR) describing the tools, probes, and information available at each IR.</p>
 <p>Part 2, provides an ordered sequence of techniques to optimize code. It is
 ordered from the easiest methods, such as choosing the right libraries; to the
-hardest and more invasive methods, such as exploiting <a class="reference internal" href="../Optimizations/Code_Changes/backpack.html#backpack-chapter"><span class="std std-ref">Backpack</span></a> for fine-grained <a class="reference internal" href="../glossary.html#term-Unboxed"><span class="xref std std-term">Unboxed</span></a> data types or exploiting
+hardest and more invasive methods, such as exploiting <a class="reference internal" href="../Optimizations/Code_Changes/backpack.html#backpack-chapter"><span class="std std-ref">backpack</span></a> for fine-grained <a class="reference internal" href="../glossary.html#term-Unboxed"><span class="xref std std-term">Unboxed</span></a> data types or exploiting
 <a class="reference internal" href="../glossary.html#term-Levity-Polymorphism"><span class="xref std std-term">Levity Polymorphism</span></a> to control the runtime representation of a data
 type.</p>
 </section>
@@ -322,8 +324,8 @@ audience.</p></li>
        title="previous chapter">← <span class="section-number">1. </span>Preliminaries</a>
   </li>
   <li class="next">
-    <a href="what_makes_fast_hs.html"
-       title="next chapter"><span class="section-number">1.2. </span>The Programs of Consistent Lethargy →</a>
+    <a href="triage.html"
+       title="next chapter"><span class="section-number">1.2. </span>Triage →</a>
   </li>
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2022-2025, Jeffrey Young (doyougnu).

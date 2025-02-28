@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-      <title>1.3. Philosophies of Optimization</title>
+      <title>1.5. Philosophies of Optimization</title>
     
           <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
           <link rel="stylesheet" href="../../_static/theme.css " type="text/css" />
@@ -31,8 +31,8 @@
     
   <link rel="index" title="Index" href="../../genindex.html" />
   <link rel="search" title="Search" href="../../search.html" />
-  <link rel="next" title="1.5. The Golden Rules of Performance-Oriented Haskell" href="golden_rules.html" />
-  <link rel="prev" title="1.2. The Programs of Consistent Lethargy" href="what_makes_fast_hs.html" /> 
+  <link rel="next" title="1.6. The Golden Rules of Performance-Oriented Haskell" href="golden_rules.html" />
+  <link rel="prev" title="1.4. The Programs of Consistent Lethargy" href="what_makes_fast_hs.html" /> 
   </head>
 
   <body>
@@ -183,18 +183,18 @@
     
       <li><a href="index.html"><span class="section-number">1. </span>Preliminaries</a> &raquo;</li>
     
-    <li><span class="section-number">1.3. </span>Philosophies of Optimization</li>
+    <li><span class="section-number">1.5. </span>Philosophies of Optimization</li>
   </ul>
   
 
   <ul class="page-nav">
   <li class="prev">
     <a href="what_makes_fast_hs.html"
-       title="previous chapter">← <span class="section-number">1.2. </span>The Programs of Consistent Lethargy</a>
+       title="previous chapter">← <span class="section-number">1.4. </span>The Programs of Consistent Lethargy</a>
   </li>
   <li class="next">
     <a href="golden_rules.html"
-       title="next chapter"><span class="section-number">1.5. </span><span class="lightgrey">The Golden Rules of Performance-Oriented Haskell</span> →</a>
+       title="next chapter"><span class="section-number">1.6. </span><span class="lightgrey">The Golden Rules of Performance-Oriented Haskell</span> →</a>
   </li>
 </ul>
   
@@ -203,7 +203,7 @@
           <div class="content" role="main" v-pre>
             
   <section id="philosophies-of-optimization">
-<span id="philosophies-of-optimization-chapter"></span><h1><span class="section-number">1.3. </span>Philosophies of Optimization<a class="headerlink" href="#philosophies-of-optimization" title="Link to this heading">¶</a></h1>
+<span id="philosophies-of-optimization-chapter"></span><h1><span class="section-number">1.5. </span>Philosophies of Optimization<a class="headerlink" href="#philosophies-of-optimization" title="Link to this heading">¶</a></h1>
 <p>What does it mean to optimize a code base? What is optimization? If we do not
 understand what it means to optimize, then how can we possibly optimize a code
 base? In this chapter, we present philosophies of optimization to answers these
@@ -211,7 +211,7 @@ questions. These ideas hail from the performance oriented culture of video game
 developers <a class="footnote-reference brackets" href="#id7" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>, we’ve only summarized them here.</p>
 <p>There are three philosophies of optimization, they are:</p>
 <section id="optimization">
-<span id="id2"></span><h2><span class="section-number">1.3.1. </span>Optimization<a class="headerlink" href="#optimization" title="Link to this heading">¶</a></h2>
+<span id="id2"></span><h2><span class="section-number">1.5.1. </span>Optimization<a class="headerlink" href="#optimization" title="Link to this heading">¶</a></h2>
 <p>This is actual optimization, the idea is to change the implementation to target
 a <em>specific</em> machine or kind of machine. The following tasks are optimization
 tasks:</p>
@@ -241,7 +241,7 @@ So in the general case, where you are writing software that runs on machines you
 don’t know anything about, you should instead optimize via non-pessimization.</p>
 </section>
 <section id="non-pessimization">
-<span id="id3"></span><h2><span class="section-number">1.3.2. </span>Non-Pessimization<a class="headerlink" href="#non-pessimization" title="Link to this heading">¶</a></h2>
+<span id="id3"></span><h2><span class="section-number">1.5.2. </span>Non-Pessimization<a class="headerlink" href="#non-pessimization" title="Link to this heading">¶</a></h2>
 <p>Non-pessimization is a philosophy of crafting software where one tries to write
 software that does the least amount of work possible. Or in other words, this
 philosophy asks us to write code that minimizes extra work the CPU must do. The
@@ -320,7 +320,7 @@ it portable to other machines, but it is also simpler and more future proof than
 actual optimization.</p>
 </section>
 <section id="fake-optimization">
-<span id="id5"></span><h2><span class="section-number">1.3.3. </span>Fake Optimization<a class="headerlink" href="#fake-optimization" title="Link to this heading">¶</a></h2>
+<span id="id5"></span><h2><span class="section-number">1.5.3. </span>Fake Optimization<a class="headerlink" href="#fake-optimization" title="Link to this heading">¶</a></h2>
 <p>Fake optimization is a philosophy of performance that will not lead to better
 code or better performance. Rather, fake optimization is advice that one finds
 around the internet. These are sayings such as “You should never use &lt;Foo&gt;!”, or
@@ -345,9 +345,8 @@ elements) insertion sort will be more performant <a class="footnote-reference br
 specific problem and data the code operates on. So beware of fake optimization
 statements for they will waste your time and iteration cycles.</p>
 </section>
-</section>
 <section id="references-and-footnotes">
-<h1><span class="section-number">1.4. </span>References and Footnotes<a class="headerlink" href="#references-and-footnotes" title="Link to this heading">¶</a></h1>
+<h2><span class="section-number">1.5.4. </span>References and Footnotes<a class="headerlink" href="#references-and-footnotes" title="Link to this heading">¶</a></h2>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="id7" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
@@ -376,6 +375,7 @@ worst-case <em>in practice</em> is vanishingly rare.</p>
 </aside>
 </aside>
 </section>
+</section>
 
 
           </div>
@@ -383,11 +383,11 @@ worst-case <em>in practice</em> is vanishingly rare.</p>
             <div class="inner"><ul class="page-nav">
   <li class="prev">
     <a href="what_makes_fast_hs.html"
-       title="previous chapter">← <span class="section-number">1.2. </span>The Programs of Consistent Lethargy</a>
+       title="previous chapter">← <span class="section-number">1.4. </span>The Programs of Consistent Lethargy</a>
   </li>
   <li class="next">
     <a href="golden_rules.html"
-       title="next chapter"><span class="section-number">1.5. </span><span class="lightgrey">The Golden Rules of Performance-Oriented Haskell</span> →</a>
+       title="next chapter"><span class="section-number">1.6. </span><span class="lightgrey">The Golden Rules of Performance-Oriented Haskell</span> →</a>
   </li>
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2022-2025, Jeffrey Young (doyougnu).

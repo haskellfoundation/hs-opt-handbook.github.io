@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-      <title>1.6. The Golden Rules of Performance-Oriented Haskell</title>
+      <title>1.3. The Checklist</title>
     
           <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
           <link rel="stylesheet" href="../../_static/theme.css " type="text/css" />
@@ -31,8 +31,8 @@
     
   <link rel="index" title="Index" href="../../genindex.html" />
   <link rel="search" title="Search" href="../../search.html" />
-  <link rel="next" title="1.7. Setting up a Reproducible Test Environment" href="repeatable_measurements.html" />
-  <link rel="prev" title="1.5. Philosophies of Optimization" href="philosophies_of_optimization.html" /> 
+  <link rel="next" title="1.4. The Programs of Consistent Lethargy" href="what_makes_fast_hs.html" />
+  <link rel="prev" title="1.2. Triage" href="triage.html" /> 
   </head>
 
   <body>
@@ -183,18 +183,18 @@
     
       <li><a href="index.html"><span class="section-number">1. </span>Preliminaries</a> &raquo;</li>
     
-    <li><span class="section-number">1.6. </span><span class="lightgrey">The Golden Rules of Performance-Oriented Haskell</span></li>
+    <li><span class="section-number">1.3. </span>The Checklist</li>
   </ul>
   
 
   <ul class="page-nav">
   <li class="prev">
-    <a href="philosophies_of_optimization.html"
-       title="previous chapter">← <span class="section-number">1.5. </span>Philosophies of Optimization</a>
+    <a href="triage.html"
+       title="previous chapter">← <span class="section-number">1.2. </span>Triage</a>
   </li>
   <li class="next">
-    <a href="repeatable_measurements.html"
-       title="next chapter"><span class="section-number">1.7. </span>Setting up a Reproducible Test Environment →</a>
+    <a href="what_makes_fast_hs.html"
+       title="next chapter"><span class="section-number">1.4. </span>The Programs of Consistent Lethargy →</a>
   </li>
 </ul>
   
@@ -202,9 +202,52 @@
 <hr>
           <div class="content" role="main" v-pre>
             
-  <section id="the-golden-rules-of-performance-oriented-haskell">
-<span id="golden-rules-chapter"></span><h1><span class="section-number">1.6. </span><span class="lightgrey">The Golden Rules of Performance-Oriented Haskell</span><a class="headerlink" href="#the-golden-rules-of-performance-oriented-haskell" title="Link to this heading">¶</a></h1>
-<p><a class="reference external" href="https://github.com/input-output-hk/hs-opt-handbook.github.io/issues/112">TODO</a></p>
+  <section id="the-checklist">
+<span id="id1"></span><h1><span class="section-number">1.3. </span>The Checklist<a class="headerlink" href="#the-checklist" title="Link to this heading">¶</a></h1>
+<p>Here is a checklist of things you might try to improve the performance of your
+program.</p>
+<ul class="simple">
+<li><p>[ ] Are you compiling with <code class="docutils literal notranslate"><span class="pre">-O2</span></code>, <code class="docutils literal notranslate"><span class="pre">-Wall</span></code>?</p></li>
+<li><p>[ ] Have you checked for <a class="reference internal" href="../Measurement_Observation/Haskell_Profiling/eventlog.html#eventlog-chapter"><span class="std std-ref">memory leaks</span></a> on the heap?</p></li>
+<li><p>[ ] Have you checked for <a class="reference internal" href="../Measurement_Observation/Stg_RTS_Profiling/reduced_stack.html#reduced-stack"><span class="std std-ref">stack leaks</span></a>?</p></li>
+<li><p>[ ] Have you <a class="reference internal" href="../Measurement_Observation/Haskell_Profiling/weigh.html#weigh-chapter"><span class="std std-ref">weighed</span></a> your data structures?</p></li>
+<li><p>[ ] Do you understand the <a class="reference internal" href="../Measurement_Observation/Core_Profiling/data_type_memory_footprint.html#memory-footprint-of-data-types-chapter"><span class="std std-ref">memory footprints</span></a> of your data types?</p></li>
+<li><p>[ ] Can you reduce the memory footprint of you data types?</p></li>
+<li><p>[ ] Are you using data structures that have a <a class="reference internal" href="what_makes_fast_hs.html#canonical-domain-modeling"><span class="std std-ref">low impedence</span></a> to your problem?</p></li>
+<li><p>[ ] Have you set up benchmarks? Are they realistic? Do the exercise the full data space?</p></li>
+<li><p>[ ] Are your data types strict? Can you unpack them?</p></li>
+<li><p>[ ] Have you removed excessive polymorphism?</p></li>
+<li><p>[ ] Are you using <code class="docutils literal notranslate"><span class="pre">Text</span></code> or <code class="docutils literal notranslate"><span class="pre">ByteString</span></code> instead of <code class="docutils literal notranslate"><span class="pre">String</span></code>?</p></li>
+<li><p>[ ] Can you inline and monomorphise critical functions, especially in hot loops?</p></li>
+<li><p>[ ] Are you <a class="reference internal" href="what_makes_fast_hs.html#id7"><span class="std std-ref">accidentally allocating</span></a> in a hot loop?</p></li>
+<li><p>[ ] Are any functions in a hot loop taking more than five arguments? Can you reduce the number of arguments?</p></li>
+<li><p>[ ] Can you <a class="reference internal" href="../Optimizations/GHC_opt/defunctionalization.html#defunctionalization-chapter"><span class="std std-ref">defunctionalize</span></a> critical functions? Is GHC defunctionalizing for you?</p></li>
+<li><p>[ ] Are you using a <a class="reference internal" href="what_makes_fast_hs.html#canonical-pointer-chasing"><span class="std std-ref">left fold over a list</span></a>?</p></li>
+<li><p>[ ] Are your datatypes definitions ordered such that the most common constructor is first?</p></li>
+<li><p>[ ] Are you using explicit export lists?</p></li>
+<li><p>[ ] Have you checked for <a class="reference external" href="https://downloads.haskell.org/~ghc/9.2.4/docs/html/users_guide//using-warnings.html#ghc-flag--Wmissed-specialisations">missed specializations</a>?</p></li>
+<li><p>[ ] Have you checked the ratio of known to unknown function calls?</p></li>
+<li><p>[ ] Have you inspected the Core?</p></li>
+<li><p>[ ] Have you inspected the STG?</p></li>
+<li><p>[ ] Would your program benefit from compiling with <code class="docutils literal notranslate"><span class="pre">LLVM</span></code>?</p></li>
+<li><p>[ ] Are you <a class="reference internal" href="what_makes_fast_hs.html#shotgun-parsing"><span class="std std-ref">shotgun parsing</span></a>? Can you lift information
+into the type system to avoid subsequent checks over the same data?</p></li>
+<li><p>[ ] Are you grouping things that need the same processing together?</p></li>
+<li><p>[ ] Could your program benefit for concurrency of parallelism?</p></li>
+<li><p>[ ] Could your program benefit from the <a class="reference internal" href="../Optimizations/Code_Changes/oneshot.html#oneshot-monad-chapter"><span class="std std-ref">one-shot monad trick</span></a>?</p></li>
+<li><p>[ ] Have you <a class="reference internal" href="../Optimizations/Code_Changes/unroll_stacks.html#unroll-monad-transformers-chapter"><span class="std std-ref">unrolled</span></a> your monad transformers?</p></li>
+<li><p>[ ] Have you inspected the <a class="reference internal" href="../Measurement_Observation/Binary_Profiling/cachegrind.html#cachegrind-chapter"><span class="std std-ref">cache behavior</span></a>?</p></li>
+</ul>
+<div class="admonition-todo admonition" id="id2">
+<p class="admonition-title">Todo</p>
+<p>Each item should have a concomitant link.</p>
+</div>
+<section id="see-also">
+<h2><span class="section-number">1.3.1. </span>See also<a class="headerlink" href="#see-also" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/haskell-perf/checklist">This older checklist</a>.</p></li>
+</ul>
+</section>
 </section>
 
 
@@ -212,12 +255,12 @@
           <div class="page-nav">
             <div class="inner"><ul class="page-nav">
   <li class="prev">
-    <a href="philosophies_of_optimization.html"
-       title="previous chapter">← <span class="section-number">1.5. </span>Philosophies of Optimization</a>
+    <a href="triage.html"
+       title="previous chapter">← <span class="section-number">1.2. </span>Triage</a>
   </li>
   <li class="next">
-    <a href="repeatable_measurements.html"
-       title="next chapter"><span class="section-number">1.7. </span>Setting up a Reproducible Test Environment →</a>
+    <a href="what_makes_fast_hs.html"
+       title="next chapter"><span class="section-number">1.4. </span>The Programs of Consistent Lethargy →</a>
   </li>
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2022-2025, Jeffrey Young (doyougnu).

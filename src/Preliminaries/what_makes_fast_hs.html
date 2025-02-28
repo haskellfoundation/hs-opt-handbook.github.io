@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-      <title>1.2. The Programs of Consistent Lethargy</title>
+      <title>1.4. The Programs of Consistent Lethargy</title>
     
           <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
           <link rel="stylesheet" href="../../_static/theme.css " type="text/css" />
@@ -31,8 +31,8 @@
     
   <link rel="index" title="Index" href="../../genindex.html" />
   <link rel="search" title="Search" href="../../search.html" />
-  <link rel="next" title="1.3. Philosophies of Optimization" href="philosophies_of_optimization.html" />
-  <link rel="prev" title="1.1. How to Use This Book" href="how_to_use.html" /> 
+  <link rel="next" title="1.5. Philosophies of Optimization" href="philosophies_of_optimization.html" />
+  <link rel="prev" title="1.3. The Checklist" href="the_checklist.html" /> 
   </head>
 
   <body>
@@ -183,18 +183,18 @@
     
       <li><a href="index.html"><span class="section-number">1. </span>Preliminaries</a> &raquo;</li>
     
-    <li><span class="section-number">1.2. </span>The Programs of Consistent Lethargy</li>
+    <li><span class="section-number">1.4. </span>The Programs of Consistent Lethargy</li>
   </ul>
   
 
   <ul class="page-nav">
   <li class="prev">
-    <a href="how_to_use.html"
-       title="previous chapter">← <span class="section-number">1.1. </span>How to Use This Book</a>
+    <a href="the_checklist.html"
+       title="previous chapter">← <span class="section-number">1.3. </span>The Checklist</a>
   </li>
   <li class="next">
     <a href="philosophies_of_optimization.html"
-       title="next chapter"><span class="section-number">1.3. </span>Philosophies of Optimization →</a>
+       title="next chapter"><span class="section-number">1.5. </span>Philosophies of Optimization →</a>
   </li>
 </ul>
   
@@ -203,7 +203,7 @@
           <div class="content" role="main" v-pre>
             
   <section id="the-programs-of-consistent-lethargy">
-<span id="sec-lethargy"></span><h1><span class="section-number">1.2. </span>The Programs of Consistent Lethargy<a class="headerlink" href="#the-programs-of-consistent-lethargy" title="Link to this heading">¶</a></h1>
+<span id="what-makes-fast-hs-chapter"></span><h1><span class="section-number">1.4. </span>The Programs of Consistent Lethargy<a class="headerlink" href="#the-programs-of-consistent-lethargy" title="Link to this heading">¶</a></h1>
 <p>We’ll begin by showing small bite sized programs that demonstrate a particular
 way Haskell programs can slow down. We call these programs <em>canonical</em> programs
 because each program is the smallest example of a kind of slow down. A reader
@@ -211,14 +211,14 @@ should come away from this section with an understanding of the ways a Haskell
 program slows down. This chapter is just to small tour; for each slow down topic
 we provide a sister chapter that explores the topic in more detail.</p>
 <section id="inlining">
-<span id="canonical-inlining"></span><h2><span class="section-number">1.2.1. </span>Inlining<a class="headerlink" href="#inlining" title="Link to this heading">¶</a></h2>
+<span id="canonical-inlining"></span><h2><span class="section-number">1.4.1. </span>Inlining<a class="headerlink" href="#inlining" title="Link to this heading">¶</a></h2>
 <section id="what-is-inlining">
-<h3><span class="section-number">1.2.1.1. </span>What is Inlining<a class="headerlink" href="#what-is-inlining" title="Link to this heading">¶</a></h3>
-<p>Inlining <a class="footnote-reference brackets" href="#id11" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> is a simple optimization technique that almost all optimizing
+<h3><span class="section-number">1.4.1.1. </span>What is Inlining<a class="headerlink" href="#what-is-inlining" title="Link to this heading">¶</a></h3>
+<p>Inlining <a class="footnote-reference brackets" href="#id12" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> is a simple optimization technique that almost all optimizing
 compilers perform. The essential idea is to substitute the call sites of a
 function <code class="docutils literal notranslate"><span class="pre">f</span></code>, with the body of <code class="docutils literal notranslate"><span class="pre">f</span></code>. For example:</p>
-<div class="literal-block-wrapper docutils container" id="id17">
-<div class="code-block-caption"><span class="caption-text">Before inlining</span><a class="headerlink" href="#id17" title="Link to this code">¶</a></div>
+<div class="literal-block-wrapper docutils container" id="id18">
+<div class="code-block-caption"><span class="caption-text">Before inlining</span><a class="headerlink" href="#id18" title="Link to this code">¶</a></div>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">3</span>
 <span class="c1">--- somewhere else</span>
 <span class="o">&gt;</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">c</span>
@@ -228,8 +228,8 @@ function <code class="docutils literal notranslate"><span class="pre">f</span></
 <p>Here we define a function <code class="docutils literal notranslate"><span class="pre">f</span></code>, and then have a single call site <code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">(a</span> <span class="pre">+</span> <span class="pre">b)</span>
 <span class="pre">...</span></code>. Inlining <code class="docutils literal notranslate"><span class="pre">f</span></code> transforms the call site by replacing <code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">(a</span> <span class="pre">+</span> <span class="pre">b)</span></code>
 with the body (or right hand side) of <code class="docutils literal notranslate"><span class="pre">f</span></code>:</p>
-<div class="literal-block-wrapper docutils container" id="id18">
-<div class="code-block-caption"><span class="caption-text">After inlining</span><a class="headerlink" href="#id18" title="Link to this code">¶</a></div>
+<div class="literal-block-wrapper docutils container" id="id19">
+<div class="code-block-caption"><span class="caption-text">After inlining</span><a class="headerlink" href="#id19" title="Link to this code">¶</a></div>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">3</span>
 <span class="c1">-- somewhere else</span>
 <span class="o">&gt;</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">c</span>
@@ -240,7 +240,7 @@ with the body (or right hand side) of <code class="docutils literal notranslate"
 <span class="math notranslate nohighlight">\(x \mapsto (a + b)\)</span>.</p>
 </section>
 <section id="why-do-we-want-inlining">
-<h3><span class="section-number">1.2.1.2. </span>Why do We Want Inlining<a class="headerlink" href="#why-do-we-want-inlining" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">1.4.1.2. </span>Why do We Want Inlining<a class="headerlink" href="#why-do-we-want-inlining" title="Link to this heading">¶</a></h3>
 <p>Inlining has been called the “mother of all optimizations” because it has two
 primary benefits. First, it removes the overhead of a function call, which can
 be noticeable in a hot loop. Second, it is an <em>enabling optimization</em>; by
@@ -251,7 +251,7 @@ more art than science; a simple change can have cascading and unforeseen effects
 in the end result.</p>
 </section>
 <section id="how-does-inlining-slow-down-runtime-performance">
-<h3><span class="section-number">1.2.1.3. </span>How does Inlining Slow Down Runtime Performance<a class="headerlink" href="#how-does-inlining-slow-down-runtime-performance" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">1.4.1.3. </span>How does Inlining Slow Down Runtime Performance<a class="headerlink" href="#how-does-inlining-slow-down-runtime-performance" title="Link to this heading">¶</a></h3>
 <p>Inlining itself does not slow down runtime performance, <em>lack of</em> inlining does,
 because it limits otherwise possible optimizations from taking place. However,
 that does not mean we should always ask GHC to inline or manually perform
@@ -261,10 +261,10 @@ particulars of GHC’s inliner, in the chapter dedicated to <a class="reference 
 </section>
 </section>
 <section id="fusion">
-<span id="canonical-fusion"></span><h2><span class="section-number">1.2.2. </span>Fusion<a class="headerlink" href="#fusion" title="Link to this heading">¶</a></h2>
+<span id="canonical-fusion"></span><h2><span class="section-number">1.4.2. </span>Fusion<a class="headerlink" href="#fusion" title="Link to this heading">¶</a></h2>
 <section id="what-is-fusion">
-<h3><span class="section-number">1.2.2.1. </span>What is Fusion<a class="headerlink" href="#what-is-fusion" title="Link to this heading">¶</a></h3>
-<p>Fusion or Deforestation <a class="footnote-reference brackets" href="#id12" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> <a class="footnote-reference brackets" href="#id13" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a> (We take Andy Gill’s excellent examples from
+<h3><span class="section-number">1.4.2.1. </span>What is Fusion<a class="headerlink" href="#what-is-fusion" title="Link to this heading">¶</a></h3>
+<p>Fusion or Deforestation <a class="footnote-reference brackets" href="#id13" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> <a class="footnote-reference brackets" href="#id14" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a> (We take Andy Gill’s excellent examples from
 this paper for this section. Thank you Andy Gill for your labor!) is an
 optimization technique that eliminates intermediate and short lived data
 structures between function calls. It is a key optimization that makes Haskell
@@ -294,7 +294,7 @@ occur using <code class="docutils literal notranslate"><span class="pre">and</sp
 this version is successful in removing the intermediate List, .</p>
 </section>
 <section id="why-do-we-want-fusion">
-<h3><span class="section-number">1.2.2.2. </span>Why do we want Fusion<a class="headerlink" href="#why-do-we-want-fusion" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">1.4.2.2. </span>Why do we want Fusion<a class="headerlink" href="#why-do-we-want-fusion" title="Link to this heading">¶</a></h3>
 <p>As Andy Gill writes:</p>
 <blockquote>
 <div><p>We want to eat our cake and have it too. That is, we would like to write
@@ -303,7 +303,7 @@ transform this into the more efficient version <code class="docutils literal not
 </div></blockquote>
 </section>
 <section id="how-does-fusion-slow-down-runtime-performance">
-<h3><span class="section-number">1.2.2.3. </span>How does Fusion Slow Down Runtime Performance<a class="headerlink" href="#how-does-fusion-slow-down-runtime-performance" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">1.4.2.3. </span>How does Fusion Slow Down Runtime Performance<a class="headerlink" href="#how-does-fusion-slow-down-runtime-performance" title="Link to this heading">¶</a></h3>
 <p>Similar to Inlining, fusion itself does not slow down performance, rather <em>lack
 of</em> fusion does, because if something can fuse but doesn’t, then the program
 will perform unnecessary allocations just to yield the same result. The
@@ -314,9 +314,9 @@ fuse in the chapter dedicated <a class="reference internal" href="../Optimizatio
 </section>
 </section>
 <section id="excessive-pointer-chasing">
-<span id="canonical-pointer-chasing"></span><h2><span class="section-number">1.2.3. </span>Excessive Pointer Chasing<a class="headerlink" href="#excessive-pointer-chasing" title="Link to this heading">¶</a></h2>
+<span id="canonical-pointer-chasing"></span><h2><span class="section-number">1.4.3. </span>Excessive Pointer Chasing<a class="headerlink" href="#excessive-pointer-chasing" title="Link to this heading">¶</a></h2>
 <section id="what-is-excessive-pointer-chasing">
-<h3><span class="section-number">1.2.3.1. </span>What is Excessive Pointer Chasing<a class="headerlink" href="#what-is-excessive-pointer-chasing" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">1.4.3.1. </span>What is Excessive Pointer Chasing<a class="headerlink" href="#what-is-excessive-pointer-chasing" title="Link to this heading">¶</a></h3>
 <p>Excessive pointer chasing is a form of superfluous computation; our program is
 doing more work than it needs in order to compute the result. It occurs anytime
 our programs de-reference a pointer to retrieve a value instead of just
@@ -327,11 +327,11 @@ laziness. As such, most of these instances are well known and have floated
 around the community for some time.</p>
 </section>
 <section id="how-does-excessive-pointer-chasing-slow-down-runtime-performance">
-<h3><span class="section-number">1.2.3.2. </span>How does Excessive Pointer Chasing Slow Down Runtime Performance?<a class="headerlink" href="#how-does-excessive-pointer-chasing-slow-down-runtime-performance" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">1.4.3.2. </span>How does Excessive Pointer Chasing Slow Down Runtime Performance?<a class="headerlink" href="#how-does-excessive-pointer-chasing-slow-down-runtime-performance" title="Link to this heading">¶</a></h3>
 <p>The classic example of excessive pointer chasing is memory leaks that result
-from folds that are overly lazy, for example <a class="footnote-reference brackets" href="#id14" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>:</p>
-<div class="literal-block-wrapper docutils container" id="id19">
-<div class="code-block-caption"><span class="caption-text">mean, calculated with a lazy left fold</span><a class="headerlink" href="#id19" title="Link to this code">¶</a></div>
+from folds that are overly lazy, for example <a class="footnote-reference brackets" href="#id15" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>:</p>
+<div class="literal-block-wrapper docutils container" id="id20">
+<div class="code-block-caption"><span class="caption-text">mean, calculated with a lazy left fold</span><a class="headerlink" href="#id20" title="Link to this code">¶</a></div>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">mean</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">[</span><span class="kt">Double</span><span class="p">]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Double</span>
 <span class="nf">mean</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">fromIntegral</span><span class="w"> </span><span class="n">ln</span>
 <span class="w">  </span><span class="kr">where</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">ln</span><span class="p">)</span><span class="w">        </span><span class="ow">=</span><span class="w"> </span><span class="n">foldl</span><span class="w"> </span><span class="n">step</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">xs</span>
@@ -339,8 +339,8 @@ from folds that are overly lazy, for example <a class="footnote-reference bracke
 </pre></div>
 </div>
 </div>
-<div class="literal-block-wrapper docutils container" id="id20">
-<div class="code-block-caption"><span class="caption-text">mean, calculated with a strict left fold</span><a class="headerlink" href="#id20" title="Link to this code">¶</a></div>
+<div class="literal-block-wrapper docutils container" id="id21">
+<div class="code-block-caption"><span class="caption-text">mean, calculated with a strict left fold</span><a class="headerlink" href="#id21" title="Link to this code">¶</a></div>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">mean&#39;</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">[</span><span class="kt">Double</span><span class="p">]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Double</span>
 <span class="nf">mean&#39;</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">fromIntegral</span><span class="w"> </span><span class="n">ln</span>
 <span class="w">  </span><span class="kr">where</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">ln</span><span class="p">)</span><span class="w">        </span><span class="ow">=</span><span class="w"> </span><span class="n">foldl&#39;</span><span class="w"> </span><span class="n">step</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">xs</span>
@@ -406,9 +406,9 @@ in the constructor. We’ll return to these fixes in the <a class="reference int
 </section>
 </section>
 <section id="excessive-closure-allocation">
-<span id="canonical-closure-alloc"></span><h2><span class="section-number">1.2.4. </span>Excessive Closure Allocation<a class="headerlink" href="#excessive-closure-allocation" title="Link to this heading">¶</a></h2>
+<span id="canonical-closure-alloc"></span><h2><span class="section-number">1.4.4. </span>Excessive Closure Allocation<a class="headerlink" href="#excessive-closure-allocation" title="Link to this heading">¶</a></h2>
 <section id="what-is-excessive-closure-allocation">
-<h3><span class="section-number">1.2.4.1. </span>What is Excessive Closure Allocation<a class="headerlink" href="#what-is-excessive-closure-allocation" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">1.4.4.1. </span>What is Excessive Closure Allocation<a class="headerlink" href="#what-is-excessive-closure-allocation" title="Link to this heading">¶</a></h3>
 <p>Excessive closure allocation is another form of superfluous computation and
 superfluous memory allocation; it means that our program is doing more memory
 allocation and likely more computation than required to compute the result.
@@ -431,8 +431,8 @@ memory allocation when reading or writing Haskell code, and teaches you to
 perform these optimizations manually when GHC fails to optimize.</p>
 </section>
 <section id="how-does-excessive-closure-allocation-slow-down-runtime-performance">
-<h3><span class="section-number">1.2.4.2. </span>How does Excessive Closure Allocation Slow Down Runtime Performance<a class="headerlink" href="#how-does-excessive-closure-allocation-slow-down-runtime-performance" title="Link to this heading">¶</a></h3>
-<p>Consider these simple examples <a class="footnote-reference brackets" href="#id15" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a> :</p>
+<span id="id7"></span><h3><span class="section-number">1.4.4.2. </span>How does Excessive Closure Allocation Slow Down Runtime Performance<a class="headerlink" href="#how-does-excessive-closure-allocation-slow-down-runtime-performance" title="Link to this heading">¶</a></h3>
+<p>Consider these simple examples <a class="footnote-reference brackets" href="#id16" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a> :</p>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
 <span class="kr">in</span><span class="w"> </span><span class="kr">case</span><span class="w"> </span><span class="n">tail</span><span class="w"> </span><span class="n">zs</span><span class="w"> </span><span class="kr">of</span>
 <span class="w">        </span><span class="kt">[]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">x</span>
@@ -456,7 +456,7 @@ form is semantically identical but more efficient because our program may avoid
 <p class="admonition-title">Note</p>
 <p>Let Floating can change <a class="reference internal" href="../glossary.html#term-Thunk"><span class="xref std std-term">Thunk</span></a> sizes.</p>
 </div>
-<p>Consider this example from <span id="id8">Peyton Jones and Santos [<a class="reference internal" href="../../contents.html#id5" title="Simon Peyton Jones and Andre Santos. A transformation-based optimiser for haskell. Science of Computer Programming, October 1997. URL: https://www.microsoft.com/en-us/research/publication/a-transformation-based-optimiser-for-haskell/.">2</a>]</span>, Section 7.1:</p>
+<p>Consider this example from <span id="id9">Peyton Jones and Santos [<a class="reference internal" href="../../contents.html#id5" title="Simon Peyton Jones and Andre Santos. A transformation-based optimiser for haskell. Science of Computer Programming, October 1997. URL: https://www.microsoft.com/en-us/research/publication/a-transformation-based-optimiser-for-haskell/.">2</a>]</span>, Section 7.1:</p>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">w</span><span class="w">     </span><span class="c1">-- v and w are free variables in x</span>
 <span class="w">    </span><span class="n">y</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="o">...</span><span class="n">x</span><span class="o">...</span><span class="n">x</span><span class="w">  </span><span class="c1">-- y mentions x</span>
 <span class="kr">in</span><span class="w"> </span><span class="kt">B</span><span class="w">              </span><span class="c1">-- B does not mention x</span>
@@ -504,9 +504,9 @@ of <code class="docutils literal notranslate"><span class="pre">g</span></code>,
 </section>
 </section>
 <section id="poor-domain-modeling">
-<span id="canonical-domain-modeling"></span><h2><span class="section-number">1.2.5. </span>Poor Domain Modeling<a class="headerlink" href="#poor-domain-modeling" title="Link to this heading">¶</a></h2>
+<span id="canonical-domain-modeling"></span><h2><span class="section-number">1.4.5. </span>Poor Domain Modeling<a class="headerlink" href="#poor-domain-modeling" title="Link to this heading">¶</a></h2>
 <section id="what-is-poor-domain-modeling">
-<h3><span class="section-number">1.2.5.1. </span>What is Poor Domain Modeling<a class="headerlink" href="#what-is-poor-domain-modeling" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">1.4.5.1. </span>What is Poor Domain Modeling<a class="headerlink" href="#what-is-poor-domain-modeling" title="Link to this heading">¶</a></h3>
 <p>Poor domain modeling is a catch all phrase for constructing a program that has a
 high impedance to the problem domain. The problem domain is the abstract domain
 that dictates the computation that the program must do, the logical sequence of
@@ -534,11 +534,11 @@ cannot provide a canonical example, instead we’ll provide a set of guidelines 
 describe when you know you have high impedance and how to fix it.</p>
 </section>
 <section id="how-do-i-know-if-i-have-poor-domain-modeling">
-<h3><span class="section-number">1.2.5.2. </span>How do I know if I have Poor Domain Modeling<a class="headerlink" href="#how-do-i-know-if-i-have-poor-domain-modeling" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">1.4.5.2. </span>How do I know if I have Poor Domain Modeling<a class="headerlink" href="#how-do-i-know-if-i-have-poor-domain-modeling" title="Link to this heading">¶</a></h3>
 <p>Unfortunately, this is more art than science. Classic indications in Haskell
 are all instances of the implementation doing more work than is necessary:</p>
 <section id="overuse-of-data-list">
-<h4><span class="section-number">1.2.5.2.1. </span>Overuse of Data.List<a class="headerlink" href="#overuse-of-data-list" title="Link to this heading">¶</a></h4>
+<h4><span class="section-number">1.4.5.2.1. </span>Overuse of Data.List<a class="headerlink" href="#overuse-of-data-list" title="Link to this heading">¶</a></h4>
 <p>You’ve used a List and have called a function from <code class="docutils literal notranslate"><span class="pre">Data.List</span></code> that does any
 kind of out-of-order processing on elements of the list, or must traverse the
 entire list in order to produce a result:</p>
@@ -561,7 +561,7 @@ small temporary lists holding single digits of elements are fine because they
 take less time to construct and traverse than more complicated data structures.</p>
 </section>
 <section id="functions-in-your-program-domain-do-not-easily-compose-to-have-meaning-in-your-problem-domain">
-<h4><span class="section-number">1.2.5.2.2. </span>Functions in your Program Domain do not Easily Compose to have Meaning in your Problem Domain<a class="headerlink" href="#functions-in-your-program-domain-do-not-easily-compose-to-have-meaning-in-your-problem-domain" title="Link to this heading">¶</a></h4>
+<h4><span class="section-number">1.4.5.2.2. </span>Functions in your Program Domain do not Easily Compose to have Meaning in your Problem Domain<a class="headerlink" href="#functions-in-your-program-domain-do-not-easily-compose-to-have-meaning-in-your-problem-domain" title="Link to this heading">¶</a></h4>
 <p>Composition and composability is one of the most valuable properties code can
 have. It is key to modularity, key to reuse, creates code that is easier to
 test, is easier to understand and is often more compact code. When the functions
@@ -573,13 +573,13 @@ than expressing that meaning through functions.</p>
 <p>When the program domain lacks composability, functions will become overly large
 and overly concerned with implementation details; <em>that</em> is high impedance
 expressing itself in the implementation.</p>
-<div class="admonition-todo admonition" id="id10">
+<div class="admonition-todo admonition" id="id11">
 <p class="admonition-title">Todo</p>
 <p>Need example as case study see <a class="reference external" href="https://github.com/input-output-hk/hs-opt-handbook.github.io/issues/20">#20</a></p>
 </div>
 </section>
 <section id="problem-domain-invariants-are-difficult-to-express">
-<h4><span class="section-number">1.2.5.2.3. </span>Problem Domain Invariants are Difficult to Express<a class="headerlink" href="#problem-domain-invariants-are-difficult-to-express" title="Link to this heading">¶</a></h4>
+<span id="shotgun-parsing"></span><h4><span class="section-number">1.4.5.2.3. </span>Problem Domain Invariants are Difficult to Express<a class="headerlink" href="#problem-domain-invariants-are-difficult-to-express" title="Link to this heading">¶</a></h4>
 <p>This one usually manifests through the use of superfluous guards. So many
 functions take this form:</p>
 <div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- | an example function on Foo, this function learns a lot about Foo</span>
@@ -612,27 +612,27 @@ from redundant checks and poor branch prediction, for example:</p>
 </section>
 </section>
 <section id="references">
-<h2><span class="section-number">1.2.6. </span>References<a class="headerlink" href="#references" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">1.4.6. </span>References<a class="headerlink" href="#references" title="Link to this heading">¶</a></h2>
 <aside class="footnote-list brackets">
-<aside class="footnote brackets" id="id11" role="doc-footnote">
+<aside class="footnote brackets" id="id12" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="https://wiki.haskell.org/Inlining_and_Specialisation">https://wiki.haskell.org/Inlining_and_Specialisation</a></p>
 </aside>
-<aside class="footnote brackets" id="id12" role="doc-footnote">
+<aside class="footnote brackets" id="id13" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="https://www.sciencedirect.com/science/article/pii/030439759090147A?via%3Dihub">https://www.sciencedirect.com/science/article/pii/030439759090147A?via%3Dihub</a></p>
 </aside>
-<aside class="footnote brackets" id="id13" role="doc-footnote">
+<aside class="footnote brackets" id="id14" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="https://www.microsoft.com/en-us/research/wp-content/uploads/2016/07/deforestation-short-cut.pdf">https://www.microsoft.com/en-us/research/wp-content/uploads/2016/07/deforestation-short-cut.pdf</a></p>
 </aside>
-<aside class="footnote brackets" id="id14" role="doc-footnote">
+<aside class="footnote brackets" id="id15" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">4</a><span class="fn-bracket">]</span></span>
 <p>This code adapted from Johan Tibell slides on Haskell <a class="reference external" href="https://www.slideshare.net/tibbe/highperformance-haskell">optimization</a>.</p>
 </aside>
-<aside class="footnote brackets" id="id15" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id7">5</a><span class="fn-bracket">]</span></span>
-<p>This code adapted from <span id="id16">Peyton Jones and Santos [<a class="reference internal" href="../../contents.html#id5" title="Simon Peyton Jones and Andre Santos. A transformation-based optimiser for haskell. Science of Computer Programming, October 1997. URL: https://www.microsoft.com/en-us/research/publication/a-transformation-based-optimiser-for-haskell/.">2</a>]</span> Section 7.</p>
+<aside class="footnote brackets" id="id16" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id8">5</a><span class="fn-bracket">]</span></span>
+<p>This code adapted from <span id="id17">Peyton Jones and Santos [<a class="reference internal" href="../../contents.html#id5" title="Simon Peyton Jones and Andre Santos. A transformation-based optimiser for haskell. Science of Computer Programming, October 1997. URL: https://www.microsoft.com/en-us/research/publication/a-transformation-based-optimiser-for-haskell/.">2</a>]</span> Section 7.</p>
 </aside>
 </aside>
 </section>
@@ -643,12 +643,12 @@ from redundant checks and poor branch prediction, for example:</p>
           <div class="page-nav">
             <div class="inner"><ul class="page-nav">
   <li class="prev">
-    <a href="how_to_use.html"
-       title="previous chapter">← <span class="section-number">1.1. </span>How to Use This Book</a>
+    <a href="the_checklist.html"
+       title="previous chapter">← <span class="section-number">1.3. </span>The Checklist</a>
   </li>
   <li class="next">
     <a href="philosophies_of_optimization.html"
-       title="next chapter"><span class="section-number">1.3. </span>Philosophies of Optimization →</a>
+       title="next chapter"><span class="section-number">1.5. </span>Philosophies of Optimization →</a>
   </li>
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2022-2025, Jeffrey Young (doyougnu).

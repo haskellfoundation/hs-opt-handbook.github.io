@@ -1,4 +1,4 @@
-.. Reduced Stack
+.. _Reduced Stack:
 
 :lightgrey:`The Reduced Stack Method`
 =====================================

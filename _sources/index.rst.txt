@@ -26,6 +26,11 @@ by `Input Output Global <https://iohk.io/>`_.
 Release History
 ---------------
 
+* February, 2025
+
+  * :ref:`The Checklist <The Checklist>` first draft finished.
+  * :ref:`Triage <Triage>` first draft finished.
+
 * September, 2024
 
   * :ref:`Memory Footprints of Data Types <Memory Footprint of Data Types Chapter>` first draft finished.
