@@ -46,12 +46,12 @@ getBinDir, getLibDir, getDynLibDir, getDataDir, getLibexecDir, getSysconfDir :: 
 
 
 bindir, libdir, dynlibdir, datadir, libexecdir, sysconfdir :: FilePath
-bindir     = "/tmp/nix-build-hoh-0.0.1.drv-0/tmp.YUzVCJnR3N/bin"
-libdir     = "/tmp/nix-build-hoh-0.0.1.drv-0/tmp.YUzVCJnR3N/lib/x86_64-linux-ghc-9.4.8/lethargy-0.1.0.0-inplace-lethargy-asm"
-dynlibdir  = "/tmp/nix-build-hoh-0.0.1.drv-0/tmp.YUzVCJnR3N/lib/x86_64-linux-ghc-9.4.8"
-datadir    = "/tmp/nix-build-hoh-0.0.1.drv-0/tmp.YUzVCJnR3N/share/x86_64-linux-ghc-9.4.8/lethargy-0.1.0.0"
-libexecdir = "/tmp/nix-build-hoh-0.0.1.drv-0/tmp.YUzVCJnR3N/libexec/x86_64-linux-ghc-9.4.8/lethargy-0.1.0.0"
-sysconfdir = "/tmp/nix-build-hoh-0.0.1.drv-0/tmp.YUzVCJnR3N/etc"
+bindir     = "/tmp/nix-build-hoh-0.0.1.drv-0/tmp.ltZhd5NVww/bin"
+libdir     = "/tmp/nix-build-hoh-0.0.1.drv-0/tmp.ltZhd5NVww/lib/x86_64-linux-ghc-9.4.8/lethargy-0.1.0.0-inplace-lethargy-asm"
+dynlibdir  = "/tmp/nix-build-hoh-0.0.1.drv-0/tmp.ltZhd5NVww/lib/x86_64-linux-ghc-9.4.8"
+datadir    = "/tmp/nix-build-hoh-0.0.1.drv-0/tmp.ltZhd5NVww/share/x86_64-linux-ghc-9.4.8/lethargy-0.1.0.0"
+libexecdir = "/tmp/nix-build-hoh-0.0.1.drv-0/tmp.ltZhd5NVww/libexec/x86_64-linux-ghc-9.4.8/lethargy-0.1.0.0"
+sysconfdir = "/tmp/nix-build-hoh-0.0.1.drv-0/tmp.ltZhd5NVww/etc"
 
 getBinDir     = catchIO (getEnv "lethargy_bindir")     (\_ -> return bindir)
 getLibDir     = catchIO (getEnv "lethargy_libdir")     (\_ -> return libdir)
