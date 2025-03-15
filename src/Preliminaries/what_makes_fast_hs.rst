@@ -222,8 +222,8 @@ of a ``Counter`` data type that tracks some domain specific integer:
    Normally, when compiling with ``-O2`` GHC will recognize and optimize this definition.
 
 ``Int`` is a :term:`Boxed` and :term:`Lifted` type in ``Counter``, this means
-that each ``Counter`` holds a pointer to an ``Int`` on the heap *not* a pointer
-to an ``Int`` directly. We can instruct GHC remove the heap indirection with the
+that each ``Counter`` holds a pointer to an ``Int`` on the heap *not*
+an ``Int`` directly. We can instruct GHC remove the heap indirection with the
 `unpack
 <https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/exts/pragmas.html?highlight=unpack#unpack-pragma>`_
 pragma and a bang pattern:
