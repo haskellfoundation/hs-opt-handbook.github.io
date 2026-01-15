@@ -15,12 +15,12 @@
             , ...
             }@attrs :
     let
-      version  = "924";
+      version  = "910";
       compiler = "ghc${version}";
 
         overlay-ghc = final: prev: {
           ghc = prev.haskell.packages.${compiler}.ghcWithHoogle (hp: with hp;
-            [ base containers deepseq gauge random unordered-containers stm
+            [ base containers deepseq random unordered-containers stm
               arrows bytestring array directory process
             ]);
 
@@ -33,7 +33,7 @@
         let pkgs = import nixpkgs { inherit system ;
                                     overlays = [ overlay-ghc ];
                                   };
-            lethargy = pkgs.callPackage ./lethargy.nix { inherit pkgs; };
+            lethargy = pkgs.callPackage ./lethargy/lethargy.nix { inherit pkgs; };
         in
 
         rec {

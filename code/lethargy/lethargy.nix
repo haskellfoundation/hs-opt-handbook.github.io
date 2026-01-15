@@ -8,6 +8,6 @@ stdenv.mkDerivation {
   isExecutable = true;
   buildInputs = [ ghc haskell-language-server cabal-install haskellPackages.eventlog2html haskellPackages.ghc-events ];
   executableHaskellDepends = with haskellPackages; [ base ];
-  benchmarkHaskellDepends =  with haskellPackages;[ base containers deepseq gauge random ];
+  benchmarkHaskellDepends =  with haskellPackages;[ base containers deepseq random ];
   mainProgram = "lethargy";
 }
