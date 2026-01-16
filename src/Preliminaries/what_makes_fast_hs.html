@@ -1,208 +1,143 @@
 <!DOCTYPE html>
-<html  lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-      <title>1.4. The Programs of Consistent Lethargy</title>
-    
-          <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-          <link rel="stylesheet" href="../../_static/theme.css " type="text/css" />
-          <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
-          <link rel="stylesheet" href="../../_static/css/s4defs-roles.css" type="text/css" />
-          <link rel="stylesheet" href="../../_static/css/iframe.css" type="text/css" />
-          <link rel="stylesheet" href="../../_static/css/admonitions.css" type="text/css" />
-          <link rel="stylesheet" href="../../_static/css/s4defs-roles.css" type="text/css" />
-          <link rel="stylesheet" href="../../_static/css/iframe.css" type="text/css" />
-          <link rel="stylesheet" href="../../_static/css/admonitions.css" type="text/css" />
-      
-      <!-- sphinx script_files -->
-        <script src="../../_static/documentation_options.js?v=d45e8c67"></script>
-        <script src="../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
-        <script src="../../_static/copybutton.js?v=f281be69"></script>
-        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-
-      
-      <!-- bundled in js (rollup iife) -->
-      <!-- <script src="../../_static/theme-vendors.js"></script> -->
-      <script src="../../_static/theme.js" defer></script>
-    
-  <link rel="index" title="Index" href="../../genindex.html" />
-  <link rel="search" title="Search" href="../../search.html" />
-  <link rel="next" title="1.5. Philosophies of Optimization" href="philosophies_of_optimization.html" />
-  <link rel="prev" title="1.3. The Checklist" href="the_checklist.html" /> 
-  </head>
-
-  <body>
-    <div id="app">
-    <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
-  <router-link to="../../contents.html" class="home-link">
-    
-      <span class="site-name">Haskell Optimization Handbook</span>
-    
-  </router-link>
-
-  <div class="links">
-    <navlinks class="can-hide">
-
-  
-    <div class="nav-item">
-      <a href="../../contents.html#haskell-optimization-handbook"
-         class="nav-link ">
-         Table of Contents
-      </a>
-    </div>
-  
-    <div class="nav-item">
-      <a href="../../contents.html#indices-and-tables"
-         class="nav-link ">
-         indices and tables
-      </a>
-    </div>
-  
-
-
-
-    </navlinks>
-  </div>
-</navbar>
-
-      
-      <div class="sidebar-mask" @click="toggleSidebar(false)">
-      </div>
-        <sidebar @toggle-sidebar="toggleSidebar">
-          
-          <navlinks>
-            
-
-  
-    <div class="nav-item">
-      <a href="../../contents.html#haskell-optimization-handbook"
-         class="nav-link ">
-         Table of Contents
-      </a>
-    </div>
-  
-    <div class="nav-item">
-      <a href="../../contents.html#indices-and-tables"
-         class="nav-link ">
-         indices and tables
-      </a>
-    </div>
-  
-
-
-
-            
-          </navlinks><div id="searchbox" class="searchbox" role="search">
-  <div class="caption"><span class="caption-text">Quick search</span>
-    <div class="searchformwrapper">
-      <form class="search" action="../../search.html" method="get">
-        <input type="text" name="q" />
-        <input type="submit" value="Search" />
-        <input type="hidden" name="check_keywords" value="yes" />
-        <input type="hidden" name="area" value="default" />
-      </form>
-    </div>
-  </div>
-</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
-  
-    <div class="sidebar-group">
-      <p class="caption">
-        <span class="caption-text"><a href="../../contents.html#haskell-optimization-handbook">Table of Contents</a></span>
-      </p>
-      <ul class="">
-        
-          <li class="toctree-l1 ">
-            
-              <a href="index.html" class="reference internal ">Preliminaries</a>
-            
-
-            
-          </li>
-
-        
-          <li class="toctree-l1 ">
-            
-              <a href="../Measurement_Observation/index.html" class="reference internal ">Measurement, Profiling, and Observation</a>
-            
-
-            
-          </li>
-
-        
-          <li class="toctree-l1 ">
-            
-              <a href="../Optimizations/index.html" class="reference internal ">Optimizations</a>
-            
-
-            
-          </li>
-
-        
-          <li class="toctree-l1 ">
-            
-              <a href="../Case_Studies/index.html" class="reference internal ">Case Studies</a>
-            
-
-            
-          </li>
-
-        
-      </ul>
-    </div>
-  
-    <div class="sidebar-group">
-      <p class="caption">
-        <span class="caption-text"><a href="../../contents.html#indices-and-tables">indices and tables</a></span>
-      </p>
-      <ul class="">
-        
-          <li class="toctree-l1 ">
-            
-              <a href="../glossary.html" class="reference internal ">Glossary</a>
-            
-
-            
-          </li>
-
-        
-      </ul>
-    </div>
-  
+<html :class="{'dark': darkMode === 'dark' || (darkMode === 'system' &amp;&amp; window.matchMedia('(prefers-color-scheme: dark)').matches)}" class="scroll-smooth" data-content_root="../../" lang="en" x-data="{ darkMode: localStorage.getItem('darkMode') || localStorage.setItem('darkMode', 'system'), activeSection: '' }" x-init="$watch('darkMode', val =&gt; localStorage.setItem('darkMode', val))">
+<head>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta charset="utf-8"/>
+<meta content="white" media="(prefers-color-scheme: light)" name="theme-color"/>
+<meta content="black" media="(prefers-color-scheme: dark)" name="theme-color"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>1.4. The Programs of Consistent Lethargy | Haskell Optimization Handbook</title>
+<meta content="1.4. The Programs of Consistent Lethargy | Haskell Optimization Handbook" property="og:title"/>
+<meta content="1.4. The Programs of Consistent Lethargy | Haskell Optimization Handbook" name="twitter:title"/>
+<link href="../../_static/pygments.css?v=e72c8e07" rel="stylesheet" type="text/css"/>
+<link href="../../_static/theme.css?v=42baaae4" rel="stylesheet" type="text/css"/>
+<link href="../../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
+<link href="../../_static/css/s4defs-roles.css?v=50fa964d" rel="stylesheet" type="text/css"/>
+<link href="../../_static/css/iframe.css?v=f933a23f" rel="stylesheet" type="text/css"/>
+<link href="../../_static/css/admonitions.css?v=3a739201" rel="stylesheet" type="text/css"/>
+<link href="../../_static/css/s4defs-roles.css?v=50fa964d" rel="stylesheet" type="text/css"/>
+<link href="../../_static/css/iframe.css?v=f933a23f" rel="stylesheet" type="text/css"/>
+<link href="../../_static/css/admonitions.css?v=3a739201" rel="stylesheet" type="text/css"/>
+<link href="../../search.html" rel="search" title="Search"/>
+<link href="../../genindex.html" rel="index" title="Index"/>
+<link href="philosophies_of_optimization.html" rel="next" title="1.5. Philosophies of Optimization"/>
+<link href="the_checklist.html" rel="prev" title="1.3. The Checklist"/>
+<script>
+    <!-- Prevent Flash of wrong theme -->
+      const userPreference = localStorage.getItem('darkMode');
+      let mode;
+      if (userPreference === 'dark' || window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        mode = 'dark';
+        document.documentElement.classList.add('dark');
+      } else {
+        mode = 'light';
+      }
+      if (!userPreference) {localStorage.setItem('darkMode', mode)}
+    </script>
+</head>
+<body :class="{ 'overflow-hidden': showSidebar }" class="min-h-screen font-sans antialiased bg-background text-foreground" x-data="{ showSidebar: false, showScrollTop: false }">
+<div @click.self="showSidebar = false" class="fixed inset-0 z-50 overflow-hidden bg-background/80 backdrop-blur-sm md:hidden" x-cloak="" x-show="showSidebar"></div><div class="relative flex flex-col min-h-screen" id="page"><a class="absolute top-0 left-0 z-[100] block bg-background p-4 text-xl transition -translate-x-full opacity-0 focus:translate-x-0 focus:opacity-100" href="#content">
+      Skip to content
+    </a><header class="sticky top-0 z-40 w-full border-b shadow-sm border-border supports-backdrop-blur:bg-background/60 bg-background/95 backdrop-blur"><div class="container flex items-center h-14">
+<div class="hidden mr-4 md:flex">
+<a class="flex items-center mr-6" href="../../contents.html"><span class="hidden font-bold sm:inline-block text-clip whitespace-nowrap">Haskell Optimization Handbook</span>
+</a></div><button @click="showSidebar = true" class="inline-flex items-center justify-center h-10 px-0 py-2 mr-2 text-base font-medium transition-colors rounded-md hover:text-accent-foreground hover:bg-transparent md:hidden" type="button">
+<svg aria-hidden="true" fill="currentColor" height="24" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M152.587 825.087q-19.152 0-32.326-13.174t-13.174-32.326q0-19.152 13.174-32.326t32.326-13.174h440q19.152 0 32.326 13.174t13.174 32.326q0 19.152-13.174 32.326t-32.326 13.174h-440Zm0-203.587q-19.152 0-32.326-13.174T107.087 576q0-19.152 13.174-32.326t32.326-13.174h320q19.152 0 32.326 13.174T518.087 576q0 19.152-13.174 32.326T472.587 621.5h-320Zm0-203.587q-19.152 0-32.326-13.174t-13.174-32.326q0-19.152 13.174-32.326t32.326-13.174h440q19.152 0 32.326 13.174t13.174 32.326q0 19.152-13.174 32.326t-32.326 13.174h-440ZM708.913 576l112.174 112.174q12.674 12.674 12.674 31.826t-12.674 31.826Q808.413 764.5 789.261 764.5t-31.826-12.674l-144-144Q600 594.391 600 576t13.435-31.826l144-144q12.674-12.674 31.826-12.674t31.826 12.674q12.674 12.674 12.674 31.826t-12.674 31.826L708.913 576Z"></path>
+</svg>
+<span class="sr-only">Toggle navigation menu</span>
+</button>
+<div class="flex items-center justify-between flex-1 space-x-2 sm:space-x-4 md:justify-end">
+<div class="flex-1 w-full md:w-auto md:flex-none"><form @keydown.k.window.meta="$refs.search.focus()" action="../../search.html" class="relative flex items-center group" id="searchbox" method="get">
+<input aria-label="Search the docs" class="inline-flex items-center font-medium transition-colors bg-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background border border-input hover:bg-accent focus:bg-accent hover:text-accent-foreground focus:text-accent-foreground hover:placeholder-accent-foreground py-2 px-4 relative h-9 w-full justify-start rounded-[0.5rem] text-sm text-muted-foreground sm:pr-12 md:w-40 lg:w-64" id="search-input" name="q" placeholder="Search ..." type="search" x-ref="search"/>
+<kbd class="pointer-events-none absolute right-1.5 top-2 hidden h-5 select-none text-muted-foreground items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex group-hover:bg-accent group-hover:text-accent-foreground">
+<span class="text-xs">⌘</span>
+    K
+  </kbd>
+</form>
 </div>
-        </sidebar>
-
-      <page>
-          <div class="body-header" role="navigation" aria-label="navigation">
-  
-  <ul class="breadcrumbs">
-    <li><a href="../../contents.html">Docs</a> &raquo;</li>
-    
-      <li><a href="index.html"><span class="section-number">1. </span>Preliminaries</a> &raquo;</li>
-    
-    <li><span class="section-number">1.4. </span>The Programs of Consistent Lethargy</li>
-  </ul>
-  
-
-  <ul class="page-nav">
-  <li class="prev">
-    <a href="the_checklist.html"
-       title="previous chapter">← <span class="section-number">1.3. </span>The Checklist</a>
-  </li>
-  <li class="next">
-    <a href="philosophies_of_optimization.html"
-       title="next chapter"><span class="section-number">1.5. </span>Philosophies of Optimization →</a>
-  </li>
+<nav class="flex items-center space-x-1">
+<button @click="darkMode = darkMode === 'light' ? 'dark' : 'light'" aria-label="Color theme switcher" class="relative inline-flex items-center justify-center px-0 text-sm font-medium transition-colors rounded-md hover:bg-accent hover:text-accent-foreground h-9 w-9" type="button">
+<svg class="absolute transition-all scale-100 rotate-0 dark:-rotate-90 dark:scale-0" fill="currentColor" height="24" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M480 685q45.456 0 77.228-31.772Q589 621.456 589 576q0-45.456-31.772-77.228Q525.456 467 480 467q-45.456 0-77.228 31.772Q371 530.544 371 576q0 45.456 31.772 77.228Q434.544 685 480 685Zm0 91q-83 0-141.5-58.5T280 576q0-83 58.5-141.5T480 376q83 0 141.5 58.5T680 576q0 83-58.5 141.5T480 776ZM80 621.5q-19.152 0-32.326-13.174T34.5 576q0-19.152 13.174-32.326T80 530.5h80q19.152 0 32.326 13.174T205.5 576q0 19.152-13.174 32.326T160 621.5H80Zm720 0q-19.152 0-32.326-13.174T754.5 576q0-19.152 13.174-32.326T800 530.5h80q19.152 0 32.326 13.174T925.5 576q0 19.152-13.174 32.326T880 621.5h-80Zm-320-320q-19.152 0-32.326-13.174T434.5 256v-80q0-19.152 13.174-32.326T480 130.5q19.152 0 32.326 13.174T525.5 176v80q0 19.152-13.174 32.326T480 301.5Zm0 720q-19.152 0-32.326-13.17Q434.5 995.152 434.5 976v-80q0-19.152 13.174-32.326T480 850.5q19.152 0 32.326 13.174T525.5 896v80q0 19.152-13.174 32.33-13.174 13.17-32.326 13.17ZM222.174 382.065l-43-42Q165.5 327.391 166 308.239t13.174-33.065q13.435-13.674 32.587-13.674t32.065 13.674l42.239 43q12.674 13.435 12.555 31.706-.12 18.272-12.555 31.946-12.674 13.674-31.445 13.413-18.772-.261-32.446-13.174Zm494 494.761-42.239-43q-12.674-13.435-12.674-32.087t12.674-31.565Q686.609 756.5 705.38 757q18.772.5 32.446 13.174l43 41.761Q794.5 824.609 794 843.761t-13.174 33.065Q767.391 890.5 748.239 890.5t-32.065-13.674Zm-42-494.761Q660.5 369.391 661 350.62q.5-18.772 13.174-32.446l41.761-43Q728.609 261.5 747.761 262t33.065 13.174q13.674 13.435 13.674 32.587t-13.674 32.065l-43 42.239q-13.435 12.674-31.706 12.555-18.272-.12-31.946-12.555Zm-495 494.761Q165.5 863.391 165.5 844.239t13.674-32.065l43-42.239q13.435-12.674 32.087-12.674t31.565 12.674Q299.5 782.609 299 801.38q-.5 18.772-13.174 32.446l-41.761 43Q231.391 890.5 212.239 890t-33.065-13.174ZM480 576Z"></path>
+</svg>
+<svg class="absolute transition-all scale-0 rotate-90 dark:rotate-0 dark:scale-100" fill="currentColor" height="24" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M480 936q-151 0-255.5-104.5T120 576q0-138 90-239.5T440 218q25-3 39 18t-1 44q-17 26-25.5 55t-8.5 61q0 90 63 153t153 63q31 0 61.5-9t54.5-25q21-14 43-1.5t19 39.5q-14 138-117.5 229T480 936Zm0-80q88 0 158-48.5T740 681q-20 5-40 8t-40 3q-123 0-209.5-86.5T364 396q0-20 3-40t8-40q-78 32-126.5 102T200 576q0 116 82 198t198 82Zm-10-270Z"></path>
+</svg>
+</button>
+</nav>
+</div>
+</div>
+</header>
+<div class="flex-1"><div class="container flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-10"><aside :aria-hidden="!showSidebar" :class="{ 'translate-x-0': showSidebar }" class="fixed inset-y-0 left-0 md:top-14 z-50 md:z-30 bg-background md:bg-transparent transition-all duration-100 -translate-x-full md:translate-x-0 ml-0 p-6 md:p-0 md:-ml-2 md:h-[calc(100vh-3.5rem)] w-5/6 md:w-full shrink-0 overflow-y-auto border-r border-border md:sticky" id="left-sidebar">
+<a class="!justify-start text-sm md:!hidden bg-background" href="../../contents.html"><span class="font-bold text-clip whitespace-nowrap">Haskell Optimization Handbook</span>
+</a>
+<div class="relative overflow-hidden md:overflow-auto my-4 md:my-0 h-[calc(100vh-8rem)] md:h-auto">
+<div class="overflow-y-auto h-full w-full relative pr-6"><nav class="table w-full min-w-full my-6 lg:my-8">
+<p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1 current" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="index.html">1. Preliminaries<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul class="current" x-show="expanded">
+<li class="toctree-l2"><a class="reference internal" href="how_to_use.html">1.1. How to Use This Book</a></li>
+<li class="toctree-l2"><a class="reference internal" href="triage.html">1.2. Triage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="the_checklist.html">1.3. The Checklist</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">1.4. The Programs of Consistent Lethargy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="philosophies_of_optimization.html">1.5. Philosophies of Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="golden_rules.html">1.6. <span class="lightgrey">The Golden Rules of Performance-Oriented Haskell</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="repeatable_measurements.html">1.7. Setting up a Reproducible Test Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how_to_debug.html">1.8. How To Debug</a></li>
 </ul>
-  
+</li>
+<li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="../Measurement_Observation/index.html">2. Measurement, Profiling, and Observation<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
+<li class="toctree-l2"><a class="reference internal" href="../Measurement_Observation/Binary_Profiling/index.html">2.1. Binary Profiling and Probing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Measurement_Observation/Thread_Profiling/index.html">2.2. Thread Level Profiling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Measurement_Observation/Cmm_Profiling/index.html">2.3. Cmm Probes and Profiling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Measurement_Observation/Stg_RTS_Profiling/index.html">2.4. Stg and RTS Probes and Profiling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Measurement_Observation/Core_Profiling/index.html">2.5. Core Probes and Profiling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Measurement_Observation/Haskell_Profiling/index.html">2.6. Haskell Level Probing and Profiling</a></li>
+</ul>
+</li>
+<li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="../Optimizations/index.html">3. Optimizations<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
+<li class="toctree-l2"><a class="reference internal" href="../Optimizations/GHC_tech/index.html">3.1. GHC Flags</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Optimizations/GHC_opt/index.html">3.2. GHC Optimizations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Optimizations/Code_Changes_Libraries/index.html">3.3. Library Based Changes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Optimizations/Code_Changes/index.html">3.4. Library Agnostic Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="../Case_Studies/index.html">4. Case Studies<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
+<li class="toctree-l2"><a class="reference internal" href="../Case_Studies/sbv_572.html">4.1. <span class="lightgrey">Impact of Seq Removal on SBV’s Internal Cache</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Case_Studies/sbv_642.html">4.2. SBV and the Bizarre GHC Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Case_Studies/klister.html">4.3. <span class="incremental">Klister: A First Pass Performance Engineering</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Case_Studies/data_oriented_design.html">4.4. <span class="lightgrey">Rearchitecting with Data-Oriented Design</span></a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+</ul>
+</nav>
 </div>
-<hr>
-          <div class="content" role="main" v-pre>
-            
-  <section id="the-programs-of-consistent-lethargy">
+</div>
+<button @click="showSidebar = false" class="absolute md:hidden right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100" type="button">
+<svg class="h-4 w-4" fill="currentColor" height="24" stroke="none" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M480 632 284 828q-11 11-28 11t-28-11q-11-11-11-28t11-28l196-196-196-196q-11-11-11-28t11-28q11-11 28-11t28 11l196 196 196-196q11-11 28-11t28 11q11 11 11 28t-11 28L536 576l196 196q11 11 11 28t-11 28q-11 11-28 11t-28-11L480 632Z"></path>
+</svg>
+</button>
+</aside>
+<main class="relative py-6 lg:gap-10 lg:py-8 xl:grid xl:grid-cols-[1fr_300px]">
+<div class="w-full min-w-0 mx-auto">
+<nav aria-label="breadcrumbs" class="flex items-center mb-4 space-x-1 text-sm text-muted-foreground">
+<a class="overflow-hidden text-ellipsis whitespace-nowrap hover:text-foreground" href="../../contents.html">
+<span class="hidden md:inline">Haskell Optimization Handbook</span>
+<svg aria-label="Home" class="md:hidden" fill="currentColor" height="18" stroke="none" viewbox="0 96 960 960" width="18" xmlns="http://www.w3.org/2000/svg">
+<path d="M240 856h120V616h240v240h120V496L480 316 240 496v360Zm-80 80V456l320-240 320 240v480H520V696h-80v240H160Zm320-350Z"></path>
+</svg>
+</a>
+<div class="mr-1">/</div><a class="hover:text-foreground overflow-hidden text-ellipsis whitespace-nowrap" href="index.html"><span class="section-number">1. </span>Preliminaries</a>
+<div class="mr-1">/</div><span aria-current="page" class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap"><span class="section-number">1.4. </span>The Programs of Consistent Lethargy</span>
+</nav>
+<div id="content" role="main">
+<section id="the-programs-of-consistent-lethargy">
 <span id="what-makes-fast-hs-chapter"></span><h1><span class="section-number">1.4. </span>The Programs of Consistent Lethargy<a class="headerlink" href="#the-programs-of-consistent-lethargy" title="Link to this heading">¶</a></h1>
 <p>We’ll begin by showing small bite sized programs that demonstrate a particular
 way Haskell programs can slow down. We call these programs <em>canonical</em> programs
@@ -211,18 +146,18 @@ should come away from this section with an understanding of the ways a Haskell
 program slows down. This chapter is just to small tour; for each slow down topic
 we provide a sister chapter that explores the topic in more detail.</p>
 <section id="inlining">
-<span id="canonical-inlining"></span><h2><span class="section-number">1.4.1. </span>Inlining<a class="headerlink" href="#inlining" title="Link to this heading">¶</a></h2>
+<span id="canonical-inlining"></span><h2><span class="section-number">1.4.1. </span>Inlining<a class="headerlink" href="#inlining" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#inlining'">¶</a></h2>
 <section id="what-is-inlining">
-<h3><span class="section-number">1.4.1.1. </span>What is Inlining<a class="headerlink" href="#what-is-inlining" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">1.4.1.1. </span>What is Inlining<a class="headerlink" href="#what-is-inlining" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#what-is-inlining'">¶</a></h3>
 <p>Inlining <a class="footnote-reference brackets" href="#id12" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> is a simple optimization technique that almost all optimizing
 compilers perform. The essential idea is to substitute the call sites of a
 function <code class="docutils literal notranslate"><span class="pre">f</span></code>, with the body of <code class="docutils literal notranslate"><span class="pre">f</span></code>. For example:</p>
 <div class="literal-block-wrapper docutils container" id="id18">
 <div class="code-block-caption"><span class="caption-text">Before inlining</span><a class="headerlink" href="#id18" title="Link to this code">¶</a></div>
-<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">3</span>
-<span class="c1">--- somewhere else</span>
-<span class="o">&gt;</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">c</span>
-</pre></div>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="o">&gt;</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">3</span>
+</span><span id="line-2"><span class="c1">--- somewhere else</span>
+</span><span id="line-3"><span class="o">&gt;</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">c</span>
+</span></code></pre></div>
 </div>
 </div>
 <p>Here we define a function <code class="docutils literal notranslate"><span class="pre">f</span></code>, and then have a single call site <code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">(a</span> <span class="pre">+</span> <span class="pre">b)</span>
@@ -230,17 +165,17 @@ function <code class="docutils literal notranslate"><span class="pre">f</span></
 with the body (or right hand side) of <code class="docutils literal notranslate"><span class="pre">f</span></code>:</p>
 <div class="literal-block-wrapper docutils container" id="id19">
 <div class="code-block-caption"><span class="caption-text">After inlining</span><a class="headerlink" href="#id19" title="Link to this code">¶</a></div>
-<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">3</span>
-<span class="c1">-- somewhere else</span>
-<span class="o">&gt;</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">c</span>
-</pre></div>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="o">&gt;</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">3</span>
+</span><span id="line-2"><span class="c1">-- somewhere else</span>
+</span><span id="line-3"><span class="o">&gt;</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">c</span>
+</span></code></pre></div>
 </div>
 </div>
 <p>Notice the call to <code class="docutils literal notranslate"><span class="pre">f</span></code> is removed and has been replaced with <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">*</span> <span class="pre">3</span></code>, where
 <span class="math notranslate nohighlight">\(x \mapsto (a + b)\)</span>.</p>
 </section>
 <section id="why-do-we-want-inlining">
-<h3><span class="section-number">1.4.1.2. </span>Why do We Want Inlining<a class="headerlink" href="#why-do-we-want-inlining" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">1.4.1.2. </span>Why do We Want Inlining<a class="headerlink" href="#why-do-we-want-inlining" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#why-do-we-want-inlining'">¶</a></h3>
 <p>Inlining has been called the “mother of all optimizations” because it has two
 primary benefits. First, it removes the overhead of a function call, which can
 be noticeable in a hot loop. Second, it is an <em>enabling optimization</em>; by
@@ -251,7 +186,7 @@ more art than science; a simple change can have cascading and unforeseen effects
 in the end result.</p>
 </section>
 <section id="how-does-inlining-slow-down-runtime-performance">
-<h3><span class="section-number">1.4.1.3. </span>How does Inlining Slow Down Runtime Performance<a class="headerlink" href="#how-does-inlining-slow-down-runtime-performance" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">1.4.1.3. </span>How does Inlining Slow Down Runtime Performance<a class="headerlink" href="#how-does-inlining-slow-down-runtime-performance" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#how-does-inlining-slow-down-runtime-performance'">¶</a></h3>
 <p>Inlining itself does not slow down runtime performance, <em>lack of</em> inlining does,
 because it limits otherwise possible optimizations from taking place. However,
 that does not mean we should always ask GHC to inline or manually perform
@@ -261,17 +196,17 @@ particulars of GHC’s inliner, in the chapter dedicated to <a class="reference 
 </section>
 </section>
 <section id="fusion">
-<span id="canonical-fusion"></span><h2><span class="section-number">1.4.2. </span>Fusion<a class="headerlink" href="#fusion" title="Link to this heading">¶</a></h2>
+<span id="canonical-fusion"></span><h2><span class="section-number">1.4.2. </span>Fusion<a class="headerlink" href="#fusion" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#fusion'">¶</a></h2>
 <section id="what-is-fusion">
-<h3><span class="section-number">1.4.2.1. </span>What is Fusion<a class="headerlink" href="#what-is-fusion" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">1.4.2.1. </span>What is Fusion<a class="headerlink" href="#what-is-fusion" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#what-is-fusion'">¶</a></h3>
 <p>Fusion or Deforestation <a class="footnote-reference brackets" href="#id13" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> <a class="footnote-reference brackets" href="#id14" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a> (We take Andy Gill’s excellent examples from
 this paper for this section. Thank you Andy Gill for your labor!) is an
 optimization technique that eliminates intermediate and short lived data
 structures between function calls. It is a key optimization that makes Haskell
 fast because idiomatic Haskell style is often written in compositional style.
 For example:</p>
-<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">all</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">and</span><span class="w"> </span><span class="p">(</span><span class="n">map</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="n">xs</span><span class="p">)</span>
-</pre></div>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="nf">all</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">and</span><span class="w"> </span><span class="p">(</span><span class="n">map</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="n">xs</span><span class="p">)</span>
+</span></code></pre></div>
 </div>
 <p>In <code class="docutils literal notranslate"><span class="pre">all</span></code> we apply <code class="docutils literal notranslate"><span class="pre">p</span></code> to each element of <code class="docutils literal notranslate"><span class="pre">xs</span></code> in <code class="docutils literal notranslate"><span class="pre">map</span> <span class="pre">p</span> <span class="pre">xs</span></code> , this
 produces an intermediate list of Booleans. This list is then consumed by <code class="docutils literal notranslate"><span class="pre">and</span></code>
@@ -282,10 +217,10 @@ by <code class="docutils literal notranslate"><span class="pre">and</span></code
 more pressure on the garbage collector.</p>
 <p>Fusion is an optimization technique that transforms functions such as <code class="docutils literal notranslate"><span class="pre">all</span></code>
 into versions that do not use intermediate lists:</p>
-<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">all&#39;</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="n">xs</span>
-<span class="w">  </span><span class="kr">where</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="kt">[]</span><span class="w">     </span><span class="ow">=</span><span class="w"> </span><span class="kt">True</span>
-<span class="w">        </span><span class="n">h</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="n">xs</span>
-</pre></div>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="nf">all'</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="n">xs</span>
+</span><span id="line-2"><span class="w">  </span><span class="kr">where</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="kt">[]</span><span class="w">     </span><span class="ow">=</span><span class="w"> </span><span class="kt">True</span>
+</span><span id="line-3"><span class="w">        </span><span class="n">h</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="n">xs</span>
+</span></code></pre></div>
 </div>
 <p>In this version of <code class="docutils literal notranslate"><span class="pre">all</span></code> we <em>do not</em> allocate any intermediate list. Instead,
 we create each Boolean value and immediately pass that value to <code class="docutils literal notranslate"><span class="pre">&amp;&amp;</span></code> creating
@@ -294,7 +229,7 @@ occur using <code class="docutils literal notranslate"><span class="pre">and</sp
 this version is successful in removing the intermediate List, .</p>
 </section>
 <section id="why-do-we-want-fusion">
-<h3><span class="section-number">1.4.2.2. </span>Why do we want Fusion<a class="headerlink" href="#why-do-we-want-fusion" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">1.4.2.2. </span>Why do we want Fusion<a class="headerlink" href="#why-do-we-want-fusion" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#why-do-we-want-fusion'">¶</a></h3>
 <p>As Andy Gill writes:</p>
 <blockquote>
 <div><p>We want to eat our cake and have it too. That is, we would like to write
@@ -303,7 +238,7 @@ transform this into the more efficient version <code class="docutils literal not
 </div></blockquote>
 </section>
 <section id="how-does-fusion-slow-down-runtime-performance">
-<h3><span class="section-number">1.4.2.3. </span>How does Fusion Slow Down Runtime Performance<a class="headerlink" href="#how-does-fusion-slow-down-runtime-performance" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">1.4.2.3. </span>How does Fusion Slow Down Runtime Performance<a class="headerlink" href="#how-does-fusion-slow-down-runtime-performance" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#how-does-fusion-slow-down-runtime-performance'">¶</a></h3>
 <p>Similar to Inlining, fusion itself does not slow down performance, rather <em>lack
 of</em> fusion does, because if something can fuse but doesn’t, then the program
 will perform unnecessary allocations just to yield the same result. The
@@ -314,9 +249,9 @@ fuse in the chapter dedicated <a class="reference internal" href="../Optimizatio
 </section>
 </section>
 <section id="excessive-pointer-chasing">
-<span id="canonical-pointer-chasing"></span><h2><span class="section-number">1.4.3. </span>Excessive Pointer Chasing<a class="headerlink" href="#excessive-pointer-chasing" title="Link to this heading">¶</a></h2>
+<span id="canonical-pointer-chasing"></span><h2><span class="section-number">1.4.3. </span>Excessive Pointer Chasing<a class="headerlink" href="#excessive-pointer-chasing" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#excessive-pointer-chasing'">¶</a></h2>
 <section id="what-is-excessive-pointer-chasing">
-<h3><span class="section-number">1.4.3.1. </span>What is Excessive Pointer Chasing<a class="headerlink" href="#what-is-excessive-pointer-chasing" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">1.4.3.1. </span>What is Excessive Pointer Chasing<a class="headerlink" href="#what-is-excessive-pointer-chasing" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#what-is-excessive-pointer-chasing'">¶</a></h3>
 <p>Excessive pointer chasing is a form of superfluous computation; our program is
 doing more work than it needs in order to compute the result. It occurs anytime
 our programs de-reference a pointer to retrieve a value instead of just
@@ -327,25 +262,25 @@ laziness. As such, most of these instances are well known and have floated
 around the community for some time.</p>
 </section>
 <section id="how-does-excessive-pointer-chasing-slow-down-runtime-performance">
-<h3><span class="section-number">1.4.3.2. </span>How does Excessive Pointer Chasing Slow Down Runtime Performance?<a class="headerlink" href="#how-does-excessive-pointer-chasing-slow-down-runtime-performance" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">1.4.3.2. </span>How does Excessive Pointer Chasing Slow Down Runtime Performance?<a class="headerlink" href="#how-does-excessive-pointer-chasing-slow-down-runtime-performance" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#how-does-excessive-pointer-chasing-slow-down-runtime-performance'">¶</a></h3>
 <p>The classic example of excessive pointer chasing is memory leaks that result
 from folds that are overly lazy, for example <a class="footnote-reference brackets" href="#id15" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>:</p>
 <div class="literal-block-wrapper docutils container" id="id20">
 <div class="code-block-caption"><span class="caption-text">mean, calculated with a lazy left fold</span><a class="headerlink" href="#id20" title="Link to this code">¶</a></div>
-<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">mean</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">[</span><span class="kt">Double</span><span class="p">]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Double</span>
-<span class="nf">mean</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">fromIntegral</span><span class="w"> </span><span class="n">ln</span>
-<span class="w">  </span><span class="kr">where</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">ln</span><span class="p">)</span><span class="w">        </span><span class="ow">=</span><span class="w"> </span><span class="n">foldl</span><span class="w"> </span><span class="n">step</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">xs</span>
-<span class="w">        </span><span class="n">step</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">ln</span><span class="p">)</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">ln</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
-</pre></div>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="nf">mean</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">[</span><span class="kt">Double</span><span class="p">]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Double</span>
+</span><span id="line-2"><span class="nf">mean</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">fromIntegral</span><span class="w"> </span><span class="n">ln</span>
+</span><span id="line-3"><span class="w">  </span><span class="kr">where</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">ln</span><span class="p">)</span><span class="w">        </span><span class="ow">=</span><span class="w"> </span><span class="n">foldl</span><span class="w"> </span><span class="n">step</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">xs</span>
+</span><span id="line-4"><span class="w">        </span><span class="n">step</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">ln</span><span class="p">)</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">ln</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+</span></code></pre></div>
 </div>
 </div>
 <div class="literal-block-wrapper docutils container" id="id21">
 <div class="code-block-caption"><span class="caption-text">mean, calculated with a strict left fold</span><a class="headerlink" href="#id21" title="Link to this code">¶</a></div>
-<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">mean&#39;</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">[</span><span class="kt">Double</span><span class="p">]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Double</span>
-<span class="nf">mean&#39;</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">fromIntegral</span><span class="w"> </span><span class="n">ln</span>
-<span class="w">  </span><span class="kr">where</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">ln</span><span class="p">)</span><span class="w">        </span><span class="ow">=</span><span class="w"> </span><span class="n">foldl&#39;</span><span class="w"> </span><span class="n">step</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">xs</span>
-<span class="w">        </span><span class="n">step</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">ln</span><span class="p">)</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">ln</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
-</pre></div>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="nf">mean'</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">[</span><span class="kt">Double</span><span class="p">]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Double</span>
+</span><span id="line-2"><span class="nf">mean'</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">fromIntegral</span><span class="w"> </span><span class="n">ln</span>
+</span><span id="line-3"><span class="w">  </span><span class="kr">where</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">ln</span><span class="p">)</span><span class="w">        </span><span class="ow">=</span><span class="w"> </span><span class="n">foldl'</span><span class="w"> </span><span class="n">step</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">xs</span>
+</span><span id="line-4"><span class="w">        </span><span class="n">step</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">ln</span><span class="p">)</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">ln</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+</span></code></pre></div>
 </div>
 </div>
 <div class="admonition note">
@@ -365,15 +300,15 @@ our computation.</p>
 <p>Another form of common excessive pointer chasing is using lazy fields in a data
 constructor that does not benefit from laziness and will be consumed anyway. For
 example, consider the data type version of <code class="docutils literal notranslate"><span class="pre">step</span></code>:</p>
-<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">data</span><span class="w"> </span><span class="kt">Step</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">Step</span><span class="w"> </span><span class="kt">Double</span><span class="w"> </span><span class="kt">Double</span>
-<span class="o">...</span>
-
-<span class="c1">-- mean rewritten with Step instead of (,)</span>
-<span class="nf">mean&#39;&#39;</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">[</span><span class="kt">Double</span><span class="p">]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Double</span>
-<span class="nf">mean&#39;&#39;</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">fromIntegral</span><span class="w"> </span><span class="n">ln</span>
-<span class="w">  </span><span class="kr">where</span><span class="w"> </span><span class="p">(</span><span class="kt">Step</span><span class="w"> </span><span class="n">s</span><span class="w">  </span><span class="n">ln</span><span class="p">)</span><span class="w">       </span><span class="ow">=</span><span class="w"> </span><span class="n">foldl&#39;</span><span class="w"> </span><span class="n">step</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">xs</span>
-<span class="w">        </span><span class="n">step</span><span class="w"> </span><span class="p">(</span><span class="kt">Step</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="n">ln</span><span class="p">)</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">Step</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">ln</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
-</pre></div>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="kr">data</span><span class="w"> </span><span class="kt">Step</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">Step</span><span class="w"> </span><span class="kt">Double</span><span class="w"> </span><span class="kt">Double</span>
+</span><span id="line-2"><span class="o">...</span>
+</span><span id="line-3">
+</span><span id="line-4"><span class="c1">-- mean rewritten with Step instead of (,)</span>
+</span><span id="line-5"><span class="nf">mean''</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">[</span><span class="kt">Double</span><span class="p">]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Double</span>
+</span><span id="line-6"><span class="nf">mean''</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">fromIntegral</span><span class="w"> </span><span class="n">ln</span>
+</span><span id="line-7"><span class="w">  </span><span class="kr">where</span><span class="w"> </span><span class="p">(</span><span class="kt">Step</span><span class="w"> </span><span class="n">s</span><span class="w">  </span><span class="n">ln</span><span class="p">)</span><span class="w">       </span><span class="ow">=</span><span class="w"> </span><span class="n">foldl'</span><span class="w"> </span><span class="n">step</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">xs</span>
+</span><span id="line-8"><span class="w">        </span><span class="n">step</span><span class="w"> </span><span class="p">(</span><span class="kt">Step</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="n">ln</span><span class="p">)</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">Step</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">ln</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+</span></code></pre></div>
 </div>
 <p>Just as <code class="docutils literal notranslate"><span class="pre">mean'</span></code> was excessively lazy, so will <code class="docutils literal notranslate"><span class="pre">mean''</span></code> be, because each
 <code class="docutils literal notranslate"><span class="pre">Double</span></code> in <code class="docutils literal notranslate"><span class="pre">Step</span></code> is lazy, and so both the <code class="docutils literal notranslate"><span class="pre">(s</span> <span class="pre">+</span> <span class="pre">a)</span></code> and <code class="docutils literal notranslate"><span class="pre">(ln</span> <span class="pre">+</span> <span class="pre">1)</span></code>
@@ -385,8 +320,8 @@ the superfluous indirection.</p>
 <p>A related form of common excessive pointer chasing is using <a class="reference internal" href="../glossary.html#term-Boxed"><span class="xref std std-term">Boxed</span></a> fields
 in data constructors when <a class="reference internal" href="../glossary.html#term-Unboxed"><span class="xref std std-term">Unboxed</span></a> fields would do. Consider an example
 of a <code class="docutils literal notranslate"><span class="pre">Counter</span></code> data type that tracks some domain specific integer:</p>
-<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">data</span><span class="w"> </span><span class="kt">Counter</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">Counter</span><span class="w"> </span><span class="kt">Int</span>
-</pre></div>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="kr">data</span><span class="w"> </span><span class="kt">Counter</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">Counter</span><span class="w"> </span><span class="kt">Int</span>
+</span></code></pre></div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -397,8 +332,8 @@ that each <code class="docutils literal notranslate"><span class="pre">Counter</
 to an <code class="docutils literal notranslate"><span class="pre">Int</span></code> directly. We can instruct GHC remove the heap indirection with the
 <a class="reference external" href="https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/exts/pragmas.html?highlight=unpack#unpack-pragma">unpack</a>
 pragma and a bang pattern:</p>
-<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">data</span><span class="w"> </span><span class="kt">Counter</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">Counter</span><span class="w"> </span><span class="cm">{-# UNPACK #-}</span><span class="w"> </span><span class="o">!</span><span class="kt">Int</span>
-</pre></div>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="kr">data</span><span class="w"> </span><span class="kt">Counter</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">Counter</span><span class="w"> </span><span class="cm">{-# UNPACK #-}</span><span class="w"> </span><span class="o">!</span><span class="kt">Int</span>
+</span></code></pre></div>
 </div>
 <p>This pragma instructs GHC to store the contents of <code class="docutils literal notranslate"><span class="pre">Int</span></code> directly in the
 <code class="docutils literal notranslate"><span class="pre">Counter</span></code> constructor, rather than storing a pointer to an <code class="docutils literal notranslate"><span class="pre">Int</span></code> on the heap
@@ -406,9 +341,9 @@ in the constructor. We’ll return to these fixes in the <a class="reference int
 </section>
 </section>
 <section id="excessive-closure-allocation">
-<span id="canonical-closure-alloc"></span><h2><span class="section-number">1.4.4. </span>Excessive Closure Allocation<a class="headerlink" href="#excessive-closure-allocation" title="Link to this heading">¶</a></h2>
+<span id="canonical-closure-alloc"></span><h2><span class="section-number">1.4.4. </span>Excessive Closure Allocation<a class="headerlink" href="#excessive-closure-allocation" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#excessive-closure-allocation'">¶</a></h2>
 <section id="what-is-excessive-closure-allocation">
-<h3><span class="section-number">1.4.4.1. </span>What is Excessive Closure Allocation<a class="headerlink" href="#what-is-excessive-closure-allocation" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">1.4.4.1. </span>What is Excessive Closure Allocation<a class="headerlink" href="#what-is-excessive-closure-allocation" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#what-is-excessive-closure-allocation'">¶</a></h3>
 <p>Excessive closure allocation is another form of superfluous computation and
 superfluous memory allocation; it means that our program is doing more memory
 allocation and likely more computation than required to compute the result.
@@ -431,22 +366,22 @@ memory allocation when reading or writing Haskell code, and teaches you to
 perform these optimizations manually when GHC fails to optimize.</p>
 </section>
 <section id="how-does-excessive-closure-allocation-slow-down-runtime-performance">
-<span id="id7"></span><h3><span class="section-number">1.4.4.2. </span>How does Excessive Closure Allocation Slow Down Runtime Performance<a class="headerlink" href="#how-does-excessive-closure-allocation-slow-down-runtime-performance" title="Link to this heading">¶</a></h3>
+<span id="id7"></span><h3><span class="section-number">1.4.4.2. </span>How does Excessive Closure Allocation Slow Down Runtime Performance<a class="headerlink" href="#how-does-excessive-closure-allocation-slow-down-runtime-performance" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#how-does-excessive-closure-allocation-slow-down-runtime-performance'">¶</a></h3>
 <p>Consider these simple examples <a class="footnote-reference brackets" href="#id16" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a> :</p>
-<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
-<span class="kr">in</span><span class="w"> </span><span class="kr">case</span><span class="w"> </span><span class="n">tail</span><span class="w"> </span><span class="n">zs</span><span class="w"> </span><span class="kr">of</span>
-<span class="w">        </span><span class="kt">[]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">x</span>
-<span class="w">        </span><span class="kr">_</span><span class="w">  </span><span class="ow">-&gt;</span><span class="w"> </span><span class="mi">1</span>
-</pre></div>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="kr">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+</span><span id="line-2"><span class="kr">in</span><span class="w"> </span><span class="kr">case</span><span class="w"> </span><span class="n">tail</span><span class="w"> </span><span class="n">zs</span><span class="w"> </span><span class="kr">of</span>
+</span><span id="line-3"><span class="w">        </span><span class="kt">[]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">x</span>
+</span><span id="line-4"><span class="w">        </span><span class="kr">_</span><span class="w">  </span><span class="ow">-&gt;</span><span class="w"> </span><span class="mi">1</span>
+</span></code></pre></div>
 </div>
 <p>This is an example of <code class="docutils literal notranslate"><span class="pre">Let</span> <span class="pre">Floating</span> <span class="pre">inwards</span></code>. Notice that <code class="docutils literal notranslate"><span class="pre">x</span></code> is only used
 in <em>one branch</em> of the <code class="docutils literal notranslate"><span class="pre">case</span> <span class="pre">expression</span></code>, because the other branch does not
 require it GHC can <em>Float x inward</em> to the first branch:</p>
-<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">case</span><span class="w"> </span><span class="n">tail</span><span class="w"> </span><span class="n">zs</span><span class="w"> </span><span class="kr">of</span>
-<span class="w">     </span><span class="kt">[]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
-<span class="w">           </span><span class="kr">in</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">x</span>
-<span class="w">     </span><span class="kr">_</span><span class="w">  </span><span class="ow">-&gt;</span><span class="w"> </span><span class="mi">1</span>
-</pre></div>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="kr">case</span><span class="w"> </span><span class="n">tail</span><span class="w"> </span><span class="n">zs</span><span class="w"> </span><span class="kr">of</span>
+</span><span id="line-2"><span class="w">     </span><span class="kt">[]</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+</span><span id="line-3"><span class="w">           </span><span class="kr">in</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">x</span>
+</span><span id="line-4"><span class="w">     </span><span class="kr">_</span><span class="w">  </span><span class="ow">-&gt;</span><span class="w"> </span><span class="mi">1</span>
+</span></code></pre></div>
 </div>
 <p>Now <code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">...</span></code> occurs <em>conditionally</em> depending on the result of <code class="docutils literal notranslate"><span class="pre">tail</span> <span class="pre">zs</span></code>,
 rather than everytime as we saw in the first previous example. Thus, the second
@@ -457,16 +392,16 @@ form is semantically identical but more efficient because our program may avoid
 <p>Let Floating can change <a class="reference internal" href="../glossary.html#term-Thunk"><span class="xref std std-term">Thunk</span></a> sizes.</p>
 </div>
 <p>Consider this example from <span id="id9">Peyton Jones and Santos [<a class="reference internal" href="../../contents.html#id5" title="Simon Peyton Jones and Andre Santos. A transformation-based optimiser for haskell. Science of Computer Programming, October 1997. URL: https://www.microsoft.com/en-us/research/publication/a-transformation-based-optimiser-for-haskell/.">2</a>]</span>, Section 7.1:</p>
-<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">w</span><span class="w">     </span><span class="c1">-- v and w are free variables in x</span>
-<span class="w">    </span><span class="n">y</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="o">...</span><span class="n">x</span><span class="o">...</span><span class="n">x</span><span class="w">  </span><span class="c1">-- y mentions x</span>
-<span class="kr">in</span><span class="w"> </span><span class="kt">B</span><span class="w">              </span><span class="c1">-- B does not mention x</span>
-</pre></div>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="kr">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">w</span><span class="w">     </span><span class="c1">-- v and w are free variables in x</span>
+</span><span id="line-2"><span class="w">    </span><span class="n">y</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="o">...</span><span class="n">x</span><span class="o">...</span><span class="n">x</span><span class="w">  </span><span class="c1">-- y mentions x</span>
+</span><span id="line-3"><span class="kr">in</span><span class="w"> </span><span class="kt">B</span><span class="w">              </span><span class="c1">-- B does not mention x</span>
+</span></code></pre></div>
 </div>
 <p>Floating <code class="docutils literal notranslate"><span class="pre">x</span></code> inward produces:</p>
-<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">let</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="c1">-- now v and w are free variables in y</span>
-<span class="w">        </span><span class="kr">in</span><span class="w"> </span><span class="o">...</span><span class="n">x</span><span class="o">...</span><span class="n">x</span>
-<span class="kr">in</span><span class="w"> </span><span class="kt">B</span>
-</pre></div>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="kr">let</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="c1">-- now v and w are free variables in y</span>
+</span><span id="line-2"><span class="w">        </span><span class="kr">in</span><span class="w"> </span><span class="o">...</span><span class="n">x</span><span class="o">...</span><span class="n">x</span>
+</span><span id="line-3"><span class="kr">in</span><span class="w"> </span><span class="kt">B</span>
+</span></code></pre></div>
 </div>
 <p>Now <code class="docutils literal notranslate"><span class="pre">v</span></code> and <code class="docutils literal notranslate"><span class="pre">w</span></code> are free variables in <code class="docutils literal notranslate"><span class="pre">y</span></code> but <code class="docutils literal notranslate"><span class="pre">x</span></code> is not. <code class="docutils literal notranslate"><span class="pre">x</span></code> is a
 bound variable in <code class="docutils literal notranslate"><span class="pre">y</span></code> (and will get inlined). So if <code class="docutils literal notranslate"><span class="pre">v</span></code> and <code class="docutils literal notranslate"><span class="pre">w</span></code> were
@@ -478,11 +413,11 @@ let floating which perform small optimizations by moving <code class="docutils l
 <code class="docutils literal notranslate"><span class="pre">case</span></code> expressions, for now we’ll focus on a very effective outward floating
 transformation called the <a class="reference internal" href="../glossary.html#term-Full-Laziness-transformation"><span class="xref std std-term">Full Laziness transformation</span></a>. The Full
 Laziness transformation floats bindings out of lambda abstractions, consider:</p>
-<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">f</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="nf">\</span><span class="n">xs</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kr">let</span>
-<span class="w">             </span><span class="n">g</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="nf">\</span><span class="n">y</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="n">xs</span><span class="w">  </span><span class="c1">-- calculate n</span>
-<span class="w">                       </span><span class="kr">in</span><span class="w"> </span><span class="o">...</span><span class="n">g</span><span class="o">...</span><span class="n">n</span><span class="w">        </span><span class="c1">-- use n, but not xs</span>
-<span class="w">           </span><span class="kr">in</span><span class="w"> </span><span class="o">...</span><span class="n">g</span><span class="o">...</span>
-</pre></div>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="nf">f</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="nf">\</span><span class="n">xs</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kr">let</span>
+</span><span id="line-2"><span class="w">             </span><span class="n">g</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="nf">\</span><span class="n">y</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="n">xs</span><span class="w">  </span><span class="c1">-- calculate n</span>
+</span><span id="line-3"><span class="w">                       </span><span class="kr">in</span><span class="w"> </span><span class="o">...</span><span class="n">g</span><span class="o">...</span><span class="n">n</span><span class="w">        </span><span class="c1">-- use n, but not xs</span>
+</span><span id="line-4"><span class="w">           </span><span class="kr">in</span><span class="w"> </span><span class="o">...</span><span class="n">g</span><span class="o">...</span>
+</span></code></pre></div>
 </div>
 <p>So we have an outer function, <code class="docutils literal notranslate"><span class="pre">f</span></code>, that defines a tight inner loop <code class="docutils literal notranslate"><span class="pre">g</span></code>.
 Notice that <em>every</em> recursive call to <code class="docutils literal notranslate"><span class="pre">g</span></code> will allocate space for, and
@@ -491,10 +426,10 @@ and <code class="docutils literal notranslate"><span class="pre">n</span></code>
 changing in the body of <code class="docutils literal notranslate"><span class="pre">g</span></code> and so we should only need to calculate <code class="docutils literal notranslate"><span class="pre">n</span></code>
 once. Fortunately, <code class="docutils literal notranslate"><span class="pre">g</span></code> never uses <code class="docutils literal notranslate"><span class="pre">xs</span></code> other than to calculate <code class="docutils literal notranslate"><span class="pre">n</span></code>, so
 <code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">n</span> <span class="pre">=</span> <span class="pre">...</span></code> can be floated out of <code class="docutils literal notranslate"><span class="pre">g</span></code>:</p>
-<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">f</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="nf">\</span><span class="n">xs</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="n">xs</span><span class="w">          </span><span class="c1">-- n only calculated once</span>
-<span class="w">           </span><span class="kr">in</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="nf">\</span><span class="n">y</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="o">...</span><span class="n">g</span><span class="o">...</span><span class="n">n</span><span class="w">  </span><span class="c1">-- use previously defined n</span>
-<span class="w">              </span><span class="kr">in</span><span class="w"> </span><span class="o">...</span><span class="n">g</span><span class="o">...</span>
-</pre></div>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="nf">f</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="nf">\</span><span class="n">xs</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="n">xs</span><span class="w">          </span><span class="c1">-- n only calculated once</span>
+</span><span id="line-2"><span class="w">           </span><span class="kr">in</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="nf">\</span><span class="n">y</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="o">...</span><span class="n">g</span><span class="o">...</span><span class="n">n</span><span class="w">  </span><span class="c1">-- use previously defined n</span>
+</span><span id="line-3"><span class="w">              </span><span class="kr">in</span><span class="w"> </span><span class="o">...</span><span class="n">g</span><span class="o">...</span>
+</span></code></pre></div>
 </div>
 <p>This version is the full laziness version because we have moved <code class="docutils literal notranslate"><span class="pre">let</span> <span class="pre">n</span> <span class="pre">=</span> <span class="pre">..</span></code>
 out of the lambda in the body of <code class="docutils literal notranslate"><span class="pre">g</span></code>. This version is much more efficient by
@@ -504,9 +439,9 @@ of <code class="docutils literal notranslate"><span class="pre">g</span></code>,
 </section>
 </section>
 <section id="poor-domain-modeling">
-<span id="canonical-domain-modeling"></span><h2><span class="section-number">1.4.5. </span>Poor Domain Modeling<a class="headerlink" href="#poor-domain-modeling" title="Link to this heading">¶</a></h2>
+<span id="canonical-domain-modeling"></span><h2><span class="section-number">1.4.5. </span>Poor Domain Modeling<a class="headerlink" href="#poor-domain-modeling" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#poor-domain-modeling'">¶</a></h2>
 <section id="what-is-poor-domain-modeling">
-<h3><span class="section-number">1.4.5.1. </span>What is Poor Domain Modeling<a class="headerlink" href="#what-is-poor-domain-modeling" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">1.4.5.1. </span>What is Poor Domain Modeling<a class="headerlink" href="#what-is-poor-domain-modeling" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#what-is-poor-domain-modeling'">¶</a></h3>
 <p>Poor domain modeling is a catch all phrase for constructing a program that has a
 high impedance to the problem domain. The problem domain is the abstract domain
 that dictates the computation that the program must do, the logical sequence of
@@ -534,7 +469,7 @@ cannot provide a canonical example, instead we’ll provide a set of guidelines 
 describe when you know you have high impedance and how to fix it.</p>
 </section>
 <section id="how-do-i-know-if-i-have-poor-domain-modeling">
-<h3><span class="section-number">1.4.5.2. </span>How do I know if I have Poor Domain Modeling<a class="headerlink" href="#how-do-i-know-if-i-have-poor-domain-modeling" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">1.4.5.2. </span>How do I know if I have Poor Domain Modeling<a class="headerlink" href="#how-do-i-know-if-i-have-poor-domain-modeling" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#how-do-i-know-if-i-have-poor-domain-modeling'">¶</a></h3>
 <p>Unfortunately, this is more art than science. Classic indications in Haskell
 are all instances of the implementation doing more work than is necessary:</p>
 <section id="overuse-of-data-list">
@@ -582,84 +517,116 @@ expressing itself in the implementation.</p>
 <span id="shotgun-parsing"></span><h4><span class="section-number">1.4.5.2.3. </span>Problem Domain Invariants are Difficult to Express<a class="headerlink" href="#problem-domain-invariants-are-difficult-to-express" title="Link to this heading">¶</a></h4>
 <p>This one usually manifests through the use of superfluous guards. So many
 functions take this form:</p>
-<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- | an example function on Foo, this function learns a lot about Foo</span>
-<span class="c1">-- by testing Foo against many predicates</span>
-<span class="nf">myFunction</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Foo</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Bar</span>
-<span class="nf">myFunction</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">predicate0</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="o">...</span><span class="kr">do</span><span class="w"> </span><span class="n">something</span><span class="w"> </span><span class="o">...</span>
-<span class="w">               </span><span class="o">|</span><span class="w"> </span><span class="n">predicate1</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="o">...</span><span class="kr">do</span><span class="w"> </span><span class="n">another</span><span class="w"> </span><span class="n">thing</span><span class="o">...</span>
-<span class="w">               </span><span class="o">|</span><span class="w"> </span><span class="o">...</span>
-<span class="w">               </span><span class="o">|</span><span class="w"> </span><span class="n">predicateN</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="o">...</span><span class="kr">do</span><span class="w"> </span><span class="kt">N</span><span class="w"> </span><span class="n">thing</span><span class="o">...</span>
-</pre></div>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1">-- | an example function on Foo, this function learns a lot about Foo</span>
+</span><span id="line-2"><span class="c1">-- by testing Foo against many predicates</span>
+</span><span id="line-3"><span class="nf">myFunction</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Foo</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Bar</span>
+</span><span id="line-4"><span class="nf">myFunction</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">predicate0</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="o">...</span><span class="kr">do</span><span class="w"> </span><span class="n">something</span><span class="w"> </span><span class="o">...</span>
+</span><span id="line-5"><span class="w">               </span><span class="o">|</span><span class="w"> </span><span class="n">predicate1</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="o">...</span><span class="kr">do</span><span class="w"> </span><span class="n">another</span><span class="w"> </span><span class="n">thing</span><span class="o">...</span>
+</span><span id="line-6"><span class="w">               </span><span class="o">|</span><span class="w"> </span><span class="o">...</span>
+</span><span id="line-7"><span class="w">               </span><span class="o">|</span><span class="w"> </span><span class="n">predicateN</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="o">...</span><span class="kr">do</span><span class="w"> </span><span class="kt">N</span><span class="w"> </span><span class="n">thing</span><span class="o">...</span>
+</span></code></pre></div>
 </div>
 <p>This becomes problematic when it grows to be ubiquitous in the code base.
 When a lot of functions in the program use guards the program will suffer
 from redundant checks and poor branch prediction, for example:</p>
-<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- | another function on Foo, this function doesn&#39;t learn much about Foo</span>
-<span class="c1">-- because it only tests Foo against one predicate.</span>
-<span class="nf">myOtherFunction</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Foo</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Baz</span>
-<span class="nf">myOtherFunction</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">predicate1</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="o">...</span><span class="kr">do</span><span class="w"> </span><span class="n">some</span><span class="w"> </span><span class="n">another</span><span class="w"> </span><span class="n">thing</span><span class="o">...</span>
-<span class="w">                    </span><span class="o">|</span><span class="w"> </span><span class="n">otherwise</span><span class="w">      </span><span class="ow">=</span><span class="w"> </span><span class="o">...</span>
-
-<span class="nf">main</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">IO</span><span class="w"> </span><span class="nb">()</span>
-<span class="nf">main</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kr">do</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="ow">&lt;-</span><span class="w"> </span><span class="n">getFoo</span><span class="w">          </span><span class="c1">-- we get a Foo</span>
-<span class="w">          </span><span class="n">myFunction</span><span class="w"> </span><span class="n">foo</span><span class="w">         </span><span class="c1">-- we learn a lot about Foo</span>
-<span class="w">          </span><span class="n">myOtherFunction</span><span class="w"> </span><span class="n">foo</span><span class="w">    </span><span class="c1">-- nothing we&#39;ve learned is propagated forward</span>
-<span class="w">                                 </span><span class="c1">--  from myFunction to myOtherFunction, and so</span>
-<span class="w">                                 </span><span class="c1">--  we redundantly check predicate1 on foo.</span>
-</pre></div>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1">-- | another function on Foo, this function doesn't learn much about Foo</span>
+</span><span id="line-2"><span class="c1">-- because it only tests Foo against one predicate.</span>
+</span><span id="line-3"><span class="nf">myOtherFunction</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Foo</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Baz</span>
+</span><span id="line-4"><span class="nf">myOtherFunction</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">predicate1</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="o">...</span><span class="kr">do</span><span class="w"> </span><span class="n">some</span><span class="w"> </span><span class="n">another</span><span class="w"> </span><span class="n">thing</span><span class="o">...</span>
+</span><span id="line-5"><span class="w">                    </span><span class="o">|</span><span class="w"> </span><span class="n">otherwise</span><span class="w">      </span><span class="ow">=</span><span class="w"> </span><span class="o">...</span>
+</span><span id="line-6">
+</span><span id="line-7"><span class="nf">main</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">IO</span><span class="w"> </span><span class="nb">()</span>
+</span><span id="line-8"><span class="nf">main</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kr">do</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="ow">&lt;-</span><span class="w"> </span><span class="n">getFoo</span><span class="w">          </span><span class="c1">-- we get a Foo</span>
+</span><span id="line-9"><span class="w">          </span><span class="n">myFunction</span><span class="w"> </span><span class="n">foo</span><span class="w">         </span><span class="c1">-- we learn a lot about Foo</span>
+</span><span id="line-10"><span class="w">          </span><span class="n">myOtherFunction</span><span class="w"> </span><span class="n">foo</span><span class="w">    </span><span class="c1">-- nothing we've learned is propagated forward</span>
+</span><span id="line-11"><span class="w">                                 </span><span class="c1">--  from myFunction to myOtherFunction, and so</span>
+</span><span id="line-12"><span class="w">                                 </span><span class="c1">--  we redundantly check predicate1 on foo.</span>
+</span></code></pre></div>
 </div>
 </section>
 </section>
 </section>
 <section id="references">
-<h2><span class="section-number">1.4.6. </span>References<a class="headerlink" href="#references" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">1.4.6. </span>References<a class="headerlink" href="#references" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#references'">¶</a></h2>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="id12" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a href="#id1" role="doc-backlink">1</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="https://wiki.haskell.org/Inlining_and_Specialisation">https://wiki.haskell.org/Inlining_and_Specialisation</a></p>
 </aside>
 <aside class="footnote brackets" id="id13" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a href="#id2" role="doc-backlink">2</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="https://www.sciencedirect.com/science/article/pii/030439759090147A?via%3Dihub">https://www.sciencedirect.com/science/article/pii/030439759090147A?via%3Dihub</a></p>
 </aside>
 <aside class="footnote brackets" id="id14" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a href="#id3" role="doc-backlink">3</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="https://www.microsoft.com/en-us/research/wp-content/uploads/2016/07/deforestation-short-cut.pdf">https://www.microsoft.com/en-us/research/wp-content/uploads/2016/07/deforestation-short-cut.pdf</a></p>
 </aside>
 <aside class="footnote brackets" id="id15" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">4</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a href="#id4" role="doc-backlink">4</a><span class="fn-bracket">]</span></span>
 <p>This code adapted from Johan Tibell slides on Haskell <a class="reference external" href="https://www.slideshare.net/tibbe/highperformance-haskell">optimization</a>.</p>
 </aside>
 <aside class="footnote brackets" id="id16" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id8">5</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a href="#id8" role="doc-backlink">5</a><span class="fn-bracket">]</span></span>
 <p>This code adapted from <span id="id17">Peyton Jones and Santos [<a class="reference internal" href="../../contents.html#id5" title="Simon Peyton Jones and Andre Santos. A transformation-based optimiser for haskell. Science of Computer Programming, October 1997. URL: https://www.microsoft.com/en-us/research/publication/a-transformation-based-optimiser-for-haskell/.">2</a>]</span> Section 7.</p>
 </aside>
 </aside>
 </section>
 </section>
-
-
-          </div>
-          <div class="page-nav">
-            <div class="inner"><ul class="page-nav">
-  <li class="prev">
-    <a href="the_checklist.html"
-       title="previous chapter">← <span class="section-number">1.3. </span>The Checklist</a>
-  </li>
-  <li class="next">
-    <a href="philosophies_of_optimization.html"
-       title="next chapter"><span class="section-number">1.5. </span>Philosophies of Optimization →</a>
-  </li>
-</ul><div class="footer" role="contentinfo">
-      &#169; Copyright 2022-2026, Jeffrey Young (doyougnu).
-    <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.2.6 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
+</div></div><aside class="hidden text-sm xl:block" id="right-sidebar">
+<div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
+<ul>
+<li><a :data-current="activeSection === '#inlining'" class="reference internal" href="#inlining">1.4.1. Inlining</a><ul>
+<li><a :data-current="activeSection === '#what-is-inlining'" class="reference internal" href="#what-is-inlining">1.4.1.1. What is Inlining</a></li>
+<li><a :data-current="activeSection === '#why-do-we-want-inlining'" class="reference internal" href="#why-do-we-want-inlining">1.4.1.2. Why do We Want Inlining</a></li>
+<li><a :data-current="activeSection === '#how-does-inlining-slow-down-runtime-performance'" class="reference internal" href="#how-does-inlining-slow-down-runtime-performance">1.4.1.3. How does Inlining Slow Down Runtime Performance</a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#fusion'" class="reference internal" href="#fusion">1.4.2. Fusion</a><ul>
+<li><a :data-current="activeSection === '#what-is-fusion'" class="reference internal" href="#what-is-fusion">1.4.2.1. What is Fusion</a></li>
+<li><a :data-current="activeSection === '#why-do-we-want-fusion'" class="reference internal" href="#why-do-we-want-fusion">1.4.2.2. Why do we want Fusion</a></li>
+<li><a :data-current="activeSection === '#how-does-fusion-slow-down-runtime-performance'" class="reference internal" href="#how-does-fusion-slow-down-runtime-performance">1.4.2.3. How does Fusion Slow Down Runtime Performance</a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#excessive-pointer-chasing'" class="reference internal" href="#excessive-pointer-chasing">1.4.3. Excessive Pointer Chasing</a><ul>
+<li><a :data-current="activeSection === '#what-is-excessive-pointer-chasing'" class="reference internal" href="#what-is-excessive-pointer-chasing">1.4.3.1. What is Excessive Pointer Chasing</a></li>
+<li><a :data-current="activeSection === '#how-does-excessive-pointer-chasing-slow-down-runtime-performance'" class="reference internal" href="#how-does-excessive-pointer-chasing-slow-down-runtime-performance">1.4.3.2. How does Excessive Pointer Chasing Slow Down Runtime Performance?</a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#excessive-closure-allocation'" class="reference internal" href="#excessive-closure-allocation">1.4.4. Excessive Closure Allocation</a><ul>
+<li><a :data-current="activeSection === '#what-is-excessive-closure-allocation'" class="reference internal" href="#what-is-excessive-closure-allocation">1.4.4.1. What is Excessive Closure Allocation</a></li>
+<li><a :data-current="activeSection === '#how-does-excessive-closure-allocation-slow-down-runtime-performance'" class="reference internal" href="#how-does-excessive-closure-allocation-slow-down-runtime-performance">1.4.4.2. How does Excessive Closure Allocation Slow Down Runtime Performance</a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#poor-domain-modeling'" class="reference internal" href="#poor-domain-modeling">1.4.5. Poor Domain Modeling</a><ul>
+<li><a :data-current="activeSection === '#what-is-poor-domain-modeling'" class="reference internal" href="#what-is-poor-domain-modeling">1.4.5.1. What is Poor Domain Modeling</a></li>
+<li><a :data-current="activeSection === '#how-do-i-know-if-i-have-poor-domain-modeling'" class="reference internal" href="#how-do-i-know-if-i-have-poor-domain-modeling">1.4.5.2. How do I know if I have Poor Domain Modeling</a><ul>
+<li><a :data-current="activeSection === '#overuse-of-data-list'" class="reference internal" href="#overuse-of-data-list">1.4.5.2.1. Overuse of Data.List</a></li>
+<li><a :data-current="activeSection === '#functions-in-your-program-domain-do-not-easily-compose-to-have-meaning-in-your-problem-domain'" class="reference internal" href="#functions-in-your-program-domain-do-not-easily-compose-to-have-meaning-in-your-problem-domain">1.4.5.2.2. Functions in your Program Domain do not Easily Compose to have Meaning in your Problem Domain</a></li>
+<li><a :data-current="activeSection === '#problem-domain-invariants-are-difficult-to-express'" class="reference internal" href="#problem-domain-invariants-are-difficult-to-express">1.4.5.2.3. Problem Domain Invariants are Difficult to Express</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#references'" class="reference internal" href="#references">1.4.6. References</a></li>
+</ul>
 </div>
-            </div>
-          </div>
-      </page>
-    </div></div>
-    
-    
-  </body>
+</aside>
+</main>
+</div>
+</div><footer class="py-6 border-t border-border md:py-0">
+<div class="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
+<div class="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
+<p class="text-sm leading-loose text-center text-muted-foreground md:text-left">© 2022-2026, Jeffrey Young (doyougnu) Built with <a class="font-medium underline underline-offset-4" href="https://www.sphinx-doc.org" rel="noreferrer">Sphinx 8.2.3</a></p>
+</div>
+</div>
+</footer>
+</div>
+<script src="../../_static/documentation_options.js?v=d45e8c67"></script>
+<script src="../../_static/doctools.js?v=9bcbadda"></script>
+<script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+<script src="../../_static/copybutton.js?v=f281be69"></script>
+<script defer="defer" src="../../_static/theme.js?v=073f68d9"></script>
+<script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</body>
 </html>

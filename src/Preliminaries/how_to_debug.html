@@ -1,208 +1,143 @@
 <!DOCTYPE html>
-<html  lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-      <title>1.8. How To Debug</title>
-    
-          <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-          <link rel="stylesheet" href="../../_static/theme.css " type="text/css" />
-          <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
-          <link rel="stylesheet" href="../../_static/css/s4defs-roles.css" type="text/css" />
-          <link rel="stylesheet" href="../../_static/css/iframe.css" type="text/css" />
-          <link rel="stylesheet" href="../../_static/css/admonitions.css" type="text/css" />
-          <link rel="stylesheet" href="../../_static/css/s4defs-roles.css" type="text/css" />
-          <link rel="stylesheet" href="../../_static/css/iframe.css" type="text/css" />
-          <link rel="stylesheet" href="../../_static/css/admonitions.css" type="text/css" />
-      
-      <!-- sphinx script_files -->
-        <script src="../../_static/documentation_options.js?v=d45e8c67"></script>
-        <script src="../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
-        <script src="../../_static/copybutton.js?v=f281be69"></script>
-        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-
-      
-      <!-- bundled in js (rollup iife) -->
-      <!-- <script src="../../_static/theme-vendors.js"></script> -->
-      <script src="../../_static/theme.js" defer></script>
-    
-  <link rel="index" title="Index" href="../../genindex.html" />
-  <link rel="search" title="Search" href="../../search.html" />
-  <link rel="next" title="2. Measurement, Profiling, and Observation" href="../Measurement_Observation/index.html" />
-  <link rel="prev" title="1.7. Setting up a Reproducible Test Environment" href="repeatable_measurements.html" /> 
-  </head>
-
-  <body>
-    <div id="app">
-    <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
-  <router-link to="../../contents.html" class="home-link">
-    
-      <span class="site-name">Haskell Optimization Handbook</span>
-    
-  </router-link>
-
-  <div class="links">
-    <navlinks class="can-hide">
-
-  
-    <div class="nav-item">
-      <a href="../../contents.html#haskell-optimization-handbook"
-         class="nav-link ">
-         Table of Contents
-      </a>
-    </div>
-  
-    <div class="nav-item">
-      <a href="../../contents.html#indices-and-tables"
-         class="nav-link ">
-         indices and tables
-      </a>
-    </div>
-  
-
-
-
-    </navlinks>
-  </div>
-</navbar>
-
-      
-      <div class="sidebar-mask" @click="toggleSidebar(false)">
-      </div>
-        <sidebar @toggle-sidebar="toggleSidebar">
-          
-          <navlinks>
-            
-
-  
-    <div class="nav-item">
-      <a href="../../contents.html#haskell-optimization-handbook"
-         class="nav-link ">
-         Table of Contents
-      </a>
-    </div>
-  
-    <div class="nav-item">
-      <a href="../../contents.html#indices-and-tables"
-         class="nav-link ">
-         indices and tables
-      </a>
-    </div>
-  
-
-
-
-            
-          </navlinks><div id="searchbox" class="searchbox" role="search">
-  <div class="caption"><span class="caption-text">Quick search</span>
-    <div class="searchformwrapper">
-      <form class="search" action="../../search.html" method="get">
-        <input type="text" name="q" />
-        <input type="submit" value="Search" />
-        <input type="hidden" name="check_keywords" value="yes" />
-        <input type="hidden" name="area" value="default" />
-      </form>
-    </div>
-  </div>
-</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
-  
-    <div class="sidebar-group">
-      <p class="caption">
-        <span class="caption-text"><a href="../../contents.html#haskell-optimization-handbook">Table of Contents</a></span>
-      </p>
-      <ul class="">
-        
-          <li class="toctree-l1 ">
-            
-              <a href="index.html" class="reference internal ">Preliminaries</a>
-            
-
-            
-          </li>
-
-        
-          <li class="toctree-l1 ">
-            
-              <a href="../Measurement_Observation/index.html" class="reference internal ">Measurement, Profiling, and Observation</a>
-            
-
-            
-          </li>
-
-        
-          <li class="toctree-l1 ">
-            
-              <a href="../Optimizations/index.html" class="reference internal ">Optimizations</a>
-            
-
-            
-          </li>
-
-        
-          <li class="toctree-l1 ">
-            
-              <a href="../Case_Studies/index.html" class="reference internal ">Case Studies</a>
-            
-
-            
-          </li>
-
-        
-      </ul>
-    </div>
-  
-    <div class="sidebar-group">
-      <p class="caption">
-        <span class="caption-text"><a href="../../contents.html#indices-and-tables">indices and tables</a></span>
-      </p>
-      <ul class="">
-        
-          <li class="toctree-l1 ">
-            
-              <a href="../glossary.html" class="reference internal ">Glossary</a>
-            
-
-            
-          </li>
-
-        
-      </ul>
-    </div>
-  
+<html :class="{'dark': darkMode === 'dark' || (darkMode === 'system' &amp;&amp; window.matchMedia('(prefers-color-scheme: dark)').matches)}" class="scroll-smooth" data-content_root="../../" lang="en" x-data="{ darkMode: localStorage.getItem('darkMode') || localStorage.setItem('darkMode', 'system'), activeSection: '' }" x-init="$watch('darkMode', val =&gt; localStorage.setItem('darkMode', val))">
+<head>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta charset="utf-8"/>
+<meta content="white" media="(prefers-color-scheme: light)" name="theme-color"/>
+<meta content="black" media="(prefers-color-scheme: dark)" name="theme-color"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>1.8. How To Debug | Haskell Optimization Handbook</title>
+<meta content="1.8. How To Debug | Haskell Optimization Handbook" property="og:title"/>
+<meta content="1.8. How To Debug | Haskell Optimization Handbook" name="twitter:title"/>
+<link href="../../_static/pygments.css?v=e72c8e07" rel="stylesheet" type="text/css"/>
+<link href="../../_static/theme.css?v=42baaae4" rel="stylesheet" type="text/css"/>
+<link href="../../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
+<link href="../../_static/css/s4defs-roles.css?v=50fa964d" rel="stylesheet" type="text/css"/>
+<link href="../../_static/css/iframe.css?v=f933a23f" rel="stylesheet" type="text/css"/>
+<link href="../../_static/css/admonitions.css?v=3a739201" rel="stylesheet" type="text/css"/>
+<link href="../../_static/css/s4defs-roles.css?v=50fa964d" rel="stylesheet" type="text/css"/>
+<link href="../../_static/css/iframe.css?v=f933a23f" rel="stylesheet" type="text/css"/>
+<link href="../../_static/css/admonitions.css?v=3a739201" rel="stylesheet" type="text/css"/>
+<link href="../../search.html" rel="search" title="Search"/>
+<link href="../../genindex.html" rel="index" title="Index"/>
+<link href="../Measurement_Observation/index.html" rel="next" title="2. Measurement, Profiling, and Observation"/>
+<link href="repeatable_measurements.html" rel="prev" title="1.7. Setting up a Reproducible Test Environment"/>
+<script>
+    <!-- Prevent Flash of wrong theme -->
+      const userPreference = localStorage.getItem('darkMode');
+      let mode;
+      if (userPreference === 'dark' || window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        mode = 'dark';
+        document.documentElement.classList.add('dark');
+      } else {
+        mode = 'light';
+      }
+      if (!userPreference) {localStorage.setItem('darkMode', mode)}
+    </script>
+</head>
+<body :class="{ 'overflow-hidden': showSidebar }" class="min-h-screen font-sans antialiased bg-background text-foreground" x-data="{ showSidebar: false, showScrollTop: false }">
+<div @click.self="showSidebar = false" class="fixed inset-0 z-50 overflow-hidden bg-background/80 backdrop-blur-sm md:hidden" x-cloak="" x-show="showSidebar"></div><div class="relative flex flex-col min-h-screen" id="page"><a class="absolute top-0 left-0 z-[100] block bg-background p-4 text-xl transition -translate-x-full opacity-0 focus:translate-x-0 focus:opacity-100" href="#content">
+      Skip to content
+    </a><header class="sticky top-0 z-40 w-full border-b shadow-sm border-border supports-backdrop-blur:bg-background/60 bg-background/95 backdrop-blur"><div class="container flex items-center h-14">
+<div class="hidden mr-4 md:flex">
+<a class="flex items-center mr-6" href="../../contents.html"><span class="hidden font-bold sm:inline-block text-clip whitespace-nowrap">Haskell Optimization Handbook</span>
+</a></div><button @click="showSidebar = true" class="inline-flex items-center justify-center h-10 px-0 py-2 mr-2 text-base font-medium transition-colors rounded-md hover:text-accent-foreground hover:bg-transparent md:hidden" type="button">
+<svg aria-hidden="true" fill="currentColor" height="24" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M152.587 825.087q-19.152 0-32.326-13.174t-13.174-32.326q0-19.152 13.174-32.326t32.326-13.174h440q19.152 0 32.326 13.174t13.174 32.326q0 19.152-13.174 32.326t-32.326 13.174h-440Zm0-203.587q-19.152 0-32.326-13.174T107.087 576q0-19.152 13.174-32.326t32.326-13.174h320q19.152 0 32.326 13.174T518.087 576q0 19.152-13.174 32.326T472.587 621.5h-320Zm0-203.587q-19.152 0-32.326-13.174t-13.174-32.326q0-19.152 13.174-32.326t32.326-13.174h440q19.152 0 32.326 13.174t13.174 32.326q0 19.152-13.174 32.326t-32.326 13.174h-440ZM708.913 576l112.174 112.174q12.674 12.674 12.674 31.826t-12.674 31.826Q808.413 764.5 789.261 764.5t-31.826-12.674l-144-144Q600 594.391 600 576t13.435-31.826l144-144q12.674-12.674 31.826-12.674t31.826 12.674q12.674 12.674 12.674 31.826t-12.674 31.826L708.913 576Z"></path>
+</svg>
+<span class="sr-only">Toggle navigation menu</span>
+</button>
+<div class="flex items-center justify-between flex-1 space-x-2 sm:space-x-4 md:justify-end">
+<div class="flex-1 w-full md:w-auto md:flex-none"><form @keydown.k.window.meta="$refs.search.focus()" action="../../search.html" class="relative flex items-center group" id="searchbox" method="get">
+<input aria-label="Search the docs" class="inline-flex items-center font-medium transition-colors bg-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background border border-input hover:bg-accent focus:bg-accent hover:text-accent-foreground focus:text-accent-foreground hover:placeholder-accent-foreground py-2 px-4 relative h-9 w-full justify-start rounded-[0.5rem] text-sm text-muted-foreground sm:pr-12 md:w-40 lg:w-64" id="search-input" name="q" placeholder="Search ..." type="search" x-ref="search"/>
+<kbd class="pointer-events-none absolute right-1.5 top-2 hidden h-5 select-none text-muted-foreground items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex group-hover:bg-accent group-hover:text-accent-foreground">
+<span class="text-xs">⌘</span>
+    K
+  </kbd>
+</form>
 </div>
-        </sidebar>
-
-      <page>
-          <div class="body-header" role="navigation" aria-label="navigation">
-  
-  <ul class="breadcrumbs">
-    <li><a href="../../contents.html">Docs</a> &raquo;</li>
-    
-      <li><a href="index.html"><span class="section-number">1. </span>Preliminaries</a> &raquo;</li>
-    
-    <li><span class="section-number">1.8. </span>How To Debug</li>
-  </ul>
-  
-
-  <ul class="page-nav">
-  <li class="prev">
-    <a href="repeatable_measurements.html"
-       title="previous chapter">← <span class="section-number">1.7. </span>Setting up a Reproducible Test Environment</a>
-  </li>
-  <li class="next">
-    <a href="../Measurement_Observation/index.html"
-       title="next chapter"><span class="section-number">2. </span>Measurement, Profiling, and Observation →</a>
-  </li>
+<nav class="flex items-center space-x-1">
+<button @click="darkMode = darkMode === 'light' ? 'dark' : 'light'" aria-label="Color theme switcher" class="relative inline-flex items-center justify-center px-0 text-sm font-medium transition-colors rounded-md hover:bg-accent hover:text-accent-foreground h-9 w-9" type="button">
+<svg class="absolute transition-all scale-100 rotate-0 dark:-rotate-90 dark:scale-0" fill="currentColor" height="24" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M480 685q45.456 0 77.228-31.772Q589 621.456 589 576q0-45.456-31.772-77.228Q525.456 467 480 467q-45.456 0-77.228 31.772Q371 530.544 371 576q0 45.456 31.772 77.228Q434.544 685 480 685Zm0 91q-83 0-141.5-58.5T280 576q0-83 58.5-141.5T480 376q83 0 141.5 58.5T680 576q0 83-58.5 141.5T480 776ZM80 621.5q-19.152 0-32.326-13.174T34.5 576q0-19.152 13.174-32.326T80 530.5h80q19.152 0 32.326 13.174T205.5 576q0 19.152-13.174 32.326T160 621.5H80Zm720 0q-19.152 0-32.326-13.174T754.5 576q0-19.152 13.174-32.326T800 530.5h80q19.152 0 32.326 13.174T925.5 576q0 19.152-13.174 32.326T880 621.5h-80Zm-320-320q-19.152 0-32.326-13.174T434.5 256v-80q0-19.152 13.174-32.326T480 130.5q19.152 0 32.326 13.174T525.5 176v80q0 19.152-13.174 32.326T480 301.5Zm0 720q-19.152 0-32.326-13.17Q434.5 995.152 434.5 976v-80q0-19.152 13.174-32.326T480 850.5q19.152 0 32.326 13.174T525.5 896v80q0 19.152-13.174 32.33-13.174 13.17-32.326 13.17ZM222.174 382.065l-43-42Q165.5 327.391 166 308.239t13.174-33.065q13.435-13.674 32.587-13.674t32.065 13.674l42.239 43q12.674 13.435 12.555 31.706-.12 18.272-12.555 31.946-12.674 13.674-31.445 13.413-18.772-.261-32.446-13.174Zm494 494.761-42.239-43q-12.674-13.435-12.674-32.087t12.674-31.565Q686.609 756.5 705.38 757q18.772.5 32.446 13.174l43 41.761Q794.5 824.609 794 843.761t-13.174 33.065Q767.391 890.5 748.239 890.5t-32.065-13.674Zm-42-494.761Q660.5 369.391 661 350.62q.5-18.772 13.174-32.446l41.761-43Q728.609 261.5 747.761 262t33.065 13.174q13.674 13.435 13.674 32.587t-13.674 32.065l-43 42.239q-13.435 12.674-31.706 12.555-18.272-.12-31.946-12.555Zm-495 494.761Q165.5 863.391 165.5 844.239t13.674-32.065l43-42.239q13.435-12.674 32.087-12.674t31.565 12.674Q299.5 782.609 299 801.38q-.5 18.772-13.174 32.446l-41.761 43Q231.391 890.5 212.239 890t-33.065-13.174ZM480 576Z"></path>
+</svg>
+<svg class="absolute transition-all scale-0 rotate-90 dark:rotate-0 dark:scale-100" fill="currentColor" height="24" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M480 936q-151 0-255.5-104.5T120 576q0-138 90-239.5T440 218q25-3 39 18t-1 44q-17 26-25.5 55t-8.5 61q0 90 63 153t153 63q31 0 61.5-9t54.5-25q21-14 43-1.5t19 39.5q-14 138-117.5 229T480 936Zm0-80q88 0 158-48.5T740 681q-20 5-40 8t-40 3q-123 0-209.5-86.5T364 396q0-20 3-40t8-40q-78 32-126.5 102T200 576q0 116 82 198t198 82Zm-10-270Z"></path>
+</svg>
+</button>
+</nav>
+</div>
+</div>
+</header>
+<div class="flex-1"><div class="container flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-10"><aside :aria-hidden="!showSidebar" :class="{ 'translate-x-0': showSidebar }" class="fixed inset-y-0 left-0 md:top-14 z-50 md:z-30 bg-background md:bg-transparent transition-all duration-100 -translate-x-full md:translate-x-0 ml-0 p-6 md:p-0 md:-ml-2 md:h-[calc(100vh-3.5rem)] w-5/6 md:w-full shrink-0 overflow-y-auto border-r border-border md:sticky" id="left-sidebar">
+<a class="!justify-start text-sm md:!hidden bg-background" href="../../contents.html"><span class="font-bold text-clip whitespace-nowrap">Haskell Optimization Handbook</span>
+</a>
+<div class="relative overflow-hidden md:overflow-auto my-4 md:my-0 h-[calc(100vh-8rem)] md:h-auto">
+<div class="overflow-y-auto h-full w-full relative pr-6"><nav class="table w-full min-w-full my-6 lg:my-8">
+<p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1 current" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="index.html">1. Preliminaries<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul class="current" x-show="expanded">
+<li class="toctree-l2"><a class="reference internal" href="how_to_use.html">1.1. How to Use This Book</a></li>
+<li class="toctree-l2"><a class="reference internal" href="triage.html">1.2. Triage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="the_checklist.html">1.3. The Checklist</a></li>
+<li class="toctree-l2"><a class="reference internal" href="what_makes_fast_hs.html">1.4. The Programs of Consistent Lethargy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="philosophies_of_optimization.html">1.5. Philosophies of Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="golden_rules.html">1.6. <span class="lightgrey">The Golden Rules of Performance-Oriented Haskell</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="repeatable_measurements.html">1.7. Setting up a Reproducible Test Environment</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">1.8. How To Debug</a></li>
 </ul>
-  
+</li>
+<li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="../Measurement_Observation/index.html">2. Measurement, Profiling, and Observation<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
+<li class="toctree-l2"><a class="reference internal" href="../Measurement_Observation/Binary_Profiling/index.html">2.1. Binary Profiling and Probing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Measurement_Observation/Thread_Profiling/index.html">2.2. Thread Level Profiling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Measurement_Observation/Cmm_Profiling/index.html">2.3. Cmm Probes and Profiling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Measurement_Observation/Stg_RTS_Profiling/index.html">2.4. Stg and RTS Probes and Profiling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Measurement_Observation/Core_Profiling/index.html">2.5. Core Probes and Profiling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Measurement_Observation/Haskell_Profiling/index.html">2.6. Haskell Level Probing and Profiling</a></li>
+</ul>
+</li>
+<li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="../Optimizations/index.html">3. Optimizations<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
+<li class="toctree-l2"><a class="reference internal" href="../Optimizations/GHC_tech/index.html">3.1. GHC Flags</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Optimizations/GHC_opt/index.html">3.2. GHC Optimizations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Optimizations/Code_Changes_Libraries/index.html">3.3. Library Based Changes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Optimizations/Code_Changes/index.html">3.4. Library Agnostic Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="../Case_Studies/index.html">4. Case Studies<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
+<li class="toctree-l2"><a class="reference internal" href="../Case_Studies/sbv_572.html">4.1. <span class="lightgrey">Impact of Seq Removal on SBV’s Internal Cache</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Case_Studies/sbv_642.html">4.2. SBV and the Bizarre GHC Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Case_Studies/klister.html">4.3. <span class="incremental">Klister: A First Pass Performance Engineering</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Case_Studies/data_oriented_design.html">4.4. <span class="lightgrey">Rearchitecting with Data-Oriented Design</span></a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+</ul>
+</nav>
 </div>
-<hr>
-          <div class="content" role="main" v-pre>
-            
-  <section id="how-to-debug">
+</div>
+<button @click="showSidebar = false" class="absolute md:hidden right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100" type="button">
+<svg class="h-4 w-4" fill="currentColor" height="24" stroke="none" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M480 632 284 828q-11 11-28 11t-28-11q-11-11-11-28t11-28l196-196-196-196q-11-11-11-28t11-28q11-11 28-11t28 11l196 196 196-196q11-11 28-11t28 11q11 11 11 28t-11 28L536 576l196 196q11 11 11 28t-11 28q-11 11-28 11t-28-11L480 632Z"></path>
+</svg>
+</button>
+</aside>
+<main class="relative py-6 lg:gap-10 lg:py-8 xl:grid xl:grid-cols-[1fr_300px]">
+<div class="w-full min-w-0 mx-auto">
+<nav aria-label="breadcrumbs" class="flex items-center mb-4 space-x-1 text-sm text-muted-foreground">
+<a class="overflow-hidden text-ellipsis whitespace-nowrap hover:text-foreground" href="../../contents.html">
+<span class="hidden md:inline">Haskell Optimization Handbook</span>
+<svg aria-label="Home" class="md:hidden" fill="currentColor" height="18" stroke="none" viewbox="0 96 960 960" width="18" xmlns="http://www.w3.org/2000/svg">
+<path d="M240 856h120V616h240v240h120V496L480 316 240 496v360Zm-80 80V456l320-240 320 240v480H520V696h-80v240H160Zm320-350Z"></path>
+</svg>
+</a>
+<div class="mr-1">/</div><a class="hover:text-foreground overflow-hidden text-ellipsis whitespace-nowrap" href="index.html"><span class="section-number">1. </span>Preliminaries</a>
+<div class="mr-1">/</div><span aria-current="page" class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap"><span class="section-number">1.8. </span>How To Debug</span>
+</nav>
+<div id="content" role="main">
+<section id="how-to-debug">
 <span id="how-to-debug-chapter"></span><h1><span class="section-number">1.8. </span>How To Debug<a class="headerlink" href="#how-to-debug" title="Link to this heading">¶</a></h1>
 <p>This chapter presents a recipe for debugging performance regressions in Haskell.
 Often, when we debug code, it becomes too easy to begin shotgun debugging; we
@@ -218,7 +153,7 @@ guide to aid you in debugging performance regression. We base it off of David
 Agan’s <a class="reference external" href="https://debuggingrules.com/">9 Rules for Debugging</a> book <a class="footnote-reference brackets" href="#id14" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> and
 apply his insights to Haskell programs.</p>
 <section id="vocabulary">
-<h2><span class="section-number">1.8.1. </span>Vocabulary<a class="headerlink" href="#vocabulary" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">1.8.1. </span>Vocabulary<a class="headerlink" href="#vocabulary" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#vocabulary'">¶</a></h2>
 <p>Unless otherwise noted, we use the following vocabulary to describe aspects of
 our optimization journey. Because these do not have a formal definition, we
 present them here instead of in the <a class="reference internal" href="../glossary.html#glossary"><span class="std std-ref">Glossary</span></a>:</p>
@@ -239,7 +174,7 @@ compare with to know you have a problem.</p></li>
 </ol>
 </section>
 <section id="the-goal">
-<h2><span class="section-number">1.8.2. </span>The Goal<a class="headerlink" href="#the-goal" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">1.8.2. </span>The Goal<a class="headerlink" href="#the-goal" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#the-goal'">¶</a></h2>
 <p>We have two goals when debugging. First, we wish to repair <a class="footnote-reference brackets" href="#id15" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> our system as
 fast as possible. Second, and more importantly, we wish to gain a deeper
 understanding of our system. The value communicated by the second goal far
@@ -255,13 +190,13 @@ the system. Changes to your code should verify that your mental model is either
 correct or incorrect.</p>
 </section>
 <section id="agan-s-rules-of-debugging">
-<h2><span class="section-number">1.8.3. </span>Agan’s Rules of Debugging<a class="headerlink" href="#agan-s-rules-of-debugging" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">1.8.3. </span>Agan’s Rules of Debugging<a class="headerlink" href="#agan-s-rules-of-debugging" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#agan-s-rules-of-debugging'">¶</a></h2>
 <p>There are nine rules, ordered from most important to least. We’ll take them one
 by one and relate each to Haskell. Note that we do not repeat <em>all</em> of Agan’s
 advice, only the central ideas and how they relate to Haskell. This way all
 readers will still benefit from Agan’s work, which we strongly encourage.</p>
 <section id="understand-the-system">
-<span id="id3"></span><h3><span class="section-number">1.8.3.1. </span>Understand the System<a class="headerlink" href="#understand-the-system" title="Link to this heading">¶</a></h3>
+<span id="id3"></span><h3><span class="section-number">1.8.3.1. </span>Understand the System<a class="headerlink" href="#understand-the-system" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#understand-the-system'">¶</a></h3>
 <p>To debug, optimize, iterate and improve, you must understand the current system,
 otherwise how will you know if the system is operating correctly and therefore
 if your performance is real <a class="footnote-reference brackets" href="#id16" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a> . Furthermore,
@@ -285,7 +220,7 @@ understanding the <a class="reference internal" href="../Optimizations/GHC_opt/i
 which make Haskell so fast; and so slow when they do not fire.</p>
 </section>
 <section id="make-it-fail">
-<span id="id5"></span><h3><span class="section-number">1.8.3.2. </span>Make it Fail<a class="headerlink" href="#make-it-fail" title="Link to this heading">¶</a></h3>
+<span id="id5"></span><h3><span class="section-number">1.8.3.2. </span>Make it Fail<a class="headerlink" href="#make-it-fail" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#make-it-fail'">¶</a></h3>
 <p>To make it fail, means to identify and have control over a stimulus that
 <em>induces</em> incorrect system behavior. This is the phase where one is searching
 for a small program, called a <a class="reference internal" href="../glossary.html#term-Reproducer"><span class="xref std std-term">reproducer</span></a>, that induces the malformed
@@ -302,7 +237,7 @@ the reproducer numerous times over weeks and months in the worst case and a
 script will help you keep things tidy and controlled.</p>
 </section>
 <section id="don-t-think-look">
-<span id="id7"></span><h3><span class="section-number">1.8.3.3. </span>Don’t Think, Look<a class="headerlink" href="#don-t-think-look" title="Link to this heading">¶</a></h3>
+<span id="id7"></span><h3><span class="section-number">1.8.3.3. </span>Don’t Think, Look<a class="headerlink" href="#don-t-think-look" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#don-t-think-look'">¶</a></h3>
 <p>Of all of Agan’s rules, this is the rule that Haskellers struggle to do the most
 often. We enjoy thinking with types and abstractions rather than instrumentation
 and measurement. To don’t think, look means to check the instrumentation or add
@@ -338,7 +273,7 @@ could be redundant boxing or a missed rule that produces poor performing Core,
 and consequently a higher Mutator time reported by the RTS.</p>
 </section>
 <section id="divide-and-conquer">
-<span id="id8"></span><h3><span class="section-number">1.8.3.4. </span>Divide and Conquer<a class="headerlink" href="#divide-and-conquer" title="Link to this heading">¶</a></h3>
+<span id="id8"></span><h3><span class="section-number">1.8.3.4. </span>Divide and Conquer<a class="headerlink" href="#divide-and-conquer" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#divide-and-conquer'">¶</a></h3>
 <p>Imagine the system execution as an ordered linear sequence of causal events
 <span class="math notranslate nohighlight">\(e_{0} \rightarrow \ldots{} \rightarrow e_{halt}\)</span>, where <span class="math notranslate nohighlight">\(e_{0}\)</span> is
 the first event to take place and <span class="math notranslate nohighlight">\(e_{halt}\)</span> the last. When the system has
@@ -374,126 +309,140 @@ signal in the instrumentation which is easier to find, diagnose and analyze.</p>
 technique is useful when reading Core, Stg, or Cmm. GHC generates names based on
 user provided names and keeps the original names in the intermediate
 representations. For example, consider this code</p>
-<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="cm">{-# OPTIONS_GHC -dsuppress-all -ddump-simpl  #-}</span><span class="w"> </span><span class="c1">-- dump the Core</span>
-
-<span class="kr">module</span><span class="w"> </span><span class="nn">Main</span><span class="w"> </span><span class="kr">where</span>
-
-<span class="nf">main</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">IO</span><span class="w"> </span><span class="nb">()</span>
-<span class="nf">main</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">print</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="kt">True</span>
-<span class="w">  </span><span class="kr">where</span>
-<span class="w">    </span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span>
-<span class="w">                </span><span class="n">j</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="mi">0</span>
-<span class="w">                </span><span class="n">j</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-<span class="w">            </span><span class="kr">in</span><span class="w"> </span><span class="kr">case</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="kr">of</span>
-<span class="w">              </span><span class="kt">True</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="mi">22</span>
-<span class="w">              </span><span class="kt">False</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="mi">33</span>
-</pre></div>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="cm">{-# OPTIONS_GHC -dsuppress-all -ddump-simpl  #-}</span><span class="w"> </span><span class="c1">-- dump the Core</span>
+</span><span id="line-2">
+</span><span id="line-3"><span class="kr">module</span><span class="w"> </span><span class="nn">Main</span><span class="w"> </span><span class="kr">where</span>
+</span><span id="line-4">
+</span><span id="line-5"><span class="nf">main</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">IO</span><span class="w"> </span><span class="nb">()</span>
+</span><span id="line-6"><span class="nf">main</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">print</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="kt">True</span>
+</span><span id="line-7"><span class="w">  </span><span class="kr">where</span>
+</span><span id="line-8"><span class="w">    </span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span>
+</span><span id="line-9"><span class="w">                </span><span class="n">j</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="mi">0</span>
+</span><span id="line-10"><span class="w">                </span><span class="n">j</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</span><span id="line-11"><span class="w">            </span><span class="kr">in</span><span class="w"> </span><span class="kr">case</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="kr">of</span>
+</span><span id="line-12"><span class="w">              </span><span class="kt">True</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="mi">22</span>
+</span><span id="line-13"><span class="w">              </span><span class="kt">False</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="mi">33</span>
+</span></code></pre></div>
 </div>
 <p>and its Core output (the 0 at the end is the program’s result):</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>
-==================== Tidy Core ====================
-Result size of Tidy Core
-  = {terms: 56, types: 31, coercions: 0, joins: 0/1}
-
-$trModule1_r17l = &quot;main&quot;#
-
-$trModule2_r17m = TrNameS $trModule1_r17l
-
-$trModule3_r17n = &quot;Main&quot;#
-
-$trModule4_r17o = TrNameS $trModule3_r17n
-
-$trModule = Module $trModule2_r17m $trModule4_r17o
-
-f_r17p
-  = \ @p_aLV _ y_azl -&gt;
-      letrec {
-        j_azm
-          = \ ds_d17b -&gt;
-              case ds_d17b of wild_X1E { I# ds1_d17c -&gt;
-              case ds1_d17c of {
-                __DEFAULT -&gt; j_azm (- $fNumInt wild_X1E (I# 1#));
-                0# -&gt; I# 0#
-              }
-              }; } in
-      case y_azl of {
-        False -&gt; j_azm (I# 33#);
-        True -&gt; j_azm (I# 22#)
-      }
-
-main = $ (print $fShowInt) (f_r17p (IS 0#) True)
-
-main = runMainIO main
-
-
-
-0
-</pre></div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">
+</span><span id="line-2">==================== Tidy Core ====================
+</span><span id="line-3">Result size of Tidy Core
+</span><span id="line-4">  = {terms: 56, types: 32, coercions: 0, joins: 0/1}
+</span><span id="line-5">
+</span><span id="line-6">$trModule1_r1ac = "main"#
+</span><span id="line-7">
+</span><span id="line-8">$trModule2_r1ad = TrNameS $trModule1_r1ac
+</span><span id="line-9">
+</span><span id="line-10">$trModule3_r1ae = "Main"#
+</span><span id="line-11">
+</span><span id="line-12">$trModule4_r1af = TrNameS $trModule3_r1ae
+</span><span id="line-13">
+</span><span id="line-14">$trModule = Module $trModule2_r1ad $trModule4_r1af
+</span><span id="line-15">
+</span><span id="line-16">f_r1ag
+</span><span id="line-17">  = \ @p_aSE _ y_az1 -&gt;
+</span><span id="line-18">      letrec {
+</span><span id="line-19">        j_az2
+</span><span id="line-20">          = \ ds_d1a2 -&gt;
+</span><span id="line-21">              case ds_d1a2 of wild_X1E { I# ds1_d1a3 -&gt;
+</span><span id="line-22">              case ds1_d1a3 of {
+</span><span id="line-23">                __DEFAULT -&gt;
+</span><span id="line-24">                  break&lt;Main,2&gt;(ds_d1a2,j_az2)
+</span><span id="line-25">                  j_az2 (break&lt;Main,1&gt;(ds_d1a2) - $fNumInt wild_X1E (I# 1#));
+</span><span id="line-26">                0# -&gt; break&lt;Main,0&gt;() I# 0#
+</span><span id="line-27">              }
+</span><span id="line-28">              }; } in
+</span><span id="line-29">      break&lt;Main,5&gt;(y_az1,j_az2)
+</span><span id="line-30">      case y_az1 of {
+</span><span id="line-31">        False -&gt; break&lt;Main,4&gt;(j_az2) j_az2 (I# 33#);
+</span><span id="line-32">        True -&gt; break&lt;Main,3&gt;(j_az2) j_az2 (I# 22#)
+</span><span id="line-33">      }
+</span><span id="line-34">
+</span><span id="line-35">main
+</span><span id="line-36">  = break&lt;Main,7&gt;(f_r1ag)
+</span><span id="line-37">    $ (print $fShowInt) (break&lt;Main,6&gt;(f_r1ag) f_r1ag (IS 0#) True)
+</span><span id="line-38">
+</span><span id="line-39">main = runMainIO main
+</span><span id="line-40">
+</span><span id="line-41">
+</span><span id="line-42">
+</span><span id="line-43">0
+</span></code></pre></div>
 </div>
 <p>Notice that the user names <code class="docutils literal notranslate"><span class="pre">f</span></code> and <code class="docutils literal notranslate"><span class="pre">j</span></code> are still in the Core output as
 <code class="docutils literal notranslate"><span class="pre">f_r17p</span></code> and <code class="docutils literal notranslate"><span class="pre">j_azm</span></code>, but both have been transformed into an
 <a class="reference internal" href="../glossary.html#term-Occurrence-Name"><span class="xref std std-term">Occurrence Name</span></a>. So we can use more obvious names to make searching the
 intermediate representations faster. For example, instead of <code class="docutils literal notranslate"><span class="pre">f</span></code> and <code class="docutils literal notranslate"><span class="pre">j</span></code> we
 can use the obnoxious <code class="docutils literal notranslate"><span class="pre">fFINDME</span></code> or <code class="docutils literal notranslate"><span class="pre">jLOOKDONTTHINK</span></code>:</p>
-<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="cm">{-# OPTIONS_GHC -dsuppress-all -ddump-simpl  #-}</span><span class="w"> </span><span class="c1">-- dump the Core</span>
-
-<span class="kr">module</span><span class="w"> </span><span class="nn">Main</span><span class="w"> </span><span class="kr">where</span>
-
-<span class="nf">main</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">IO</span><span class="w"> </span><span class="nb">()</span>
-<span class="nf">main</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">print</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="n">fFINDME</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="kt">True</span>
-<span class="w">  </span><span class="kr">where</span>
-<span class="w">    </span><span class="n">fFINDME</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">jLOOKDONTTHINK</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span>
-<span class="w">                      </span><span class="n">jLOOKDONTTHINK</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="mi">0</span>
-<span class="w">                      </span><span class="n">jLOOKDONTTHINK</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">jLOOKDONTTHINK</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-<span class="w">                  </span><span class="kr">in</span><span class="w"> </span><span class="kr">case</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="kr">of</span>
-<span class="w">                    </span><span class="kt">True</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="n">jLOOKDONTTHINK</span><span class="w"> </span><span class="mi">22</span>
-<span class="w">                    </span><span class="kt">False</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="n">jLOOKDONTTHINK</span><span class="w"> </span><span class="mi">33</span>
-</pre></div>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="cm">{-# OPTIONS_GHC -dsuppress-all -ddump-simpl  #-}</span><span class="w"> </span><span class="c1">-- dump the Core</span>
+</span><span id="line-2">
+</span><span id="line-3"><span class="kr">module</span><span class="w"> </span><span class="nn">Main</span><span class="w"> </span><span class="kr">where</span>
+</span><span id="line-4">
+</span><span id="line-5"><span class="nf">main</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">IO</span><span class="w"> </span><span class="nb">()</span>
+</span><span id="line-6"><span class="nf">main</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">print</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="n">fFINDME</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="kt">True</span>
+</span><span id="line-7"><span class="w">  </span><span class="kr">where</span>
+</span><span id="line-8"><span class="w">    </span><span class="n">fFINDME</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">jLOOKDONTTHINK</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span>
+</span><span id="line-9"><span class="w">                      </span><span class="n">jLOOKDONTTHINK</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="mi">0</span>
+</span><span id="line-10"><span class="w">                      </span><span class="n">jLOOKDONTTHINK</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">jLOOKDONTTHINK</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</span><span id="line-11"><span class="w">                  </span><span class="kr">in</span><span class="w"> </span><span class="kr">case</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="kr">of</span>
+</span><span id="line-12"><span class="w">                    </span><span class="kt">True</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="n">jLOOKDONTTHINK</span><span class="w"> </span><span class="mi">22</span>
+</span><span id="line-13"><span class="w">                    </span><span class="kt">False</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="n">jLOOKDONTTHINK</span><span class="w"> </span><span class="mi">33</span>
+</span></code></pre></div>
 </div>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>
-==================== Tidy Core ====================
-Result size of Tidy Core
-  = {terms: 56, types: 31, coercions: 0, joins: 0/1}
-
-$trModule1_r17l = &quot;main&quot;#
-
-$trModule2_r17m = TrNameS $trModule1_r17l
-
-$trModule3_r17n = &quot;Main&quot;#
-
-$trModule4_r17o = TrNameS $trModule3_r17n
-
-$trModule = Module $trModule2_r17m $trModule4_r17o
-
-fFINDME_r17p
-  = \ @p_aLV _ y_azl -&gt;
-      letrec {
-        jLOOKDONTTHINK_azm
-          = \ ds_d17b -&gt;
-              case ds_d17b of wild_X1E { I# ds1_d17c -&gt;
-              case ds1_d17c of {
-                __DEFAULT -&gt; jLOOKDONTTHINK_azm (- $fNumInt wild_X1E (I# 1#));
-                0# -&gt; I# 0#
-              }
-              }; } in
-      case y_azl of {
-        False -&gt; jLOOKDONTTHINK_azm (I# 33#);
-        True -&gt; jLOOKDONTTHINK_azm (I# 22#)
-      }
-
-main = $ (print $fShowInt) (fFINDME_r17p (IS 0#) True)
-
-main = runMainIO main
-
-
-
-0
-</pre></div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">
+</span><span id="line-2">==================== Tidy Core ====================
+</span><span id="line-3">Result size of Tidy Core
+</span><span id="line-4">  = {terms: 56, types: 32, coercions: 0, joins: 0/1}
+</span><span id="line-5">
+</span><span id="line-6">$trModule1_r1ac = "main"#
+</span><span id="line-7">
+</span><span id="line-8">$trModule2_r1ad = TrNameS $trModule1_r1ac
+</span><span id="line-9">
+</span><span id="line-10">$trModule3_r1ae = "Main"#
+</span><span id="line-11">
+</span><span id="line-12">$trModule4_r1af = TrNameS $trModule3_r1ae
+</span><span id="line-13">
+</span><span id="line-14">$trModule = Module $trModule2_r1ad $trModule4_r1af
+</span><span id="line-15">
+</span><span id="line-16">fFINDME_r1ag
+</span><span id="line-17">  = \ @p_aSE _ y_az1 -&gt;
+</span><span id="line-18">      letrec {
+</span><span id="line-19">        jLOOKDONTTHINK_az2
+</span><span id="line-20">          = \ ds_d1a2 -&gt;
+</span><span id="line-21">              case ds_d1a2 of wild_X1E { I# ds1_d1a3 -&gt;
+</span><span id="line-22">              case ds1_d1a3 of {
+</span><span id="line-23">                __DEFAULT -&gt;
+</span><span id="line-24">                  break&lt;Main,2&gt;(ds_d1a2,jLOOKDONTTHINK_az2)
+</span><span id="line-25">                  jLOOKDONTTHINK_az2
+</span><span id="line-26">                    (break&lt;Main,1&gt;(ds_d1a2) - $fNumInt wild_X1E (I# 1#));
+</span><span id="line-27">                0# -&gt; break&lt;Main,0&gt;() I# 0#
+</span><span id="line-28">              }
+</span><span id="line-29">              }; } in
+</span><span id="line-30">      break&lt;Main,5&gt;(y_az1,jLOOKDONTTHINK_az2)
+</span><span id="line-31">      case y_az1 of {
+</span><span id="line-32">        False -&gt;
+</span><span id="line-33">          break&lt;Main,4&gt;(jLOOKDONTTHINK_az2) jLOOKDONTTHINK_az2 (I# 33#);
+</span><span id="line-34">        True -&gt;
+</span><span id="line-35">          break&lt;Main,3&gt;(jLOOKDONTTHINK_az2) jLOOKDONTTHINK_az2 (I# 22#)
+</span><span id="line-36">      }
+</span><span id="line-37">
+</span><span id="line-38">main
+</span><span id="line-39">  = break&lt;Main,7&gt;(fFINDME_r1ag)
+</span><span id="line-40">    $ (print $fShowInt)
+</span><span id="line-41">      (break&lt;Main,6&gt;(fFINDME_r1ag) fFINDME_r1ag (IS 0#) True)
+</span><span id="line-42">
+</span><span id="line-43">main = runMainIO main
+</span><span id="line-44">
+</span><span id="line-45">
+</span><span id="line-46">
+</span><span id="line-47">0
+</span></code></pre></div>
 </div>
 <p>And now it is much easier to recognize or search for these names.</p>
 </section>
 <section id="change-one-thing-at-a-time">
-<span id="id10"></span><h3><span class="section-number">1.8.3.5. </span>Change One Thing at a Time<a class="headerlink" href="#change-one-thing-at-a-time" title="Link to this heading">¶</a></h3>
+<span id="id10"></span><h3><span class="section-number">1.8.3.5. </span>Change One Thing at a Time<a class="headerlink" href="#change-one-thing-at-a-time" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#change-one-thing-at-a-time'">¶</a></h3>
 <p>To some extent, everyone understands that changing only one thing at a time is
 good practice. It simplifies keeping a log of changes, correlating cause and
 effect, and more importantly, it reduces the probability of creating an abnormal
@@ -510,7 +459,7 @@ these changes affect the bug’s effect, then you are guessing, and instead shou
 <a class="reference internal" href="#don-t-think-look"><span class="std std-ref">Don’t Think, Look</span></a>.</p>
 </section>
 <section id="keep-an-audit-trail">
-<span id="id11"></span><h3><span class="section-number">1.8.3.6. </span>Keep an Audit Trail<a class="headerlink" href="#keep-an-audit-trail" title="Link to this heading">¶</a></h3>
+<span id="id11"></span><h3><span class="section-number">1.8.3.6. </span>Keep an Audit Trail<a class="headerlink" href="#keep-an-audit-trail" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#keep-an-audit-trail'">¶</a></h3>
 <p>To keep an audit trail means to maintain a log of your debugging work. Think
 like a scientist who wants others to be able to replicate their work. Be
 meticulous, you should write down the exact sequence of what you did, and then
@@ -531,80 +480,80 @@ be thankful.</p>
 subsystem or test. Similarly, I use angle-bracket notation <code class="docutils literal notranslate"><span class="pre">&lt;...&gt;</span></code> to
 represent pieces of important data that the log should record.</p>
 </div>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>* Mutator regression in commit &lt;some-hash&gt; | System version &lt;i&gt; | Feb. 02, 2024
-
-  ** Bug&#39;s Effect:
-
-     - We&#39;ve observed in increase of &lt;n&gt; seconds (&lt;m&gt; %) in Mutator time as
-     reported by the RTS&#39;s -S flag when running test foo on debian 10 at
-     commit &lt;hash&gt; in CI.
-
-  ** Background:
-
-     Test foo is memory intensive, testing a pathological case where user
-     input results is subsystem bar performing a lot of IO operations
-     concurrently.
-
-  ** Sanity Checks:
-
-     - Do we observe this regression on other platforms, e.g., Windows,
-       Fedora or Mac?
-
-     - Has the CI runner changed?
-
-  ** Theory: Regression caused by missed optimizations resulting in a GHC
-  version bump that occurred at commit &lt;hash&gt;.
-
-  *** Possible Instrumentation
-
-     - Compare Mutator time with the baseline using -O0. I expect to see the
-       baseline and regressed versions perform similarly at -O0. If that is
-       the case then we should disable the optimizations implied by -O1 one
-       by one. Why -O1? Because that is -O2 with two less passes of GHC&#39;s
-       optimizer. If that is not the case, then we should check versioning
-       differences and bisect the commits to find the commit where the
-       mutator regresses. In this scenario it is likely that we&#39;ve slowed the
-       system rather than some interaction with GHC. We could also check for
-       a stack leak in this case.
-
-     - Revert to known working GHC version, then run test foo on debian 10 at
-       commit we observed the bug. If we observe the bug&#39;s effect then we
-       know its a regression that in our code base. If not then its a
-       regression in a dependency and we can systematically test each one.
-
-     - Inspect the tickyticky output to compare the baseline and regressed
-       branch. Check for a change in the number of unboxed tuples and data
-       constructors. Unsure how stable these numbers are between runs of the
-       same test.
-
-     - Compare the output of the baseline branch and the regressed branch
-       when compiling with `-Wall-missed-specializations`. Changes in this
-       output could point to missed specializations which would also be
-       observable in Core. However, this output also changes along dependency
-       versioning. I expect to see minor differences in the output. If these
-       differences occur in the code the foo exercises then they are likely
-       candidates for the regression. Will have to verify by reading Core.
-
-  *** Tests
-
-     - Compare Mutator time with baseline version using -O0:
-         Note taken on [2021-12-03 Fri 15:55]
-
-         With `ghc --version`: 9.8.1
-
-         Ran `cabal
-         test --show-details=streaming --pattern=&#39;foo&#39; --ghc-options=&#39;+RTS -S
-         -RTS&#39;` on both baseline (commit &lt;hash&gt;) and regressed (commit
-         &lt;hash&gt;). Results differed by less than 1%.
-
-
-  ** Theory: Regression caused by regression in a dependency
-  ...
-</pre></div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">* Mutator regression in commit &lt;some-hash&gt; | System version &lt;i&gt; | Feb. 02, 2024
+</span><span id="line-2">
+</span><span id="line-3">  ** Bug's Effect:
+</span><span id="line-4">
+</span><span id="line-5">     - We've observed in increase of &lt;n&gt; seconds (&lt;m&gt; %) in Mutator time as
+</span><span id="line-6">     reported by the RTS's -S flag when running test foo on debian 10 at
+</span><span id="line-7">     commit &lt;hash&gt; in CI.
+</span><span id="line-8">
+</span><span id="line-9">  ** Background:
+</span><span id="line-10">
+</span><span id="line-11">     Test foo is memory intensive, testing a pathological case where user
+</span><span id="line-12">     input results is subsystem bar performing a lot of IO operations
+</span><span id="line-13">     concurrently.
+</span><span id="line-14">
+</span><span id="line-15">  ** Sanity Checks:
+</span><span id="line-16">
+</span><span id="line-17">     - Do we observe this regression on other platforms, e.g., Windows,
+</span><span id="line-18">       Fedora or Mac?
+</span><span id="line-19">
+</span><span id="line-20">     - Has the CI runner changed?
+</span><span id="line-21">
+</span><span id="line-22">  ** Theory: Regression caused by missed optimizations resulting in a GHC
+</span><span id="line-23">  version bump that occurred at commit &lt;hash&gt;.
+</span><span id="line-24">
+</span><span id="line-25">  *** Possible Instrumentation
+</span><span id="line-26">
+</span><span id="line-27">     - Compare Mutator time with the baseline using -O0. I expect to see the
+</span><span id="line-28">       baseline and regressed versions perform similarly at -O0. If that is
+</span><span id="line-29">       the case then we should disable the optimizations implied by -O1 one
+</span><span id="line-30">       by one. Why -O1? Because that is -O2 with two less passes of GHC's
+</span><span id="line-31">       optimizer. If that is not the case, then we should check versioning
+</span><span id="line-32">       differences and bisect the commits to find the commit where the
+</span><span id="line-33">       mutator regresses. In this scenario it is likely that we've slowed the
+</span><span id="line-34">       system rather than some interaction with GHC. We could also check for
+</span><span id="line-35">       a stack leak in this case.
+</span><span id="line-36">
+</span><span id="line-37">     - Revert to known working GHC version, then run test foo on debian 10 at
+</span><span id="line-38">       commit we observed the bug. If we observe the bug's effect then we
+</span><span id="line-39">       know its a regression that in our code base. If not then its a
+</span><span id="line-40">       regression in a dependency and we can systematically test each one.
+</span><span id="line-41">
+</span><span id="line-42">     - Inspect the tickyticky output to compare the baseline and regressed
+</span><span id="line-43">       branch. Check for a change in the number of unboxed tuples and data
+</span><span id="line-44">       constructors. Unsure how stable these numbers are between runs of the
+</span><span id="line-45">       same test.
+</span><span id="line-46">
+</span><span id="line-47">     - Compare the output of the baseline branch and the regressed branch
+</span><span id="line-48">       when compiling with `-Wall-missed-specializations`. Changes in this
+</span><span id="line-49">       output could point to missed specializations which would also be
+</span><span id="line-50">       observable in Core. However, this output also changes along dependency
+</span><span id="line-51">       versioning. I expect to see minor differences in the output. If these
+</span><span id="line-52">       differences occur in the code the foo exercises then they are likely
+</span><span id="line-53">       candidates for the regression. Will have to verify by reading Core.
+</span><span id="line-54">
+</span><span id="line-55">  *** Tests
+</span><span id="line-56">
+</span><span id="line-57">     - Compare Mutator time with baseline version using -O0:
+</span><span id="line-58">         Note taken on [2021-12-03 Fri 15:55]
+</span><span id="line-59">
+</span><span id="line-60">         With `ghc --version`: 9.8.1
+</span><span id="line-61">
+</span><span id="line-62">         Ran `cabal
+</span><span id="line-63">         test --show-details=streaming --pattern='foo' --ghc-options='+RTS -S
+</span><span id="line-64">         -RTS'` on both baseline (commit &lt;hash&gt;) and regressed (commit
+</span><span id="line-65">         &lt;hash&gt;). Results differed by less than 1%.
+</span><span id="line-66">
+</span><span id="line-67">
+</span><span id="line-68">  ** Theory: Regression caused by regression in a dependency
+</span><span id="line-69">  ...
+</span></code></pre></div>
 </div>
 </section>
 <section id="check-the-plug">
-<span id="id12"></span><h3><span class="section-number">1.8.3.7. </span>Check the Plug<a class="headerlink" href="#check-the-plug" title="Link to this heading">¶</a></h3>
+<span id="id12"></span><h3><span class="section-number">1.8.3.7. </span>Check the Plug<a class="headerlink" href="#check-the-plug" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#check-the-plug'">¶</a></h3>
 <p>To check the plug means to verify your assumptions by performing sanity checks.
 Assumptions could be library and GHC versions, your operating systems’ available
 resources and settings; such as the CPU governor (be sure to make sure your
@@ -627,7 +576,7 @@ engineering tolerances. Such deviations are more times than not (but not
 always!) caused by unplugged things in the system.</p>
 </section>
 <section id="get-a-fresh-view">
-<span id="id13"></span><h3><span class="section-number">1.8.3.8. </span>Get a Fresh View<a class="headerlink" href="#get-a-fresh-view" title="Link to this heading">¶</a></h3>
+<span id="id13"></span><h3><span class="section-number">1.8.3.8. </span>Get a Fresh View<a class="headerlink" href="#get-a-fresh-view" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#get-a-fresh-view'">¶</a></h3>
 <p>Sometimes, despite your best efforts you’ll exhaust all leads and become stuck.
 To get a fresh view, means to recognize when you’re stuck and ask for help,
 especially from experts.</p>
@@ -648,12 +597,12 @@ passion and help you fix the problem. Here are the best forums to reach out:</p>
 <li><p><a class="reference external" href="https://discourse.haskell.org/">The Haskell discourse</a></p></li>
 <li><p><a class="reference external" href="https://wiki.haskell.org/Mailing_lists">The mailing lists</a> (see <a class="reference external" href="https://mail.haskell.org/mailman/listinfo">here</a>
 for a comprehensive list.)</p></li>
-<li><p>If you believe its GHC related then the GHC Developers’ <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/wikis/mailing-lists-and-irc">mailing list</a> is the place to ask.</p></li>
+<li><p>If you believe its GHC related then the GHC Developers’ <a class="extlink-ghcWiki reference external" href="https://gitlab.haskell.org/ghc/ghc/wikis/mailing-lists-and-irc">mailing list</a> is the place to ask.</p></li>
 <li><p><a class="reference external" href="https://www.reddit.com/r/haskell/">The Haskell subreddit</a>.</p></li>
 </ul>
 </section>
 <section id="if-you-didn-t-fix-it-then-it-ain-t-fixed">
-<span id="if-you-didn-t-fix-it-it-ain-t-fixed"></span><h3><span class="section-number">1.8.3.9. </span>If You Didn’t Fix It, Then It Ain’t Fixed<a class="headerlink" href="#if-you-didn-t-fix-it-then-it-ain-t-fixed" title="Link to this heading">¶</a></h3>
+<span id="if-you-didn-t-fix-it-it-ain-t-fixed"></span><h3><span class="section-number">1.8.3.9. </span>If You Didn’t Fix It, Then It Ain’t Fixed<a class="headerlink" href="#if-you-didn-t-fix-it-then-it-ain-t-fixed" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#if-you-didn-t-fix-it-then-it-ain-t-fixed'">¶</a></h3>
 <p>Repeat it with me: “The problem will not fix itself nor will the system correct
 itself.” We wish it were otherwise, but the cost of inaction almost always
 outweighs the cost of action because inaction prevents quality control.</p>
@@ -672,7 +621,7 @@ complete with instrumentation to capture more system details for next time.</p>
 </section>
 </section>
 <section id="summary">
-<h2><span class="section-number">1.8.4. </span>Summary<a class="headerlink" href="#summary" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">1.8.4. </span>Summary<a class="headerlink" href="#summary" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#summary'">¶</a></h2>
 <p>We’ve come a long way, let’s review, the nine rules of debugging are:</p>
 <ol class="arabic simple">
 <li><p><a class="reference internal" href="#understand-the-system"><span class="std std-ref">Understand the System</span></a>: If you do not understand the system then you
@@ -714,12 +663,12 @@ ability to avoid future bugs <em>before</em> they manifest. So work slowly,
 deliberately and carefully. The investment pays off in the long run.</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="id14" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a href="#id1" role="doc-backlink">1</a><span class="fn-bracket">]</span></span>
 <p>We cannot recommend this book highly enough, it should be mandatory
 reading for all software engineers.</p>
 </aside>
 <aside class="footnote brackets" id="id15" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a href="#id2" role="doc-backlink">2</a><span class="fn-bracket">]</span></span>
 <p>A <em>fix</em> is the act of bringing a system back into an acceptable operating
 state. A <em>repair</em> is a fix with an understanding of the mechanism and
 chain of events (failure mode), that moved the system outside of its
@@ -727,7 +676,7 @@ engineering tolerances and into an unacceptable operating state. We seek
 to repair, not simply to fix.</p>
 </aside>
 <aside class="footnote brackets" id="id16" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">3</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a href="#id4" role="doc-backlink">3</a><span class="fn-bracket">]</span></span>
 <p>In <a class="reference external" href="https://www.typetheoryforall.com/2022/08/04/21-Conal-Eliott-2.html">episode 21</a>
 (at 45 minutes) of the <a class="reference external" href="https://typetheoryforall.com/">Type Theory For All</a> podcast, <a class="reference external" href="http://conal.net/">Conal Elliot</a> persuasively argues that proof of correctness is
 necessary for efficiency and system performance. The idea is that proof
@@ -738,12 +687,12 @@ to build and not a slightly adjacent, incorrect, but fast one. Or in
 other words, performance without correctness is easy, but easily useless.</p>
 </aside>
 <aside class="footnote brackets" id="id17" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">4</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a href="#id6" role="doc-backlink">4</a><span class="fn-bracket">]</span></span>
 <p>Be sure to have a reproducible testing environment set up before you begin
 gathering data. See <a class="reference internal" href="repeatable_measurements.html#repeatable-measurements"><span class="std std-ref">Setting up a Reproducible Test Environment</span></a>.</p>
 </aside>
 <aside class="footnote brackets" id="id18" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id9">5</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a href="#id9" role="doc-backlink">5</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="https://lexi-lambda.github.io/">Alexis King</a> has a great <a class="reference external" href="https://youtu.be/fSqE-HSh_NU?si=GE1RMlY_6OIumuri">video</a> on the impact of
 strictness on a programming language’s semantics from the perspective of
 a compiler. The essential idea is that a program is a specification of
@@ -759,29 +708,43 @@ optimizations.</p>
 </aside>
 </section>
 </section>
-
-
-          </div>
-          <div class="page-nav">
-            <div class="inner"><ul class="page-nav">
-  <li class="prev">
-    <a href="repeatable_measurements.html"
-       title="previous chapter">← <span class="section-number">1.7. </span>Setting up a Reproducible Test Environment</a>
-  </li>
-  <li class="next">
-    <a href="../Measurement_Observation/index.html"
-       title="next chapter"><span class="section-number">2. </span>Measurement, Profiling, and Observation →</a>
-  </li>
-</ul><div class="footer" role="contentinfo">
-      &#169; Copyright 2022-2026, Jeffrey Young (doyougnu).
-    <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.2.6 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
+</div></div><aside class="hidden text-sm xl:block" id="right-sidebar">
+<div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
+<ul>
+<li><a :data-current="activeSection === '#vocabulary'" class="reference internal" href="#vocabulary">1.8.1. Vocabulary</a></li>
+<li><a :data-current="activeSection === '#the-goal'" class="reference internal" href="#the-goal">1.8.2. The Goal</a></li>
+<li><a :data-current="activeSection === '#agan-s-rules-of-debugging'" class="reference internal" href="#agan-s-rules-of-debugging">1.8.3. Agan’s Rules of Debugging</a><ul>
+<li><a :data-current="activeSection === '#understand-the-system'" class="reference internal" href="#understand-the-system">1.8.3.1. Understand the System</a></li>
+<li><a :data-current="activeSection === '#make-it-fail'" class="reference internal" href="#make-it-fail">1.8.3.2. Make it Fail</a></li>
+<li><a :data-current="activeSection === '#don-t-think-look'" class="reference internal" href="#don-t-think-look">1.8.3.3. Don’t Think, Look</a></li>
+<li><a :data-current="activeSection === '#divide-and-conquer'" class="reference internal" href="#divide-and-conquer">1.8.3.4. Divide and Conquer</a></li>
+<li><a :data-current="activeSection === '#change-one-thing-at-a-time'" class="reference internal" href="#change-one-thing-at-a-time">1.8.3.5. Change One Thing at a Time</a></li>
+<li><a :data-current="activeSection === '#keep-an-audit-trail'" class="reference internal" href="#keep-an-audit-trail">1.8.3.6. Keep an Audit Trail</a></li>
+<li><a :data-current="activeSection === '#check-the-plug'" class="reference internal" href="#check-the-plug">1.8.3.7. Check the Plug</a></li>
+<li><a :data-current="activeSection === '#get-a-fresh-view'" class="reference internal" href="#get-a-fresh-view">1.8.3.8. Get a Fresh View</a></li>
+<li><a :data-current="activeSection === '#if-you-didn-t-fix-it-then-it-ain-t-fixed'" class="reference internal" href="#if-you-didn-t-fix-it-then-it-ain-t-fixed">1.8.3.9. If You Didn’t Fix It, Then It Ain’t Fixed</a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#summary'" class="reference internal" href="#summary">1.8.4. Summary</a></li>
+</ul>
 </div>
-            </div>
-          </div>
-      </page>
-    </div></div>
-    
-    
-  </body>
+</aside>
+</main>
+</div>
+</div><footer class="py-6 border-t border-border md:py-0">
+<div class="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
+<div class="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
+<p class="text-sm leading-loose text-center text-muted-foreground md:text-left">© 2022-2026, Jeffrey Young (doyougnu) Built with <a class="font-medium underline underline-offset-4" href="https://www.sphinx-doc.org" rel="noreferrer">Sphinx 8.2.3</a></p>
+</div>
+</div>
+</footer>
+</div>
+<script src="../../_static/documentation_options.js?v=d45e8c67"></script>
+<script src="../../_static/doctools.js?v=9bcbadda"></script>
+<script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+<script src="../../_static/copybutton.js?v=f281be69"></script>
+<script defer="defer" src="../../_static/theme.js?v=073f68d9"></script>
+<script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</body>
 </html>

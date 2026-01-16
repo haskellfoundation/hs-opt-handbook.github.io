@@ -1,216 +1,150 @@
 <!DOCTYPE html>
-<html  lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-      <title>Glossary</title>
-    
-          <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-          <link rel="stylesheet" href="../_static/theme.css " type="text/css" />
-          <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
-          <link rel="stylesheet" href="../_static/css/s4defs-roles.css" type="text/css" />
-          <link rel="stylesheet" href="../_static/css/iframe.css" type="text/css" />
-          <link rel="stylesheet" href="../_static/css/admonitions.css" type="text/css" />
-          <link rel="stylesheet" href="../_static/css/s4defs-roles.css" type="text/css" />
-          <link rel="stylesheet" href="../_static/css/iframe.css" type="text/css" />
-          <link rel="stylesheet" href="../_static/css/admonitions.css" type="text/css" />
-      
-      <!-- sphinx script_files -->
-        <script src="../_static/documentation_options.js?v=d45e8c67"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
-        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
-        <script src="../_static/copybutton.js?v=f281be69"></script>
-        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-
-      
-      <!-- bundled in js (rollup iife) -->
-      <!-- <script src="../_static/theme-vendors.js"></script> -->
-      <script src="../_static/theme.js" defer></script>
-    
-  <link rel="index" title="Index" href="../genindex.html" />
-  <link rel="search" title="Search" href="../search.html" />
-  <link rel="prev" title="4.4. Rearchitecting with Data-Oriented Design" href="Case_Studies/data_oriented_design.html" /> 
-  </head>
-
-  <body>
-    <div id="app">
-    <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
-  <router-link to="../contents.html" class="home-link">
-    
-      <span class="site-name">Haskell Optimization Handbook</span>
-    
-  </router-link>
-
-  <div class="links">
-    <navlinks class="can-hide">
-
-  
-    <div class="nav-item">
-      <a href="../contents.html#haskell-optimization-handbook"
-         class="nav-link ">
-         Table of Contents
-      </a>
-    </div>
-  
-    <div class="nav-item">
-      <a href="../contents.html#indices-and-tables"
-         class="nav-link  router-link-active">
-         indices and tables
-      </a>
-    </div>
-  
-
-
-
-    </navlinks>
-  </div>
-</navbar>
-
-      
-      <div class="sidebar-mask" @click="toggleSidebar(false)">
-      </div>
-        <sidebar @toggle-sidebar="toggleSidebar">
-          
-          <navlinks>
-            
-
-  
-    <div class="nav-item">
-      <a href="../contents.html#haskell-optimization-handbook"
-         class="nav-link ">
-         Table of Contents
-      </a>
-    </div>
-  
-    <div class="nav-item">
-      <a href="../contents.html#indices-and-tables"
-         class="nav-link  router-link-active">
-         indices and tables
-      </a>
-    </div>
-  
-
-
-
-            
-          </navlinks><div id="searchbox" class="searchbox" role="search">
-  <div class="caption"><span class="caption-text">Quick search</span>
-    <div class="searchformwrapper">
-      <form class="search" action="../search.html" method="get">
-        <input type="text" name="q" />
-        <input type="submit" value="Search" />
-        <input type="hidden" name="check_keywords" value="yes" />
-        <input type="hidden" name="area" value="default" />
-      </form>
-    </div>
-  </div>
-</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
-  
-    <div class="sidebar-group">
-      <p class="caption">
-        <span class="caption-text"><a href="../contents.html#haskell-optimization-handbook">Table of Contents</a></span>
-      </p>
-      <ul class="">
-        
-          <li class="toctree-l1 ">
-            
-              <a href="Preliminaries/index.html" class="reference internal ">Preliminaries</a>
-            
-
-            
-          </li>
-
-        
-          <li class="toctree-l1 ">
-            
-              <a href="Measurement_Observation/index.html" class="reference internal ">Measurement, Profiling, and Observation</a>
-            
-
-            
-          </li>
-
-        
-          <li class="toctree-l1 ">
-            
-              <a href="Optimizations/index.html" class="reference internal ">Optimizations</a>
-            
-
-            
-          </li>
-
-        
-          <li class="toctree-l1 ">
-            
-              <a href="Case_Studies/index.html" class="reference internal ">Case Studies</a>
-            
-
-            
-          </li>
-
-        
-      </ul>
-    </div>
-  
-    <div class="sidebar-group">
-      <p class="caption">
-        <span class="caption-text"><a href="../contents.html#indices-and-tables">indices and tables</a></span>
-      </p>
-      <ul class="current">
-        
-          <li class="toctree-l1 current">
-            
-              <a href="#" class="reference internal current">Glossary</a>
-            
-
-            
-              <ul>
-                
-                  <li class="toctree-l2"><a href="#glossary" class="reference internal">Glossary</a></li>
-                
-              </ul>
-            
-          </li>
-
-        
-      </ul>
-    </div>
-  
+<html :class="{'dark': darkMode === 'dark' || (darkMode === 'system' &amp;&amp; window.matchMedia('(prefers-color-scheme: dark)').matches)}" class="scroll-smooth" data-content_root="../" lang="en" x-data="{ darkMode: localStorage.getItem('darkMode') || localStorage.setItem('darkMode', 'system'), activeSection: '' }" x-init="$watch('darkMode', val =&gt; localStorage.setItem('darkMode', val))">
+<head>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta charset="utf-8"/>
+<meta content="white" media="(prefers-color-scheme: light)" name="theme-color"/>
+<meta content="black" media="(prefers-color-scheme: dark)" name="theme-color"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Glossary | Haskell Optimization Handbook</title>
+<meta content="Glossary | Haskell Optimization Handbook" property="og:title"/>
+<meta content="Glossary | Haskell Optimization Handbook" name="twitter:title"/>
+<link href="../_static/pygments.css?v=e72c8e07" rel="stylesheet" type="text/css"/>
+<link href="../_static/theme.css?v=42baaae4" rel="stylesheet" type="text/css"/>
+<link href="../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
+<link href="../_static/css/s4defs-roles.css?v=50fa964d" rel="stylesheet" type="text/css"/>
+<link href="../_static/css/iframe.css?v=f933a23f" rel="stylesheet" type="text/css"/>
+<link href="../_static/css/admonitions.css?v=3a739201" rel="stylesheet" type="text/css"/>
+<link href="../_static/css/s4defs-roles.css?v=50fa964d" rel="stylesheet" type="text/css"/>
+<link href="../_static/css/iframe.css?v=f933a23f" rel="stylesheet" type="text/css"/>
+<link href="../_static/css/admonitions.css?v=3a739201" rel="stylesheet" type="text/css"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="Case_Studies/data_oriented_design.html" rel="prev" title="4.4. Rearchitecting with Data-Oriented Design"/>
+<script>
+    <!-- Prevent Flash of wrong theme -->
+      const userPreference = localStorage.getItem('darkMode');
+      let mode;
+      if (userPreference === 'dark' || window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        mode = 'dark';
+        document.documentElement.classList.add('dark');
+      } else {
+        mode = 'light';
+      }
+      if (!userPreference) {localStorage.setItem('darkMode', mode)}
+    </script>
+</head>
+<body :class="{ 'overflow-hidden': showSidebar }" class="min-h-screen font-sans antialiased bg-background text-foreground" x-data="{ showSidebar: false, showScrollTop: false }">
+<div @click.self="showSidebar = false" class="fixed inset-0 z-50 overflow-hidden bg-background/80 backdrop-blur-sm md:hidden" x-cloak="" x-show="showSidebar"></div><div class="relative flex flex-col min-h-screen" id="page"><a class="absolute top-0 left-0 z-[100] block bg-background p-4 text-xl transition -translate-x-full opacity-0 focus:translate-x-0 focus:opacity-100" href="#content">
+      Skip to content
+    </a><header class="sticky top-0 z-40 w-full border-b shadow-sm border-border supports-backdrop-blur:bg-background/60 bg-background/95 backdrop-blur"><div class="container flex items-center h-14">
+<div class="hidden mr-4 md:flex">
+<a class="flex items-center mr-6" href="../contents.html"><span class="hidden font-bold sm:inline-block text-clip whitespace-nowrap">Haskell Optimization Handbook</span>
+</a></div><button @click="showSidebar = true" class="inline-flex items-center justify-center h-10 px-0 py-2 mr-2 text-base font-medium transition-colors rounded-md hover:text-accent-foreground hover:bg-transparent md:hidden" type="button">
+<svg aria-hidden="true" fill="currentColor" height="24" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M152.587 825.087q-19.152 0-32.326-13.174t-13.174-32.326q0-19.152 13.174-32.326t32.326-13.174h440q19.152 0 32.326 13.174t13.174 32.326q0 19.152-13.174 32.326t-32.326 13.174h-440Zm0-203.587q-19.152 0-32.326-13.174T107.087 576q0-19.152 13.174-32.326t32.326-13.174h320q19.152 0 32.326 13.174T518.087 576q0 19.152-13.174 32.326T472.587 621.5h-320Zm0-203.587q-19.152 0-32.326-13.174t-13.174-32.326q0-19.152 13.174-32.326t32.326-13.174h440q19.152 0 32.326 13.174t13.174 32.326q0 19.152-13.174 32.326t-32.326 13.174h-440ZM708.913 576l112.174 112.174q12.674 12.674 12.674 31.826t-12.674 31.826Q808.413 764.5 789.261 764.5t-31.826-12.674l-144-144Q600 594.391 600 576t13.435-31.826l144-144q12.674-12.674 31.826-12.674t31.826 12.674q12.674 12.674 12.674 31.826t-12.674 31.826L708.913 576Z"></path>
+</svg>
+<span class="sr-only">Toggle navigation menu</span>
+</button>
+<div class="flex items-center justify-between flex-1 space-x-2 sm:space-x-4 md:justify-end">
+<div class="flex-1 w-full md:w-auto md:flex-none"><form @keydown.k.window.meta="$refs.search.focus()" action="../search.html" class="relative flex items-center group" id="searchbox" method="get">
+<input aria-label="Search the docs" class="inline-flex items-center font-medium transition-colors bg-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background border border-input hover:bg-accent focus:bg-accent hover:text-accent-foreground focus:text-accent-foreground hover:placeholder-accent-foreground py-2 px-4 relative h-9 w-full justify-start rounded-[0.5rem] text-sm text-muted-foreground sm:pr-12 md:w-40 lg:w-64" id="search-input" name="q" placeholder="Search ..." type="search" x-ref="search"/>
+<kbd class="pointer-events-none absolute right-1.5 top-2 hidden h-5 select-none text-muted-foreground items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex group-hover:bg-accent group-hover:text-accent-foreground">
+<span class="text-xs">⌘</span>
+    K
+  </kbd>
+</form>
 </div>
-        </sidebar>
-
-      <page>
-          <div class="body-header" role="navigation" aria-label="navigation">
-  
-  <ul class="breadcrumbs">
-    <li><a href="../contents.html">Docs</a> &raquo;</li>
-    
-    <li>Glossary</li>
-  </ul>
-  
-
-  <ul class="page-nav">
-  <li class="prev">
-    <a href="Case_Studies/data_oriented_design.html"
-       title="previous chapter">← <span class="section-number">4.4. </span><span class="lightgrey">Rearchitecting with Data-Oriented Design</span></a>
-  </li>
+<nav class="flex items-center space-x-1">
+<button @click="darkMode = darkMode === 'light' ? 'dark' : 'light'" aria-label="Color theme switcher" class="relative inline-flex items-center justify-center px-0 text-sm font-medium transition-colors rounded-md hover:bg-accent hover:text-accent-foreground h-9 w-9" type="button">
+<svg class="absolute transition-all scale-100 rotate-0 dark:-rotate-90 dark:scale-0" fill="currentColor" height="24" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M480 685q45.456 0 77.228-31.772Q589 621.456 589 576q0-45.456-31.772-77.228Q525.456 467 480 467q-45.456 0-77.228 31.772Q371 530.544 371 576q0 45.456 31.772 77.228Q434.544 685 480 685Zm0 91q-83 0-141.5-58.5T280 576q0-83 58.5-141.5T480 376q83 0 141.5 58.5T680 576q0 83-58.5 141.5T480 776ZM80 621.5q-19.152 0-32.326-13.174T34.5 576q0-19.152 13.174-32.326T80 530.5h80q19.152 0 32.326 13.174T205.5 576q0 19.152-13.174 32.326T160 621.5H80Zm720 0q-19.152 0-32.326-13.174T754.5 576q0-19.152 13.174-32.326T800 530.5h80q19.152 0 32.326 13.174T925.5 576q0 19.152-13.174 32.326T880 621.5h-80Zm-320-320q-19.152 0-32.326-13.174T434.5 256v-80q0-19.152 13.174-32.326T480 130.5q19.152 0 32.326 13.174T525.5 176v80q0 19.152-13.174 32.326T480 301.5Zm0 720q-19.152 0-32.326-13.17Q434.5 995.152 434.5 976v-80q0-19.152 13.174-32.326T480 850.5q19.152 0 32.326 13.174T525.5 896v80q0 19.152-13.174 32.33-13.174 13.17-32.326 13.17ZM222.174 382.065l-43-42Q165.5 327.391 166 308.239t13.174-33.065q13.435-13.674 32.587-13.674t32.065 13.674l42.239 43q12.674 13.435 12.555 31.706-.12 18.272-12.555 31.946-12.674 13.674-31.445 13.413-18.772-.261-32.446-13.174Zm494 494.761-42.239-43q-12.674-13.435-12.674-32.087t12.674-31.565Q686.609 756.5 705.38 757q18.772.5 32.446 13.174l43 41.761Q794.5 824.609 794 843.761t-13.174 33.065Q767.391 890.5 748.239 890.5t-32.065-13.674Zm-42-494.761Q660.5 369.391 661 350.62q.5-18.772 13.174-32.446l41.761-43Q728.609 261.5 747.761 262t33.065 13.174q13.674 13.435 13.674 32.587t-13.674 32.065l-43 42.239q-13.435 12.674-31.706 12.555-18.272-.12-31.946-12.555Zm-495 494.761Q165.5 863.391 165.5 844.239t13.674-32.065l43-42.239q13.435-12.674 32.087-12.674t31.565 12.674Q299.5 782.609 299 801.38q-.5 18.772-13.174 32.446l-41.761 43Q231.391 890.5 212.239 890t-33.065-13.174ZM480 576Z"></path>
+</svg>
+<svg class="absolute transition-all scale-0 rotate-90 dark:rotate-0 dark:scale-100" fill="currentColor" height="24" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M480 936q-151 0-255.5-104.5T120 576q0-138 90-239.5T440 218q25-3 39 18t-1 44q-17 26-25.5 55t-8.5 61q0 90 63 153t153 63q31 0 61.5-9t54.5-25q21-14 43-1.5t19 39.5q-14 138-117.5 229T480 936Zm0-80q88 0 158-48.5T740 681q-20 5-40 8t-40 3q-123 0-209.5-86.5T364 396q0-20 3-40t8-40q-78 32-126.5 102T200 576q0 116 82 198t198 82Zm-10-270Z"></path>
+</svg>
+</button>
+</nav>
+</div>
+</div>
+</header>
+<div class="flex-1"><div class="container flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-10"><aside :aria-hidden="!showSidebar" :class="{ 'translate-x-0': showSidebar }" class="fixed inset-y-0 left-0 md:top-14 z-50 md:z-30 bg-background md:bg-transparent transition-all duration-100 -translate-x-full md:translate-x-0 ml-0 p-6 md:p-0 md:-ml-2 md:h-[calc(100vh-3.5rem)] w-5/6 md:w-full shrink-0 overflow-y-auto border-r border-border md:sticky" id="left-sidebar">
+<a class="!justify-start text-sm md:!hidden bg-background" href="../contents.html"><span class="font-bold text-clip whitespace-nowrap">Haskell Optimization Handbook</span>
+</a>
+<div class="relative overflow-hidden md:overflow-auto my-4 md:my-0 h-[calc(100vh-8rem)] md:h-auto">
+<div class="overflow-y-auto h-full w-full relative pr-6"><nav class="table w-full min-w-full my-6 lg:my-8">
+<p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="Preliminaries/index.html">1. Preliminaries<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
+<li class="toctree-l2"><a class="reference internal" href="Preliminaries/how_to_use.html">1.1. How to Use This Book</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Preliminaries/triage.html">1.2. Triage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Preliminaries/the_checklist.html">1.3. The Checklist</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Preliminaries/what_makes_fast_hs.html">1.4. The Programs of Consistent Lethargy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Preliminaries/philosophies_of_optimization.html">1.5. Philosophies of Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Preliminaries/golden_rules.html">1.6. <span class="lightgrey">The Golden Rules of Performance-Oriented Haskell</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Preliminaries/repeatable_measurements.html">1.7. Setting up a Reproducible Test Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Preliminaries/how_to_debug.html">1.8. How To Debug</a></li>
 </ul>
-  
+</li>
+<li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="Measurement_Observation/index.html">2. Measurement, Profiling, and Observation<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
+<li class="toctree-l2"><a class="reference internal" href="Measurement_Observation/Binary_Profiling/index.html">2.1. Binary Profiling and Probing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Measurement_Observation/Thread_Profiling/index.html">2.2. Thread Level Profiling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Measurement_Observation/Cmm_Profiling/index.html">2.3. Cmm Probes and Profiling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Measurement_Observation/Stg_RTS_Profiling/index.html">2.4. Stg and RTS Probes and Profiling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Measurement_Observation/Core_Profiling/index.html">2.5. Core Probes and Profiling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Measurement_Observation/Haskell_Profiling/index.html">2.6. Haskell Level Probing and Profiling</a></li>
+</ul>
+</li>
+<li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="Optimizations/index.html">3. Optimizations<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
+<li class="toctree-l2"><a class="reference internal" href="Optimizations/GHC_tech/index.html">3.1. GHC Flags</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Optimizations/GHC_opt/index.html">3.2. GHC Optimizations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Optimizations/Code_Changes_Libraries/index.html">3.3. Library Based Changes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Optimizations/Code_Changes/index.html">3.4. Library Agnostic Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="Case_Studies/index.html">4. Case Studies<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
+<li class="toctree-l2"><a class="reference internal" href="Case_Studies/sbv_572.html">4.1. <span class="lightgrey">Impact of Seq Removal on SBV’s Internal Cache</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Case_Studies/sbv_642.html">4.2. SBV and the Bizarre GHC Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Case_Studies/klister.html">4.3. <span class="incremental">Klister: A First Pass Performance Engineering</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Case_Studies/data_oriented_design.html">4.4. <span class="lightgrey">Rearchitecting with Data-Oriented Design</span></a></li>
+</ul>
+</li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Glossary</a></li>
+</ul>
+</nav>
 </div>
-<hr>
-          <div class="content" role="main" v-pre>
-            
-  <section id="glossary">
+</div>
+<button @click="showSidebar = false" class="absolute md:hidden right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100" type="button">
+<svg class="h-4 w-4" fill="currentColor" height="24" stroke="none" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M480 632 284 828q-11 11-28 11t-28-11q-11-11-11-28t11-28l196-196-196-196q-11-11-11-28t11-28q11-11 28-11t28 11l196 196 196-196q11-11 28-11t28 11q11 11 11 28t-11 28L536 576l196 196q11 11 11 28t-11 28q-11 11-28 11t-28-11L480 632Z"></path>
+</svg>
+</button>
+</aside>
+<main class="relative py-6 lg:gap-10 lg:py-8 xl:grid xl:grid-cols-[1fr_300px]">
+<div class="w-full min-w-0 mx-auto">
+<nav aria-label="breadcrumbs" class="flex items-center mb-4 space-x-1 text-sm text-muted-foreground">
+<a class="overflow-hidden text-ellipsis whitespace-nowrap hover:text-foreground" href="../contents.html">
+<span class="hidden md:inline">Haskell Optimization Handbook</span>
+<svg aria-label="Home" class="md:hidden" fill="currentColor" height="18" stroke="none" viewbox="0 96 960 960" width="18" xmlns="http://www.w3.org/2000/svg">
+<path d="M240 856h120V616h240v240h120V496L480 316 240 496v360Zm-80 80V456l320-240 320 240v480H520V696h-80v240H160Zm320-350Z"></path>
+</svg>
+</a>
+<div class="mr-1">/</div><span aria-current="page" class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">Glossary</span>
+</nav>
+<div id="content" role="main">
+<section id="glossary">
 <span id="id1"></span><h1>Glossary<a class="headerlink" href="#glossary" title="Link to this heading">¶</a></h1>
 <dl class="glossary">
 <dt id="term-Algebraic-Data-Type">Algebraic Data Type<a class="headerlink" href="#term-Algebraic-Data-Type" title="Link to this term">¶</a></dt><dd><p>First implemented in the Hope programming language
 <span id="id2">Hudak <em>et al.</em> [<a class="reference internal" href="../contents.html#id19" title="Paul Hudak, John Hughes, Simon Peyton Jones, and Philip Wadler. A history of haskell: being lazy with class. In Proceedings of the Third ACM SIGPLAN Conference on History of Programming Languages, HOPL III, 12–1–12–55. New York, NY, USA, 2007. Association for Computing Machinery. URL: https://doi.org/10.1145/1238844.1238856, doi:10.1145/1238844.1238856.">9</a>]</span>, Algebraic Data Types are <em>composite</em>, meaning
 that they are data types made from other data types. For example,</p>
-<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">data</span><span class="w"> </span><span class="kt">Foo</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">One</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span>
-<span class="w">         </span><span class="o">|</span><span class="w"> </span><span class="kt">Two</span><span class="w"> </span><span class="kt">Bool</span><span class="w"> </span><span class="kt">Int</span>
-<span class="w">         </span><span class="o">|</span><span class="w"> </span><span class="kt">Three</span><span class="w"> </span><span class="kt">Float</span><span class="w"> </span><span class="kt">Bool</span><span class="w"> </span><span class="kt">Char</span>
-</pre></div>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="kr">data</span><span class="w"> </span><span class="kt">Foo</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">One</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="kt">Int</span>
+</span><span id="line-2"><span class="w">         </span><span class="o">|</span><span class="w"> </span><span class="kt">Two</span><span class="w"> </span><span class="kt">Bool</span><span class="w"> </span><span class="kt">Int</span>
+</span><span id="line-3"><span class="w">         </span><span class="o">|</span><span class="w"> </span><span class="kt">Three</span><span class="w"> </span><span class="kt">Float</span><span class="w"> </span><span class="kt">Bool</span><span class="w"> </span><span class="kt">Char</span>
+</span></code></pre></div>
 </div>
 <p>Here <code class="docutils literal notranslate"><span class="pre">Foo</span></code> is an algebraic data type made from the types <code class="docutils literal notranslate"><span class="pre">Int</span></code>,
 <code class="docutils literal notranslate"><span class="pre">Bool</span></code>, <code class="docutils literal notranslate"><span class="pre">Float</span></code>, and <code class="docutils literal notranslate"><span class="pre">Char</span></code>. In general, these data types are
@@ -265,16 +199,16 @@ of bits for the exponent, and a set of bits for the fraction (in <a class="refer
 </dd>
 <dt id="term-Boxed">Boxed<a class="headerlink" href="#term-Boxed" title="Link to this term">¶</a></dt><dd><p>A Boxed value is a value that is represented by a pointer to the heap. For
 example, a value such as <code class="docutils literal notranslate"><span class="pre">1729</span> <span class="pre">::</span> <span class="pre">Int</span></code> is defined as:</p>
-<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- in GHC.Types in the ghc-prim library</span>
-<span class="c1">-- ...</span>
-<span class="c1">-- | A fixed-precision integer type with at least the range @[-2^29 .. 2^29-1]@.</span>
-<span class="c1">-- The exact range for a given implementation can be determined by using</span>
-<span class="c1">-- &#39;Prelude.minBound&#39; and &#39;Prelude.maxBound&#39; from the &#39;Prelude.Bounded&#39; class.</span>
-<span class="kr">data</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">I</span><span class="o">#</span><span class="w"> </span><span class="kt">Int</span><span class="o">#</span>
-</pre></div>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1">-- in GHC.Types in the ghc-prim library</span>
+</span><span id="line-2"><span class="c1">-- ...</span>
+</span><span id="line-3"><span class="c1">-- | A fixed-precision integer type with at least the range @[-2^29 .. 2^29-1]@.</span>
+</span><span id="line-4"><span class="c1">-- The exact range for a given implementation can be determined by using</span>
+</span><span id="line-5"><span class="c1">-- 'Prelude.minBound' and 'Prelude.maxBound' from the 'Prelude.Bounded' class.</span>
+</span><span id="line-6"><span class="kr">data</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">I</span><span class="o">#</span><span class="w"> </span><span class="kt">Int</span><span class="o">#</span>
+</span></code></pre></div>
 </div>
 <p>and is represented in memory as:</p>
-<div class="figure" style="text-align: center"><p><img  src="../_images/tikz-1757cfdd3752c56b142536fed05d077090a18c2e.svg" alt="Figure made with TikZ" /></p>
+<div class="figure" style="text-align: center"><p><img alt="Figure made with TikZ" src="../_images/tikz-1757cfdd3752c56b142536fed05d077090a18c2e.svg"/></p>
 </div><p>the <em>box</em> is the <code class="docutils literal notranslate"><span class="pre">I#</span></code> constructor because it “boxes” the payload with a
 pointer (represented as an arrow). The payload is a heap object that is an
 <a class="reference internal" href="#term-Unboxed"><span class="xref std std-term">unboxed</span></a> type <code class="docutils literal notranslate"><span class="pre">Int#</span></code>, which in this case, is the unboxed literal
@@ -282,27 +216,27 @@ pointer (represented as an arrow). The payload is a heap object that is an
 </dd>
 <dt id="term-CAF">CAF<a class="headerlink" href="#term-CAF" title="Link to this term">¶</a></dt><dd><p>A CAF, or Constant Applicative Form, is a Haskell value which contains no
 free variables and is not a function. Consider these examples:</p>
-<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- these are CAFs</span>
-<span class="c1">-- A static literal is a CAF</span>
-<span class="nf">foo</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span>
-<span class="nf">foo</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="mi">12</span>
-
-<span class="c1">-- A reducible expression that requires no input is a CAF</span>
-<span class="nf">bar</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">(</span><span class="kt">Int</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="kt">Int</span><span class="p">])</span>
-<span class="nf">bar</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="p">((</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="o">..</span><span class="p">])</span>
-
-<span class="c1">-- not a lambda, curried functions that can be reduced when given an</span>
-<span class="c1">-- input are CAFs</span>
-<span class="nf">baz</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span>
-<span class="nf">baz</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="mi">3</span>
-
-<span class="c1">-- not CAFs</span>
-<span class="nf">qux</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span>
-<span class="nf">qux</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">3</span><span class="w">     </span><span class="c1">-- equivalent to baz but is a lambda so not a CAF</span>
-
-<span class="nf">quux</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span>
-<span class="nf">quux</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">x</span><span class="w">      </span><span class="c1">-- x is free thus not a CAF</span>
-</pre></div>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1">-- these are CAFs</span>
+</span><span id="line-2"><span class="c1">-- A static literal is a CAF</span>
+</span><span id="line-3"><span class="nf">foo</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span>
+</span><span id="line-4"><span class="nf">foo</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="mi">12</span>
+</span><span id="line-5">
+</span><span id="line-6"><span class="c1">-- A reducible expression that requires no input is a CAF</span>
+</span><span id="line-7"><span class="nf">bar</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="p">(</span><span class="kt">Int</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="kt">Int</span><span class="p">])</span>
+</span><span id="line-8"><span class="nf">bar</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="p">((</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="o">..</span><span class="p">])</span>
+</span><span id="line-9">
+</span><span id="line-10"><span class="c1">-- not a lambda, curried functions that can be reduced when given an</span>
+</span><span id="line-11"><span class="c1">-- input are CAFs</span>
+</span><span id="line-12"><span class="nf">baz</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span>
+</span><span id="line-13"><span class="nf">baz</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="mi">3</span>
+</span><span id="line-14">
+</span><span id="line-15"><span class="c1">-- not CAFs</span>
+</span><span id="line-16"><span class="nf">qux</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span>
+</span><span id="line-17"><span class="nf">qux</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">3</span><span class="w">     </span><span class="c1">-- equivalent to baz but is a lambda so not a CAF</span>
+</span><span id="line-18">
+</span><span id="line-19"><span class="nf">quux</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span>
+</span><span id="line-20"><span class="nf">quux</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">x</span><span class="w">      </span><span class="c1">-- x is free thus not a CAF</span>
+</span></code></pre></div>
 </div>
 <p>These values are <em>constant</em> because they don’t bind any variables or have
 any free variables. Because they are constant they are floated (see
@@ -337,26 +271,26 @@ i.e., a closure (pair of environment and function) is created causing some
 extra heap allocation. Finally the call sites of the original function are
 rewritten to pass the environment with the original function. Consider
 this example:</p>
-<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
-<span class="kr">let</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">foldl</span><span class="w"> </span><span class="p">(</span><span class="nf">\</span><span class="n">acc</span><span class="w"> </span><span class="kr">_</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="n">acc</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="n">xs</span>
-<span class="kr">in</span><span class="w">  </span><span class="n">f</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="o">..</span><span class="mi">100</span><span class="p">]</span>
-<span class="o">...</span>
-</pre></div>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="o">...</span>
+</span><span id="line-2"><span class="kr">let</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">foldl</span><span class="w"> </span><span class="p">(</span><span class="nf">\</span><span class="n">acc</span><span class="w"> </span><span class="kr">_</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="n">acc</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="n">xs</span>
+</span><span id="line-3"><span class="kr">in</span><span class="w">  </span><span class="n">f</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="o">..</span><span class="mi">100</span><span class="p">]</span>
+</span><span id="line-4"><span class="o">...</span>
+</span></code></pre></div>
 </div>
 <p>In this example <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> are free variables in the function <code class="docutils literal notranslate"><span class="pre">f</span></code> .
 Closure conversion will capture them and transform this function to:</p>
-<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
-<span class="c1">-- the function environment</span>
-<span class="kr">data</span><span class="w"> </span><span class="kt">EnvF</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">EnvF</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="p">}</span>
-
-<span class="c1">-- the new function</span>
-<span class="nf">f_cc</span><span class="w"> </span><span class="n">env</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">foldl</span><span class="w"> </span><span class="p">(</span><span class="nf">\</span><span class="n">acc</span><span class="w"> </span><span class="kr">_</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="n">acc</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">env</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">y</span><span class="w"> </span><span class="n">env</span><span class="p">)</span><span class="w"> </span><span class="n">xs</span>
-
-<span class="c1">-- the closure that replaces the original function in the same scope</span>
-<span class="kr">let</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="p">(</span><span class="n">f_cc</span><span class="p">,</span><span class="w"> </span><span class="kt">EnvF</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span>
-<span class="kr">in</span><span class="w"> </span><span class="p">(</span><span class="n">fst</span><span class="w"> </span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">snd</span><span class="w"> </span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="o">..</span><span class="mi">100</span><span class="p">]</span>
-<span class="o">...</span>
-</pre></div>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="o">...</span>
+</span><span id="line-2"><span class="c1">-- the function environment</span>
+</span><span id="line-3"><span class="kr">data</span><span class="w"> </span><span class="kt">EnvF</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kt">EnvF</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="p">}</span>
+</span><span id="line-4">
+</span><span id="line-5"><span class="c1">-- the new function</span>
+</span><span id="line-6"><span class="nf">f_cc</span><span class="w"> </span><span class="n">env</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">foldl</span><span class="w"> </span><span class="p">(</span><span class="nf">\</span><span class="n">acc</span><span class="w"> </span><span class="kr">_</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="n">acc</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">env</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">y</span><span class="w"> </span><span class="n">env</span><span class="p">)</span><span class="w"> </span><span class="n">xs</span>
+</span><span id="line-7">
+</span><span id="line-8"><span class="c1">-- the closure that replaces the original function in the same scope</span>
+</span><span id="line-9"><span class="kr">let</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="p">(</span><span class="n">f_cc</span><span class="p">,</span><span class="w"> </span><span class="kt">EnvF</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span>
+</span><span id="line-10"><span class="kr">in</span><span class="w"> </span><span class="p">(</span><span class="n">fst</span><span class="w"> </span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">snd</span><span class="w"> </span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="o">..</span><span class="mi">100</span><span class="p">]</span>
+</span><span id="line-11"><span class="o">...</span>
+</span></code></pre></div>
 </div>
 <p>Notice closure conversion has <em>added</em> an extra <code class="docutils literal notranslate"><span class="pre">let</span></code> expression for the
 closure and the reference to <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> have been replaced with
@@ -396,7 +330,7 @@ is said to be in normal form (<a class="reference internal" href="#term-NF"><spa
 <dt id="term-Info-Table">Info Table<a class="headerlink" href="#term-Info-Table" title="Link to this term">¶</a></dt><dd><p>Every heap allocated object in the runtime system keeps an information
 table that stores data such as: the object type (function, data
 constructor, thunk etc.) before the payload of the object. This is called
-the Info Table. See <span id="id11">Marlow <em>et al.</em> [<a class="reference internal" href="../contents.html#id11" title="Simon Marlow, Alexey Rodriguez Yakushev, and Simon Peyton Jones. Faster laziness using dynamic pointer tagging. SIGPLAN Not., 42(9):277–288, oct 2007. URL: https://doi.org/10.1145/1291220.1291194, doi:10.1145/1291220.1291194.">4</a>]</span>, <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/wikis/commentary/rts/storage/heap-objects#info-tables">wiki</a>, and
+the Info Table. See <span id="id11">Marlow <em>et al.</em> [<a class="reference internal" href="../contents.html#id11" title="Simon Marlow, Alexey Rodriguez Yakushev, and Simon Peyton Jones. Faster laziness using dynamic pointer tagging. SIGPLAN Not., 42(9):277–288, oct 2007. URL: https://doi.org/10.1145/1291220.1291194, doi:10.1145/1291220.1291194.">4</a>]</span>, <a class="extlink-ghcWiki reference external" href="https://gitlab.haskell.org/ghc/ghc/wikis/commentary/rts/storage/heap-objects#info-tables">wiki</a>, and
 <span id="id12">Peyton Jones and Salkild [<a class="reference internal" href="../contents.html#id7" title="Simon L. Peyton Jones and Jon Salkild. The spineless tagless g-machine. In Proceedings of the Fourth International Conference on Functional Programming Languages and Computer Architecture, FPCA '89, 184–201. New York, NY, USA, 1989. Association for Computing Machinery. URL: https://doi.org/10.1145/99370.99385, doi:10.1145/99370.99385.">13</a>]</span> Section 7.1 for more details.</p>
 </dd>
 <dt id="term-Info-Table-Address">Info Table Address<a class="headerlink" href="#term-Info-Table-Address" title="Link to this term">¶</a></dt><dd><p>The memory address for heap object descriptors <a class="reference internal" href="#term-Info-Table"><span class="xref std std-term">info table</span></a>.</p>
@@ -404,11 +338,11 @@ the Info Table. See <span id="id11">Marlow <em>et al.</em> [<a class="reference 
 <dt id="term-Join-Point">Join Point<a class="headerlink" href="#term-Join-Point" title="Link to this term">¶</a></dt><dd><p>A join point is a place where different execution paths come together or
 <em>join</em>. Consider this example slightly modified from
 <span id="id13">Maurer <em>et al.</em> [<a class="reference internal" href="../contents.html#id2" title="Luke Maurer, Paul Downen, Zena M. Ariola, and Simon Peyton Jones. Compiling without continuations. In Proceedings of the 38th ACM SIGPLAN Conference on Programming Language Design and Implementation, PLDI 2017, 482–494. New York, NY, USA, 2017. Association for Computing Machinery. URL: https://doi.org/10.1145/3062341.3062380, doi:10.1145/3062341.3062380.">14</a>]</span>:</p>
-<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">let</span><span class="w"> </span><span class="n">join1</span><span class="w"> </span><span class="kr">_</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">some_large_expression</span>
-<span class="w">    </span><span class="n">join2</span><span class="w"> </span><span class="kr">_</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">some_other_large_expr</span>
-<span class="kr">in</span><span class="w"> </span><span class="kr">if</span><span class="w"> </span><span class="n">e1</span><span class="w"> </span><span class="kr">then</span><span class="w"> </span><span class="p">(</span><span class="kr">if</span><span class="w"> </span><span class="n">e2</span><span class="w"> </span><span class="kr">then</span><span class="w"> </span><span class="n">join1</span><span class="w"> </span><span class="nb">()</span><span class="w"> </span><span class="kr">else</span><span class="w"> </span><span class="n">join2</span><span class="w"> </span><span class="nb">()</span><span class="p">)</span>
-<span class="w">         </span><span class="kr">else</span><span class="w"> </span><span class="p">(</span><span class="kr">if</span><span class="w"> </span><span class="n">e3</span><span class="w"> </span><span class="kr">then</span><span class="w"> </span><span class="n">join1</span><span class="w"> </span><span class="nb">()</span><span class="w"> </span><span class="kr">else</span><span class="w"> </span><span class="n">join2</span><span class="w"> </span><span class="nb">()</span><span class="p">)</span>
-</pre></div>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="kr">let</span><span class="w"> </span><span class="n">join1</span><span class="w"> </span><span class="kr">_</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">some_large_expression</span>
+</span><span id="line-2"><span class="w">    </span><span class="n">join2</span><span class="w"> </span><span class="kr">_</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">some_other_large_expr</span>
+</span><span id="line-3"><span class="kr">in</span><span class="w"> </span><span class="kr">if</span><span class="w"> </span><span class="n">e1</span><span class="w"> </span><span class="kr">then</span><span class="w"> </span><span class="p">(</span><span class="kr">if</span><span class="w"> </span><span class="n">e2</span><span class="w"> </span><span class="kr">then</span><span class="w"> </span><span class="n">join1</span><span class="w"> </span><span class="nb">()</span><span class="w"> </span><span class="kr">else</span><span class="w"> </span><span class="n">join2</span><span class="w"> </span><span class="nb">()</span><span class="p">)</span>
+</span><span id="line-4"><span class="w">         </span><span class="kr">else</span><span class="w"> </span><span class="p">(</span><span class="kr">if</span><span class="w"> </span><span class="n">e3</span><span class="w"> </span><span class="kr">then</span><span class="w"> </span><span class="n">join1</span><span class="w"> </span><span class="nb">()</span><span class="w"> </span><span class="kr">else</span><span class="w"> </span><span class="n">join2</span><span class="w"> </span><span class="nb">()</span><span class="p">)</span>
+</span></code></pre></div>
 </div>
 <p>In this example, <code class="docutils literal notranslate"><span class="pre">join1</span></code> and <code class="docutils literal notranslate"><span class="pre">join2</span></code> are join points because the
 branches described by each if-expression conclude by calling them. Thus,
@@ -449,26 +383,26 @@ loops in a program, thereby reducing the number of memory accesses and the
 number of looping constructs. In Haskell, loop fusion transforms many
 traversals over the same data structure to a single traversal. A classic
 example of this is map fusion.</p>
-<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- two traversals, one for f, one for g on the result of f</span>
-<span class="nf">map</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="n">map</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="o">..</span><span class="mi">100</span><span class="p">]</span>
-
-<span class="c1">-- after map fusion:</span>
-<span class="c1">-- only one traversal</span>
-<span class="nf">map</span><span class="w"> </span><span class="p">(</span><span class="n">g</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="o">..</span><span class="mi">100</span><span class="p">]</span>
-</pre></div>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1">-- two traversals, one for f, one for g on the result of f</span>
+</span><span id="line-2"><span class="nf">map</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="n">map</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="o">..</span><span class="mi">100</span><span class="p">]</span>
+</span><span id="line-3">
+</span><span id="line-4"><span class="c1">-- after map fusion:</span>
+</span><span id="line-5"><span class="c1">-- only one traversal</span>
+</span><span id="line-6"><span class="nf">map</span><span class="w"> </span><span class="p">(</span><span class="n">g</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="o">..</span><span class="mi">100</span><span class="p">]</span>
+</span></code></pre></div>
 </div>
 <p>This can also appear in list comprehensions, for example:</p>
-<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
-<span class="c1">-- three traversals: two to project elements, 1 to fold</span>
-<span class="kr">let</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">foldl</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="kr">_</span><span class="p">)</span><span class="w"> </span><span class="ow">&lt;-</span><span class="w"> </span><span class="n">args</span><span class="w"> </span><span class="p">]</span>
-<span class="kr">let</span><span class="w"> </span><span class="n">res</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">bar</span><span class="w"> </span><span class="n">foo</span><span class="w">   </span><span class="p">[</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="p">(</span><span class="kr">_</span><span class="p">,</span><span class="n">j</span><span class="p">)</span><span class="w"> </span><span class="ow">&lt;-</span><span class="w"> </span><span class="n">args</span><span class="w"> </span><span class="p">]</span>
-
-<span class="c1">-- after loop fusion on the list comprehensions</span>
-<span class="c1">-- 2 traversals: one for the arguments, one to fold</span>
-<span class="kr">let</span><span class="w"> </span><span class="p">(</span><span class="n">is</span><span class="p">,</span><span class="w"> </span><span class="n">js</span><span class="p">)</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">unzip</span><span class="w"> </span><span class="n">args</span>
-<span class="kr">let</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">foldl</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">is</span>
-<span class="kr">let</span><span class="w"> </span><span class="n">bar</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">bar</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="n">js</span>
-</pre></div>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="o">...</span>
+</span><span id="line-2"><span class="c1">-- three traversals: two to project elements, 1 to fold</span>
+</span><span id="line-3"><span class="kr">let</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">foldl</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="kr">_</span><span class="p">)</span><span class="w"> </span><span class="ow">&lt;-</span><span class="w"> </span><span class="n">args</span><span class="w"> </span><span class="p">]</span>
+</span><span id="line-4"><span class="kr">let</span><span class="w"> </span><span class="n">res</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">bar</span><span class="w"> </span><span class="n">foo</span><span class="w">   </span><span class="p">[</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="p">(</span><span class="kr">_</span><span class="p">,</span><span class="n">j</span><span class="p">)</span><span class="w"> </span><span class="ow">&lt;-</span><span class="w"> </span><span class="n">args</span><span class="w"> </span><span class="p">]</span>
+</span><span id="line-5">
+</span><span id="line-6"><span class="c1">-- after loop fusion on the list comprehensions</span>
+</span><span id="line-7"><span class="c1">-- 2 traversals: one for the arguments, one to fold</span>
+</span><span id="line-8"><span class="kr">let</span><span class="w"> </span><span class="p">(</span><span class="n">is</span><span class="p">,</span><span class="w"> </span><span class="n">js</span><span class="p">)</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">unzip</span><span class="w"> </span><span class="n">args</span>
+</span><span id="line-9"><span class="kr">let</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">foldl</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">is</span>
+</span><span id="line-10"><span class="kr">let</span><span class="w"> </span><span class="n">bar</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="n">bar</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="n">js</span>
+</span></code></pre></div>
 </div>
 </dd>
 <dt id="term-Multi-Shot-Lambda">Multi-Shot Lambda<a class="headerlink" href="#term-Multi-Shot-Lambda" title="Link to this term">¶</a></dt><dd><p>A multi-shot lambda is a lambda that is called <em>more</em> than once. In
@@ -499,12 +433,12 @@ would have been <code class="docutils literal notranslate"><span class="pre">fan
 suffix; the <code class="docutils literal notranslate"><span class="pre">r</span></code> in <code class="docutils literal notranslate"><span class="pre">r17p</span></code> is static and meaningful. In this case, the
 <code class="docutils literal notranslate"><span class="pre">r</span></code> indicates that the name <code class="docutils literal notranslate"><span class="pre">f</span></code> is an element in the <code class="docutils literal notranslate"><span class="pre">NameCache</span></code>,
 meaning that all references to <code class="docutils literal notranslate"><span class="pre">f</span></code> share a single <code class="docutils literal notranslate"><span class="pre">Unique</span></code> ID in every
-GHC invocation (See the <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/blob/master/compiler/GHC/Types/Name/Cache.hs?ref_type=heads#L36">Note [The Name Cache]</a> for more). When
+GHC invocation (See the <a class="extlink-ghcSource reference external" href="https://gitlab.haskell.org/ghc/ghc/-/blob/master/compiler/GHC/Types/Name/Cache.hs?ref_type=heads#L36">Note [The Name Cache]</a> for more). When
 occurrence names are generated, the leading character is a hint for what
 kind of name is being generated. You can find an incomplete list of tags
-and their meanings in <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/blob/master/compiler/GHC/Builtin/Uniques.hs?ref_type=heads#L305">Note [Uniques for wired-in prelude things
+and their meanings in <a class="extlink-ghcSource reference external" href="https://gitlab.haskell.org/ghc/ghc/-/blob/master/compiler/GHC/Builtin/Uniques.hs?ref_type=heads#L305">Note [Uniques for wired-in prelude things
 and known tags]</a>. For
-more on names see <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/blob/master/compiler/GHC/Iface/Tidy.hs?ref_type=heads#L271">Note [Choosing external Ids]</a> and <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/wikis/commentary/compiler/rdr-name-type#the-occname-type">this</a>
+more on names see <a class="extlink-ghcSource reference external" href="https://gitlab.haskell.org/ghc/ghc/-/blob/master/compiler/GHC/Iface/Tidy.hs?ref_type=heads#L271">Note [Choosing external Ids]</a> and <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/wikis/commentary/compiler/rdr-name-type#the-occname-type">this</a>
 wiki page on GHC’s Reader names.</p>
 </dd>
 <dt id="term-One-Shot-Lambda">One-Shot Lambda<a class="headerlink" href="#term-One-Shot-Lambda" title="Link to this term">¶</a></dt><dd><p>A one-shot lambda is a lambda that is called <em>exactly</em> once. These
@@ -522,7 +456,7 @@ for an unsafe way to instruct GHC that you have a one-shot lambda.</p>
 closure that represents a function applied to <em>too few</em> arguments. PAPs
 should never be entered, and are only applied using the generic apply
 functions in the STG machine. See the file <code class="docutils literal notranslate"><span class="pre">rts/Apply.cmm</span></code> in GHC or the
-<a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/wikis/commentary/rts/storage/heap-objects">heap object</a> wiki page for
+<a class="extlink-ghcWiki reference external" href="https://gitlab.haskell.org/ghc/ghc/wikis/commentary/rts/storage/heap-objects">heap object</a> wiki page for
 more.</p>
 </dd>
 <dt id="term-Pinned">Pinned<a class="headerlink" href="#term-Pinned" title="Link to this term">¶</a></dt><dd><p>Pinned memory is memory that is guaranteed to not be moved by GHC’s garbage
@@ -536,10 +470,10 @@ for more.</p>
 in the system. See <a class="reference internal" href="Preliminaries/how_to_debug.html#make-it-fail"><span class="std std-ref">Make it Fail</span></a> for more.</p>
 </dd>
 <dt id="term-Sharing">Sharing<a class="headerlink" href="#term-Sharing" title="Link to this term">¶</a></dt><dd><p>Consider the following program:</p>
-<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="nf">foo</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span>
-<span class="nf">foo</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="o">..</span><span class="n">n</span><span class="p">]</span>
-<span class="w">            </span><span class="kr">in</span><span class="w"> </span><span class="n">zip</span><span class="w"> </span><span class="p">(</span><span class="n">fmap</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">last</span><span class="w"> </span><span class="n">x</span><span class="p">))</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="n">x</span>
-</pre></div>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="nf">foo</span><span class="w"> </span><span class="ow">::</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="ow">-&gt;</span><span class="w"> </span><span class="kt">Int</span>
+</span><span id="line-2"><span class="nf">foo</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="kr">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">=</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="o">..</span><span class="n">n</span><span class="p">]</span>
+</span><span id="line-3"><span class="w">            </span><span class="kr">in</span><span class="w"> </span><span class="n">zip</span><span class="w"> </span><span class="p">(</span><span class="n">fmap</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">last</span><span class="w"> </span><span class="n">x</span><span class="p">))</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="n">x</span>
+</span></code></pre></div>
 </div>
 <p>We say that <code class="docutils literal notranslate"><span class="pre">x</span></code> is <em>shared</em> in this program because each of the three
 references of <code class="docutils literal notranslate"><span class="pre">x</span></code> refer to the <code class="docutils literal notranslate"><span class="pre">x</span></code> defined in the <code class="docutils literal notranslate"><span class="pre">let</span></code>. If <code class="docutils literal notranslate"><span class="pre">x</span></code> is
@@ -563,7 +497,7 @@ Section 3.1.2 for more details.</p>
 </dd>
 <dt id="term-Thread-State-Object-TSO">Thread State Object (TSO)<a class="headerlink" href="#term-Thread-State-Object-TSO" title="Link to this term">¶</a></dt><dd><p>A thread state object is a heap object that represents a Haskell thread in
 GHC’s runtime system. For the precise contents please see its definition
-in <a class="reference external" href="https://gitlab.haskell.org/ghc/ghc/-/blob/master/rts/include/rts/storage/TSO.h?ref_type=heads">GHC’s source code</a> and <a class="reference external" href="https://youtu.be/5vKBFnTsCcE?si=4THBS_KMYRI6U1Sm&amp;t=4620">this description</a> by Ben
+in <a class="extlink-ghcSource reference external" href="https://gitlab.haskell.org/ghc/ghc/-/blob/master/rts/include/rts/storage/TSO.h?ref_type=heads">GHC’s source code</a> and <a class="reference external" href="https://youtu.be/5vKBFnTsCcE?si=4THBS_KMYRI6U1Sm&amp;t=4620">this description</a> by Ben
 Gamari.</p>
 </dd>
 <dt id="term-Top-Level">Top-Level<a class="headerlink" href="#term-Top-Level" title="Link to this term">¶</a></dt><dd><p>The most outer-most or global scope of the program.</p>
@@ -600,25 +534,23 @@ for more.</p>
 </dd>
 </dl>
 </section>
-
-
-          </div>
-          <div class="page-nav">
-            <div class="inner"><ul class="page-nav">
-  <li class="prev">
-    <a href="Case_Studies/data_oriented_design.html"
-       title="previous chapter">← <span class="section-number">4.4. </span><span class="lightgrey">Rearchitecting with Data-Oriented Design</span></a>
-  </li>
-</ul><div class="footer" role="contentinfo">
-      &#169; Copyright 2022-2026, Jeffrey Young (doyougnu).
-    <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.2.6 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.8.0.
+</div></div>
+</main>
 </div>
-            </div>
-          </div>
-      </page>
-    </div></div>
-    
-    
-  </body>
+</div><footer class="py-6 border-t border-border md:py-0">
+<div class="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
+<div class="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
+<p class="text-sm leading-loose text-center text-muted-foreground md:text-left">© 2022-2026, Jeffrey Young (doyougnu) Built with <a class="font-medium underline underline-offset-4" href="https://www.sphinx-doc.org" rel="noreferrer">Sphinx 8.2.3</a></p>
+</div>
+</div>
+</footer>
+</div>
+<script src="../_static/documentation_options.js?v=d45e8c67"></script>
+<script src="../_static/doctools.js?v=9bcbadda"></script>
+<script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+<script src="../_static/copybutton.js?v=f281be69"></script>
+<script defer="defer" src="../_static/theme.js?v=073f68d9"></script>
+<script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</body>
 </html>

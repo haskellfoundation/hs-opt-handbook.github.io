@@ -465,7 +465,7 @@ A total of 387 words which is 3, 096 bytes or roughly 3KiB, just for 32
 elements! Unfortunately, this also will not be a cache friendly data structure.
 To store 387 words we need :math:`\frac{387}{8} = 48` cache lines. But 387 is
 not a multiple of 2, so there will be :math:`387 \bmod{} 8 = 3` words of
-leftover space on the final cache line [#]_. A more cache friendly data
+leftover space on the final cache line [#f1]_. A more cache friendly data
 structure would ensure that a ``Full`` always fit evenly into a set of cache
 lines and would thereby avoid fragmenting the cache. One caveat is that this
 wasted space will change depending on the sizes of the key and value.
@@ -731,11 +731,11 @@ Which is just what we expected: one word (``.quad (,)_con_info``) for the data
 constructor header, one for ``fst`` (``.quad stg_INTLIKE_closure+273`` ), and
 one ``snd`` (``.quad stg_INTLIKE_closure+289``). However, GHC has added another
 word that is mysteriously set to 3: ``.quad 3``. This extra word is an
-optimization that GHC applies which tags the symbol ``Main.a_pair_closure`` as a
+optimization that GHC applies which tags [#f3]_ the symbol ``Main.a_pair_closure`` as a
 static constructor that contains no :term:`CAF` references. This tag (the 3)
 instructs the garbage collector to ignore this symbol during garbage collection.
 If ``Main.a_pair_closure`` was found to possibly have a CAF then the tag would
-have been 0 but the extra word would still exist [#]_ . So does this mean that
+have been 0 but the extra word would still exist [#f2]_. So does this mean that
 our analysis is incorrect? No, this data is only checked and loaded during a
 garbage collection event, it is a by product of our abuse of ``NOINLINE`` to
 create a static top-level closure.
@@ -1067,18 +1067,18 @@ that data you'll be all but guaranteed to speed up your system.
 References
 ==========
 
-.. [#] The HashMap behaves this way because of `yours truly
-       <https://github.com/haskell-unordered-containers/unordered-containers/pull/317>`__.
-       Even though the cache behavior is poor, the 16-bit base was worse because
-       it created HashMaps with a more deeply nested structure. This meant even
-       *more* pointer chasing in full cases. For the interested, you can observe
-       the effect in the data posted in the pull request I have linked.
+.. [#f1] The HashMap behaves this way because of `yours truly
+         <https://github.com/haskell-unordered-containers/unordered-containers/pull/317>`__.
+         Even though the cache behavior is poor, the 16-bit base was worse because
+         it created HashMaps with a more deeply nested structure. This meant even
+         *more* pointer chasing in full cases. For the interested, you can observe
+         the effect in the data posted in the pull request I have linked.
 
-.. [#] The `Haskell Wiki
-       <https://www.fpcomplete.com/blog/2016/05/weigh-package/>`_ page. Although
-       it has not been updated in some time.
+.. [#f2] The `Haskell Wiki
+         <https://www.fpcomplete.com/blog/2016/05/weigh-package/>`_ page. Although
+         it has not been updated in some time.
 
-.. [#] For the interested, `here
+.. [#f3] For the interested, `here
    <https://gitlab.haskell.org/ghc/ghc/-/blob/master/compiler/GHC/StgToCmm/Heap.hs?ref_type=heads#L215>`__
    is where the tag is applied and `here
    <https://gitlab.haskell.org/ghc/ghc/-/blob/master/rts/sm/Storage.h?ref_type=heads#L134>`__
