@@ -10,54 +10,81 @@
   };
 
   outputs = { self, nixpkgs, flake-utils, flake-compat }:
-    let press-theme-overlay = final: prev: {
-          sphinx-press-theme = prev.python311Packages.buildPythonPackage rec {
-            pname = "sphinx_press_theme";
-            version = "0.8.0";
+    let pythonEnv-overlay = final: prev: {
+      python313Packages = prev.python313Packages.overrideScope (pyFinal: pyPrev: {
 
-            src = prev.python311Packages.fetchPypi {
-              inherit pname;
-              inherit version;
-              sha256 = "sha256-KITKqx3AHssR0VjU3W0xeeLdl81IUWx2nMJzYCcuYrM=";
-            };
-            propagatedBuildInputs = [ prev.sphinx ];
-          };
-        };
+          # sphinx-press-theme = pyPrev.buildPythonPackage rec {
+            # pname = "sphinx-press-theme";
+            # pyproject = true;
+            # build-system = [ pyPrev.setuptools ];
+            # version = "0.9.1";
 
-        copy-button-overlay = final: prev: {
-          sphinx-copybutton = prev.python311Packages.buildPythonPackage rec {
+            # src = pyPrev.fetchPypi {
+              # inherit pname;
+              # inherit version;
+              # sha256 = "sha256-KITKqx3AHssR0VjU3W0xeeLdl81IUWx2nMJzYCcuYrM=";
+            # };
+            # propagatedBuildInputs = [ pyPrev.sphinx ];
+          # };
+
+
+          sphinx-copybutton = pyPrev.buildPythonPackage rec {
             pname = "sphinx-copybutton";
+            pyproject = true;
+            build-system = [ pyPrev.setuptools ];
             version = "0.5.2";
 
-            src = prev.python311Packages.fetchPypi {
+            src = pyPrev.fetchPypi {
               inherit pname;
               inherit version;
               sha256 = "sha256-TPF8gvuWRtG8nKkqwoCBOjtgXYxCEiX9mRMVQQPuH70=";
             };
-            propagatedBuildInputs = [ prev.sphinx ];
+            propagatedBuildInputs = [ pyPrev.sphinx ];
           };
-        };
 
-        sphinx-exec-directive-overlay = final: prev: {
-          sphinx-exec-directive = prev.python311Packages.buildPythonPackage rec {
+          sphinx-exec-directive = pyPrev.buildPythonPackage rec {
             pname   = "sphinx-exec-directive";
+            pyproject = true;
+            build-system = [ pyPrev.setuptools ];
+
             version = "0.6";
 
-            src = prev.python311Packages.fetchPypi {
+            src = pyPrev.fetchPypi {
               inherit pname;
               inherit version;
               sha256 = "sha256-lMo4QILqt6pEiIatN/LNxhiUGX3ziSWV+bfRahzmZWU=";
             };
-            propagatedBuildInputs = [ prev.sphinx prev.python311Packages.matplotlib ];
+            propagatedBuildInputs = [ pyPrev.sphinx
+                                      pyPrev.matplotlib
+                                    ];
           };
-        };
 
-        tex-overlay = final: prev: {
-            tex-env = prev.texlive.combine {
-              inherit (prev.texlive)
-                scheme-basic collection-xetex fncychap titlesec tabulary varwidth
-                framed capt-of wrapfig needspace dejavu-otf helvetic upquote
-                memorygraphs;
+          sphinxcontrib-bibtex = pyPrev.buildPythonPackage rec {
+            pname   = "sphinxcontrib_bibtex"; # yes they are inconsistent with the name
+            pyproject = true;
+            build-system = [ pyPrev.setuptools ];
+
+            version = "2.6.5";
+
+            src = pyPrev.fetchPypi {
+              inherit pname;
+              inherit version;
+              sha256 = "sha256-mzIk3W/s6SaOvYyQXcCoP/L2xUFIqSNf5w6dHp/xScA=";
+            };
+            propagatedBuildInputs = [ pyPrev.sphinx
+                                      pyPrev.pybtex
+                                      pyPrev.pybtex-docutils
+                                    ];
+          };
+      });
+      };
+
+      tex-overlay = final: prev: {
+          tex-env = prev.texlive.combine {
+            inherit (prev.texlive)
+              scheme-basic collection-xetex fncychap titlesec tabulary varwidth
+              framed capt-of wrapfig needspace dejavu-otf helvetic upquote
+              memorygraphs;
             };
         };
 
@@ -66,9 +93,7 @@
       (system:
         let pkgs = import nixpkgs
               { inherit system;
-                overlays = [ press-theme-overlay
-                             copy-button-overlay
-                             sphinx-exec-directive-overlay
+                overlays = [ pythonEnv-overlay
                              tex-overlay
                            ];
               } ;

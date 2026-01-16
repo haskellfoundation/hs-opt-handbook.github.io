@@ -113,8 +113,8 @@ exclude_patterns = [ '_build'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme      = "press"
-html_theme_options = { "body_max_width": 1600 }
+html_theme      = "sphinxawesome_theme"
+html_theme_options = { "body_max_width": 1600 } # "config_file": "theme.toml",}
 html_static_path = ['_static', 'code']
 html_css_files = [ 'css/s4defs-roles.css', 'css/iframe.css', 'css/admonitions.css' ]
 

@@ -8,6 +8,6 @@
 .. |bottom| replace:: :math:`\bot`
 ..
    GHC Specific
-.. |ghcVersion| replace:: 9.2.x
+.. |ghcVersion| replace:: 9.x
 .. |core| replace:: Core
 .. |stg| replace:: Stg

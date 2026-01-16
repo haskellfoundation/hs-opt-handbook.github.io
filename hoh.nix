@@ -3,22 +3,18 @@
 }:
 
 let
-   pythonInputs = with pkgs.python311Packages; [
-     sphinx
-     sphinxcontrib-bibtex
+   pythonEnv = pkgs.python313.withPackages (ps: with ps;
+   [ sphinx
      sphinxcontrib-tikz
      sphinx-autobuild
+     sphinxawesome-theme
+     sphinx-copybutton  # this comes from the overlay
+     sphinxcontrib-bibtex # from overlay
+     # sphinx-exec-directive
      pip
-     # marked as broken in nixpkgs unfortunately
-     # sphinx-book-theme
-     ## until we have a reason for tex leave this commented out for CI
-   ];
-   nonPythonInputs = with pkgs; [ sphinx-press-theme # this comes from the overlay
-                                  sphinx-copybutton  # this comes from the overlay
-                                  # pandoc
-                                  # change once extension fixes are upstreamed
-                                  sphinx-exec-directive
-                                  rst2html5
+   ]);
+
+   nonPythonInputs = with pkgs; [ rst2html5
                                   ghc
                                   cabal-install
                                   git
@@ -30,7 +26,7 @@ pkgs.stdenv.mkDerivation {
    version = "0.0.1";
    src     = ./.;
    phases = [ "unpackPhase" "preBuild" "buildPhase" "installPhase"];
-   buildInputs = pythonInputs ++ nonPythonInputs;
+   buildInputs = [pythonEnv] ++ nonPythonInputs;
 
    preBuild = ''
    unset SOURCE_DATE_EPOCH
@@ -40,7 +36,7 @@ pkgs.stdenv.mkDerivation {
 
    buildPhase = ''
    runHook preBuild
-   export PATH="${pkgs.lib.makeBinPath (pythonInputs ++ nonPythonInputs)}:$PATH";
+   export PATH="${pkgs.lib.makeBinPath (nonPythonInputs)}:$PATH";
    SOURCE_DATE_EPOCH="$(${pkgs.coreutils}/bin/date '+%s')"
    make clean
    make ${target} SPHINXOPTS="-W"
