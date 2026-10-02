@@ -541,8 +541,8 @@ And here is our example program.
    a_word64 :: Word64
    a_word64 = 1234
 
-We'll handle these in chunks beginning with a unit. Recall that in the
-:ref:`Weigh Chapter <Weigh Chapter>` a ``()`` was measured to be 0 allocations
+We'll handle these in chunks beginning with a unit. In the
+:ref:`Weigh Chapter <Weigh Chapter>`, we show that a ``()`` is measured to be 0 allocations
 because only one ``()`` exists in GHC and is shared for all references. But here
 we can see the truth:
 
