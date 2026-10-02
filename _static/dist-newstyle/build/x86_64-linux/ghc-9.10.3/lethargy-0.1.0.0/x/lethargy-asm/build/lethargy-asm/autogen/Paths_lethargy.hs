@@ -96,12 +96,12 @@ getSysconfDir :: IO FilePath
 
 
 bindir, libdir, dynlibdir, datadir, libexecdir, sysconfdir :: FilePath
-bindir     = "/nix/var/nix/builds/nix-2695-3105306592/tmp.Wfx3RWolZf/bin"
-libdir     = "/nix/var/nix/builds/nix-2695-3105306592/tmp.Wfx3RWolZf/lib/x86_64-linux-ghc-9.10.3-4c5b/lethargy-0.1.0.0-inplace-lethargy-asm"
-dynlibdir  = "/nix/var/nix/builds/nix-2695-3105306592/tmp.Wfx3RWolZf/lib/x86_64-linux-ghc-9.10.3-4c5b"
-datadir    = "/nix/var/nix/builds/nix-2695-3105306592/tmp.Wfx3RWolZf/share/x86_64-linux-ghc-9.10.3-4c5b/lethargy-0.1.0.0"
-libexecdir = "/nix/var/nix/builds/nix-2695-3105306592/tmp.Wfx3RWolZf/libexec/x86_64-linux-ghc-9.10.3-4c5b/lethargy-0.1.0.0"
-sysconfdir = "/nix/var/nix/builds/nix-2695-3105306592/tmp.Wfx3RWolZf/etc"
+bindir     = "/nix/var/nix/builds/nix-2720-1282263825/tmp.CJtjHpa0nX/bin"
+libdir     = "/nix/var/nix/builds/nix-2720-1282263825/tmp.CJtjHpa0nX/lib/x86_64-linux-ghc-9.10.3-4c5b/lethargy-0.1.0.0-inplace-lethargy-asm"
+dynlibdir  = "/nix/var/nix/builds/nix-2720-1282263825/tmp.CJtjHpa0nX/lib/x86_64-linux-ghc-9.10.3-4c5b"
+datadir    = "/nix/var/nix/builds/nix-2720-1282263825/tmp.CJtjHpa0nX/share/x86_64-linux-ghc-9.10.3-4c5b/lethargy-0.1.0.0"
+libexecdir = "/nix/var/nix/builds/nix-2720-1282263825/tmp.CJtjHpa0nX/libexec/x86_64-linux-ghc-9.10.3-4c5b/lethargy-0.1.0.0"
+sysconfdir = "/nix/var/nix/builds/nix-2720-1282263825/tmp.CJtjHpa0nX/etc"
 
 getBinDir     = catchIO (getEnv "lethargy_bindir")     (\_ -> return bindir)
 getLibDir     = catchIO (getEnv "lethargy_libdir")     (\_ -> return libdir)
