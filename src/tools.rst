@@ -28,6 +28,11 @@ eventlog2html
 * :ref:`Klister — investigating a memory leak <src/case_studies/klister:optimization 2: a memory leak casts a long shadow>`.
 * :ref:`Klister — locating allocations with info tables <src/case_studies/klister:optimization 4: fixing allscopesets>`.
 
+eventlog-live
+~~~~~~~~~~~~~
+
+`eventlog-live <https://hackage.haskell.org/package/eventlog-live/>`__ analyses the eventlog of any Haskell program and streams the resulting telemetry data to any observability platform that supports the OpenTelemetry protocol.
+
 ghc-events
 ~~~~~~~~~~
 
