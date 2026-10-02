@@ -26,10 +26,12 @@ Indices and tables
    :hidden:
 
    src/glossary
+   src/tools
 
 * :ref:`genindex`
 * :ref:`search`
 * :ref:`glossary`
+* :ref:`tools`
 
 
 Bibliography
